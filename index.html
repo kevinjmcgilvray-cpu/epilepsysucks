@@ -632,23 +632,41 @@
     }
 
     .split__image--family {
-      background:
-        linear-gradient(160deg, var(--family-scrim), var(--family-scrim-strong)),
-        url("epilepsy-sucks-images/IMG_7086.jpeg") center 35% / cover no-repeat;
+      background: var(--ink-2);
+      padding: 0;
+      overflow: hidden;
+      display: grid;
     }
 
     .split__image--family::after {
       display: none;
     }
 
+    .split__image--family img {
+      width: 100%;
+      height: 100%;
+      min-height: clamp(16rem, 40vw, 26rem);
+      object-fit: cover;
+      object-position: center 35%;
+    }
+
     .split__image--race {
-      background:
-        linear-gradient(160deg, var(--family-scrim), var(--family-scrim-strong)),
-        url("epilepsy-sucks-images/IMG_5739.jpeg") center 20% / cover no-repeat;
+      background: var(--ink-2);
+      padding: 0;
+      overflow: hidden;
+      display: grid;
     }
 
     .split__image--race::after {
       display: none;
+    }
+
+    .split__image--race img {
+      width: 100%;
+      height: 100%;
+      min-height: clamp(16rem, 40vw, 26rem);
+      object-fit: cover;
+      object-position: center 20%;
     }
 
     .split__image::after {
@@ -822,6 +840,22 @@
         order: -1;
         min-height: 14rem;
       }
+
+      .split__image--family,
+      .split__image--race {
+        min-height: 0;
+        aspect-ratio: 3 / 4;
+        max-height: 78vh;
+      }
+
+      .split__image--family img,
+      .split__image--race img {
+        min-height: 0;
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+        object-position: center center;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -951,7 +985,9 @@
             <p><span class="key">The chains of epilepsy that had bound me for so long were broken.</span> <span class="key">I no longer fear having a seizure.</span> It’s just the way my life is.</p>
             <p>I am so thankful that I have an <span class="key">awesome family</span> that has supported me throughout this long process.</p>
           </div>
-          <div class="split__image split__image--family reveal" role="img" aria-label="Kevin with family and friends"></div>
+          <div class="split__image split__image--family reveal">
+            <img src="epilepsy-sucks-images/IMG_7086.jpeg" alt="Kevin with family and friends" />
+          </div>
         </div>
       </div>
     </section>
@@ -1042,7 +1078,9 @@
               <a class="btn btn--ghost" href="https://www.cureepilepsy.org/" target="_blank" rel="noopener noreferrer">Learn about CURE</a>
             </div>
           </div>
-          <div class="split__image split__image--race reveal" role="img" aria-label="Kevin after a race, thumbs up on the beach in bib 202"></div>
+          <div class="split__image split__image--race reveal">
+            <img src="epilepsy-sucks-images/IMG_5739.jpeg" alt="Kevin after a race, thumbs up on the beach in bib 202" />
+          </div>
         </div>
       </div>
     </section>
