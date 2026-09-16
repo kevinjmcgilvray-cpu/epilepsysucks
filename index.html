@@ -149,6 +149,35 @@
       text-transform: uppercase;
     }
 
+    .nav__left {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.2rem;
+      min-width: 0;
+    }
+
+    .nav__funds {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.35rem 0.55rem;
+      font-size: 0.78rem;
+      letter-spacing: 0.02em;
+      color: var(--paper-dim);
+      line-height: 1.2;
+    }
+
+    .nav__funds strong {
+      color: var(--epi);
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .nav__funds:hover {
+      color: var(--paper);
+    }
+
     .nav__links {
       display: flex;
       align-items: center;
@@ -984,7 +1013,19 @@
 </head>
 <body>
   <header class="nav" id="nav">
-    <a class="nav__brand" href="#top">Epilepsy Sucks</a>
+    <div class="nav__left">
+      <a class="nav__brand" href="#top">Epilepsy Sucks</a>
+      <a
+        class="nav__funds"
+        href="https://fundraisers.hakuapp.com/Kevin-McGilvray"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Fundraising progress"
+      >
+        <strong id="funds-raised">$1,851</strong>
+        <span>raised of <span id="funds-goal">$3,000</span></span>
+      </a>
+    </div>
     <button class="nav__toggle" id="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
     <ul class="nav__links" id="nav-links">
       <li><a href="#story">My story</a></li>
@@ -1201,7 +1242,8 @@
               <div><strong>Event</strong> ASICS Los Angeles Marathon</div>
               <div><strong>Date</strong> March 7, 2027</div>
               <div><strong>Team</strong> Team CURE Epilepsy</div>
-              <div><strong>Goal</strong> $3,000</div>
+              <div><strong>Raised</strong> <span id="funds-raised-meta">$1,851</span></div>
+              <div><strong>Goal</strong> <span id="funds-goal-meta">$3,000</span></div>
             </div>
             <div class="hero__actions" style="justify-content: flex-start; margin-top: 2rem; animation: none;">
               <a class="btn btn--purple" href="https://haku.ly/9795a39b3b" target="_blank" rel="noopener noreferrer">Donate now</a>
@@ -1357,6 +1399,25 @@
       walk(root);
     }
     highlightEpiWords(document.body);
+
+    (function syncFundraisingTotals() {
+      const raisedEl = document.getElementById("funds-raised");
+      const goalEl = document.getElementById("funds-goal");
+      const raisedMeta = document.getElementById("funds-raised-meta");
+      const goalMeta = document.getElementById("funds-goal-meta");
+      if (!raisedEl || !goalEl) return;
+
+      fetch("/api/raised")
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (!data || !data.ok) return;
+          raisedEl.textContent = data.raisedFormatted;
+          goalEl.textContent = data.goalFormatted;
+          if (raisedMeta) raisedMeta.textContent = data.raisedFormatted;
+          if (goalMeta) goalMeta.textContent = data.goalFormatted;
+        })
+        .catch(() => {});
+    })();
 
     (function initWeightChartHover() {
       const frame = document.getElementById("weight-chart-frame");
