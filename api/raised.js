@@ -7,24 +7,30 @@ export default async function handler(req, res) {
       headers: { "User-Agent": "epilepsysucks.org-fundraiser-sync" }
     });
     const html = await response.text();
-    const match = html.match(
-      /\$([0-9,]+\.[0-9]{2})\s*raised[\s\S]{0,80}?\$([0-9,]+\.[0-9]{2})\s*goal/i
+
+    const raisedMatch = html.match(
+      /\$([0-9,]+\.\d{2})<\/span>\s*raised/i
+    );
+    const goalMatch = html.match(
+      /\$([0-9,]+\.\d{2})<\/span>\s*goal/i
     );
 
-    if (!match) {
+    if (!raisedMatch || !goalMatch) {
       res.status(502).json({ ok: false, error: "Could not parse fundraising totals" });
       return;
     }
 
-    const raised = Number(match[1].replace(/,/g, ""));
-    const goal = Number(match[2].replace(/,/g, ""));
+    const raised = Number(raisedMatch[1].replace(/,/g, ""));
+    const goal = Number(goalMatch[1].replace(/,/g, ""));
+    const format = (n) =>
+      `$${n.toLocaleString("en-US", { maximumFractionDigits: 0 })}`;
 
     res.status(200).json({
       ok: true,
       raised,
       goal,
-      raisedFormatted: `$${raised.toLocaleString("en-US", { maximumFractionDigits: 0 })}`,
-      goalFormatted: `$${goal.toLocaleString("en-US", { maximumFractionDigits: 0 })}`,
+      raisedFormatted: format(raised),
+      goalFormatted: format(goal),
       source: "https://fundraisers.hakuapp.com/Kevin-McGilvray"
     });
   } catch (error) {
