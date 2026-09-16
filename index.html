@@ -460,6 +460,37 @@
       background: var(--surface-muted);
     }
 
+    .chapter__video {
+      grid-column: 1 / -1;
+      margin-top: 0.5rem;
+      border: 1px solid var(--line);
+      overflow: hidden;
+      background: #000;
+      max-width: 42rem;
+    }
+
+    .chapter--with-photo .chapter__video {
+      max-width: none;
+    }
+
+    .chapter__video video {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: min(70vh, 28rem);
+      background: #000;
+    }
+
+    .chapter__video figcaption {
+      padding: 0.65rem 0.85rem;
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--paper-faint);
+      border-top: 1px solid var(--line);
+      background: var(--surface-muted);
+    }
+
     .weight-chart {
       margin-top: 2.75rem;
       padding-top: 2rem;
