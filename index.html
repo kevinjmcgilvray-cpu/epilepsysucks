@@ -575,6 +575,69 @@
       color: var(--paper-faint);
     }
 
+    .weight-photos {
+      margin-top: 2.25rem;
+      display: grid;
+      gap: 1rem;
+      max-width: 42rem;
+    }
+
+    .weight-photos__main {
+      border: 1px solid var(--line);
+      overflow: hidden;
+      background: var(--ink-2);
+    }
+
+    .weight-photos__main img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .weight-photos__row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .weight-photos__row figure {
+      border: 1px solid var(--line);
+      overflow: hidden;
+      background: var(--ink-2);
+      margin: 0;
+    }
+
+    .weight-photos__row img {
+      width: 100%;
+      height: 100%;
+      min-height: 12rem;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    .weight-photos figcaption {
+      padding: 0.65rem 0.85rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--paper-faint);
+      border-top: 1px solid var(--line);
+    }
+
+    @media (max-width: 800px) {
+      .weight-photos__row {
+        grid-template-columns: 1fr;
+      }
+
+      .weight-photos__row img {
+        min-height: 0;
+        aspect-ratio: 4 / 3;
+        object-fit: contain;
+        background: var(--ink-2);
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       .weight-chart__tooltip {
         transition: none;
@@ -1001,6 +1064,23 @@
         <p>Pound by pound, the number came down. Months turned into years. The mirror started telling a different story. People who hadn’t seen me in a while did a double take. More than that — <span class="key">I</span> did a double take. I could move again. Train again. Believe that a marathon wasn’t a fantasy reserved for someone else’s body.</p>
         <p>Today I stand at <span class="key">214 pounds</span>. That’s <span class="key">154 pounds gone</span> — more than the weight of a whole person lifted off my frame. I didn’t just lose weight. I took back miles of my life. The same resolve that walked me into operating rooms is the resolve that got me here: lighter, stronger, and lining up for 26.2 with Team CURE Epilepsy.</p>
         <p>Epilepsy tried to write my limits. The scale tried too. I’m still rewriting both.</p>
+
+        <div class="weight-photos reveal">
+          <figure class="weight-photos__main">
+            <img src="epilepsy-sucks-images/fat-me1.JPG" alt="Before and after weight loss comparison" />
+            <figcaption>Before &amp; after — 368 lb to 214 lb</figcaption>
+          </figure>
+          <div class="weight-photos__row">
+            <figure>
+              <img src="epilepsy-sucks-images/fat-me2.jpeg" alt="Family gathering during the weight loss journey" />
+              <figcaption>Along the way</figcaption>
+            </figure>
+            <figure>
+              <img src="epilepsy-sucks-images/fat-me3.jpeg" alt="Cooking outdoors with friends during the journey" />
+              <figcaption>Still showing up</figcaption>
+            </figure>
+          </div>
+        </div>
 
         <div class="weight-chart reveal">
           <p class="weight-chart__title">The weigh-ins — Aug 2023 to Aug 2026</p>
