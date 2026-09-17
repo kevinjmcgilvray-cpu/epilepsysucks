@@ -1832,25 +1832,6 @@
     }
     highlightEpiWords(document.body);
 
-    (function syncFundraisingTotals() {
-      const raisedEl = document.getElementById("funds-raised");
-      const goalEl = document.getElementById("funds-goal");
-      const raisedMeta = document.getElementById("funds-raised-meta");
-      const goalMeta = document.getElementById("funds-goal-meta");
-      if (!raisedEl || !goalEl) return;
-
-      fetch("/api/raised")
-        .then((res) => (res.ok ? res.json() : null))
-        .then((data) => {
-          if (!data || !data.ok) return;
-          raisedEl.textContent = data.raisedFormatted;
-          goalEl.textContent = data.goalFormatted;
-          if (raisedMeta) raisedMeta.textContent = data.raisedFormatted;
-          if (goalMeta) goalMeta.textContent = data.goalFormatted;
-        })
-        .catch(() => {});
-    })();
-
     (function initFundraisingCountdown() {
       const daysEl = document.getElementById("days-remaining");
       const countdownEl = document.getElementById("nav-countdown");
