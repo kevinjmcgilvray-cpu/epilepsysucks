@@ -200,15 +200,12 @@
       letter-spacing: 0.01em;
       color: var(--paper-dim);
       padding: 0.15rem 0.5rem 0.1rem;
+      margin: 0;
     }
 
     .nav__countdown strong {
       color: var(--epi);
       font-weight: 600;
-    }
-
-    .nav__countdown:hover {
-      color: var(--paper);
     }
 
     .nav__links {
@@ -1342,16 +1339,9 @@
         <li><a class="nav__cta" href="https://haku.ly/9795a39b3b" target="_blank" rel="noopener noreferrer">Donate</a></li>
       </ul>
     </div>
-    <a
-      class="nav__countdown"
-      id="nav-countdown"
-      href="https://fundraisers.hakuapp.com/Kevin-McGilvray"
-      target="_blank"
-      rel="noopener noreferrer"
-      data-end-date="2027-04-30"
-    >
+    <p class="nav__countdown" id="nav-countdown" data-end-date="2027-04-30">
       Only <strong id="days-remaining">226</strong> <span id="days-remaining-label">days</span> remaining to help Kevin McGilvray reach his fundraising goal
-    </a>
+    </p>
   </header>
 
   <main id="top">
@@ -1776,20 +1766,27 @@
       const goalEl = document.getElementById("funds-goal");
       const raisedMeta = document.getElementById("funds-raised-meta");
       const goalMeta = document.getElementById("funds-goal-meta");
-      const daysEl = document.getElementById("days-remaining");
-      const countdownEl = document.getElementById("nav-countdown");
       if (!raisedEl || !goalEl) return;
 
-      const STORAGE_KEY = "epilepsy-fundraiser-end-date-v2";
-      let endDate =
-        (countdownEl && countdownEl.dataset.endDate) ||
-        null;
+      fetch("/api/raised")
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (!data || !data.ok) return;
+          raisedEl.textContent = data.raisedFormatted;
+          goalEl.textContent = data.goalFormatted;
+          if (raisedMeta) raisedMeta.textContent = data.raisedFormatted;
+          if (goalMeta) goalMeta.textContent = data.goalFormatted;
+        })
+        .catch(() => {});
+    })();
 
-      try {
-        endDate = endDate || localStorage.getItem(STORAGE_KEY) || "2027-04-30";
-      } catch (e) {
-        endDate = endDate || "2027-04-30";
-      }
+    (function initFundraisingCountdown() {
+      const daysEl = document.getElementById("days-remaining");
+      const countdownEl = document.getElementById("nav-countdown");
+      if (!daysEl || !countdownEl) return;
+
+      // Standalone countdown: 226 days from Sep 16, 2026 (Pacific) → April 30, 2027.
+      const END_DATE = countdownEl.dataset.endDate || "2027-04-30";
 
       function pacificTodayYmd() {
         return new Intl.DateTimeFormat("en-CA", {
@@ -1801,57 +1798,31 @@
       }
 
       function daysUntil(isoDate) {
-        const endParts = String(isoDate || "").split("-").map(Number);
+        const endParts = String(isoDate).split("-").map(Number);
         const todayParts = pacificTodayYmd().split("-").map(Number);
         if (endParts.length !== 3 || todayParts.length !== 3) return null;
-        if (endParts.some((n) => Number.isNaN(n)) || todayParts.some((n) => Number.isNaN(n))) {
-          return null;
-        }
         const end = Date.UTC(endParts[0], endParts[1] - 1, endParts[2]);
         const today = Date.UTC(todayParts[0], todayParts[1] - 1, todayParts[2]);
         return Math.max(0, Math.round((end - today) / 86400000));
       }
 
       function renderDays(days) {
-        if (!daysEl || days == null || Number.isNaN(days)) return;
+        if (days == null || Number.isNaN(days)) return;
         daysEl.textContent = String(days);
         const labelEl = document.getElementById("days-remaining-label");
         if (labelEl) labelEl.textContent = days === 1 ? "day" : "days";
-        if (countdownEl) {
-          countdownEl.setAttribute(
-            "aria-label",
-            `Only ${days} ${days === 1 ? "day" : "days"} remaining to help Kevin McGilvray reach his fundraising goal`
-          );
-        }
+        countdownEl.setAttribute(
+          "aria-label",
+          `Only ${days} ${days === 1 ? "day" : "days"} remaining to help Kevin McGilvray reach his fundraising goal`
+        );
       }
 
       function refreshCountdown() {
-        renderDays(daysUntil(endDate));
+        renderDays(daysUntil(END_DATE));
       }
 
       refreshCountdown();
-      // Recheck around midnight so the number drops each day without a refresh.
       setInterval(refreshCountdown, 60 * 1000);
-
-      fetch("/api/raised")
-        .then((res) => (res.ok ? res.json() : null))
-        .then((data) => {
-          if (!data || !data.ok) return;
-          raisedEl.textContent = data.raisedFormatted;
-          goalEl.textContent = data.goalFormatted;
-          if (raisedMeta) raisedMeta.textContent = data.raisedFormatted;
-          if (goalMeta) goalMeta.textContent = data.goalFormatted;
-          if (data.endDate) {
-            endDate = data.endDate;
-            try {
-              localStorage.setItem(STORAGE_KEY, endDate);
-              localStorage.removeItem("epilepsy-fundraiser-end-date");
-            } catch (e) {}
-            if (countdownEl) countdownEl.dataset.endDate = endDate;
-          }
-          refreshCountdown();
-        })
-        .catch(() => {});
     })();
 
     (function initWeightChartHover() {
