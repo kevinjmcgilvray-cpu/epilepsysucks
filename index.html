@@ -361,6 +361,17 @@
       mix-blend-mode: multiply;
     }
 
+    @media (max-width: 800px) {
+      .hero__mri {
+        width: min(72vw, 22rem);
+        opacity: 0.28;
+      }
+
+      html[data-theme="light"] .hero__mri {
+        opacity: 0.24;
+      }
+    }
+
     .bg-word {
       position: absolute;
       inset: 0;
