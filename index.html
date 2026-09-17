@@ -227,8 +227,8 @@
       align-items: center;
       padding: 0.55rem 1rem;
       border: 1px solid var(--epi);
-      background: var(--epi);
-      color: var(--btn-on-color);
+      background: var(--epi) !important;
+      color: var(--btn-on-color) !important;
       font-size: 0.85rem;
       letter-spacing: 0.04em;
       text-transform: uppercase;
@@ -236,9 +236,13 @@
     }
 
     .nav__cta:hover {
-      background: #8350e6;
+      background: #8350e6 !important;
       border-color: #8350e6;
-      color: var(--btn-on-color);
+      color: var(--btn-on-color) !important;
+    }
+
+    .nav__links a.nav__cta:hover {
+      color: var(--btn-on-color) !important;
     }
 
     .nav__theme {
@@ -1355,7 +1359,7 @@
         <div class="hero__actions">
           <a class="btn btn--purple" href="#story">Read my story</a>
           <a class="btn btn--purple" href="/game">Play game</a>
-          <a class="btn btn--ghost" href="https://haku.ly/9795a39b3b" target="_blank" rel="noopener noreferrer">Donate</a>
+          <a class="btn btn--purple" href="https://haku.ly/9795a39b3b" target="_blank" rel="noopener noreferrer">Donate</a>
         </div>
       </div>
     </section>
@@ -1627,7 +1631,7 @@
         <p>A short browser game about breaking epilepsy’s chains — run, collect Hope, dodge the static storms, and keep going. Built for awareness, not for mocking seizures.</p>
         <div class="hero__actions" style="justify-content: flex-start; margin-top: 1.5rem; animation: none;">
           <a class="btn btn--purple" href="/game">Play Chain Breaker</a>
-          <a class="btn btn--ghost" href="https://haku.ly/9795a39b3b" target="_blank" rel="noopener noreferrer">Donate to CURE</a>
+          <a class="btn btn--purple" href="https://haku.ly/9795a39b3b" target="_blank" rel="noopener noreferrer">Donate to CURE</a>
         </div>
       </div>
     </section>
