@@ -552,123 +552,6 @@
       background: var(--surface-muted);
     }
 
-    .seizure-stage {
-      margin: 2.25rem auto 0;
-      max-width: min(22rem, 92vw);
-    }
-
-    .seizure-stage__frame {
-      position: relative;
-      border: 1px solid var(--line);
-      overflow: hidden;
-      background: #0a0908;
-      isolation: isolate;
-      box-shadow:
-        0 0 0 1px color-mix(in srgb, var(--epi) 18%, transparent),
-        0 24px 60px rgba(0, 0, 0, 0.35);
-      transform: translateY(0.75rem) scale(0.985);
-      opacity: 0.88;
-      transition:
-        transform 0.9s cubic-bezier(0.22, 1, 0.36, 1),
-        opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
-        box-shadow 0.45s ease;
-    }
-
-    .seizure-stage.is-in .seizure-stage__frame {
-      transform: translateY(0) scale(1);
-      opacity: 1;
-    }
-
-    .seizure-stage__frame::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      z-index: 2;
-      pointer-events: none;
-      background:
-        radial-gradient(ellipse 80% 70% at 50% 40%, transparent 35%, rgba(0, 0, 0, 0.35) 100%),
-        linear-gradient(180deg, rgba(0, 0, 0, 0.15), transparent 30%, transparent 70%, rgba(0, 0, 0, 0.45));
-    }
-
-    .seizure-stage__frame::after {
-      content: "";
-      position: absolute;
-      inset: -20%;
-      z-index: 0;
-      pointer-events: none;
-      background: radial-gradient(circle at 50% 45%, color-mix(in srgb, var(--epi) 28%, transparent), transparent 55%);
-      opacity: 0.55;
-      animation: seizure-glow 5.5s ease-in-out infinite alternate;
-    }
-
-    .seizure-stage video {
-      position: relative;
-      z-index: 1;
-      display: block;
-      width: 100%;
-      height: auto;
-      max-height: min(72vh, 34rem);
-      object-fit: cover;
-      background: #0a0908;
-    }
-
-    .seizure-stage__play {
-      position: absolute;
-      inset: 0;
-      z-index: 3;
-      display: grid;
-      place-items: center;
-      border: 0;
-      background: rgba(10, 9, 8, 0.28);
-      cursor: pointer;
-      transition: opacity 0.35s ease, background 0.35s ease;
-    }
-
-    .seizure-stage__play[hidden] {
-      display: none;
-    }
-
-    .seizure-stage__play span {
-      display: grid;
-      place-items: center;
-      width: 4.25rem;
-      height: 4.25rem;
-      border-radius: 999px;
-      border: 1px solid color-mix(in srgb, var(--epi) 70%, white);
-      background: color-mix(in srgb, var(--epi) 88%, black);
-      color: var(--btn-on-color);
-      font-size: 0.75rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
-      transform: scale(1);
-      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), background 0.25s ease;
-    }
-
-    .seizure-stage__play:hover span,
-    .seizure-stage__play:focus-visible span {
-      transform: scale(1.06);
-      background: var(--epi);
-    }
-
-    .seizure-stage__play:focus-visible {
-      outline: none;
-    }
-
-    .seizure-stage figcaption {
-      margin-top: 0.85rem;
-      text-align: center;
-      font-size: 0.85rem;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: var(--paper-faint);
-    }
-
-    @keyframes seizure-glow {
-      from { opacity: 0.35; transform: scale(0.96); }
-      to { opacity: 0.7; transform: scale(1.04); }
-    }
-
     .weight-chart {
       margin-top: 2.75rem;
       padding-top: 2rem;
@@ -1407,18 +1290,6 @@
         transition: none;
       }
 
-      .seizure-stage__frame,
-      .seizure-stage__frame::after,
-      .seizure-stage__play span {
-        animation: none;
-        transition: none;
-      }
-
-      .seizure-stage__frame {
-        transform: none;
-        opacity: 1;
-      }
-
       .chapter__photo,
       .weight-photos__main,
       .weight-photos__row figure,
@@ -1558,26 +1429,6 @@
         <p class="eyebrow">The hard truth</p>
         <h2>What it’s like to have a seizure</h2>
         <p>What it’s like to have a seizure is <span class="key">terrifying</span>. You are <span class="key">hopeless</span>. You <span class="key">cannot control your body</span>, and your mind is racing because you are fearful of what will happen. You know that you are going to have a seizure — and <span class="key">there’s nothing you can do about it</span>.</p>
-
-        <figure class="seizure-stage reveal">
-          <div class="seizure-stage__frame">
-            <video
-              id="seizure-video"
-              src="epilepsy-sucks-images/seizures.mp4"
-              poster="epilepsy-sucks-images/seizures-poster.jpg"
-              controls
-              playsinline
-              preload="metadata"
-              controlslist="nodownload"
-            >
-              Your browser does not support the video tag.
-            </video>
-            <button class="seizure-stage__play" id="seizure-play" type="button" aria-label="Play seizure clip">
-              <span>Play</span>
-            </button>
-          </div>
-          <figcaption>A real seizure — short clip with sound</figcaption>
-        </figure>
       </div>
     </section>
 
@@ -1909,35 +1760,6 @@
       walk(root);
     }
     highlightEpiWords(document.body);
-
-    (function initSeizureStage() {
-      const video = document.getElementById("seizure-video");
-      const playBtn = document.getElementById("seizure-play");
-      if (!video || !playBtn) return;
-
-      const hidePlay = () => {
-        playBtn.hidden = true;
-      };
-      const showPlay = () => {
-        if (video.paused) playBtn.hidden = false;
-      };
-
-      playBtn.addEventListener("click", () => {
-        video.muted = false;
-        const playPromise = video.play();
-        if (playPromise && typeof playPromise.then === "function") {
-          playPromise.then(hidePlay).catch(() => {});
-        } else {
-          hidePlay();
-        }
-      });
-
-      video.addEventListener("play", hidePlay);
-      video.addEventListener("pause", showPlay);
-      video.addEventListener("ended", () => {
-        showPlay();
-      });
-    })();
 
     (function syncFundraisingTotals() {
       const raisedEl = document.getElementById("funds-raised");
