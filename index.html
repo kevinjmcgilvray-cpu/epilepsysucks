@@ -925,6 +925,68 @@
       line-height: 1.55;
     }
 
+    .owner-update {
+      margin: 1.75rem 0 0;
+      padding: 1.25rem 0 1.5rem;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .owner-update__label {
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--epi);
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+
+    .owner-update__meta {
+      font-size: 0.85rem;
+      color: var(--paper-faint);
+      margin-bottom: 0.75rem;
+    }
+
+    .owner-update__body {
+      color: var(--paper);
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      line-height: 1.55;
+      font-size: 1.05rem;
+    }
+
+    .owner-update-form {
+      margin-top: 2rem;
+      max-width: 36rem;
+      border-top: 1px solid var(--line);
+      padding-top: 1rem;
+    }
+
+    .owner-update-form summary {
+      cursor: pointer;
+      list-style: none;
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--paper-faint);
+      padding: 0.35rem 0;
+    }
+
+    .owner-update-form summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .owner-update-form[open] summary {
+      color: var(--paper-dim);
+      margin-bottom: 1rem;
+    }
+
+    .owner-update-form .comment-form {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: none;
+    }
+
     .comment-form {
       margin-top: 2.25rem;
       padding-top: 1.75rem;
@@ -1458,6 +1520,12 @@
         <h2>Comments</h2>
         <p>If my story landed with you — leave a note. Others can read it here too.</p>
 
+        <aside class="owner-update" id="owner-update" hidden>
+          <p class="owner-update__label">Latest update from Kevin</p>
+          <p class="owner-update__meta"><time id="owner-update-date"></time></p>
+          <p class="owner-update__body" id="owner-update-body"></p>
+        </aside>
+
         <div id="comments-status" class="comments-list__status" aria-live="polite">Loading comments…</div>
         <ul class="comments-list" id="comments-list" hidden></ul>
 
@@ -1482,6 +1550,25 @@
           </div>
           <p class="comment-form__error" id="comment-error" hidden></p>
         </form>
+
+        <details class="owner-update-form" id="owner-update-form-wrap">
+          <summary>Kevin — post a latest update</summary>
+          <form class="comment-form" id="owner-update-form" novalidate>
+            <label>
+              Password
+              <input id="owner-update-password" name="password" type="password" required autocomplete="current-password" placeholder="Your update password" />
+            </label>
+            <label>
+              Your update to viewers
+              <textarea id="owner-update-message" name="message" maxlength="2000" required placeholder="Write the latest update you want everyone to see"></textarea>
+            </label>
+            <div class="comment-form__actions">
+              <button class="btn btn--purple" type="submit" id="owner-update-submit">Post update</button>
+              <span class="comment-form__note">Replaces the previous latest update.</span>
+            </div>
+            <p class="comment-form__error" id="owner-update-error" hidden></p>
+          </form>
+        </details>
       </div>
     </section>
 
@@ -1890,6 +1977,115 @@
       });
 
       loadComments();
+    })();
+
+    (function initOwnerUpdate() {
+      const box = document.getElementById("owner-update");
+      const bodyEl = document.getElementById("owner-update-body");
+      const dateEl = document.getElementById("owner-update-date");
+      const form = document.getElementById("owner-update-form");
+      const errorEl = document.getElementById("owner-update-error");
+      const submitBtn = document.getElementById("owner-update-submit");
+      if (!box || !bodyEl || !form) return;
+
+      function escapeHtml(value) {
+        return String(value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      function formatDate(iso) {
+        try {
+          return new Date(iso).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric"
+          });
+        } catch (e) {
+          return "";
+        }
+      }
+
+      function renderUpdate(update) {
+        if (!update || !update.body) {
+          box.hidden = true;
+          bodyEl.textContent = "";
+          if (dateEl) dateEl.textContent = "";
+          return;
+        }
+        box.hidden = false;
+        bodyEl.textContent = update.body;
+        if (dateEl) {
+          dateEl.dateTime = update.updatedAt || "";
+          dateEl.textContent = formatDate(update.updatedAt);
+        }
+      }
+
+      function showError(message) {
+        if (!errorEl) return;
+        if (!message) {
+          errorEl.hidden = true;
+          errorEl.textContent = "";
+          return;
+        }
+        errorEl.hidden = false;
+        errorEl.textContent = message;
+      }
+
+      function loadUpdate() {
+        return fetch("/api/update")
+          .then((res) => res.json())
+          .then((data) => {
+            if (!data || !data.ok) return;
+            renderUpdate(data.update);
+          })
+          .catch(() => {});
+      }
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        showError("");
+
+        const password = (form.password.value || "").trim();
+        const message = (form.message.value || "").trim();
+        if (!password || message.length < 2) {
+          showError("Enter your password and an update message.");
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Posting…";
+
+        fetch("/api/update", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ password, message })
+        })
+          .then((res) => res.json().then((data) => ({ res, data })))
+          .then(({ res, data }) => {
+            if (!res.ok || !data || !data.ok) {
+              throw new Error((data && data.error) || "Could not post update");
+            }
+            renderUpdate(data.update);
+            form.message.value = "";
+            showError("");
+            const wrap = document.getElementById("owner-update-form-wrap");
+            if (wrap) wrap.open = false;
+            box.scrollIntoView({ behavior: "smooth", block: "center" });
+          })
+          .catch((err) => {
+            showError(err.message || "Could not post update. Please try again.");
+          })
+          .finally(() => {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Post update";
+          });
+      });
+
+      loadUpdate();
     })();
 
     (function initPhotoLiftOnScroll() {
