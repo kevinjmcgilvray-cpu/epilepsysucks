@@ -340,6 +340,27 @@
       opacity: 0.22;
     }
 
+    .hero__mri {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: min(48vw, 34rem);
+      z-index: 1;
+      pointer-events: none;
+      background:
+        url("epilepsy-sucks-images/cerebral-hemiatrophy-mri.png") left center / cover no-repeat;
+      opacity: 0.42;
+      -webkit-mask-image: linear-gradient(to right, #000 0%, #000 42%, transparent 100%);
+      mask-image: linear-gradient(to right, #000 0%, #000 42%, transparent 100%);
+      animation: visual-in 1.8s ease both;
+    }
+
+    html[data-theme="light"] .hero__mri {
+      opacity: 0.34;
+      mix-blend-mode: multiply;
+    }
+
     .bg-word {
       position: absolute;
       inset: 0;
@@ -1313,7 +1334,8 @@
       .hero__content h1,
       .hero__content > p,
       .hero__actions,
-      .hero__visual {
+      .hero__visual,
+      .hero__mri {
         animation: none;
       }
 
@@ -1395,6 +1417,11 @@
   <main id="top">
     <section class="hero" aria-label="Introduction">
       <div class="hero__visual" aria-hidden="true"></div>
+      <div
+        class="hero__mri"
+        role="img"
+        aria-label="Illustrative MRI showing cerebral hemiatrophy — one half of the brain smaller than the other"
+      ></div>
       <div class="bg-word" aria-hidden="true"><span>Sucks</span></div>
       <div class="hero__content">
         <h1>Epilepsy</h1>
