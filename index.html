@@ -197,12 +197,7 @@
       gap: 0.45rem;
       max-width: 100%;
       margin-top: 0.15rem;
-      text-decoration: none;
       color: var(--paper-dim);
-    }
-
-    .nav__cause:hover {
-      color: var(--paper);
     }
 
     .nav__cause-logo {
@@ -1369,12 +1364,7 @@
           <strong id="funds-raised">$1,851</strong>
           <span>raised of <span id="funds-goal">$3,000</span></span>
         </a>
-        <a
-          class="nav__cause"
-          href="https://fundraisers.hakuapp.com/Kevin-McGilvray"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <div class="nav__cause">
           <img
             class="nav__cause-logo"
             src="epilepsy-sucks-images/cure-epilepsy-logo.svg"
@@ -1383,7 +1373,7 @@
             height="54"
           />
           <span class="nav__cause-text">Kevin J Mcgilvray is fundraising for CURE Epilepsy</span>
-        </a>
+        </div>
       </div>
       <button class="nav__toggle" id="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
       <ul class="nav__links" id="nav-links">
@@ -1831,6 +1821,25 @@
       walk(root);
     }
     highlightEpiWords(document.body);
+
+    (function syncFundraisingTotals() {
+      const raisedEl = document.getElementById("funds-raised");
+      const goalEl = document.getElementById("funds-goal");
+      const raisedMeta = document.getElementById("funds-raised-meta");
+      const goalMeta = document.getElementById("funds-goal-meta");
+      if (!raisedEl || !goalEl) return;
+
+      fetch("/api/raised")
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (!data || !data.ok) return;
+          raisedEl.textContent = data.raisedFormatted;
+          goalEl.textContent = data.goalFormatted;
+          if (raisedMeta) raisedMeta.textContent = data.raisedFormatted;
+          if (goalMeta) goalMeta.textContent = data.goalFormatted;
+        })
+        .catch(() => {});
+    })();
 
     (function initFundraisingCountdown() {
       const daysEl = document.getElementById("days-remaining");
