@@ -843,6 +843,118 @@
       min-width: 5.5rem;
     }
 
+    .comments-list {
+      list-style: none;
+      margin: 2rem 0 0;
+      display: grid;
+      gap: 1.25rem;
+    }
+
+    .comments-list__empty,
+    .comments-list__status {
+      color: var(--paper-dim);
+      font-size: 0.95rem;
+    }
+
+    .comment-item {
+      padding: 1rem 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .comment-item:first-child {
+      border-top: none;
+      padding-top: 0;
+    }
+
+    .comment-item__meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem 0.85rem;
+      align-items: baseline;
+      margin-bottom: 0.45rem;
+      font-size: 0.85rem;
+      color: var(--paper-faint);
+    }
+
+    .comment-item__name {
+      color: var(--epi);
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .comment-item__body {
+      color: var(--paper);
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      line-height: 1.55;
+    }
+
+    .comment-form {
+      margin-top: 2.25rem;
+      padding-top: 1.75rem;
+      border-top: 1px solid var(--line);
+      display: grid;
+      gap: 1rem;
+      max-width: 36rem;
+    }
+
+    .comment-form label {
+      display: grid;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--paper-dim);
+    }
+
+    .comment-form input,
+    .comment-form textarea {
+      width: 100%;
+      padding: 0.75rem 0.85rem;
+      border: 1px solid var(--line);
+      background: var(--surface-muted);
+      color: var(--paper);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      line-height: 1.45;
+      border-radius: 0;
+    }
+
+    .comment-form input:focus,
+    .comment-form textarea:focus {
+      outline: 2px solid var(--epi);
+      outline-offset: 2px;
+    }
+
+    .comment-form textarea {
+      min-height: 7rem;
+      resize: vertical;
+    }
+
+    .comment-form__hp {
+      position: absolute;
+      left: -10000px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .comment-form__actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.85rem 1.25rem;
+    }
+
+    .comment-form__note {
+      font-size: 0.85rem;
+      color: var(--paper-faint);
+    }
+
+    .comment-form__error {
+      color: var(--accent);
+      font-size: 0.9rem;
+    }
+
     .support-list {
       list-style: none;
       margin-top: 2.5rem;
@@ -1065,6 +1177,7 @@
       <li><a href="#freedom">Freedom</a></li>
       <li><a href="#weight">Weight loss</a></li>
       <li><a href="#marathon">LA Marathon</a></li>
+      <li><a href="#comments">Comments</a></li>
       <li><button class="nav__theme" id="theme-toggle" type="button" aria-label="Switch color theme">Dark</button></li>
       <li><a class="nav__cta" href="https://haku.ly/9795a39b3b" target="_blank" rel="noopener noreferrer">Donate</a></li>
     </ul>
@@ -1294,6 +1407,39 @@
             <img src="epilepsy-sucks-images/IMG_5739.jpeg" alt="Kevin after a race, thumbs up on the beach in bib 202" />
           </div>
         </div>
+      </div>
+    </section>
+
+    <section class="section section--alt" id="comments">
+      <div class="section__inner reveal">
+        <p class="eyebrow">Community</p>
+        <h2>Comments</h2>
+        <p>If my story landed with you — leave a note. Others can read it here too.</p>
+
+        <div id="comments-status" class="comments-list__status" aria-live="polite">Loading comments…</div>
+        <ul class="comments-list" id="comments-list" hidden></ul>
+
+        <form class="comment-form" id="comment-form" novalidate>
+          <p class="comment-form__hp" aria-hidden="true">
+            <label>
+              Website
+              <input type="text" name="website" tabindex="-1" autocomplete="off" />
+            </label>
+          </p>
+          <label>
+            Name
+            <input id="comment-name" name="name" type="text" maxlength="40" required autocomplete="name" placeholder="Your name" />
+          </label>
+          <label>
+            Message
+            <textarea id="comment-message" name="message" maxlength="1000" required placeholder="Share a thought about Kevin’s story"></textarea>
+          </label>
+          <div class="comment-form__actions">
+            <button class="btn btn--purple" type="submit" id="comment-submit">Post comment</button>
+            <span class="comment-form__note">No account needed.</span>
+          </div>
+          <p class="comment-form__error" id="comment-error" hidden></p>
+        </form>
       </div>
     </section>
 
@@ -1572,6 +1718,136 @@
         group.addEventListener("focus", () => showTip(point, group));
         group.addEventListener("blur", hideTip);
       });
+    })();
+
+    (function initComments() {
+      const listEl = document.getElementById("comments-list");
+      const statusEl = document.getElementById("comments-status");
+      const form = document.getElementById("comment-form");
+      const errorEl = document.getElementById("comment-error");
+      const submitBtn = document.getElementById("comment-submit");
+      if (!listEl || !statusEl || !form) return;
+
+      function escapeHtml(value) {
+        return String(value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      function formatDate(iso) {
+        try {
+          return new Date(iso).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric"
+          });
+        } catch (e) {
+          return "";
+        }
+      }
+
+      function renderComments(comments) {
+        if (!comments.length) {
+          listEl.hidden = true;
+          listEl.innerHTML = "";
+          statusEl.hidden = false;
+          statusEl.textContent = "No comments yet — be the first.";
+          statusEl.className = "comments-list__empty";
+          return;
+        }
+
+        statusEl.hidden = true;
+        listEl.hidden = false;
+        listEl.innerHTML = comments
+          .map(
+            (c) =>
+              `<li class="comment-item">` +
+              `<div class="comment-item__meta">` +
+              `<span class="comment-item__name">${escapeHtml(c.name)}</span>` +
+              `<time datetime="${escapeHtml(c.createdAt || "")}">${escapeHtml(formatDate(c.createdAt))}</time>` +
+              `</div>` +
+              `<p class="comment-item__body">${escapeHtml(c.body)}</p>` +
+              `</li>`
+          )
+          .join("");
+      }
+
+      function showError(message) {
+        if (!errorEl) return;
+        if (!message) {
+          errorEl.hidden = true;
+          errorEl.textContent = "";
+          return;
+        }
+        errorEl.hidden = false;
+        errorEl.textContent = message;
+      }
+
+      function loadComments() {
+        statusEl.hidden = false;
+        statusEl.className = "comments-list__status";
+        statusEl.textContent = "Loading comments…";
+        return fetch("/api/comments")
+          .then((res) => res.json())
+          .then((data) => {
+            if (!data || !data.ok) {
+              statusEl.textContent = "Comments are temporarily unavailable.";
+              return;
+            }
+            renderComments(data.comments || []);
+          })
+          .catch(() => {
+            statusEl.hidden = false;
+            statusEl.textContent = "Comments are temporarily unavailable.";
+          });
+      }
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        showError("");
+
+        const name = (form.name.value || "").trim();
+        const message = (form.message.value || "").trim();
+        const website = (form.website && form.website.value) || "";
+
+        if (name.length < 2 || message.length < 2) {
+          showError("Please enter your name and a short message.");
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Posting…";
+
+        fetch("/api/comments", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, message, website })
+        })
+          .then((res) => res.json().then((data) => ({ res, data })))
+          .then(({ res, data }) => {
+            if (!res.ok || !data || !data.ok) {
+              throw new Error((data && data.error) || "Could not post comment");
+            }
+            if (data.ignored) {
+              form.reset();
+              return;
+            }
+            form.reset();
+            return loadComments();
+          })
+          .catch((err) => {
+            showError(err.message || "Could not post comment. Please try again.");
+          })
+          .finally(() => {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Post comment";
+          });
+      });
+
+      loadComments();
     })();
   </script>
 </body>
