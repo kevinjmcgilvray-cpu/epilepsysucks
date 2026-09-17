@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Chain Breaker — Epilepsy Sucks</title>
+  <meta name="description" content="A short browser game about breaking epilepsy’s chains — run, collect hope, and keep going for CURE Epilepsy." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #14110f;
+      --ink-2: #1c1916;
+      --paper: #ebe4d8;
+      --paper-dim: rgba(235, 228, 216, 0.72);
+      --paper-faint: rgba(235, 228, 216, 0.45);
+      --epi: #9b6bff;
+      --epi-deep: #6d3fe8;
+      --accent: #c43b2c;
+      --line: rgba(235, 228, 216, 0.12);
+      --good: #7dcea0;
+      --font-display: "Bebas Neue", sans-serif;
+      --font-body: "DM Sans", sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      min-height: 100%;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% 0%, rgba(155, 107, 255, 0.16), transparent 55%),
+        linear-gradient(165deg, #1a1613 0%, var(--ink) 45%, var(--ink-2) 100%);
+      color: var(--paper);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .wrap {
+      width: min(960px, 100%);
+      margin: 0 auto;
+      padding: 1.25rem 1rem 2.5rem;
+    }
+
+    .top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .brand {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .brand span { color: var(--epi); }
+
+    .top-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem 1rem;
+      align-items: center;
+      font-size: 0.9rem;
+      color: var(--paper-dim);
+    }
+
+    .top-links a:hover { color: var(--paper); }
+
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.55rem 1rem;
+      border: 1px solid var(--epi);
+      background: var(--epi);
+      color: #f7f3ec;
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .cta:hover { background: #8350e6; border-color: #8350e6; }
+
+    .intro {
+      max-width: 40rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .intro .eyebrow {
+      font-size: 0.8rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--epi);
+      margin-bottom: 0.35rem;
+    }
+
+    .intro h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 8vw, 4rem);
+      letter-spacing: 0.06em;
+      line-height: 0.95;
+      text-transform: uppercase;
+      margin-bottom: 0.65rem;
+    }
+
+    .intro p {
+      color: var(--paper-dim);
+      line-height: 1.55;
+      font-size: 1rem;
+    }
+
+    .stage {
+      position: relative;
+      border: 1px solid var(--line);
+      background: #0c0b0a;
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+      touch-action: manipulation;
+      width: 100%;
+      aspect-ratio: 900 / 520;
+      min-height: 260px;
+      max-height: min(70vh, 560px);
+    }
+
+    canvas {
+      display: block;
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      vertical-align: middle;
+    }
+
+    .hud {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 0.85rem 1rem;
+      z-index: 2;
+    }
+
+    .hud-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--paper-dim);
+      text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+    }
+
+    .hud-row strong {
+      color: var(--epi);
+      font-weight: 600;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      background: rgba(12, 11, 10, 0.78);
+      backdrop-filter: blur(6px);
+    }
+
+    .overlay[hidden] { display: none !important; }
+
+    .panel {
+      width: min(26rem, 100%);
+      text-align: center;
+      border: 1px solid var(--line);
+      background: rgba(28, 25, 22, 0.96);
+      padding: 1.25rem 1rem;
+      margin: auto;
+    }
+
+    .jump-btn {
+      display: none;
+      position: absolute;
+      right: 0.85rem;
+      bottom: 0.85rem;
+      z-index: 4;
+      width: 4.5rem;
+      height: 4.5rem;
+      border-radius: 999px;
+      border: 1px solid color-mix(in srgb, var(--epi) 70%, white);
+      background: color-mix(in srgb, var(--epi) 90%, black);
+      color: #f7f3ec;
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+      touch-action: manipulation;
+    }
+
+    .jump-btn:active { transform: scale(0.96); }
+
+    @media (max-width: 800px) {
+      .wrap { padding: 0.85rem 0.75rem 2rem; }
+      .stage {
+        aspect-ratio: 3 / 4;
+        max-height: none;
+        min-height: 420px;
+      }
+      .jump-btn { display: grid; place-items: center; }
+      .panel h2 { font-size: 2rem; }
+      .hud-row { font-size: 0.72rem; }
+      button.btn, .actions a.btn {
+        min-height: 2.75rem;
+        padding: 0.85rem 1.1rem;
+      }
+    }
+
+    .panel h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 6vw, 2.75rem);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .panel p {
+      color: var(--paper-dim);
+      line-height: 1.5;
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+    }
+
+    .panel .stats {
+      display: grid;
+      gap: 0.35rem;
+      margin: 0.75rem 0 1.15rem;
+      color: var(--paper-faint);
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .panel .stats strong { color: var(--epi); }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      justify-content: center;
+    }
+
+    button.btn {
+      appearance: none;
+      border: 1px solid transparent;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 0.75rem 1.2rem;
+      cursor: pointer;
+      background: var(--epi);
+      color: #f7f3ec;
+    }
+
+    button.btn:hover { background: #8350e6; }
+
+    button.btn-ghost {
+      background: transparent;
+      border-color: var(--line);
+      color: var(--paper);
+    }
+
+    button.btn-ghost:hover { border-color: var(--paper-faint); }
+
+    .help {
+      margin-top: 1rem;
+      color: var(--paper-faint);
+      font-size: 0.85rem;
+      line-height: 1.45;
+    }
+
+    .help kbd {
+      display: inline-block;
+      padding: 0.1rem 0.4rem;
+      border: 1px solid var(--line);
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      color: var(--paper-dim);
+    }
+
+    .note {
+      margin-top: 1.25rem;
+      max-width: 40rem;
+      color: var(--paper-faint);
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <a class="brand" href="/">Epilepsy <span>Sucks</span></a>
+      <div class="top-links">
+        <a href="/#story">Kevin’s story</a>
+        <a href="/#marathon">LA Marathon</a>
+        <a class="cta" href="https://haku.ly/9795a39b3b" target="_blank" rel="noopener noreferrer">Donate</a>
+      </div>
+    </div>
+
+    <div class="intro">
+      <p class="eyebrow">A short game</p>
+      <h1>Chain Breaker</h1>
+      <p>
+        Epilepsy tries to bind you. In this game you run forward anyway —
+        collect <strong style="color:var(--epi)">Hope</strong>, dodge the static storms,
+        and keep your chains from closing in. Made for awareness, not for mocking seizures.
+      </p>
+    </div>
+
+    <div class="stage" id="stage">
+      <canvas id="game" width="900" height="520" aria-label="Chain Breaker game canvas"></canvas>
+      <div class="hud" aria-hidden="true">
+        <div class="hud-row">
+          <div>Miles <strong id="hud-miles">0.0</strong></div>
+          <div>Hope <strong id="hud-hope">0</strong></div>
+          <div>Lives <strong id="hud-lives">3</strong></div>
+        </div>
+        <div class="hud-row">
+          <div>Goal <strong>26.2</strong></div>
+          <div id="hud-hint">Tap Jump</div>
+        </div>
+      </div>
+
+      <button class="jump-btn" id="btn-jump" type="button" aria-label="Jump" hidden>Jump</button>
+
+      <div class="overlay" id="overlay-start">
+        <div class="panel">
+          <h2>Break the chains</h2>
+          <p>Jump the static storms. Grab purple Hope. Reach marathon distance — or go as far as you can.</p>
+          <div class="actions">
+            <button class="btn" id="btn-start" type="button">Start run</button>
+            <a class="btn btn-ghost" style="display:inline-flex;align-items:center;" href="https://haku.ly/9795a39b3b" target="_blank" rel="noopener noreferrer">Donate to CURE</a>
+          </div>
+          <p class="help">Desktop: <kbd>Space</kbd> / <kbd>↑</kbd> to jump · Mobile: tap the game</p>
+        </div>
+      </div>
+
+      <div class="overlay" id="overlay-over" hidden>
+        <div class="panel">
+          <h2 id="over-title">Run over</h2>
+          <p id="over-copy">The chains tightened — but you showed up. That still counts.</p>
+          <div class="stats">
+            <div>Distance <strong id="over-miles">0.0</strong> miles</div>
+            <div>Hope collected <strong id="over-hope">0</strong></div>
+          </div>
+          <div class="actions">
+            <button class="btn" id="btn-retry" type="button">Run again</button>
+            <a class="btn btn-ghost" style="display:inline-flex;align-items:center;" href="https://haku.ly/9795a39b3b" target="_blank" rel="noopener noreferrer">Donate</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="note">
+      This is a metaphor game about resilience — not a medical simulation.
+      If you live with epilepsy, you already know the real fight. Kevin’s story and Team CURE Epilepsy are why this exists.
+    </p>
+  </div>
+
+  <script>
+    (function () {
+      const canvas = document.getElementById("game");
+      const ctx = canvas.getContext("2d");
+      const stage = document.getElementById("stage");
+      const overlayStart = document.getElementById("overlay-start");
+      const overlayOver = document.getElementById("overlay-over");
+      const hudMiles = document.getElementById("hud-miles");
+      const hudHope = document.getElementById("hud-hope");
+      const hudLives = document.getElementById("hud-lives");
+      const overTitle = document.getElementById("over-title");
+      const overCopy = document.getElementById("over-copy");
+      const overMiles = document.getElementById("over-miles");
+      const overHope = document.getElementById("over-hope");
+      const jumpBtn = document.getElementById("btn-jump");
+
+      const W = canvas.width;
+      const H = canvas.height;
+      const GROUND = H - 78;
+      const GOAL_MILES = 26.2;
+
+      let state = "ready"; // ready | playing | over
+      let last = 0;
+      let spawnTimer = 0;
+      let distancePx = 0;
+      let hope = 0;
+      let lives = 3;
+      let speed = 280;
+      let invuln = 0;
+      let flash = 0;
+      let won = false;
+
+      const player = {
+        x: 120,
+        y: GROUND,
+        w: 36,
+        h: 52,
+        vy: 0,
+        onGround: true
+      };
+
+      let storms = [];
+      let orbs = [];
+      let particles = [];
+      let chains = [];
+
+      function setJumpVisible(show) {
+        if (!jumpBtn) return;
+        jumpBtn.hidden = !show;
+      }
+
+      function miles() {
+        return Math.min(GOAL_MILES, distancePx / 420);
+      }
+
+      function resetGame() {
+        distancePx = 0;
+        hope = 0;
+        lives = 3;
+        speed = 280;
+        spawnTimer = 0;
+        invuln = 0;
+        flash = 0;
+        won = false;
+        storms = [];
+        orbs = [];
+        particles = [];
+        player.y = GROUND;
+        player.vy = 0;
+        player.onGround = true;
+        for (let i = 0; i < 18; i++) {
+          chains.push({
+            x: Math.random() * W,
+            y: 40 + Math.random() * (GROUND - 120),
+            len: 40 + Math.random() * 80,
+            phase: Math.random() * Math.PI * 2,
+            speed: 0.4 + Math.random() * 0.8
+          });
+        }
+        updateHud();
+      }
+
+      function updateHud() {
+        hudMiles.textContent = miles().toFixed(1);
+        hudHope.textContent = String(hope);
+        hudLives.textContent = String(lives);
+      }
+
+      function jump() {
+        if (state !== "playing") return;
+        if (player.onGround) {
+          player.vy = -520;
+          player.onGround = false;
+        }
+      }
+
+      function spawn() {
+        const roll = Math.random();
+        if (roll < 0.55) {
+          storms.push({
+            x: W + 40,
+            y: GROUND - (28 + Math.random() * 20),
+            w: 34 + Math.random() * 22,
+            h: 36 + Math.random() * 28,
+            type: "storm"
+          });
+        } else {
+          orbs.push({
+            x: W + 30,
+            y: GROUND - 70 - Math.random() * 120,
+            r: 10,
+            pulse: Math.random() * Math.PI * 2
+          });
+        }
+      }
+
+      function hitPlayer() {
+        if (invuln > 0) return;
+        lives -= 1;
+        invuln = 1.25;
+        flash = 0.35;
+        updateHud();
+        for (let i = 0; i < 14; i++) {
+          particles.push({
+            x: player.x + player.w / 2,
+            y: player.y - player.h / 2,
+            vx: (Math.random() - 0.5) * 260,
+            vy: -80 - Math.random() * 180,
+            life: 0.5 + Math.random() * 0.4,
+            color: "#c43b2c"
+          });
+        }
+        if (lives <= 0) endGame(false);
+      }
+
+      function endGame(victory) {
+        state = "over";
+        won = victory;
+        setJumpVisible(false);
+        overlayOver.hidden = false;
+        overMiles.textContent = miles().toFixed(1);
+        overHope.textContent = String(hope);
+        if (victory) {
+          overTitle.textContent = "You made it";
+          overCopy.textContent =
+            "26.2 on the board. The chains didn’t win today. If you can, help real research with a donation to Team CURE.";
+        } else {
+          overTitle.textContent = "Run over";
+          overCopy.textContent =
+            "The chains tightened — but showing up still matters. Read Kevin’s story, or help Team CURE Epilepsy.";
+        }
+      }
+
+      function startGame() {
+        resetGame();
+        state = "playing";
+        overlayStart.hidden = true;
+        overlayOver.hidden = true;
+        setJumpVisible(true);
+        last = performance.now();
+        requestAnimationFrame(loop);
+      }
+
+      function rectHit(a, b) {
+        return (
+          a.x < b.x + b.w &&
+          a.x + a.w > b.x &&
+          a.y - a.h < b.y + b.h &&
+          a.y > b.y
+        );
+      }
+
+      function loop(now) {
+        if (state !== "playing") return;
+        const dt = Math.min(0.033, (now - last) / 1000);
+        last = now;
+
+        speed = Math.min(520, 280 + distancePx / 900);
+        distancePx += speed * dt;
+        spawnTimer -= dt;
+        if (spawnTimer <= 0) {
+          spawn();
+          spawnTimer = Math.max(0.55, 1.25 - distancePx / 8000);
+        }
+        if (invuln > 0) invuln -= dt;
+        if (flash > 0) flash -= dt;
+
+        // physics
+        player.vy += 1600 * dt;
+        player.y += player.vy * dt;
+        if (player.y >= GROUND) {
+          player.y = GROUND;
+          player.vy = 0;
+          player.onGround = true;
+        }
+
+        const pBox = {
+          x: player.x + 6,
+          y: player.y,
+          w: player.w - 12,
+          h: player.h
+        };
+
+        storms.forEach((s) => {
+          s.x -= speed * dt;
+        });
+        storms = storms.filter((s) => {
+          if (s.x + s.w < -40) return false;
+          if (invuln <= 0 && rectHit(pBox, { x: s.x, y: s.y, w: s.w, h: s.h })) {
+            hitPlayer();
+          }
+          return true;
+        });
+
+        orbs.forEach((o) => {
+          o.x -= speed * dt;
+          o.pulse += dt * 4;
+        });
+        orbs = orbs.filter((o) => {
+          if (o.x + o.r < -20) return false;
+          const dx = pBox.x + pBox.w / 2 - o.x;
+          const dy = pBox.y - pBox.h / 2 - o.y;
+          if (dx * dx + dy * dy < (o.r + 18) * (o.r + 18)) {
+            hope += 1;
+            updateHud();
+            for (let i = 0; i < 10; i++) {
+              particles.push({
+                x: o.x,
+                y: o.y,
+                vx: (Math.random() - 0.5) * 180,
+                vy: (Math.random() - 0.5) * 180,
+                life: 0.35 + Math.random() * 0.3,
+                color: "#9b6bff"
+              });
+            }
+            return false;
+          }
+          return true;
+        });
+
+        particles.forEach((p) => {
+          p.life -= dt;
+          p.x += p.vx * dt;
+          p.y += p.vy * dt;
+          p.vy += 420 * dt;
+        });
+        particles = particles.filter((p) => p.life > 0);
+
+        chains.forEach((c) => {
+          c.phase += dt * c.speed;
+          c.x -= speed * 0.15 * dt;
+          if (c.x < -40) c.x = W + Math.random() * 80;
+        });
+
+        updateHud();
+        draw(now);
+
+        if (miles() >= GOAL_MILES) {
+          endGame(true);
+          return;
+        }
+        requestAnimationFrame(loop);
+      }
+
+      function draw(now) {
+        ctx.clearRect(0, 0, W, H);
+
+        // sky
+        const g = ctx.createLinearGradient(0, 0, 0, H);
+        g.addColorStop(0, "#1c1624");
+        g.addColorStop(0.55, "#14110f");
+        g.addColorStop(1, "#0c0b0a");
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, W, H);
+
+        // distant word
+        ctx.save();
+        ctx.globalAlpha = 0.08;
+        ctx.strokeStyle = "#ebe4d8";
+        ctx.lineWidth = 2;
+        ctx.font = "120px Bebas Neue, sans-serif";
+        ctx.strokeText("SUCKS", 40 - (distancePx * 0.02) % 200, 160);
+        ctx.restore();
+
+        // background chains
+        chains.forEach((c) => {
+          ctx.save();
+          ctx.strokeStyle = "rgba(155,107,255,0.18)";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          const sway = Math.sin(c.phase) * 10;
+          ctx.moveTo(c.x, c.y);
+          ctx.quadraticCurveTo(c.x + sway, c.y + c.len * 0.5, c.x - sway * 0.4, c.y + c.len);
+          ctx.stroke();
+          for (let i = 0; i < 4; i++) {
+            const t = i / 3;
+            const x = c.x + sway * Math.sin(t * Math.PI);
+            const y = c.y + c.len * t;
+            ctx.beginPath();
+            ctx.arc(x, y, 4, 0, Math.PI * 2);
+            ctx.stroke();
+          }
+          ctx.restore();
+        });
+
+        // ground
+        ctx.fillStyle = "#241f1a";
+        ctx.fillRect(0, GROUND, W, H - GROUND);
+        ctx.fillStyle = "#9b6bff";
+        ctx.globalAlpha = 0.7;
+        ctx.fillRect(0, GROUND, W, 3);
+        ctx.globalAlpha = 1;
+
+        // ground dashes
+        ctx.strokeStyle = "rgba(235,228,216,0.15)";
+        ctx.lineWidth = 2;
+        const dashOffset = -((distancePx * 0.4) % 60);
+        for (let x = dashOffset; x < W; x += 60) {
+          ctx.beginPath();
+          ctx.moveTo(x, GROUND + 18);
+          ctx.lineTo(x + 28, GROUND + 18);
+          ctx.stroke();
+        }
+
+        // storms
+        storms.forEach((s) => {
+          const grd = ctx.createRadialGradient(
+            s.x + s.w / 2,
+            s.y + s.h / 2,
+            4,
+            s.x + s.w / 2,
+            s.y + s.h / 2,
+            s.w
+          );
+          grd.addColorStop(0, "rgba(196,59,44,0.95)");
+          grd.addColorStop(1, "rgba(196,59,44,0.15)");
+          ctx.fillStyle = grd;
+          ctx.beginPath();
+          ctx.ellipse(s.x + s.w / 2, s.y + s.h / 2, s.w * 0.55, s.h * 0.55, 0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.strokeStyle = "rgba(235,228,216,0.25)";
+          ctx.stroke();
+        });
+
+        // hope orbs
+        orbs.forEach((o) => {
+          const r = o.r + Math.sin(o.pulse) * 2;
+          const grd = ctx.createRadialGradient(o.x, o.y, 2, o.x, o.y, r * 2.2);
+          grd.addColorStop(0, "#e4d7ff");
+          grd.addColorStop(0.4, "#9b6bff");
+          grd.addColorStop(1, "rgba(155,107,255,0)");
+          ctx.fillStyle = grd;
+          ctx.beginPath();
+          ctx.arc(o.x, o.y, r * 2.2, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = "#9b6bff";
+          ctx.beginPath();
+          ctx.arc(o.x, o.y, r, 0, Math.PI * 2);
+          ctx.fill();
+        });
+
+        // player
+        const blink = invuln > 0 && Math.floor(now / 80) % 2 === 0;
+        if (!blink) {
+          ctx.save();
+          ctx.translate(player.x, player.y);
+          // body
+          ctx.fillStyle = "#ebe4d8";
+          ctx.fillRect(8, -player.h + 10, 20, 34);
+          // head
+          ctx.beginPath();
+          ctx.arc(18, -player.h + 6, 10, 0, Math.PI * 2);
+          ctx.fill();
+          // epi accent stripe
+          ctx.fillStyle = "#9b6bff";
+          ctx.fillRect(8, -28, 20, 5);
+          // legs
+          const gait = player.onGround ? Math.sin(distancePx / 18) * 8 : 0;
+          ctx.fillStyle = "#cfc5b6";
+          ctx.fillRect(10, -8, 6, 10 + gait);
+          ctx.fillRect(20, -8, 6, 10 - gait);
+          ctx.restore();
+        }
+
+        // particles
+        particles.forEach((p) => {
+          ctx.globalAlpha = Math.max(0, p.life * 2);
+          ctx.fillStyle = p.color;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.globalAlpha = 1;
+        });
+
+        if (flash > 0) {
+          ctx.fillStyle = `rgba(196,59,44,${flash * 0.35})`;
+          ctx.fillRect(0, 0, W, H);
+        }
+
+        // progress bar
+        const prog = miles() / GOAL_MILES;
+        ctx.fillStyle = "rgba(235,228,216,0.12)";
+        ctx.fillRect(24, 18, W - 48, 6);
+        ctx.fillStyle = "#9b6bff";
+        ctx.fillRect(24, 18, (W - 48) * prog, 6);
+      }
+
+      function drawReady() {
+        // idle preview frame
+        distancePx += 0.4;
+        draw(performance.now());
+        requestAnimationFrame(function idle() {
+          if (state !== "ready") return;
+          distancePx += 0.5;
+          draw(performance.now());
+          requestAnimationFrame(idle);
+        });
+      }
+
+      document.getElementById("btn-start").addEventListener("click", startGame);
+      document.getElementById("btn-retry").addEventListener("click", startGame);
+      if (jumpBtn) {
+        jumpBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          jump();
+        });
+      }
+
+      window.addEventListener("keydown", (e) => {
+        if (e.code === "Space" || e.code === "ArrowUp") {
+          e.preventDefault();
+          if (state === "ready") startGame();
+          else if (state === "over") startGame();
+          else jump();
+        }
+      });
+
+      stage.addEventListener(
+        "pointerdown",
+        (e) => {
+          if (e.target.closest("button, a, .overlay")) return;
+          if (state === "ready" || state === "over") return;
+          jump();
+        },
+        { passive: true }
+      );
+
+      resetGame();
+      setJumpVisible(false);
+      drawReady();
+    })();
+  </script>
+</body>
+</html>
