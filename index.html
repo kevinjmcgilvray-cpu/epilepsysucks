@@ -340,6 +340,38 @@
       opacity: 0.22;
     }
 
+    .hero__mri {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: min(48vw, 34rem);
+      z-index: 1;
+      pointer-events: none;
+      background:
+        url("epilepsy-sucks-images/cerebral-hemiatrophy-mri.png") left center / cover no-repeat;
+      opacity: 0.42;
+      -webkit-mask-image: linear-gradient(to right, #000 0%, #000 42%, transparent 100%);
+      mask-image: linear-gradient(to right, #000 0%, #000 42%, transparent 100%);
+      animation: visual-in 1.8s ease both;
+    }
+
+    html[data-theme="light"] .hero__mri {
+      opacity: 0.34;
+      mix-blend-mode: multiply;
+    }
+
+    @media (max-width: 800px) {
+      .hero__mri {
+        width: min(72vw, 22rem);
+        opacity: 0.28;
+      }
+
+      html[data-theme="light"] .hero__mri {
+        opacity: 0.24;
+      }
+    }
+
     .bg-word {
       position: absolute;
       inset: 0;
@@ -466,58 +498,6 @@
 
     .section__inner--wide {
       max-width: 68rem;
-    }
-
-    .story-start {
-      display: grid;
-      grid-template-columns: minmax(10rem, 0.9fr) 1.1fr;
-      gap: clamp(1.25rem, 3vw, 2.25rem);
-      align-items: start;
-    }
-
-    .story-start__mri {
-      margin: 0;
-      border: 1px solid var(--line);
-      overflow: hidden;
-      background: #000;
-      position: sticky;
-      top: 5.5rem;
-    }
-
-    .story-start__mri img {
-      width: 100%;
-      height: auto;
-      display: block;
-      background: #000;
-    }
-
-    .story-start__mri figcaption {
-      padding: 0.65rem 0.85rem;
-      font-size: 0.8rem;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: var(--paper-faint);
-      border-top: 1px solid var(--line);
-      background: var(--ink-2);
-    }
-
-    .story-start__copy .eyebrow {
-      margin-bottom: 1rem;
-    }
-
-    .story-start__copy p {
-      max-width: none;
-    }
-
-    @media (max-width: 800px) {
-      .story-start {
-        grid-template-columns: 1fr;
-      }
-
-      .story-start__mri {
-        position: static;
-        max-width: 22rem;
-      }
     }
 
     .eyebrow {
@@ -1365,7 +1345,8 @@
       .hero__content h1,
       .hero__content > p,
       .hero__actions,
-      .hero__visual {
+      .hero__visual,
+      .hero__mri {
         animation: none;
       }
 
@@ -1447,6 +1428,11 @@
   <main id="top">
     <section class="hero" aria-label="Introduction">
       <div class="hero__visual" aria-hidden="true"></div>
+      <div
+        class="hero__mri"
+        role="img"
+        aria-label="Illustrative MRI showing cerebral hemiatrophy — one half of the brain smaller than the other"
+      ></div>
       <div class="bg-word" aria-hidden="true"><span>Sucks</span></div>
       <div class="hero__content">
         <h1>Epilepsy</h1>
@@ -1461,20 +1447,11 @@
 
     <section class="section" id="story">
       <div class="section__inner section__inner--wide">
-        <div class="story-start reveal">
-          <figure class="story-start__mri">
-            <img
-              src="epilepsy-sucks-images/cerebral-hemiatrophy-mri.png"
-              alt="MRI showing cerebral hemiatrophy — one half of the brain smaller than the other"
-            />
-            <figcaption>Cerebral hemiatrophy — MRI</figcaption>
-          </figure>
-          <div class="story-start__copy">
-            <p class="eyebrow">Kevin’s story</p>
-            <h2>How it started</h2>
-            <p>When I was young, life threw me a curveball I never saw coming — <span class="key">weakness down the right side of my body</span>. My parents were incredibly concerned, so we went straight to the doctor. After MRIs, CT scans, and more, I was wheeled into the operating room to see if I had a <span class="key">tumor in my brain — which I didn’t, thank God</span>!</p>
-            <p>After all those tests, they decided I had <span class="key">cerebral hemiatrophy</span>. <span class="key">I was eight years old.</span> In plain English: <span class="key">one half of my brain is smaller than the other</span> — “hemi” means half, and “atrophy” means that part of the brain didn’t grow or stay as large as it should. That difference on one side of the brain is what set the stage for everything that came next. A few years later? Oh man — <em>this</em> is where the fun begins.</p>
-          </div>
+        <div class="reveal">
+          <p class="eyebrow">Kevin’s story</p>
+          <h2>How it started</h2>
+          <p>When I was young, life threw me a curveball I never saw coming — <span class="key">weakness down the right side of my body</span>. My parents were incredibly concerned, so we went straight to the doctor. After MRIs, CT scans, and more, I was wheeled into the operating room to see if I had a <span class="key">tumor in my brain — which I didn’t, thank God</span>!</p>
+          <p>After all those tests, they decided I had <span class="key">cerebral hemiatrophy</span>. <span class="key">I was eight years old.</span> In plain English: <span class="key">one half of my brain is smaller than the other</span> — “hemi” means half, and “atrophy” means that part of the brain didn’t grow or stay as large as it should. That difference on one side of the brain is what set the stage for everything that came next. A few years later? Oh man — <em>this</em> is where the fun begins.</p>
         </div>
 
         <article class="chapter reveal">
