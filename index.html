@@ -468,6 +468,58 @@
       max-width: 68rem;
     }
 
+    .story-start {
+      display: grid;
+      grid-template-columns: minmax(10rem, 0.9fr) 1.1fr;
+      gap: clamp(1.25rem, 3vw, 2.25rem);
+      align-items: start;
+    }
+
+    .story-start__mri {
+      margin: 0;
+      border: 1px solid var(--line);
+      overflow: hidden;
+      background: #000;
+      position: sticky;
+      top: 5.5rem;
+    }
+
+    .story-start__mri img {
+      width: 100%;
+      height: auto;
+      display: block;
+      background: #000;
+    }
+
+    .story-start__mri figcaption {
+      padding: 0.65rem 0.85rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--paper-faint);
+      border-top: 1px solid var(--line);
+      background: var(--ink-2);
+    }
+
+    .story-start__copy .eyebrow {
+      margin-bottom: 1rem;
+    }
+
+    .story-start__copy p {
+      max-width: none;
+    }
+
+    @media (max-width: 800px) {
+      .story-start {
+        grid-template-columns: 1fr;
+      }
+
+      .story-start__mri {
+        position: static;
+        max-width: 22rem;
+      }
+    }
+
     .eyebrow {
       font-size: 0.8rem;
       letter-spacing: 0.16em;
