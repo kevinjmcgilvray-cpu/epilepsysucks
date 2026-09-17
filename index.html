@@ -191,6 +191,33 @@
       color: var(--paper);
     }
 
+    .nav__cause {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      max-width: 100%;
+      margin-top: 0.15rem;
+      text-decoration: none;
+      color: var(--paper-dim);
+    }
+
+    .nav__cause:hover {
+      color: var(--paper);
+    }
+
+    .nav__cause-logo {
+      flex-shrink: 0;
+      width: auto;
+      height: 1.35rem;
+      display: block;
+    }
+
+    .nav__cause-text {
+      font-size: clamp(0.68rem, 1.5vw, 0.78rem);
+      line-height: 1.25;
+      letter-spacing: 0.01em;
+    }
+
     .nav__countdown {
       display: block;
       width: 100%;
@@ -1200,6 +1227,18 @@
         font-size: 0.98rem;
       }
 
+      .nav__cause {
+        max-width: min(100%, 16rem);
+      }
+
+      .nav__cause-logo {
+        height: 1.15rem;
+      }
+
+      .nav__cause-text {
+        font-size: 0.68rem;
+      }
+
       .nav__countdown {
         order: 2;
         font-size: 0.78rem;
@@ -1329,6 +1368,21 @@
         >
           <strong id="funds-raised">$1,851</strong>
           <span>raised of <span id="funds-goal">$3,000</span></span>
+        </a>
+        <a
+          class="nav__cause"
+          href="https://fundraisers.hakuapp.com/Kevin-McGilvray"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            class="nav__cause-logo"
+            src="epilepsy-sucks-images/cure-epilepsy-logo.svg"
+            alt="CURE Epilepsy"
+            width="189"
+            height="54"
+          />
+          <span class="nav__cause-text">Kevin J Mcgilvray is fundraising for CURE Epilepsy</span>
         </a>
       </div>
       <button class="nav__toggle" id="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
