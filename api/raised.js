@@ -15,7 +15,7 @@ export default async function handler(req, res) {
       /\$([0-9,]+\.\d{2})<\/span>\s*goal/i
     );
     const daysMatch = html.match(
-      /Only\s+(\d+)\s+days\s*remaining/i
+      /Only\s+(\d+)\s+days(?:<\/span>)?\s*remaining/i
     );
 
     if (!raisedMatch || !goalMatch) {
