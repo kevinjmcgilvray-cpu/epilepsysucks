@@ -127,9 +127,9 @@
       right: 0;
       z-index: 20;
       display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 1rem;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.45rem;
       padding: calc(0.85rem + env(safe-area-inset-top, 0px)) clamp(1.25rem, 4vw, 2.5rem) 0.85rem;
       background: linear-gradient(to bottom, var(--nav-top), transparent);
       backdrop-filter: blur(0px);
@@ -140,6 +140,14 @@
       background: var(--nav-solid);
       backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--line);
+    }
+
+    .nav__top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      width: 100%;
     }
 
     .nav__brand {
@@ -180,6 +188,26 @@
     }
 
     .nav__funds:hover {
+      color: var(--paper);
+    }
+
+    .nav__countdown {
+      display: block;
+      width: 100%;
+      text-align: center;
+      font-size: clamp(0.78rem, 1.7vw, 0.92rem);
+      line-height: 1.35;
+      letter-spacing: 0.01em;
+      color: var(--paper-dim);
+      padding: 0.15rem 0.5rem 0.1rem;
+    }
+
+    .nav__countdown strong {
+      color: var(--epi);
+      font-weight: 600;
+    }
+
+    .nav__countdown:hover {
       color: var(--paper);
     }
 
@@ -1142,10 +1170,15 @@
 
     @media (max-width: 800px) {
       .nav {
-        align-items: flex-start;
+        align-items: stretch;
         background: var(--nav-solid);
         backdrop-filter: blur(10px);
         border-bottom: 1px solid var(--line);
+      }
+
+      .nav__top {
+        position: relative;
+        align-items: flex-start;
       }
 
       .nav__brand {
@@ -1164,6 +1197,12 @@
 
       .nav__funds strong {
         font-size: 0.98rem;
+      }
+
+      .nav__countdown {
+        order: 2;
+        font-size: 0.78rem;
+        padding-top: 0.2rem;
       }
 
       .nav__toggle {
@@ -1185,6 +1224,7 @@
         padding: 0.75rem 1.25rem 1.25rem;
         background: var(--nav-menu);
         border-bottom: 1px solid var(--line);
+        z-index: 5;
       }
 
       .nav__links.is-open {
@@ -1276,30 +1316,42 @@
 </head>
 <body>
   <header class="nav" id="nav">
-    <div class="nav__left">
-      <a class="nav__brand" href="#top">Epilepsy Sucks</a>
-      <a
-        class="nav__funds"
-        href="https://fundraisers.hakuapp.com/Kevin-McGilvray"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Fundraising progress"
-      >
-        <strong id="funds-raised">$1,851</strong>
-        <span>raised of <span id="funds-goal">$3,000</span></span>
-      </a>
+    <div class="nav__top">
+      <div class="nav__left">
+        <a class="nav__brand" href="#top">Epilepsy Sucks</a>
+        <a
+          class="nav__funds"
+          href="https://fundraisers.hakuapp.com/Kevin-McGilvray"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Fundraising progress"
+        >
+          <strong id="funds-raised">$1,851</strong>
+          <span>raised of <span id="funds-goal">$3,000</span></span>
+        </a>
+      </div>
+      <button class="nav__toggle" id="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
+      <ul class="nav__links" id="nav-links">
+        <li><a href="#story">My story</a></li>
+        <li><a href="#seizure">What it’s like</a></li>
+        <li><a href="#freedom">Freedom</a></li>
+        <li><a href="#weight">Weight loss</a></li>
+        <li><a href="#marathon">LA Marathon</a></li>
+        <li><a href="#comments">Comments</a></li>
+        <li><button class="nav__theme" id="theme-toggle" type="button" aria-label="Switch color theme">Dark</button></li>
+        <li><a class="nav__cta" href="https://haku.ly/9795a39b3b" target="_blank" rel="noopener noreferrer">Donate</a></li>
+      </ul>
     </div>
-    <button class="nav__toggle" id="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
-    <ul class="nav__links" id="nav-links">
-      <li><a href="#story">My story</a></li>
-      <li><a href="#seizure">What it’s like</a></li>
-      <li><a href="#freedom">Freedom</a></li>
-      <li><a href="#weight">Weight loss</a></li>
-      <li><a href="#marathon">LA Marathon</a></li>
-      <li><a href="#comments">Comments</a></li>
-      <li><button class="nav__theme" id="theme-toggle" type="button" aria-label="Switch color theme">Dark</button></li>
-      <li><a class="nav__cta" href="https://haku.ly/9795a39b3b" target="_blank" rel="noopener noreferrer">Donate</a></li>
-    </ul>
+    <a
+      class="nav__countdown"
+      id="nav-countdown"
+      href="https://fundraisers.hakuapp.com/Kevin-McGilvray"
+      target="_blank"
+      rel="noopener noreferrer"
+      data-end-date="2027-04-30"
+    >
+      Only <strong id="days-remaining">226</strong> <span id="days-remaining-label">days</span> remaining to help Kevin McGilvray reach his fundraising goal
+    </a>
   </header>
 
   <main id="top">
@@ -1724,7 +1776,50 @@
       const goalEl = document.getElementById("funds-goal");
       const raisedMeta = document.getElementById("funds-raised-meta");
       const goalMeta = document.getElementById("funds-goal-meta");
+      const daysEl = document.getElementById("days-remaining");
+      const countdownEl = document.getElementById("nav-countdown");
       if (!raisedEl || !goalEl) return;
+
+      const STORAGE_KEY = "epilepsy-fundraiser-end-date";
+      let endDate =
+        (countdownEl && countdownEl.dataset.endDate) ||
+        null;
+
+      try {
+        endDate = endDate || localStorage.getItem(STORAGE_KEY) || "2027-04-30";
+      } catch (e) {
+        endDate = endDate || "2027-04-30";
+      }
+
+      function daysUntil(isoDate) {
+        const parts = String(isoDate || "").split("-").map(Number);
+        if (parts.length !== 3 || parts.some((n) => !n && n !== 0)) return null;
+        const end = Date.UTC(parts[0], parts[1] - 1, parts[2]);
+        const now = new Date();
+        const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+        return Math.max(0, Math.round((end - today) / 86400000));
+      }
+
+      function renderDays(days) {
+        if (!daysEl || days == null || Number.isNaN(days)) return;
+        daysEl.textContent = String(days);
+        const labelEl = document.getElementById("days-remaining-label");
+        if (labelEl) labelEl.textContent = days === 1 ? "day" : "days";
+        if (countdownEl) {
+          countdownEl.setAttribute(
+            "aria-label",
+            `Only ${days} ${days === 1 ? "day" : "days"} remaining to help Kevin McGilvray reach his fundraising goal`
+          );
+        }
+      }
+
+      function refreshCountdown() {
+        renderDays(daysUntil(endDate));
+      }
+
+      refreshCountdown();
+      // Recheck around midnight so the number drops each day without a refresh.
+      setInterval(refreshCountdown, 60 * 1000);
 
       fetch("/api/raised")
         .then((res) => (res.ok ? res.json() : null))
@@ -1734,6 +1829,18 @@
           goalEl.textContent = data.goalFormatted;
           if (raisedMeta) raisedMeta.textContent = data.raisedFormatted;
           if (goalMeta) goalMeta.textContent = data.goalFormatted;
+          if (data.endDate) {
+            endDate = data.endDate;
+            try {
+              localStorage.setItem(STORAGE_KEY, endDate);
+            } catch (e) {}
+            if (countdownEl) countdownEl.dataset.endDate = endDate;
+          }
+          if (typeof data.daysRemaining === "number") {
+            renderDays(data.daysRemaining);
+          } else {
+            refreshCountdown();
+          }
         })
         .catch(() => {});
     })();

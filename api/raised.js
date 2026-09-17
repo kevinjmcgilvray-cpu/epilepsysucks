@@ -14,6 +14,9 @@ export default async function handler(req, res) {
     const goalMatch = html.match(
       /\$([0-9,]+\.\d{2})<\/span>\s*goal/i
     );
+    const daysMatch = html.match(
+      /Only\s+(\d+)\s+days\s*remaining/i
+    );
 
     if (!raisedMatch || !goalMatch) {
       res.status(502).json({ ok: false, error: "Could not parse fundraising totals" });
@@ -25,12 +28,27 @@ export default async function handler(req, res) {
     const format = (n) =>
       `$${n.toLocaleString("en-US", { maximumFractionDigits: 0 })}`;
 
+    let daysRemaining = null;
+    let endDate = null;
+    if (daysMatch) {
+      daysRemaining = Number(daysMatch[1]);
+      const end = new Date();
+      end.setHours(0, 0, 0, 0);
+      end.setDate(end.getDate() + daysRemaining);
+      const y = end.getFullYear();
+      const m = String(end.getMonth() + 1).padStart(2, "0");
+      const d = String(end.getDate()).padStart(2, "0");
+      endDate = `${y}-${m}-${d}`;
+    }
+
     res.status(200).json({
       ok: true,
       raised,
       goal,
       raisedFormatted: format(raised),
       goalFormatted: format(goal),
+      daysRemaining,
+      endDate,
       source: "https://fundraisers.hakuapp.com/Kevin-McGilvray"
     });
   } catch (error) {
