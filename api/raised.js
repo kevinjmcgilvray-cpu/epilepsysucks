@@ -1,3 +1,21 @@
+function pacificTodayYmd() {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Los_Angeles",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  }).format(new Date());
+}
+
+function addDaysToYmd(ymd, days) {
+  const [y, m, d] = String(ymd).split("-").map(Number);
+  const dt = new Date(Date.UTC(y, m - 1, d + Number(days)));
+  const yy = dt.getUTCFullYear();
+  const mm = String(dt.getUTCMonth() + 1).padStart(2, "0");
+  const dd = String(dt.getUTCDate()).padStart(2, "0");
+  return `${yy}-${mm}-${dd}`;
+}
+
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Cache-Control", "s-maxage=300, stale-while-revalidate=600");
@@ -32,13 +50,8 @@ export default async function handler(req, res) {
     let endDate = null;
     if (daysMatch) {
       daysRemaining = Number(daysMatch[1]);
-      const end = new Date();
-      end.setHours(0, 0, 0, 0);
-      end.setDate(end.getDate() + daysRemaining);
-      const y = end.getFullYear();
-      const m = String(end.getMonth() + 1).padStart(2, "0");
-      const d = String(end.getDate()).padStart(2, "0");
-      endDate = `${y}-${m}-${d}`;
+      // Haku counts in US Pacific calendar days — keep endDate aligned to that.
+      endDate = addDaysToYmd(pacificTodayYmd(), daysRemaining);
     }
 
     res.status(200).json({

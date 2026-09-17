@@ -1780,7 +1780,7 @@
       const countdownEl = document.getElementById("nav-countdown");
       if (!raisedEl || !goalEl) return;
 
-      const STORAGE_KEY = "epilepsy-fundraiser-end-date";
+      const STORAGE_KEY = "epilepsy-fundraiser-end-date-v2";
       let endDate =
         (countdownEl && countdownEl.dataset.endDate) ||
         null;
@@ -1791,12 +1791,24 @@
         endDate = endDate || "2027-04-30";
       }
 
+      function pacificTodayYmd() {
+        return new Intl.DateTimeFormat("en-CA", {
+          timeZone: "America/Los_Angeles",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit"
+        }).format(new Date());
+      }
+
       function daysUntil(isoDate) {
-        const parts = String(isoDate || "").split("-").map(Number);
-        if (parts.length !== 3 || parts.some((n) => !n && n !== 0)) return null;
-        const end = Date.UTC(parts[0], parts[1] - 1, parts[2]);
-        const now = new Date();
-        const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+        const endParts = String(isoDate || "").split("-").map(Number);
+        const todayParts = pacificTodayYmd().split("-").map(Number);
+        if (endParts.length !== 3 || todayParts.length !== 3) return null;
+        if (endParts.some((n) => Number.isNaN(n)) || todayParts.some((n) => Number.isNaN(n))) {
+          return null;
+        }
+        const end = Date.UTC(endParts[0], endParts[1] - 1, endParts[2]);
+        const today = Date.UTC(todayParts[0], todayParts[1] - 1, todayParts[2]);
         return Math.max(0, Math.round((end - today) / 86400000));
       }
 
@@ -1833,14 +1845,11 @@
             endDate = data.endDate;
             try {
               localStorage.setItem(STORAGE_KEY, endDate);
+              localStorage.removeItem("epilepsy-fundraiser-end-date");
             } catch (e) {}
             if (countdownEl) countdownEl.dataset.endDate = endDate;
           }
-          if (typeof data.daysRemaining === "number") {
-            renderDays(data.daysRemaining);
-          } else {
-            refreshCountdown();
-          }
+          refreshCountdown();
         })
         .catch(() => {});
     })();
