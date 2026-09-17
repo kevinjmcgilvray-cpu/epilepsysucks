@@ -121,13 +121,19 @@
       background: #0c0b0a;
       overflow: hidden;
       box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
-      touch-action: none;
+      touch-action: manipulation;
+      width: 100%;
+      aspect-ratio: 900 / 520;
+      min-height: 260px;
+      max-height: min(70vh, 560px);
     }
 
     canvas {
       display: block;
+      position: absolute;
+      inset: 0;
       width: 100%;
-      height: auto;
+      height: 100%;
       vertical-align: middle;
     }
 
@@ -139,6 +145,7 @@
       flex-direction: column;
       justify-content: space-between;
       padding: 0.85rem 1rem;
+      z-index: 2;
     }
 
     .hud-row {
@@ -160,21 +167,64 @@
     .overlay {
       position: absolute;
       inset: 0;
-      display: grid;
-      place-items: center;
-      padding: 1.25rem;
-      background: rgba(12, 11, 10, 0.72);
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      background: rgba(12, 11, 10, 0.78);
       backdrop-filter: blur(6px);
     }
 
-    .overlay[hidden] { display: none; }
+    .overlay[hidden] { display: none !important; }
 
     .panel {
       width: min(26rem, 100%);
       text-align: center;
       border: 1px solid var(--line);
-      background: rgba(28, 25, 22, 0.92);
-      padding: 1.5rem 1.25rem;
+      background: rgba(28, 25, 22, 0.96);
+      padding: 1.25rem 1rem;
+      margin: auto;
+    }
+
+    .jump-btn {
+      display: none;
+      position: absolute;
+      right: 0.85rem;
+      bottom: 0.85rem;
+      z-index: 4;
+      width: 4.5rem;
+      height: 4.5rem;
+      border-radius: 999px;
+      border: 1px solid color-mix(in srgb, var(--epi) 70%, white);
+      background: color-mix(in srgb, var(--epi) 90%, black);
+      color: #f7f3ec;
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+      touch-action: manipulation;
+    }
+
+    .jump-btn:active { transform: scale(0.96); }
+
+    @media (max-width: 800px) {
+      .wrap { padding: 0.85rem 0.75rem 2rem; }
+      .stage {
+        aspect-ratio: 3 / 4;
+        max-height: none;
+        min-height: 420px;
+      }
+      .jump-btn { display: grid; place-items: center; }
+      .panel h2 { font-size: 2rem; }
+      .hud-row { font-size: 0.72rem; }
+      button.btn, .actions a.btn {
+        min-height: 2.75rem;
+        padding: 0.85rem 1.1rem;
+      }
     }
 
     .panel h2 {
@@ -290,9 +340,11 @@
         </div>
         <div class="hud-row">
           <div>Goal <strong>26.2</strong></div>
-          <div id="hud-hint">Tap / Space to jump</div>
+          <div id="hud-hint">Tap Jump</div>
         </div>
       </div>
+
+      <button class="jump-btn" id="btn-jump" type="button" aria-label="Jump" hidden>Jump</button>
 
       <div class="overlay" id="overlay-start">
         <div class="panel">
@@ -342,6 +394,7 @@
       const overCopy = document.getElementById("over-copy");
       const overMiles = document.getElementById("over-miles");
       const overHope = document.getElementById("over-hope");
+      const jumpBtn = document.getElementById("btn-jump");
 
       const W = canvas.width;
       const H = canvas.height;
@@ -372,6 +425,11 @@
       let orbs = [];
       let particles = [];
       let chains = [];
+
+      function setJumpVisible(show) {
+        if (!jumpBtn) return;
+        jumpBtn.hidden = !show;
+      }
 
       function miles() {
         return Math.min(GOAL_MILES, distancePx / 420);
@@ -460,6 +518,7 @@
       function endGame(victory) {
         state = "over";
         won = victory;
+        setJumpVisible(false);
         overlayOver.hidden = false;
         overMiles.textContent = miles().toFixed(1);
         overHope.textContent = String(hope);
@@ -479,6 +538,7 @@
         state = "playing";
         overlayStart.hidden = true;
         overlayOver.hidden = true;
+        setJumpVisible(true);
         last = performance.now();
         requestAnimationFrame(loop);
       }
@@ -741,6 +801,13 @@
 
       document.getElementById("btn-start").addEventListener("click", startGame);
       document.getElementById("btn-retry").addEventListener("click", startGame);
+      if (jumpBtn) {
+        jumpBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          jump();
+        });
+      }
 
       window.addEventListener("keydown", (e) => {
         if (e.code === "Space" || e.code === "ArrowUp") {
@@ -754,7 +821,7 @@
       stage.addEventListener(
         "pointerdown",
         (e) => {
-          if (e.target.closest("button, a")) return;
+          if (e.target.closest("button, a, .overlay")) return;
           if (state === "ready" || state === "over") return;
           jump();
         },
@@ -762,6 +829,7 @@
       );
 
       resetGame();
+      setJumpVisible(false);
       drawReady();
     })();
   </script>
