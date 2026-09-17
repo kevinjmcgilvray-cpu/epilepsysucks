@@ -38,7 +38,7 @@
       --surface-muted: rgba(12, 15, 20, 0.45);
       --chart-top: rgba(21, 26, 36, 0.9);
       --chart-bottom: rgba(12, 15, 20, 0.95);
-      --bg-word-stroke: rgba(232, 226, 214, 0.12);
+      --bg-word-stroke: rgba(232, 226, 214, 0.28);
       --btn-on-color: #e8e2d6;
       --image-scrim: rgba(12, 15, 20, 0.15);
       --image-scrim-strong: rgba(12, 15, 20, 0.75);
@@ -70,7 +70,7 @@
       --surface-muted: rgba(255, 255, 255, 0.72);
       --chart-top: #ffffff;
       --chart-bottom: #f7f8fa;
-      --bg-word-stroke: rgba(22, 24, 29, 0.1);
+      --bg-word-stroke: rgba(22, 24, 29, 0.22);
       --btn-on-color: #f7f5f2;
       --image-scrim: rgba(240, 242, 245, 0.1);
       --image-scrim-strong: rgba(22, 24, 29, 0.28);
@@ -303,8 +303,10 @@
       font-size: clamp(8rem, 32vw, 28rem);
       line-height: 0.85;
       letter-spacing: 0.04em;
-      color: transparent;
-      -webkit-text-stroke: 1.5px var(--bg-word-stroke);
+      font-weight: 700;
+      color: color-mix(in srgb, var(--paper) 10%, transparent);
+      -webkit-text-stroke: 3.5px var(--bg-word-stroke);
+      paint-order: stroke fill;
       text-transform: uppercase;
       white-space: nowrap;
       transform: translateY(8%) scale(1.05);
