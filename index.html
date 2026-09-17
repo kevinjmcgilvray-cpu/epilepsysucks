@@ -820,15 +820,28 @@
       transform: scaleX(1);
     }
 
-    @media (hover: hover) and (pointer: fine) {
-      .chapter__photo,
-      .weight-photos__main,
-      .weight-photos__row figure,
-      .split__image {
-        position: relative;
-        transition: box-shadow 0.35s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-      }
+    .chapter__photo,
+    .weight-photos__main,
+    .weight-photos__row figure,
+    .split__image {
+      position: relative;
+      transition: box-shadow 0.35s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
 
+    .chapter__photo.is-lifted,
+    .weight-photos__main.is-lifted,
+    .weight-photos__row figure.is-lifted,
+    .split__image.is-lifted {
+      z-index: 6;
+      transform: translateY(-4px);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+    }
+
+    .chapter--with-photo .chapter__photo.is-lifted {
+      position: sticky;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
       .chapter__photo:hover,
       .weight-photos__main:hover,
       .weight-photos__row figure:hover,
@@ -1186,7 +1199,11 @@
       .chapter__photo:hover,
       .weight-photos__main:hover,
       .weight-photos__row figure:hover,
-      .split__image:hover {
+      .split__image:hover,
+      .chapter__photo.is-lifted,
+      .weight-photos__main.is-lifted,
+      .weight-photos__row figure.is-lifted,
+      .split__image.is-lifted {
         transform: none;
         box-shadow: none;
       }
@@ -1873,6 +1890,33 @@
       });
 
       loadComments();
+    })();
+
+    (function initPhotoLiftOnScroll() {
+      const photos = document.querySelectorAll(
+        ".chapter__photo, .weight-photos__main, .weight-photos__row figure, .split__image"
+      );
+      if (!photos.length || !("IntersectionObserver" in window)) return;
+
+      const fineHover = window.matchMedia("(hover: hover) and (pointer: fine)");
+      if (fineHover.matches) return;
+
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            entry.target.classList.toggle(
+              "is-lifted",
+              entry.isIntersecting && entry.intersectionRatio >= 0.4
+            );
+          });
+        },
+        {
+          threshold: [0.25, 0.4, 0.6],
+          rootMargin: "-12% 0px -12% 0px"
+        }
+      );
+
+      photos.forEach((el) => io.observe(el));
     })();
   </script>
 </body>
