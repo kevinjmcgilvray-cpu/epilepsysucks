@@ -1988,15 +1988,6 @@
       const submitBtn = document.getElementById("owner-update-submit");
       if (!box || !bodyEl || !form) return;
 
-      function escapeHtml(value) {
-        return String(value)
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;")
-          .replace(/'/g, "&#39;");
-      }
-
       function formatDate(iso) {
         try {
           return new Date(iso).toLocaleDateString("en-US", {
