@@ -214,23 +214,6 @@
       letter-spacing: 0.01em;
     }
 
-    .nav__countdown {
-      display: block;
-      width: 100%;
-      text-align: center;
-      font-size: clamp(0.78rem, 1.7vw, 0.92rem);
-      line-height: 1.35;
-      letter-spacing: 0.01em;
-      color: var(--paper-dim);
-      padding: 0.15rem 0.5rem 0.1rem;
-      margin: 0;
-    }
-
-    .nav__countdown strong {
-      color: var(--epi);
-      font-weight: 600;
-    }
-
     .nav__links {
       display: flex;
       align-items: center;
@@ -1611,12 +1594,6 @@
         font-size: 0.78rem;
       }
 
-      .nav__countdown {
-        order: 2;
-        font-size: 0.78rem;
-        padding-top: 0.2rem;
-      }
-
       .nav__toggle {
         display: grid;
         place-items: center;
@@ -1818,9 +1795,6 @@
         <li><a class="nav__cta" href="https://haku.ly/9795a39b3b" target="_blank" rel="noopener noreferrer">Donate</a></li>
       </ul>
     </div>
-    <p class="nav__countdown" id="nav-countdown" data-end-date="2027-04-30">
-      Only <strong id="days-remaining">226</strong> <span id="days-remaining-label">days</span> remaining to help Kevin McGilvray reach his fundraising goal
-    </p>
   </header>
 
   <main id="top">
@@ -2418,51 +2392,6 @@
           if (percentEl) percentEl.textContent = pct + "%";
         })
         .catch(() => {});
-    })();
-
-    (function initFundraisingCountdown() {
-      const daysEl = document.getElementById("days-remaining");
-      const countdownEl = document.getElementById("nav-countdown");
-      if (!daysEl || !countdownEl) return;
-
-      // Standalone countdown: 226 days from Sep 16, 2026 (Pacific) → April 30, 2027.
-      const END_DATE = countdownEl.dataset.endDate || "2027-04-30";
-
-      function pacificTodayYmd() {
-        return new Intl.DateTimeFormat("en-CA", {
-          timeZone: "America/Los_Angeles",
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit"
-        }).format(new Date());
-      }
-
-      function daysUntil(isoDate) {
-        const endParts = String(isoDate).split("-").map(Number);
-        const todayParts = pacificTodayYmd().split("-").map(Number);
-        if (endParts.length !== 3 || todayParts.length !== 3) return null;
-        const end = Date.UTC(endParts[0], endParts[1] - 1, endParts[2]);
-        const today = Date.UTC(todayParts[0], todayParts[1] - 1, todayParts[2]);
-        return Math.max(0, Math.round((end - today) / 86400000));
-      }
-
-      function renderDays(days) {
-        if (days == null || Number.isNaN(days)) return;
-        daysEl.textContent = String(days);
-        const labelEl = document.getElementById("days-remaining-label");
-        if (labelEl) labelEl.textContent = days === 1 ? "day" : "days";
-        countdownEl.setAttribute(
-          "aria-label",
-          `Only ${days} ${days === 1 ? "day" : "days"} remaining to help Kevin McGilvray reach his fundraising goal`
-        );
-      }
-
-      function refreshCountdown() {
-        renderDays(daysUntil(END_DATE));
-      }
-
-      refreshCountdown();
-      setInterval(refreshCountdown, 60 * 1000);
     })();
 
     (function initCourseMap() {
