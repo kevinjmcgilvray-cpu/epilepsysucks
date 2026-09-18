@@ -1256,12 +1256,14 @@
     }
 
     .elfsight-float {
+      --elfsight-w: min(18rem, 28vw);
+      --elfsight-gap: 2.75rem;
       position: fixed;
       top: 9.25rem;
-      right: 2.75rem;
+      right: var(--elfsight-gap);
       bottom: auto;
       z-index: 25;
-      width: min(18rem, 28vw);
+      width: var(--elfsight-w);
       max-height: min(28rem, calc(100vh - 10.5rem));
       overflow: auto;
       border: 1px solid rgba(180, 140, 255, 0.4);
@@ -1280,8 +1282,22 @@
     }
 
     @media (min-width: 801px) {
-      body {
-        padding-right: min(19.5rem, 30vw);
+      .hero {
+        padding-right: calc(min(18rem, 28vw) + 2.75rem + clamp(1.25rem, 4vw, 2.5rem));
+      }
+
+      .bg-word {
+        right: calc(min(18rem, 28vw) + 2.75rem + 0.5rem);
+        left: 0;
+        width: auto;
+        inset: unset;
+        top: 0;
+        bottom: 0;
+      }
+
+      .section,
+      .footer {
+        padding-right: calc(min(18rem, 28vw) + 2.75rem + 0.75rem);
       }
     }
 
