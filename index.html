@@ -1900,20 +1900,6 @@
             </div>
           </div>
           <p class="weight-chart__note" id="weight-chart-note">Hover any dot for the exact date and weight.</p>
-          <div style="overflow-x:auto; margin-top: 1.25rem;">
-            <table class="training-table" aria-label="Weigh-in log">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Weight</th>
-                  <th>Change</th>
-                </tr>
-              </thead>
-              <tbody id="weigh-ins-table-body">
-                <tr><td colspan="3" class="is-muted">Loading weigh-ins…</td></tr>
-              </tbody>
-            </table>
-          </div>
         </div>
       </div>
     </section>
@@ -2612,8 +2598,6 @@
             note.textContent = "Hover any dot for the exact date and weight — from " + stats.startLb + " lb to " + stats.currentLb + " lb.";
           }
         }
-
-        renderTable(weighIns);
       }
 
       fetch("/api/weigh-ins")
