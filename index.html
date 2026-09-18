@@ -626,57 +626,10 @@
       max-width: 68rem;
     }
 
-    .bolt-scatter {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      width: 100%;
-      pointer-events: none;
-      z-index: 0;
-      overflow: hidden;
-    }
-
-    .bolt-scatter__bolt {
-      position: absolute;
-      width: clamp(1.85rem, 3.6vw, 3.15rem);
-      height: auto;
-      color: var(--epi);
-      opacity: 0.1;
-    }
-
-    .bolt-scatter__bolt--dim {
-      opacity: 0.06;
-      width: clamp(1.5rem, 3vw, 2.5rem);
-    }
-
-    .bolt-scatter__bolt--bright {
-      opacity: 0.16;
-      width: clamp(2.1rem, 4.2vw, 3.6rem);
-    }
-
     main,
     .footer {
       position: relative;
       z-index: 1;
-    }
-
-    @media (max-width: 800px) {
-      .bolt-scatter__bolt {
-        opacity: 0.12;
-        width: 1.45rem;
-      }
-
-      .bolt-scatter__bolt--dim {
-        opacity: 0.07;
-        width: 1.2rem;
-      }
-
-      .bolt-scatter__bolt--bright {
-        opacity: 0.18;
-        width: 1.65rem;
-      }
     }
 
     .eyebrow {
@@ -1858,51 +1811,7 @@
 </head>
 <body>
 
-  <div class="bolt-scatter" aria-hidden="true">
-    <svg class="bolt-scatter__bolt bolt-scatter__bolt--bright" style="top:6%;left:4%;transform:rotate(-18deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M29 2 12 34h11L17 62l22-36H27L29 2z"/></svg>
-    <svg class="bolt-scatter__bolt bolt-scatter__bolt--dim" style="top:10%;left:92%;transform:rotate(14deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M30 1 10 33h13L14 63l26-35H26L30 1z"/></svg>
-    <svg class="bolt-scatter__bolt" style="top:14%;left:8%;transform:rotate(8deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M28 2 11 33h12L16 62l23-35H26L28 2z"/></svg>
-    <svg class="bolt-scatter__bolt bolt-scatter__bolt--bright" style="top:18%;left:88%;transform:rotate(-12deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M27 4 15 32h10L18 60l20-32H27L27 4z"/></svg>
-    <svg class="bolt-scatter__bolt bolt-scatter__bolt--dim" style="top:22%;left:3%;transform:rotate(22deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M31 3 13 35h12L19 61l21-33H28L31 3z"/></svg>
-    <svg class="bolt-scatter__bolt" style="top:26%;left:95%;transform:rotate(-8deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M26 3 14 31h11L19 61l21-33H28L26 3z"/></svg>
-    <svg class="bolt-scatter__bolt bolt-scatter__bolt--dim" style="top:8%;left:48%;transform:rotate(6deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M29 2 12 34h11L17 62l22-36H27L29 2z"/></svg>
-    <svg class="bolt-scatter__bolt bolt-scatter__bolt--bright" style="top:32%;left:5%;transform:rotate(-14deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M30 1 10 33h13L14 63l26-35H26L30 1z"/></svg>
-    <svg class="bolt-scatter__bolt" style="top:36%;left:91%;transform:rotate(18deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M28 2 11 33h12L16 62l23-35H26L28 2z"/></svg>
-    <svg class="bolt-scatter__bolt bolt-scatter__bolt--dim" style="top:40%;left:7%;transform:rotate(10deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M27 4 15 32h10L18 60l20-32H27L27 4z"/></svg>
-    <svg class="bolt-scatter__bolt bolt-scatter__bolt--bright" style="top:44%;left:93%;transform:rotate(-16deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M31 3 13 35h12L19 61l21-33H28L31 3z"/></svg>
-    <svg class="bolt-scatter__bolt" style="top:48%;left:4%;transform:rotate(6deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M26 3 14 31h11L19 61l21-33H28L26 3z"/></svg>
-    <svg class="bolt-scatter__bolt bolt-scatter__bolt--dim" style="top:52%;left:90%;transform:rotate(12deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M29 2 12 34h11L17 62l22-36H27L29 2z"/></svg>
-    <svg class="bolt-scatter__bolt bolt-scatter__bolt--dim" style="top:38%;left:18%;transform:rotate(-22deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M30 1 10 33h13L14 63l26-35H26L30 1z"/></svg>
-    <svg class="bolt-scatter__bolt" style="top:46%;left:78%;transform:rotate(20deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M28 2 11 33h12L16 62l23-35H26L28 2z"/></svg>
-    <svg class="bolt-scatter__bolt bolt-scatter__bolt--bright" style="top:56%;left:6%;transform:rotate(-10deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M27 4 15 32h10L18 60l20-32H27L27 4z"/></svg>
-    <svg class="bolt-scatter__bolt bolt-scatter__bolt--dim" style="top:60%;left:94%;transform:rotate(15deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M31 3 13 35h12L19 61l21-33H28L31 3z"/></svg>
-    <svg class="bolt-scatter__bolt" style="top:64%;left:3%;transform:rotate(8deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M26 3 14 31h11L19 61l21-33H28L26 3z"/></svg>
-    <svg class="bolt-scatter__bolt bolt-scatter__bolt--bright" style="top:68%;left:89%;transform:rotate(-18deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M29 2 12 34h11L17 62l22-36H27L29 2z"/></svg>
-    <svg class="bolt-scatter__bolt bolt-scatter__bolt--dim" style="top:72%;left:8%;transform:rotate(14deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M30 1 10 33h13L14 63l26-35H26L30 1z"/></svg>
-    <svg class="bolt-scatter__bolt" style="top:74%;left:82%;transform:rotate(-6deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M28 2 11 33h12L16 62l23-35H26L28 2z"/></svg>
-    <svg class="bolt-scatter__bolt bolt-scatter__bolt--dim" style="top:70%;left:22%;transform:rotate(24deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M27 4 15 32h10L18 60l20-32H27L27 4z"/></svg>
-    <svg class="bolt-scatter__bolt" style="top:66%;left:70%;transform:rotate(-14deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M31 3 13 35h12L19 61l21-33H28L31 3z"/></svg>
-    <svg class="bolt-scatter__bolt bolt-scatter__bolt--bright" style="top:78%;left:5%;transform:rotate(-12deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M26 3 14 31h11L19 61l21-33H28L26 3z"/></svg>
-    <svg class="bolt-scatter__bolt bolt-scatter__bolt--dim" style="top:82%;left:92%;transform:rotate(10deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M29 2 12 34h11L17 62l22-36H27L29 2z"/></svg>
-    <svg class="bolt-scatter__bolt" style="top:86%;left:4%;transform:rotate(16deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M30 1 10 33h13L14 63l26-35H26L30 1z"/></svg>
-    <svg class="bolt-scatter__bolt bolt-scatter__bolt--bright" style="top:88%;left:88%;transform:rotate(-20deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M28 2 11 33h12L16 62l23-35H26L28 2z"/></svg>
-    <svg class="bolt-scatter__bolt bolt-scatter__bolt--dim" style="top:90%;left:12%;transform:rotate(8deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M27 4 15 32h10L18 60l20-32H27L27 4z"/></svg>
-    <svg class="bolt-scatter__bolt" style="top:84%;left:76%;transform:rotate(18deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M31 3 13 35h12L19 61l21-33H28L31 3z"/></svg>
-    <svg class="bolt-scatter__bolt bolt-scatter__bolt--dim" style="top:80%;left:28%;transform:rotate(-8deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M26 3 14 31h11L19 61l21-33H28L26 3z"/></svg>
-    <svg class="bolt-scatter__bolt" style="top:92%;left:6%;transform:rotate(12deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M29 2 12 34h11L17 62l22-36H27L29 2z"/></svg>
-    <svg class="bolt-scatter__bolt bolt-scatter__bolt--bright" style="top:94%;left:90%;transform:rotate(-14deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M30 1 10 33h13L14 63l26-35H26L30 1z"/></svg>
-    <svg class="bolt-scatter__bolt bolt-scatter__bolt--dim" style="top:96%;left:3%;transform:rotate(6deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M28 2 11 33h12L16 62l23-35H26L28 2z"/></svg>
-    <svg class="bolt-scatter__bolt" style="top:97%;left:85%;transform:rotate(20deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M27 4 15 32h10L18 60l20-32H27L27 4z"/></svg>
-    <svg class="bolt-scatter__bolt bolt-scatter__bolt--dim" style="top:55%;left:50%;transform:rotate(-25deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M31 3 13 35h12L19 61l21-33H28L31 3z"/></svg>
-    <svg class="bolt-scatter__bolt bolt-scatter__bolt--dim" style="top:75%;left:55%;transform:rotate(28deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M26 3 14 31h11L19 61l21-33H28L26 3z"/></svg>
-    <svg class="bolt-scatter__bolt bolt-scatter__bolt--dim" style="top:35%;left:60%;transform:rotate(-15deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M29 2 12 34h11L17 62l22-36H27L29 2z"/></svg>
-    <svg class="bolt-scatter__bolt" style="top:58%;left:35%;transform:rotate(11deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M30 1 10 33h13L14 63l26-35H26L30 1z"/></svg>
-    <svg class="bolt-scatter__bolt bolt-scatter__bolt--dim" style="top:42%;left:40%;transform:rotate(-30deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M28 2 11 33h12L16 62l23-35H26L28 2z"/></svg>
-    <svg class="bolt-scatter__bolt bolt-scatter__bolt--dim" style="top:85%;left:42%;transform:rotate(9deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M27 4 15 32h10L18 60l20-32H27L27 4z"/></svg>
-    <svg class="bolt-scatter__bolt" style="top:28%;left:72%;transform:rotate(17deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M31 3 13 35h12L19 61l21-33H28L31 3z"/></svg>
-    <svg class="bolt-scatter__bolt bolt-scatter__bolt--bright" style="top:62%;left:15%;transform:rotate(-7deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M26 3 14 31h11L19 61l21-33H28L26 3z"/></svg>
-  </div>
-
+  <div class="bg-lightning" aria-hidden="true"></div>
   <header class="nav" id="nav">
     <div class="nav__top">
       <div class="nav__left">
