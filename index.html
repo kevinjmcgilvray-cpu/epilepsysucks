@@ -92,6 +92,7 @@
     }
 
     body {
+      position: relative;
       font-family: var(--font-body);
       color: var(--paper);
       background: var(--ink);
@@ -500,97 +501,55 @@
       max-width: 68rem;
     }
 
-    #story {
-      overflow: hidden;
-    }
-
-    .story-symbols {
+    .bolt-scatter {
       position: absolute;
-      inset: 0;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 100%;
       pointer-events: none;
       z-index: 0;
       overflow: hidden;
     }
 
-    .story-symbols__rail {
+    .bolt-scatter__bolt {
       position: absolute;
-      top: 0;
-      bottom: 0;
-      width: clamp(3.25rem, 9vw, 6.5rem);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-evenly;
-      gap: 1.5rem;
-      padding: 3rem 0;
-    }
-
-    .story-symbols__rail--left {
-      left: clamp(0.2rem, 1.2vw, 1rem);
-    }
-
-    .story-symbols__rail--right {
-      right: clamp(0.2rem, 1.2vw, 1rem);
-    }
-
-    .story-symbols__mark {
-      width: clamp(2rem, 4.4vw, 3.25rem);
+      width: clamp(1.35rem, 2.8vw, 2.4rem);
       height: auto;
       color: var(--epi);
-      opacity: 0.26;
-      flex-shrink: 0;
+      opacity: 0.18;
     }
 
-    .story-symbols__mark--dim {
-      opacity: 0.16;
+    .bolt-scatter__bolt--dim {
+      opacity: 0.1;
+      width: clamp(1.1rem, 2.2vw, 1.85rem);
     }
 
-    .story-symbols__mark--bright {
-      opacity: 0.42;
+    .bolt-scatter__bolt--bright {
+      opacity: 0.28;
+      width: clamp(1.55rem, 3.2vw, 2.75rem);
     }
 
-    .story-symbols__mark--bolt {
-      width: clamp(1.9rem, 4.2vw, 3.1rem);
-    }
-
-    .story-symbols__rail--left .story-symbols__mark:nth-child(odd) {
-      transform: rotate(-12deg);
-    }
-
-    .story-symbols__rail--left .story-symbols__mark:nth-child(even) {
-      transform: rotate(8deg) scale(0.9);
-    }
-
-    .story-symbols__rail--right .story-symbols__mark:nth-child(odd) {
-      transform: rotate(14deg) scale(0.92);
-    }
-
-    .story-symbols__rail--right .story-symbols__mark:nth-child(even) {
-      transform: rotate(-9deg);
-    }
-
-    #story > .section__inner {
+    .nav,
+    main,
+    .footer {
       position: relative;
       z-index: 1;
     }
 
     @media (max-width: 800px) {
-      .story-symbols__mark {
-        opacity: 0.14;
-        width: 1.55rem;
+      .bolt-scatter__bolt {
+        opacity: 0.12;
+        width: 1.15rem;
       }
 
-      .story-symbols__mark--bright {
-        opacity: 0.24;
+      .bolt-scatter__bolt--dim {
+        opacity: 0.07;
+        width: 0.95rem;
       }
 
-      .story-symbols__mark--bolt {
-        width: 1.55rem;
-      }
-
-      .story-symbols__rail {
-        width: 2.15rem;
-        padding: 2rem 0;
+      .bolt-scatter__bolt--bright {
+        opacity: 0.18;
+        width: 1.3rem;
       }
     }
 
@@ -1474,9 +1433,56 @@
         box-shadow: none;
       }
     }
+
   </style>
 </head>
 <body>
+
+  <div class="bolt-scatter" aria-hidden="true">
+    <svg class="bolt-scatter__bolt bolt-scatter__bolt--bright" style="top:6%;left:4%;transform:rotate(-18deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M29 2 12 34h11L17 62l22-36H27L29 2z"/></svg>
+    <svg class="bolt-scatter__bolt bolt-scatter__bolt--dim" style="top:10%;left:92%;transform:rotate(14deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M30 1 10 33h13L14 63l26-35H26L30 1z"/></svg>
+    <svg class="bolt-scatter__bolt" style="top:14%;left:8%;transform:rotate(8deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M28 2 11 33h12L16 62l23-35H26L28 2z"/></svg>
+    <svg class="bolt-scatter__bolt bolt-scatter__bolt--bright" style="top:18%;left:88%;transform:rotate(-12deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M27 4 15 32h10L18 60l20-32H27L27 4z"/></svg>
+    <svg class="bolt-scatter__bolt bolt-scatter__bolt--dim" style="top:22%;left:3%;transform:rotate(22deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M31 3 13 35h12L19 61l21-33H28L31 3z"/></svg>
+    <svg class="bolt-scatter__bolt" style="top:26%;left:95%;transform:rotate(-8deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M26 3 14 31h11L19 61l21-33H28L26 3z"/></svg>
+    <svg class="bolt-scatter__bolt bolt-scatter__bolt--dim" style="top:8%;left:48%;transform:rotate(6deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M29 2 12 34h11L17 62l22-36H27L29 2z"/></svg>
+    <svg class="bolt-scatter__bolt bolt-scatter__bolt--bright" style="top:32%;left:5%;transform:rotate(-14deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M30 1 10 33h13L14 63l26-35H26L30 1z"/></svg>
+    <svg class="bolt-scatter__bolt" style="top:36%;left:91%;transform:rotate(18deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M28 2 11 33h12L16 62l23-35H26L28 2z"/></svg>
+    <svg class="bolt-scatter__bolt bolt-scatter__bolt--dim" style="top:40%;left:7%;transform:rotate(10deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M27 4 15 32h10L18 60l20-32H27L27 4z"/></svg>
+    <svg class="bolt-scatter__bolt bolt-scatter__bolt--bright" style="top:44%;left:93%;transform:rotate(-16deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M31 3 13 35h12L19 61l21-33H28L31 3z"/></svg>
+    <svg class="bolt-scatter__bolt" style="top:48%;left:4%;transform:rotate(6deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M26 3 14 31h11L19 61l21-33H28L26 3z"/></svg>
+    <svg class="bolt-scatter__bolt bolt-scatter__bolt--dim" style="top:52%;left:90%;transform:rotate(12deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M29 2 12 34h11L17 62l22-36H27L29 2z"/></svg>
+    <svg class="bolt-scatter__bolt bolt-scatter__bolt--dim" style="top:38%;left:18%;transform:rotate(-22deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M30 1 10 33h13L14 63l26-35H26L30 1z"/></svg>
+    <svg class="bolt-scatter__bolt" style="top:46%;left:78%;transform:rotate(20deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M28 2 11 33h12L16 62l23-35H26L28 2z"/></svg>
+    <svg class="bolt-scatter__bolt bolt-scatter__bolt--bright" style="top:56%;left:6%;transform:rotate(-10deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M27 4 15 32h10L18 60l20-32H27L27 4z"/></svg>
+    <svg class="bolt-scatter__bolt bolt-scatter__bolt--dim" style="top:60%;left:94%;transform:rotate(15deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M31 3 13 35h12L19 61l21-33H28L31 3z"/></svg>
+    <svg class="bolt-scatter__bolt" style="top:64%;left:3%;transform:rotate(8deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M26 3 14 31h11L19 61l21-33H28L26 3z"/></svg>
+    <svg class="bolt-scatter__bolt bolt-scatter__bolt--bright" style="top:68%;left:89%;transform:rotate(-18deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M29 2 12 34h11L17 62l22-36H27L29 2z"/></svg>
+    <svg class="bolt-scatter__bolt bolt-scatter__bolt--dim" style="top:72%;left:8%;transform:rotate(14deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M30 1 10 33h13L14 63l26-35H26L30 1z"/></svg>
+    <svg class="bolt-scatter__bolt" style="top:74%;left:82%;transform:rotate(-6deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M28 2 11 33h12L16 62l23-35H26L28 2z"/></svg>
+    <svg class="bolt-scatter__bolt bolt-scatter__bolt--dim" style="top:70%;left:22%;transform:rotate(24deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M27 4 15 32h10L18 60l20-32H27L27 4z"/></svg>
+    <svg class="bolt-scatter__bolt" style="top:66%;left:70%;transform:rotate(-14deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M31 3 13 35h12L19 61l21-33H28L31 3z"/></svg>
+    <svg class="bolt-scatter__bolt bolt-scatter__bolt--bright" style="top:78%;left:5%;transform:rotate(-12deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M26 3 14 31h11L19 61l21-33H28L26 3z"/></svg>
+    <svg class="bolt-scatter__bolt bolt-scatter__bolt--dim" style="top:82%;left:92%;transform:rotate(10deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M29 2 12 34h11L17 62l22-36H27L29 2z"/></svg>
+    <svg class="bolt-scatter__bolt" style="top:86%;left:4%;transform:rotate(16deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M30 1 10 33h13L14 63l26-35H26L30 1z"/></svg>
+    <svg class="bolt-scatter__bolt bolt-scatter__bolt--bright" style="top:88%;left:88%;transform:rotate(-20deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M28 2 11 33h12L16 62l23-35H26L28 2z"/></svg>
+    <svg class="bolt-scatter__bolt bolt-scatter__bolt--dim" style="top:90%;left:12%;transform:rotate(8deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M27 4 15 32h10L18 60l20-32H27L27 4z"/></svg>
+    <svg class="bolt-scatter__bolt" style="top:84%;left:76%;transform:rotate(18deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M31 3 13 35h12L19 61l21-33H28L31 3z"/></svg>
+    <svg class="bolt-scatter__bolt bolt-scatter__bolt--dim" style="top:80%;left:28%;transform:rotate(-8deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M26 3 14 31h11L19 61l21-33H28L26 3z"/></svg>
+    <svg class="bolt-scatter__bolt" style="top:92%;left:6%;transform:rotate(12deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M29 2 12 34h11L17 62l22-36H27L29 2z"/></svg>
+    <svg class="bolt-scatter__bolt bolt-scatter__bolt--bright" style="top:94%;left:90%;transform:rotate(-14deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M30 1 10 33h13L14 63l26-35H26L30 1z"/></svg>
+    <svg class="bolt-scatter__bolt bolt-scatter__bolt--dim" style="top:96%;left:3%;transform:rotate(6deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M28 2 11 33h12L16 62l23-35H26L28 2z"/></svg>
+    <svg class="bolt-scatter__bolt" style="top:97%;left:85%;transform:rotate(20deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M27 4 15 32h10L18 60l20-32H27L27 4z"/></svg>
+    <svg class="bolt-scatter__bolt bolt-scatter__bolt--dim" style="top:55%;left:50%;transform:rotate(-25deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M31 3 13 35h12L19 61l21-33H28L31 3z"/></svg>
+    <svg class="bolt-scatter__bolt bolt-scatter__bolt--dim" style="top:75%;left:55%;transform:rotate(28deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M26 3 14 31h11L19 61l21-33H28L26 3z"/></svg>
+    <svg class="bolt-scatter__bolt bolt-scatter__bolt--dim" style="top:35%;left:60%;transform:rotate(-15deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M29 2 12 34h11L17 62l22-36H27L29 2z"/></svg>
+    <svg class="bolt-scatter__bolt" style="top:58%;left:35%;transform:rotate(11deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M30 1 10 33h13L14 63l26-35H26L30 1z"/></svg>
+    <svg class="bolt-scatter__bolt bolt-scatter__bolt--dim" style="top:42%;left:40%;transform:rotate(-30deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M28 2 11 33h12L16 62l23-35H26L28 2z"/></svg>
+    <svg class="bolt-scatter__bolt bolt-scatter__bolt--dim" style="top:85%;left:42%;transform:rotate(9deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M27 4 15 32h10L18 60l20-32H27L27 4z"/></svg>
+    <svg class="bolt-scatter__bolt" style="top:28%;left:72%;transform:rotate(17deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M31 3 13 35h12L19 61l21-33H28L31 3z"/></svg>
+    <svg class="bolt-scatter__bolt bolt-scatter__bolt--bright" style="top:62%;left:15%;transform:rotate(-7deg)" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M26 3 14 31h11L19 61l21-33H28L26 3z"/></svg>
+  </div>
+
   <header class="nav" id="nav">
     <div class="nav__top">
       <div class="nav__left">
@@ -1540,40 +1546,6 @@
     </section>
 
     <section class="section" id="story">
-      <div class="story-symbols" aria-hidden="true">
-        <div class="story-symbols__rail story-symbols__rail--left">
-          <svg class="story-symbols__mark story-symbols__mark--bolt story-symbols__mark--bright" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M29 2 12 34h11L17 62l22-36H27L29 2z"/></svg>
-          <svg class="story-symbols__mark story-symbols__mark--bolt story-symbols__mark--dim" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M30 1 10 33h13L14 63l26-35H26L30 1z"/></svg>
-          <svg class="story-symbols__mark story-symbols__mark--bolt" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M28 2 11 33h12L16 62l23-35H26L28 2z"/></svg>
-          <svg class="story-symbols__mark story-symbols__mark--bolt story-symbols__mark--bright" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M27 4 15 32h10L18 60l20-32H27L27 4z"/></svg>
-          <svg class="story-symbols__mark story-symbols__mark--bolt story-symbols__mark--dim" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M31 3 13 35h12L19 61l21-33H28L31 3z"/></svg>
-          <svg class="story-symbols__mark story-symbols__mark--bolt" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M26 3 14 31h11L19 61l21-33H28L26 3z"/></svg>
-          <svg class="story-symbols__mark story-symbols__mark--bolt story-symbols__mark--bright" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M29 2 12 34h11L17 62l22-36H27L29 2z"/></svg>
-          <svg class="story-symbols__mark story-symbols__mark--bolt story-symbols__mark--dim" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M30 1 10 33h13L14 63l26-35H26L30 1z"/></svg>
-          <svg class="story-symbols__mark story-symbols__mark--bolt" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M28 2 11 33h12L16 62l23-35H26L28 2z"/></svg>
-          <svg class="story-symbols__mark story-symbols__mark--bolt story-symbols__mark--bright" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M27 4 15 32h10L18 60l20-32H27L27 4z"/></svg>
-          <svg class="story-symbols__mark story-symbols__mark--bolt story-symbols__mark--dim" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M31 3 13 35h12L19 61l21-33H28L31 3z"/></svg>
-          <svg class="story-symbols__mark story-symbols__mark--bolt" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M26 3 14 31h11L19 61l21-33H28L26 3z"/></svg>
-          <svg class="story-symbols__mark story-symbols__mark--bolt story-symbols__mark--bright" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M29 2 12 34h11L17 62l22-36H27L29 2z"/></svg>
-          <svg class="story-symbols__mark story-symbols__mark--bolt story-symbols__mark--dim" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M30 1 10 33h13L14 63l26-35H26L30 1z"/></svg>
-        </div>
-        <div class="story-symbols__rail story-symbols__rail--right">
-          <svg class="story-symbols__mark story-symbols__mark--bolt story-symbols__mark--bright" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M28 2 11 33h12L16 62l23-35H26L28 2z"/></svg>
-          <svg class="story-symbols__mark story-symbols__mark--bolt story-symbols__mark--dim" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M27 4 15 32h10L18 60l20-32H27L27 4z"/></svg>
-          <svg class="story-symbols__mark story-symbols__mark--bolt" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M31 3 13 35h12L19 61l21-33H28L31 3z"/></svg>
-          <svg class="story-symbols__mark story-symbols__mark--bolt story-symbols__mark--bright" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M26 3 14 31h11L19 61l21-33H28L26 3z"/></svg>
-          <svg class="story-symbols__mark story-symbols__mark--bolt story-symbols__mark--dim" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M29 2 12 34h11L17 62l22-36H27L29 2z"/></svg>
-          <svg class="story-symbols__mark story-symbols__mark--bolt" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M30 1 10 33h13L14 63l26-35H26L30 1z"/></svg>
-          <svg class="story-symbols__mark story-symbols__mark--bolt story-symbols__mark--bright" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M28 2 11 33h12L16 62l23-35H26L28 2z"/></svg>
-          <svg class="story-symbols__mark story-symbols__mark--bolt story-symbols__mark--dim" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M27 4 15 32h10L18 60l20-32H27L27 4z"/></svg>
-          <svg class="story-symbols__mark story-symbols__mark--bolt" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M31 3 13 35h12L19 61l21-33H28L31 3z"/></svg>
-          <svg class="story-symbols__mark story-symbols__mark--bolt story-symbols__mark--bright" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M26 3 14 31h11L19 61l21-33H28L26 3z"/></svg>
-          <svg class="story-symbols__mark story-symbols__mark--bolt story-symbols__mark--dim" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M29 2 12 34h11L17 62l22-36H27L29 2z"/></svg>
-          <svg class="story-symbols__mark story-symbols__mark--bolt story-symbols__mark--bright" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M30 1 10 33h13L14 63l26-35H26L30 1z"/></svg>
-          <svg class="story-symbols__mark story-symbols__mark--bolt story-symbols__mark--dim" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M28 2 11 33h12L16 62l23-35H26L28 2z"/></svg>
-          <svg class="story-symbols__mark story-symbols__mark--bolt" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M27 4 15 32h10L18 60l20-32H27L27 4z"/></svg>
-        </div>
-      </div>
       <div class="section__inner section__inner--wide">
         <div class="reveal">
           <p class="eyebrow">Kevin’s story</p>
