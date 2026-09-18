@@ -500,6 +500,92 @@
       max-width: 68rem;
     }
 
+    #story {
+      overflow: hidden;
+    }
+
+    .story-symbols {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .story-symbols__rail {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: clamp(2.5rem, 8vw, 5.5rem);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-evenly;
+      gap: 1.5rem;
+      padding: 3rem 0;
+    }
+
+    .story-symbols__rail--left {
+      left: clamp(0.35rem, 1.5vw, 1.25rem);
+    }
+
+    .story-symbols__rail--right {
+      right: clamp(0.35rem, 1.5vw, 1.25rem);
+    }
+
+    .story-symbols__mark {
+      width: clamp(1.35rem, 3.2vw, 2.35rem);
+      height: auto;
+      color: var(--epi);
+      opacity: 0.22;
+      flex-shrink: 0;
+    }
+
+    .story-symbols__mark--dim {
+      opacity: 0.14;
+    }
+
+    .story-symbols__mark--bright {
+      opacity: 0.3;
+    }
+
+    .story-symbols__rail--left .story-symbols__mark:nth-child(odd) {
+      transform: rotate(-12deg);
+    }
+
+    .story-symbols__rail--left .story-symbols__mark:nth-child(even) {
+      transform: rotate(8deg) scale(0.9);
+    }
+
+    .story-symbols__rail--right .story-symbols__mark:nth-child(odd) {
+      transform: rotate(14deg) scale(0.92);
+    }
+
+    .story-symbols__rail--right .story-symbols__mark:nth-child(even) {
+      transform: rotate(-9deg);
+    }
+
+    #story > .section__inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    @media (max-width: 800px) {
+      .story-symbols__mark {
+        opacity: 0.12;
+        width: 1.15rem;
+      }
+
+      .story-symbols__mark--bright {
+        opacity: 0.18;
+      }
+
+      .story-symbols__rail {
+        width: 1.6rem;
+        padding: 2rem 0;
+      }
+    }
+
     .eyebrow {
       font-size: 0.8rem;
       letter-spacing: 0.16em;
@@ -1446,6 +1532,28 @@
     </section>
 
     <section class="section" id="story">
+      <div class="story-symbols" aria-hidden="true">
+        <div class="story-symbols__rail story-symbols__rail--left">
+          <svg class="story-symbols__mark story-symbols__mark--bright" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M24 2c-1.8 6.5-7.2 10.8-12.6 15.4C6.2 21.8 1 27.2 1 35.2 1 45.4 9 54 24 62c15-8 23-16.6 23-26.8 0-8-5.2-13.4-10.4-17.8C31.2 12.8 25.8 8.5 24 2z"/></svg>
+          <svg class="story-symbols__mark story-symbols__mark--dim" viewBox="0 0 48 64" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M28 4 14 34h12L18 60 36 28H22L28 4z"/></svg>
+          <svg class="story-symbols__mark" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M24 2c-1.8 6.5-7.2 10.8-12.6 15.4C6.2 21.8 1 27.2 1 35.2 1 45.4 9 54 24 62c15-8 23-16.6 23-26.8 0-8-5.2-13.4-10.4-17.8C31.2 12.8 25.8 8.5 24 2z"/></svg>
+          <svg class="story-symbols__mark story-symbols__mark--dim" viewBox="0 0 64 40" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M8 20c4-10 12-14 20-8 4 3 6 3 10 0 8-6 16-2 20 8"/><path d="M22 28c2 4 6 6 10 6s8-2 10-6"/><circle cx="24" cy="18" r="1.6" fill="currentColor"/><circle cx="40" cy="18" r="1.6" fill="currentColor"/></svg>
+          <svg class="story-symbols__mark story-symbols__mark--bright" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M24 2c-1.8 6.5-7.2 10.8-12.6 15.4C6.2 21.8 1 27.2 1 35.2 1 45.4 9 54 24 62c15-8 23-16.6 23-26.8 0-8-5.2-13.4-10.4-17.8C31.2 12.8 25.8 8.5 24 2z"/></svg>
+          <svg class="story-symbols__mark story-symbols__mark--dim" viewBox="0 0 48 64" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M28 4 14 34h12L18 60 36 28H22L28 4z"/></svg>
+          <svg class="story-symbols__mark" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M24 2c-1.8 6.5-7.2 10.8-12.6 15.4C6.2 21.8 1 27.2 1 35.2 1 45.4 9 54 24 62c15-8 23-16.6 23-26.8 0-8-5.2-13.4-10.4-17.8C31.2 12.8 25.8 8.5 24 2z"/></svg>
+          <svg class="story-symbols__mark story-symbols__mark--dim" viewBox="0 0 56 28" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M10 8c-4 0-7 3-7 6s3 6 7 6c2.5 0 4-1 6-3l4-4c2-2 3.5-3 6-3 4 0 7 3 7 6s-3 6-7 6"/><path d="M46 8c4 0 7 3 7 6s-3 6-7 6c-2.5 0-4-1-6-3l-4-4c-2-2-3.5-3-6-3-4 0-7 3-7 6s3 6 7 6"/></svg>
+        </div>
+        <div class="story-symbols__rail story-symbols__rail--right">
+          <svg class="story-symbols__mark story-symbols__mark--dim" viewBox="0 0 48 64" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M28 4 14 34h12L18 60 36 28H22L28 4z"/></svg>
+          <svg class="story-symbols__mark story-symbols__mark--bright" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M24 2c-1.8 6.5-7.2 10.8-12.6 15.4C6.2 21.8 1 27.2 1 35.2 1 45.4 9 54 24 62c15-8 23-16.6 23-26.8 0-8-5.2-13.4-10.4-17.8C31.2 12.8 25.8 8.5 24 2z"/></svg>
+          <svg class="story-symbols__mark story-symbols__mark--dim" viewBox="0 0 64 40" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M8 20c4-10 12-14 20-8 4 3 6 3 10 0 8-6 16-2 20 8"/><path d="M22 28c2 4 6 6 10 6s8-2 10-6"/><circle cx="24" cy="18" r="1.6" fill="currentColor"/><circle cx="40" cy="18" r="1.6" fill="currentColor"/></svg>
+          <svg class="story-symbols__mark" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M24 2c-1.8 6.5-7.2 10.8-12.6 15.4C6.2 21.8 1 27.2 1 35.2 1 45.4 9 54 24 62c15-8 23-16.6 23-26.8 0-8-5.2-13.4-10.4-17.8C31.2 12.8 25.8 8.5 24 2z"/></svg>
+          <svg class="story-symbols__mark story-symbols__mark--dim" viewBox="0 0 48 64" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M28 4 14 34h12L18 60 36 28H22L28 4z"/></svg>
+          <svg class="story-symbols__mark story-symbols__mark--bright" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M24 2c-1.8 6.5-7.2 10.8-12.6 15.4C6.2 21.8 1 27.2 1 35.2 1 45.4 9 54 24 62c15-8 23-16.6 23-26.8 0-8-5.2-13.4-10.4-17.8C31.2 12.8 25.8 8.5 24 2z"/></svg>
+          <svg class="story-symbols__mark story-symbols__mark--dim" viewBox="0 0 56 28" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M10 8c-4 0-7 3-7 6s3 6 7 6c2.5 0 4-1 6-3l4-4c2-2 3.5-3 6-3 4 0 7 3 7 6s-3 6-7 6"/><path d="M46 8c4 0 7 3 7 6s-3 6-7 6c-2.5 0-4-1-6-3l-4-4c-2-2-3.5-3-6-3-4 0-7 3-7 6s3 6 7 6"/></svg>
+          <svg class="story-symbols__mark" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M24 2c-1.8 6.5-7.2 10.8-12.6 15.4C6.2 21.8 1 27.2 1 35.2 1 45.4 9 54 24 62c15-8 23-16.6 23-26.8 0-8-5.2-13.4-10.4-17.8C31.2 12.8 25.8 8.5 24 2z"/></svg>
+        </div>
+      </div>
       <div class="section__inner section__inner--wide">
         <div class="reveal">
           <p class="eyebrow">Kevin’s story</p>
