@@ -358,16 +358,22 @@
 
     .nav__links {
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
-      gap: clamp(1rem, 3vw, 1.75rem);
+      justify-content: flex-end;
+      gap: clamp(0.4rem, 1.2vw, 0.65rem);
       list-style: none;
       font-size: 0.9rem;
       letter-spacing: 0.02em;
       color: var(--paper-dim);
+      max-width: min(52rem, 72vw);
     }
 
-    .nav__links a:hover {
-      color: var(--paper);
+    .nav__links .nav__cta {
+      padding: 0.45rem 0.75rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
     }
 
     .nav__cta {
@@ -1850,9 +1856,18 @@
         padding: 0.9rem 0;
       }
 
+      .nav__links a.nav__cta {
+        display: inline-flex;
+        justify-content: center;
+        width: 100%;
+        padding: 0.75rem 1rem;
+        margin: 0.35rem 0;
+        font-size: 0.85rem;
+        box-sizing: border-box;
+      }
+
       .nav__cta {
         justify-content: center;
-        margin-top: 0.5rem;
       }
 
       .split {
@@ -1961,13 +1976,13 @@
       </div>
       <button class="nav__toggle" id="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
       <ul class="nav__links" id="nav-links">
-        <li><a href="#story">My story</a></li>
-        <li><a href="#freedom">Freedom</a></li>
-        <li><a href="#weight">Weight loss</a></li>
-        <li><a href="#training">Training</a></li>
-        <li><a href="#marathon">LA Marathon</a></li>
-        <li><a href="#comments">Comments</a></li>
-        <li><a href="/game">Game</a></li>
+        <li><a class="nav__cta" href="#story">My story</a></li>
+        <li><a class="nav__cta" href="#freedom">Freedom</a></li>
+        <li><a class="nav__cta" href="#weight">Weight loss</a></li>
+        <li><a class="nav__cta" href="#training">Training</a></li>
+        <li><a class="nav__cta" href="#marathon">LA Marathon</a></li>
+        <li><a class="nav__cta" href="#comments">Comments</a></li>
+        <li><a class="nav__cta" href="/game">Game</a></li>
         <li><button class="nav__theme" id="theme-toggle" type="button" aria-label="Switch color theme">Dark</button></li>
         <li><a class="nav__cta" href="https://haku.ly/9795a39b3b" target="_blank" rel="noopener noreferrer">Donate</a></li>
       </ul>
