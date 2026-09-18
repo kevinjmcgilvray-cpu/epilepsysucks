@@ -371,22 +371,67 @@
     }
 
     .nav__cta {
+      --cta-glow: rgba(180, 140, 255, 0.55);
+      position: relative;
       display: inline-flex;
       align-items: center;
       padding: 0.55rem 1rem;
-      border: 1px solid var(--epi);
-      background: var(--epi) !important;
+      border: 1px solid #c4a4ff;
+      background: linear-gradient(135deg, #9b6bff 0%, #7a45e8 55%, #6b35d8 100%) !important;
       color: var(--btn-on-color) !important;
       font-size: 0.85rem;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.25);
+      box-shadow:
+        0 0 0 1px rgba(180, 140, 255, 0.25),
+        0 0 14px rgba(155, 107, 255, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+      overflow: hidden;
+      isolation: isolate;
+      transition:
+        transform 0.22s ease,
+        box-shadow 0.22s ease,
+        border-color 0.22s ease,
+        filter 0.22s ease;
+    }
+
+    .nav__cta::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        115deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.18) 42%,
+        transparent 58%
+      );
+      transform: translateX(-120%);
+      transition: transform 0.55s ease;
+      z-index: 0;
+      pointer-events: none;
     }
 
     .nav__cta:hover {
-      background: #8350e6 !important;
-      border-color: #8350e6;
+      background: linear-gradient(135deg, #b48cff 0%, #9b6bff 50%, #8350e6 100%) !important;
+      border-color: #e0d0ff;
       color: var(--btn-on-color) !important;
+      transform: translateY(-2px) scale(1.03);
+      filter: brightness(1.08);
+      box-shadow:
+        0 0 0 1px rgba(196, 164, 255, 0.55),
+        0 0 18px var(--cta-glow),
+        0 0 36px rgba(155, 107, 255, 0.45),
+        0 8px 20px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.28);
+    }
+
+    .nav__cta:hover::before {
+      transform: translateX(120%);
+    }
+
+    .nav__cta:active {
+      transform: translateY(0) scale(0.99);
     }
 
     .nav__links a.nav__cta:hover {
@@ -558,18 +603,57 @@
     }
 
     .btn {
+      --cta-glow: rgba(180, 140, 255, 0.55);
+      position: relative;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 0.85rem 1.35rem;
+      padding: 0.9rem 1.45rem;
       font-family: var(--font-body);
       font-size: 0.9rem;
-      font-weight: 500;
-      letter-spacing: 0.04em;
+      font-weight: 600;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       border: 1px solid transparent;
       cursor: pointer;
-      transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+      overflow: hidden;
+      isolation: isolate;
+      transition:
+        transform 0.22s ease,
+        box-shadow 0.22s ease,
+        border-color 0.22s ease,
+        background 0.22s ease,
+        color 0.22s ease,
+        filter 0.22s ease;
+    }
+
+    .btn::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        115deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.2) 42%,
+        transparent 58%
+      );
+      transform: translateX(-130%);
+      transition: transform 0.55s ease;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .btn > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .btn:hover::before {
+      transform: translateX(130%);
+    }
+
+    .btn:active {
+      transform: translateY(0) scale(0.98);
     }
 
     .btn--primary {
@@ -582,12 +666,28 @@
     }
 
     .btn--purple {
-      background: var(--epi);
+      border-color: #c4a4ff;
+      background: linear-gradient(135deg, #9b6bff 0%, #7a45e8 55%, #6b35d8 100%);
       color: var(--btn-on-color);
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.22);
+      box-shadow:
+        0 0 0 1px rgba(180, 140, 255, 0.28),
+        0 0 16px rgba(155, 107, 255, 0.38),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18);
     }
 
     .btn--purple:hover {
-      background: #8350e6;
+      background: linear-gradient(135deg, #b48cff 0%, #9b6bff 48%, #8350e6 100%);
+      border-color: #e0d0ff;
+      color: var(--btn-on-color);
+      transform: translateY(-3px) scale(1.035);
+      filter: brightness(1.08);
+      box-shadow:
+        0 0 0 1px rgba(196, 164, 255, 0.6),
+        0 0 20px var(--cta-glow),
+        0 0 42px rgba(155, 107, 255, 0.5),
+        0 10px 24px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
     }
 
     .btn--ghost {
@@ -598,6 +698,23 @@
 
     .btn--ghost:hover {
       border-color: var(--paper-faint);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .btn,
+      .nav__cta {
+        transition: box-shadow 0.2s ease, border-color 0.2s ease, filter 0.2s ease;
+      }
+
+      .btn:hover,
+      .nav__cta:hover {
+        transform: none;
+      }
+
+      .btn::before,
+      .nav__cta::before {
+        display: none;
+      }
     }
 
     .section {
