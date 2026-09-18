@@ -516,7 +516,7 @@
       position: absolute;
       top: 0;
       bottom: 0;
-      width: clamp(2.5rem, 8vw, 5.5rem);
+      width: clamp(3.25rem, 9vw, 6.5rem);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -526,15 +526,15 @@
     }
 
     .story-symbols__rail--left {
-      left: clamp(0.35rem, 1.5vw, 1.25rem);
+      left: clamp(0.2rem, 1.2vw, 1rem);
     }
 
     .story-symbols__rail--right {
-      right: clamp(0.35rem, 1.5vw, 1.25rem);
+      right: clamp(0.2rem, 1.2vw, 1rem);
     }
 
     .story-symbols__mark {
-      width: clamp(1.5rem, 3.4vw, 2.55rem);
+      width: clamp(2rem, 4.4vw, 3.25rem);
       height: auto;
       color: var(--epi);
       opacity: 0.26;
@@ -542,8 +542,8 @@
     }
 
     .story-symbols__mark--ribbon {
-      width: clamp(1.65rem, 3.8vw, 2.85rem);
-      opacity: 0.34;
+      width: clamp(2.35rem, 5vw, 3.75rem);
+      opacity: 0.36;
     }
 
     .story-symbols__mark--dim {
@@ -551,11 +551,11 @@
     }
 
     .story-symbols__mark--bright {
-      opacity: 0.4;
+      opacity: 0.42;
     }
 
     .story-symbols__mark--bolt {
-      width: clamp(1.2rem, 2.8vw, 2rem);
+      width: clamp(1.75rem, 3.8vw, 2.85rem);
     }
 
     .story-symbols__rail--left .story-symbols__mark:nth-child(odd) {
@@ -582,24 +582,24 @@
     @media (max-width: 800px) {
       .story-symbols__mark {
         opacity: 0.14;
-        width: 1.2rem;
+        width: 1.55rem;
       }
 
       .story-symbols__mark--ribbon {
-        width: 1.35rem;
-        opacity: 0.2;
-      }
-
-      .story-symbols__mark--bright {
+        width: 1.85rem;
         opacity: 0.22;
       }
 
+      .story-symbols__mark--bright {
+        opacity: 0.24;
+      }
+
       .story-symbols__mark--bolt {
-        width: 1.05rem;
+        width: 1.45rem;
       }
 
       .story-symbols__rail {
-        width: 1.6rem;
+        width: 2.15rem;
         padding: 2rem 0;
       }
     }
@@ -1552,30 +1552,30 @@
     <section class="section" id="story">
       <div class="story-symbols" aria-hidden="true">
         <div class="story-symbols__rail story-symbols__rail--left">
-          <svg class="story-symbols__mark story-symbols__mark--ribbon story-symbols__mark--bright" viewBox="0 0 64 96" fill="currentColor" aria-hidden="true"><path d="M32 6c-1.2 0-2.4.6-3.4 1.8C22.4 15.2 16 25.2 16 36.5c0 6.2 2.6 11.2 7.2 14.8L8.5 88.5c-.5 1 .2 2.2 1.4 2.2h11.2c.7 0 1.3-.4 1.6-1L32 64.2 41.3 89.7c.3.6.9 1 1.6 1h11.2c1.2 0 1.9-1.2 1.4-2.2L40.8 51.3c4.6-3.6 7.2-8.6 7.2-14.8 0-11.3-6.4-21.3-12.6-28.7C34.4 6.6 33.2 6 32 6zm0 12.2c5.2 6.6 9.8 14.4 9.8 18.3 0 3.6-1.4 6.2-4 8.2-.8.6-1.8.4-2.4-.3L32 38.2l-3.4 6.2c-.6.7-1.6.9-2.4.3-2.6-2-4-4.6-4-8.2 0-3.9 4.6-11.7 9.8-18.3z"/></svg>
+          <svg class="story-symbols__mark story-symbols__mark--ribbon story-symbols__mark--bright" viewBox="0 0 64 100" fill="currentColor" fill-rule="evenodd" aria-hidden="true"><path d="M32 8c-16 0-28 12.5-28 30c0 11 6 19.5 17.5 25.2L7 96h17l8-29 8 29h17L42.5 63.2C54 57.5 60 49 60 38C60 20.5 48 8 32 8zM32 20c10.5 0 18 7.2 18 16.5S42.5 53 32 53S14 45.8 14 36.5S21.5 20 32 20z"/></svg>
           <svg class="story-symbols__mark story-symbols__mark--bolt story-symbols__mark--dim" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M29 2 12 34h11L17 62l22-36H27L29 2z"/></svg>
-          <svg class="story-symbols__mark story-symbols__mark--ribbon" viewBox="0 0 64 96" fill="currentColor" aria-hidden="true"><path d="M32 6c-1.2 0-2.4.6-3.4 1.8C22.4 15.2 16 25.2 16 36.5c0 6.2 2.6 11.2 7.2 14.8L8.5 88.5c-.5 1 .2 2.2 1.4 2.2h11.2c.7 0 1.3-.4 1.6-1L32 64.2 41.3 89.7c.3.6.9 1 1.6 1h11.2c1.2 0 1.9-1.2 1.4-2.2L40.8 51.3c4.6-3.6 7.2-8.6 7.2-14.8 0-11.3-6.4-21.3-12.6-28.7C34.4 6.6 33.2 6 32 6zm0 12.2c5.2 6.6 9.8 14.4 9.8 18.3 0 3.6-1.4 6.2-4 8.2-.8.6-1.8.4-2.4-.3L32 38.2l-3.4 6.2c-.6.7-1.6.9-2.4.3-2.6-2-4-4.6-4-8.2 0-3.9 4.6-11.7 9.8-18.3z"/></svg>
+          <svg class="story-symbols__mark story-symbols__mark--ribbon" viewBox="0 0 64 100" fill="currentColor" fill-rule="evenodd" aria-hidden="true"><path d="M32 8c-16 0-28 12.5-28 30c0 11 6 19.5 17.5 25.2L7 96h17l8-29 8 29h17L42.5 63.2C54 57.5 60 49 60 38C60 20.5 48 8 32 8zM32 20c10.5 0 18 7.2 18 16.5S42.5 53 32 53S14 45.8 14 36.5S21.5 20 32 20z"/></svg>
           <svg class="story-symbols__mark story-symbols__mark--bolt story-symbols__mark--bright" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M30 1 10 33h13L14 63l26-35H26L30 1z"/></svg>
           <svg class="story-symbols__mark story-symbols__mark--bolt story-symbols__mark--dim" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M28 2 11 33h12L16 62l23-35H26L28 2z"/></svg>
-          <svg class="story-symbols__mark story-symbols__mark--ribbon story-symbols__mark--bright" viewBox="0 0 64 96" fill="currentColor" aria-hidden="true"><path d="M32 6c-1.2 0-2.4.6-3.4 1.8C22.4 15.2 16 25.2 16 36.5c0 6.2 2.6 11.2 7.2 14.8L8.5 88.5c-.5 1 .2 2.2 1.4 2.2h11.2c.7 0 1.3-.4 1.6-1L32 64.2 41.3 89.7c.3.6.9 1 1.6 1h11.2c1.2 0 1.9-1.2 1.4-2.2L40.8 51.3c4.6-3.6 7.2-8.6 7.2-14.8 0-11.3-6.4-21.3-12.6-28.7C34.4 6.6 33.2 6 32 6zm0 12.2c5.2 6.6 9.8 14.4 9.8 18.3 0 3.6-1.4 6.2-4 8.2-.8.6-1.8.4-2.4-.3L32 38.2l-3.4 6.2c-.6.7-1.6.9-2.4.3-2.6-2-4-4.6-4-8.2 0-3.9 4.6-11.7 9.8-18.3z"/></svg>
+          <svg class="story-symbols__mark story-symbols__mark--ribbon story-symbols__mark--bright" viewBox="0 0 64 100" fill="currentColor" fill-rule="evenodd" aria-hidden="true"><path d="M32 8c-16 0-28 12.5-28 30c0 11 6 19.5 17.5 25.2L7 96h17l8-29 8 29h17L42.5 63.2C54 57.5 60 49 60 38C60 20.5 48 8 32 8zM32 20c10.5 0 18 7.2 18 16.5S42.5 53 32 53S14 45.8 14 36.5S21.5 20 32 20z"/></svg>
           <svg class="story-symbols__mark story-symbols__mark--bolt" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M29 2 12 34h11L17 62l22-36H27L29 2z"/></svg>
           <svg class="story-symbols__mark story-symbols__mark--bolt story-symbols__mark--dim" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M31 3 13 35h12L19 61l21-33H28L31 3z"/></svg>
-          <svg class="story-symbols__mark story-symbols__mark--ribbon" viewBox="0 0 64 96" fill="currentColor" aria-hidden="true"><path d="M32 6c-1.2 0-2.4.6-3.4 1.8C22.4 15.2 16 25.2 16 36.5c0 6.2 2.6 11.2 7.2 14.8L8.5 88.5c-.5 1 .2 2.2 1.4 2.2h11.2c.7 0 1.3-.4 1.6-1L32 64.2 41.3 89.7c.3.6.9 1 1.6 1h11.2c1.2 0 1.9-1.2 1.4-2.2L40.8 51.3c4.6-3.6 7.2-8.6 7.2-14.8 0-11.3-6.4-21.3-12.6-28.7C34.4 6.6 33.2 6 32 6zm0 12.2c5.2 6.6 9.8 14.4 9.8 18.3 0 3.6-1.4 6.2-4 8.2-.8.6-1.8.4-2.4-.3L32 38.2l-3.4 6.2c-.6.7-1.6.9-2.4.3-2.6-2-4-4.6-4-8.2 0-3.9 4.6-11.7 9.8-18.3z"/></svg>
+          <svg class="story-symbols__mark story-symbols__mark--ribbon" viewBox="0 0 64 100" fill="currentColor" fill-rule="evenodd" aria-hidden="true"><path d="M32 8c-16 0-28 12.5-28 30c0 11 6 19.5 17.5 25.2L7 96h17l8-29 8 29h17L42.5 63.2C54 57.5 60 49 60 38C60 20.5 48 8 32 8zM32 20c10.5 0 18 7.2 18 16.5S42.5 53 32 53S14 45.8 14 36.5S21.5 20 32 20z"/></svg>
           <svg class="story-symbols__mark story-symbols__mark--bolt story-symbols__mark--bright" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M28 2 11 33h12L16 62l23-35H26L28 2z"/></svg>
           <svg class="story-symbols__mark story-symbols__mark--bolt story-symbols__mark--dim" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M30 1 10 33h13L14 63l26-35H26L30 1z"/></svg>
         </div>
         <div class="story-symbols__rail story-symbols__rail--right">
           <svg class="story-symbols__mark story-symbols__mark--bolt story-symbols__mark--dim" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M30 1 10 33h13L14 63l26-35H26L30 1z"/></svg>
-          <svg class="story-symbols__mark story-symbols__mark--ribbon story-symbols__mark--bright" viewBox="0 0 64 96" fill="currentColor" aria-hidden="true"><path d="M32 6c-1.2 0-2.4.6-3.4 1.8C22.4 15.2 16 25.2 16 36.5c0 6.2 2.6 11.2 7.2 14.8L8.5 88.5c-.5 1 .2 2.2 1.4 2.2h11.2c.7 0 1.3-.4 1.6-1L32 64.2 41.3 89.7c.3.6.9 1 1.6 1h11.2c1.2 0 1.9-1.2 1.4-2.2L40.8 51.3c4.6-3.6 7.2-8.6 7.2-14.8 0-11.3-6.4-21.3-12.6-28.7C34.4 6.6 33.2 6 32 6zm0 12.2c5.2 6.6 9.8 14.4 9.8 18.3 0 3.6-1.4 6.2-4 8.2-.8.6-1.8.4-2.4-.3L32 38.2l-3.4 6.2c-.6.7-1.6.9-2.4.3-2.6-2-4-4.6-4-8.2 0-3.9 4.6-11.7 9.8-18.3z"/></svg>
+          <svg class="story-symbols__mark story-symbols__mark--ribbon story-symbols__mark--bright" viewBox="0 0 64 100" fill="currentColor" fill-rule="evenodd" aria-hidden="true"><path d="M32 8c-16 0-28 12.5-28 30c0 11 6 19.5 17.5 25.2L7 96h17l8-29 8 29h17L42.5 63.2C54 57.5 60 49 60 38C60 20.5 48 8 32 8zM32 20c10.5 0 18 7.2 18 16.5S42.5 53 32 53S14 45.8 14 36.5S21.5 20 32 20z"/></svg>
           <svg class="story-symbols__mark story-symbols__mark--bolt" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M29 2 12 34h11L17 62l22-36H27L29 2z"/></svg>
           <svg class="story-symbols__mark story-symbols__mark--bolt story-symbols__mark--bright" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M28 2 11 33h12L16 62l23-35H26L28 2z"/></svg>
-          <svg class="story-symbols__mark story-symbols__mark--ribbon" viewBox="0 0 64 96" fill="currentColor" aria-hidden="true"><path d="M32 6c-1.2 0-2.4.6-3.4 1.8C22.4 15.2 16 25.2 16 36.5c0 6.2 2.6 11.2 7.2 14.8L8.5 88.5c-.5 1 .2 2.2 1.4 2.2h11.2c.7 0 1.3-.4 1.6-1L32 64.2 41.3 89.7c.3.6.9 1 1.6 1h11.2c1.2 0 1.9-1.2 1.4-2.2L40.8 51.3c4.6-3.6 7.2-8.6 7.2-14.8 0-11.3-6.4-21.3-12.6-28.7C34.4 6.6 33.2 6 32 6zm0 12.2c5.2 6.6 9.8 14.4 9.8 18.3 0 3.6-1.4 6.2-4 8.2-.8.6-1.8.4-2.4-.3L32 38.2l-3.4 6.2c-.6.7-1.6.9-2.4.3-2.6-2-4-4.6-4-8.2 0-3.9 4.6-11.7 9.8-18.3z"/></svg>
+          <svg class="story-symbols__mark story-symbols__mark--ribbon" viewBox="0 0 64 100" fill="currentColor" fill-rule="evenodd" aria-hidden="true"><path d="M32 8c-16 0-28 12.5-28 30c0 11 6 19.5 17.5 25.2L7 96h17l8-29 8 29h17L42.5 63.2C54 57.5 60 49 60 38C60 20.5 48 8 32 8zM32 20c10.5 0 18 7.2 18 16.5S42.5 53 32 53S14 45.8 14 36.5S21.5 20 32 20z"/></svg>
           <svg class="story-symbols__mark story-symbols__mark--bolt story-symbols__mark--dim" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M31 3 13 35h12L19 61l21-33H28L31 3z"/></svg>
           <svg class="story-symbols__mark story-symbols__mark--bolt story-symbols__mark--bright" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M30 1 10 33h13L14 63l26-35H26L30 1z"/></svg>
-          <svg class="story-symbols__mark story-symbols__mark--ribbon story-symbols__mark--bright" viewBox="0 0 64 96" fill="currentColor" aria-hidden="true"><path d="M32 6c-1.2 0-2.4.6-3.4 1.8C22.4 15.2 16 25.2 16 36.5c0 6.2 2.6 11.2 7.2 14.8L8.5 88.5c-.5 1 .2 2.2 1.4 2.2h11.2c.7 0 1.3-.4 1.6-1L32 64.2 41.3 89.7c.3.6.9 1 1.6 1h11.2c1.2 0 1.9-1.2 1.4-2.2L40.8 51.3c4.6-3.6 7.2-8.6 7.2-14.8 0-11.3-6.4-21.3-12.6-28.7C34.4 6.6 33.2 6 32 6zm0 12.2c5.2 6.6 9.8 14.4 9.8 18.3 0 3.6-1.4 6.2-4 8.2-.8.6-1.8.4-2.4-.3L32 38.2l-3.4 6.2c-.6.7-1.6.9-2.4.3-2.6-2-4-4.6-4-8.2 0-3.9 4.6-11.7 9.8-18.3z"/></svg>
+          <svg class="story-symbols__mark story-symbols__mark--ribbon story-symbols__mark--bright" viewBox="0 0 64 100" fill="currentColor" fill-rule="evenodd" aria-hidden="true"><path d="M32 8c-16 0-28 12.5-28 30c0 11 6 19.5 17.5 25.2L7 96h17l8-29 8 29h17L42.5 63.2C54 57.5 60 49 60 38C60 20.5 48 8 32 8zM32 20c10.5 0 18 7.2 18 16.5S42.5 53 32 53S14 45.8 14 36.5S21.5 20 32 20z"/></svg>
           <svg class="story-symbols__mark story-symbols__mark--bolt" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M27 4 15 32h10L18 60l20-32H27L27 4z"/></svg>
           <svg class="story-symbols__mark story-symbols__mark--bolt story-symbols__mark--dim" viewBox="0 0 48 64" fill="currentColor" aria-hidden="true"><path d="M29 2 12 34h11L17 62l22-36H27L29 2z"/></svg>
-          <svg class="story-symbols__mark story-symbols__mark--ribbon" viewBox="0 0 64 96" fill="currentColor" aria-hidden="true"><path d="M32 6c-1.2 0-2.4.6-3.4 1.8C22.4 15.2 16 25.2 16 36.5c0 6.2 2.6 11.2 7.2 14.8L8.5 88.5c-.5 1 .2 2.2 1.4 2.2h11.2c.7 0 1.3-.4 1.6-1L32 64.2 41.3 89.7c.3.6.9 1 1.6 1h11.2c1.2 0 1.9-1.2 1.4-2.2L40.8 51.3c4.6-3.6 7.2-8.6 7.2-14.8 0-11.3-6.4-21.3-12.6-28.7C34.4 6.6 33.2 6 32 6zm0 12.2c5.2 6.6 9.8 14.4 9.8 18.3 0 3.6-1.4 6.2-4 8.2-.8.6-1.8.4-2.4-.3L32 38.2l-3.4 6.2c-.6.7-1.6.9-2.4.3-2.6-2-4-4.6-4-8.2 0-3.9 4.6-11.7 9.8-18.3z"/></svg>
+          <svg class="story-symbols__mark story-symbols__mark--ribbon" viewBox="0 0 64 100" fill="currentColor" fill-rule="evenodd" aria-hidden="true"><path d="M32 8c-16 0-28 12.5-28 30c0 11 6 19.5 17.5 25.2L7 96h17l8-29 8 29h17L42.5 63.2C54 57.5 60 49 60 38C60 20.5 48 8 32 8zM32 20c10.5 0 18 7.2 18 16.5S42.5 53 32 53S14 45.8 14 36.5S21.5 20 32 20z"/></svg>
         </div>
       </div>
       <div class="section__inner section__inner--wide">
