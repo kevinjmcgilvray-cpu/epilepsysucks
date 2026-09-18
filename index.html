@@ -1900,6 +1900,20 @@
             </div>
           </div>
           <p class="weight-chart__note" id="weight-chart-note">Hover any dot for the exact date and weight.</p>
+          <div style="overflow-x:auto; margin-top: 1.25rem;">
+            <table class="training-table" aria-label="Weigh-in log">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Weight</th>
+                  <th>Change</th>
+                </tr>
+              </thead>
+              <tbody id="weigh-ins-table-body">
+                <tr><td colspan="3" class="is-muted">Loading weigh-ins…</td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </section>
@@ -2383,21 +2397,25 @@
       const ns = "http://www.w3.org/2000/svg";
       const X0 = 56, X1 = 776, Y0 = 40.5, Y1 = 261.7, BASE = 272;
 
+      function dayKey(iso) {
+        return String(iso || "").slice(0, 10);
+      }
+
       function formatDateLabel(iso) {
         try {
-          const d = new Date(iso + "T12:00:00");
+          const d = new Date(dayKey(iso) + "T12:00:00");
           return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
         } catch (e) {
-          return iso;
+          return dayKey(iso);
         }
       }
 
       function formatShort(iso) {
         try {
-          const d = new Date(iso + "T12:00:00");
+          const d = new Date(dayKey(iso) + "T12:00:00");
           return d.toLocaleDateString("en-US", { month: "short", year: "2-digit" });
         } catch (e) {
-          return iso;
+          return dayKey(iso);
         }
       }
 
@@ -2440,9 +2458,42 @@
         });
       }
 
+      function renderTable(weighIns) {
+        const tbody = document.getElementById("weigh-ins-table-body");
+        if (!tbody) return;
+        if (!weighIns.length) {
+          tbody.innerHTML = '<tr><td colspan="3" class="is-muted">No weigh-ins yet.</td></tr>';
+          return;
+        }
+        const rows = weighIns.slice().reverse();
+        tbody.innerHTML = rows
+          .map((w, i) => {
+            const prev = rows[i + 1];
+            let change = "—";
+            if (prev) {
+              const delta = Number((w.weightLb - prev.weightLb).toFixed(1));
+              change = (delta > 0 ? "+" : "") + delta + " lb";
+            }
+            return (
+              "<tr>" +
+              "<td>" +
+              formatDateLabel(w.date) +
+              "</td>" +
+              "<td>" +
+              w.weightLb +
+              " lb</td>" +
+              "<td>" +
+              change +
+              "</td>" +
+              "</tr>"
+            );
+          })
+          .join("");
+      }
+
       function render(weighIns, stats) {
         if (!weighIns.length) return;
-        const times = weighIns.map((w) => new Date(w.date + "T12:00:00").getTime());
+        const times = weighIns.map((w) => new Date(dayKey(w.date) + "T12:00:00").getTime());
         const lbs = weighIns.map((w) => w.weightLb);
         const tMin = Math.min.apply(null, times);
         const tMax = Math.max.apply(null, times) || tMin + 1;
@@ -2561,6 +2612,8 @@
             note.textContent = "Hover any dot for the exact date and weight — from " + stats.startLb + " lb to " + stats.currentLb + " lb.";
           }
         }
+
+        renderTable(weighIns);
       }
 
       fetch("/api/weigh-ins")
