@@ -1796,7 +1796,6 @@
       <button class="nav__toggle" id="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
       <ul class="nav__links" id="nav-links">
         <li><a href="#story">My story</a></li>
-        <li><a href="#course">Course</a></li>
         <li><a href="#freedom">Freedom</a></li>
         <li><a href="#weight">Weight loss</a></li>
         <li><a href="#training">Training</a></li>
@@ -1895,24 +1894,6 @@
             <figcaption>2022 — after DBS</figcaption>
           </figure>
         </article>
-      </div>
-    </section>
-
-    <section class="section course-map" id="course">
-      <div class="section__inner section__inner--wide reveal">
-        <p class="eyebrow">March 7, 2027</p>
-        <h2>Stadium to the Stars</h2>
-        <p>From Dodger Stadium to Century City — the finish line I’m training toward after everything from how it started to deep brain stimulation.</p>
-        <div class="course-map__frame">
-          <div class="course-map__canvas" id="marathon-map" role="img" aria-label="Interactive map of the LA Marathon route from Dodger Stadium to Century City"></div>
-        </div>
-        <div class="course-map__legend">
-          <span><span class="course-map__swatch" aria-hidden="true"></span>LA Marathon route</span>
-          <span id="course-map-distance">26.2 miles</span>
-          <span>Start: Dodger Stadium</span>
-          <span>Finish: Avenue of the Stars</span>
-        </div>
-        <p class="course-map__note" id="course-map-note">Dark map · neon course line from Neon PostGIS</p>
       </div>
     </section>
 
@@ -2017,11 +1998,22 @@
       </div>
     </section>
 
-    <section class="section section--alt" id="training">
+    <section class="section section--alt course-map" id="training">
       <div class="section__inner reveal">
-        <p class="eyebrow">Training log</p>
-        <h2>Where I am now</h2>
-        <p>Every run gets logged — distance, time, pace, and notes. This is the live picture of the road to March 7, 2027.</p>
+        <p class="eyebrow">March 7, 2027 · Training log</p>
+        <h2>Stadium to the Stars</h2>
+        <p>Where I am now — every run gets logged, and this is the course I’m training for: Dodger Stadium to Century City on March 7, 2027.</p>
+
+        <div class="course-map__frame">
+          <div class="course-map__canvas" id="marathon-map" role="img" aria-label="Interactive map of the LA Marathon route from Dodger Stadium to Century City"></div>
+        </div>
+        <div class="course-map__legend">
+          <span><span class="course-map__swatch" aria-hidden="true"></span>LA Marathon route</span>
+          <span id="course-map-distance">26.2 miles</span>
+          <span>Start: Dodger Stadium</span>
+          <span>Finish: Avenue of the Stars</span>
+        </div>
+        <p class="course-map__note" id="course-map-note">Dark map · neon course line from Neon PostGIS</p>
 
         <div class="training-status" id="training-status">
           <div class="training-status__card">
