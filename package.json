@@ -1,0 +1,24 @@
+{
+  "name": "epilepsysucks",
+  "version": "1.0.0",
+  "description": "Kevin’s story site for the LA Marathon / CURE Epilepsy — hosted at [epilepsysucks.org](https://epilepsysucks.org).",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kevinjmcgilvray-cpu/epilepsysucks.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/kevinjmcgilvray-cpu/epilepsysucks/issues"
+  },
+  "homepage": "https://github.com/kevinjmcgilvray-cpu/epilepsysucks#readme",
+  "dependencies": {
+    "@neondatabase/serverless": "^1.1.0"
+  }
+}
