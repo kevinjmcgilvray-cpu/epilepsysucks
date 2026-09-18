@@ -1255,6 +1255,39 @@
       }
     }
 
+    .story-start {
+      display: grid;
+      grid-template-columns: 1.15fr minmax(12rem, 0.85fr);
+      gap: clamp(1.25rem, 3vw, 2rem);
+      align-items: start;
+    }
+
+    .story-start__widget {
+      position: sticky;
+      top: 5.5rem;
+      min-height: 12rem;
+      border: 1px solid rgba(180, 140, 255, 0.28);
+      background: rgba(155, 107, 255, 0.06);
+      box-shadow: 0 0 24px rgba(155, 107, 255, 0.12);
+      overflow: hidden;
+    }
+
+    .story-start__widget .elfsight-app-YOUR-WIDGET-ID,
+    .story-start__widget [class^="elfsight-app-"] {
+      width: 100%;
+    }
+
+    @media (max-width: 800px) {
+      .story-start {
+        grid-template-columns: 1fr;
+      }
+
+      .story-start__widget {
+        position: static;
+        order: 2;
+      }
+    }
+
     .chapter--with-photo {
       display: grid;
       grid-template-columns: minmax(10rem, 0.85fr) 1.15fr;
@@ -2291,11 +2324,17 @@
 
     <section class="section" id="story">
       <div class="section__inner section__inner--wide">
-        <div class="reveal">
-          <p class="eyebrow">Kevin’s story</p>
-          <h2>How it started</h2>
-          <p>When I was young, life threw me a curveball I never saw coming — <span class="key">weakness down the right side of my body</span>. My parents were incredibly concerned, so we went straight to the doctor. After MRIs, CT scans, and more, I was wheeled into the operating room to see if I had a <span class="key">tumor in my brain — which I didn’t, thank God</span>!</p>
-          <p>After all those tests, they decided I had <span class="key">cerebral hemiatrophy</span>. <span class="key">I was eight years old.</span> In plain English: <span class="key">one half of my brain is smaller than the other</span> — “hemi” means half, and “atrophy” means that part of the brain didn’t grow or stay as large as it should. That difference on one side of the brain is what set the stage for everything that came next. A few years later? Oh man — <em>this</em> is where the fun begins.</p>
+        <div class="story-start reveal">
+          <div class="story-start__copy">
+            <p class="eyebrow">Kevin’s story</p>
+            <h2>How it started</h2>
+            <p>When I was young, life threw me a curveball I never saw coming — <span class="key">weakness down the right side of my body</span>. My parents were incredibly concerned, so we went straight to the doctor. After MRIs, CT scans, and more, I was wheeled into the operating room to see if I had a <span class="key">tumor in my brain — which I didn’t, thank God</span>!</p>
+            <p>After all those tests, they decided I had <span class="key">cerebral hemiatrophy</span>. <span class="key">I was eight years old.</span> In plain English: <span class="key">one half of my brain is smaller than the other</span> — “hemi” means half, and “atrophy” means that part of the brain didn’t grow or stay as large as it should. That difference on one side of the brain is what set the stage for everything that came next. A few years later? Oh man — <em>this</em> is where the fun begins.</p>
+          </div>
+          <div class="story-start__widget" aria-label="Elfsight widget">
+            <script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
+            <div class="elfsight-app-YOUR-WIDGET-ID" data-elfsight-app-lazy></div>
+          </div>
         </div>
 
         <article class="chapter reveal">
