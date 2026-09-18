@@ -1,5 +1,7 @@
 -- Site data layer for epilepsysucks.org
 
+CREATE EXTENSION IF NOT EXISTS postgis;
+
 CREATE TABLE IF NOT EXISTS training_runs (
   id BIGSERIAL PRIMARY KEY,
   run_date DATE NOT NULL,
