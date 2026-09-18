@@ -4,10 +4,14 @@ CREATE TABLE IF NOT EXISTS comments (
   name TEXT NOT NULL,
   message TEXT NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  approved BOOLEAN NOT NULL DEFAULT TRUE,
+  approved BOOLEAN NOT NULL DEFAULT FALSE,
   spam BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 CREATE INDEX IF NOT EXISTS comments_public_idx
   ON comments (created_at DESC)
   WHERE approved = TRUE AND spam = FALSE;
+
+CREATE INDEX IF NOT EXISTS comments_pending_idx
+  ON comments (created_at ASC)
+  WHERE approved = FALSE AND spam = FALSE;

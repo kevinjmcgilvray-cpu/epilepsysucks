@@ -1126,6 +1126,58 @@
       border-top: none;
     }
 
+    .moderation-list {
+      list-style: none;
+      display: grid;
+      gap: 1rem;
+      margin: 1rem 0 0;
+      padding: 0;
+    }
+
+    .moderation-item {
+      border: 1px solid var(--line);
+      padding: 1rem;
+      background: var(--surface-muted);
+    }
+
+    .moderation-item__meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+      margin-bottom: 0.55rem;
+      font-size: 0.85rem;
+      color: var(--paper-faint);
+    }
+
+    .moderation-item__name {
+      color: var(--paper);
+      font-weight: 600;
+    }
+
+    .moderation-item__body {
+      margin: 0 0 0.85rem;
+      color: var(--paper-dim);
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+
+    .moderation-item__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .moderation-item__actions .btn {
+      padding: 0.55rem 0.9rem;
+      font-size: 0.78rem;
+    }
+
+    .moderation-status {
+      margin-top: 0.75rem;
+      font-size: 0.9rem;
+      color: var(--paper-dim);
+    }
+
     .comment-form {
       margin-top: 2.25rem;
       padding-top: 1.75rem;
@@ -1766,7 +1818,7 @@
       <div class="section__inner reveal">
         <p class="eyebrow">Community</p>
         <h2>Comments</h2>
-        <p>If my story landed with you — leave a note. Others can read it here too.</p>
+        <p>If my story landed with you — leave a note. Comments are reviewed before they show publicly.</p>
 
         <aside class="owner-update" id="owner-update" hidden>
           <p class="owner-update__label">Latest update from Kevin</p>
@@ -1794,10 +1846,27 @@
           </label>
           <div class="comment-form__actions">
             <button class="btn btn--purple" type="submit" id="comment-submit">Post comment</button>
-            <span class="comment-form__note">No account needed.</span>
+            <span class="comment-form__note">Comments are reviewed before they appear.</span>
           </div>
           <p class="comment-form__error" id="comment-error" hidden></p>
         </form>
+
+        <details class="owner-update-form" id="moderation-form-wrap">
+          <summary>Kevin — moderate comments</summary>
+          <form class="comment-form" id="moderation-form" novalidate>
+            <label>
+              Password
+              <input id="moderation-password" name="password" type="password" required autocomplete="current-password" placeholder="Your update password" />
+            </label>
+            <div class="comment-form__actions">
+              <button class="btn btn--purple" type="submit" id="moderation-load">Load pending</button>
+              <span class="comment-form__note">Approve to publish, or mark spam.</span>
+            </div>
+            <p class="comment-form__error" id="moderation-error" hidden></p>
+          </form>
+          <p class="moderation-status" id="moderation-status" hidden></p>
+          <ul class="moderation-list" id="moderation-list" hidden></ul>
+        </details>
 
         <details class="owner-update-form" id="owner-update-form-wrap">
           <summary>Kevin — post a latest update</summary>
@@ -2270,6 +2339,9 @@
               return;
             }
             form.reset();
+            statusEl.hidden = false;
+            statusEl.className = "comments-list__empty";
+            statusEl.textContent = "Thanks — your comment is waiting for approval.";
             return loadComments();
           })
           .catch((err) => {
@@ -2282,6 +2354,183 @@
       });
 
       loadComments();
+    })();
+
+    (function initModeration() {
+      const form = document.getElementById("moderation-form");
+      const listEl = document.getElementById("moderation-list");
+      const statusEl = document.getElementById("moderation-status");
+      const errorEl = document.getElementById("moderation-error");
+      const loadBtn = document.getElementById("moderation-load");
+      const passwordEl = document.getElementById("moderation-password");
+      if (!form || !listEl || !passwordEl) return;
+
+      function escapeHtml(value) {
+        return String(value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      function formatDate(iso) {
+        try {
+          return new Date(iso).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric"
+          });
+        } catch (e) {
+          return "";
+        }
+      }
+
+      function showError(message) {
+        if (!errorEl) return;
+        if (!message) {
+          errorEl.hidden = true;
+          errorEl.textContent = "";
+          return;
+        }
+        errorEl.hidden = false;
+        errorEl.textContent = message;
+      }
+
+      function setStatus(message) {
+        if (!statusEl) return;
+        if (!message) {
+          statusEl.hidden = true;
+          statusEl.textContent = "";
+          return;
+        }
+        statusEl.hidden = false;
+        statusEl.textContent = message;
+      }
+
+      function moderate(action, id) {
+        return fetch("/api/moderate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            password: passwordEl.value || "",
+            action,
+            id
+          })
+        }).then((res) => res.json().then((data) => ({ res, data })));
+      }
+
+      function renderPending(comments) {
+        if (!comments.length) {
+          listEl.hidden = true;
+          listEl.innerHTML = "";
+          setStatus("No pending comments.");
+          return;
+        }
+
+        setStatus(comments.length + " pending comment" + (comments.length === 1 ? "" : "s"));
+        listEl.hidden = false;
+        listEl.innerHTML = comments
+          .map(
+            (c) =>
+              `<li class="moderation-item" data-id="${escapeHtml(c.id)}">` +
+              `<div class="moderation-item__meta">` +
+              `<span class="moderation-item__name">${escapeHtml(c.name)}</span>` +
+              `<time datetime="${escapeHtml(c.createdAt || "")}">${escapeHtml(formatDate(c.createdAt))}</time>` +
+              `</div>` +
+              `<p class="moderation-item__body">${escapeHtml(c.body || c.message || "")}</p>` +
+              `<div class="moderation-item__actions">` +
+              `<button class="btn btn--purple" type="button" data-action="approve">Approve</button>` +
+              `<button class="btn btn--ghost" type="button" data-action="spam">Mark spam</button>` +
+              `</div>` +
+              `</li>`
+          )
+          .join("");
+      }
+
+      function reloadPending() {
+        return moderate("list").then(({ res, data }) => {
+          if (!res.ok || !data || !data.ok) {
+            throw new Error((data && data.error) || "Could not load pending comments");
+          }
+          renderPending(data.comments || []);
+        });
+      }
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        showError("");
+        loadBtn.disabled = true;
+        loadBtn.textContent = "Loading…";
+        reloadPending()
+          .catch((err) => {
+            showError(err.message || "Could not load pending comments.");
+            listEl.hidden = true;
+            setStatus("");
+          })
+          .finally(() => {
+            loadBtn.disabled = false;
+            loadBtn.textContent = "Load pending";
+          });
+      });
+
+      listEl.addEventListener("click", (event) => {
+        const button = event.target.closest("button[data-action]");
+        if (!button) return;
+        const item = button.closest(".moderation-item");
+        if (!item) return;
+        const action = button.getAttribute("data-action");
+        const id = item.getAttribute("data-id");
+        showError("");
+        button.disabled = true;
+        moderate(action, id)
+          .then(({ res, data }) => {
+            if (!res.ok || !data || !data.ok) {
+              throw new Error((data && data.error) || "Could not update comment");
+            }
+            return reloadPending();
+          })
+          .then(() => {
+            const publicList = document.getElementById("comments-list");
+            if (publicList && typeof window !== "undefined") {
+              // Refresh public list after approve
+              fetch("/api/comments")
+                .then((r) => r.json())
+                .then((data) => {
+                  if (!data || !data.ok) return;
+                  const status = document.getElementById("comments-status");
+                  if (!data.comments || !data.comments.length) {
+                    publicList.hidden = true;
+                    if (status) {
+                      status.hidden = false;
+                      status.textContent = "No comments yet — be the first.";
+                      status.className = "comments-list__empty";
+                    }
+                    return;
+                  }
+                  if (status) status.hidden = true;
+                  publicList.hidden = false;
+                  publicList.innerHTML = data.comments
+                    .map(
+                      (c) =>
+                        `<li class="comment-item">` +
+                        `<div class="comment-item__meta">` +
+                        `<span class="comment-item__name">${escapeHtml(c.name)}</span>` +
+                        `<time datetime="${escapeHtml(c.createdAt || "")}">${escapeHtml(formatDate(c.createdAt))}</time>` +
+                        `</div>` +
+                        `<p class="comment-item__body">${escapeHtml(c.body)}</p>` +
+                        `</li>`
+                    )
+                    .join("");
+                })
+                .catch(() => {});
+            }
+          })
+          .catch((err) => {
+            showError(err.message || "Could not update comment.");
+            button.disabled = false;
+          });
+      });
     })();
 
     (function initOwnerUpdate() {

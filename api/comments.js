@@ -93,11 +93,15 @@ export default async function handler(req, res) {
 
       const rows = await sql`
         INSERT INTO comments (name, message, approved, spam)
-        VALUES (${name}, ${message}, TRUE, FALSE)
+        VALUES (${name}, ${message}, FALSE, FALSE)
         RETURNING id, name, message, created_at, approved, spam
       `;
 
-      res.status(201).json({ ok: true, comment: mapComment(rows[0]) });
+      res.status(201).json({
+        ok: true,
+        pending: true,
+        comment: mapComment(rows[0])
+      });
       return;
     }
 
