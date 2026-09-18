@@ -100,6 +100,22 @@
       -webkit-font-smoothing: antialiased;
     }
 
+    .bg-lightning {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        url("epilepsy-sucks-images/lightning-seizure.jpg") center center / cover no-repeat;
+      opacity: 0.42;
+      mix-blend-mode: screen;
+    }
+
+    [data-theme="light"] .bg-lightning {
+      opacity: 0.22;
+      mix-blend-mode: multiply;
+    }
+
     a {
       color: inherit;
       text-decoration: none;
@@ -627,16 +643,16 @@
       width: clamp(1.85rem, 3.6vw, 3.15rem);
       height: auto;
       color: var(--epi);
-      opacity: 0.18;
+      opacity: 0.1;
     }
 
     .bolt-scatter__bolt--dim {
-      opacity: 0.1;
+      opacity: 0.06;
       width: clamp(1.5rem, 3vw, 2.5rem);
     }
 
     .bolt-scatter__bolt--bright {
-      opacity: 0.28;
+      opacity: 0.16;
       width: clamp(2.1rem, 4.2vw, 3.6rem);
     }
 
