@@ -376,6 +376,14 @@
       white-space: nowrap;
     }
 
+    button.nav__cta {
+      font-family: var(--font-body);
+      font-weight: 600;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
     .nav__cta {
       --cta-glow: rgba(180, 140, 255, 0.55);
       position: relative;
@@ -440,8 +448,204 @@
       transform: translateY(0) scale(0.99);
     }
 
-    .nav__links a.nav__cta:hover {
+    .nav__links a.nav__cta:hover,
+    .nav__links button.nav__cta:hover {
       color: var(--btn-on-color) !important;
+    }
+
+    .booth {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      display: none;
+      align-items: stretch;
+      justify-content: flex-end;
+      background: rgba(6, 4, 12, 0.62);
+      backdrop-filter: blur(6px);
+    }
+
+    .booth.is-open,
+    .booth:not([hidden]) {
+      display: flex;
+    }
+
+    .booth[hidden] {
+      display: none !important;
+    }
+
+    .booth__panel {
+      width: min(28rem, 100%);
+      height: 100%;
+      overflow: auto;
+      padding: 1.1rem 1.15rem 1.5rem;
+      border-left: 1px solid rgba(180, 140, 255, 0.45);
+      background:
+        linear-gradient(180deg, rgba(155, 107, 255, 0.12), transparent 28%),
+        #100c16;
+      box-shadow: -12px 0 40px rgba(0, 0, 0, 0.45), 0 0 30px rgba(155, 107, 255, 0.18);
+      color: var(--paper);
+    }
+
+    .booth__head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .booth__eyebrow {
+      margin: 0 0 0.25rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #b48cff;
+      text-shadow: 0 0 10px rgba(180, 140, 255, 0.45);
+    }
+
+    .booth__title {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 1.65rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      line-height: 1;
+    }
+
+    .booth__close {
+      flex-shrink: 0;
+      width: 2.35rem;
+      height: 2.35rem;
+      border: 1px solid rgba(180, 140, 255, 0.45);
+      background: rgba(155, 107, 255, 0.15);
+      color: #e0d0ff;
+      font-size: 1.1rem;
+      cursor: pointer;
+      box-shadow: 0 0 12px rgba(155, 107, 255, 0.25);
+    }
+
+    .booth__close:hover {
+      background: rgba(155, 107, 255, 0.35);
+    }
+
+    .booth__copy {
+      margin: 0 0 1rem;
+      font-size: 0.9rem;
+      color: var(--paper-dim);
+      line-height: 1.45;
+    }
+
+    .booth__stage {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1;
+      margin-bottom: 0.85rem;
+      border: 1px solid rgba(180, 140, 255, 0.4);
+      background: #07050c;
+      box-shadow:
+        0 0 0 1px rgba(155, 107, 255, 0.15) inset,
+        0 0 24px rgba(155, 107, 255, 0.2);
+      overflow: hidden;
+      touch-action: none;
+    }
+
+    .booth__stage canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      cursor: grab;
+    }
+
+    .booth__stage canvas.is-dragging {
+      cursor: grabbing;
+    }
+
+    .booth__hint {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 1.25rem;
+      text-align: center;
+      color: rgba(224, 208, 255, 0.78);
+      font-size: 0.92rem;
+      pointer-events: none;
+      background: radial-gradient(circle at center, rgba(155, 107, 255, 0.12), transparent 65%);
+    }
+
+    .booth__hint[hidden] {
+      display: none;
+    }
+
+    .booth__row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .booth__file {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .booth__file input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .booth__stickers {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.45rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .booth__sticker {
+      display: grid;
+      place-items: center;
+      min-height: 3rem;
+      padding: 0.4rem 0.35rem;
+      border: 1px solid rgba(180, 140, 255, 0.35);
+      background: rgba(155, 107, 255, 0.1);
+      color: #e8dcff;
+      font-family: var(--font-body);
+      font-size: 0.68rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-align: center;
+      line-height: 1.2;
+      box-shadow: 0 0 10px rgba(155, 107, 255, 0.15);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    }
+
+    .booth__sticker:hover {
+      transform: translateY(-1px);
+      border-color: #c4a4ff;
+      box-shadow: 0 0 16px rgba(180, 140, 255, 0.4);
+    }
+
+    .booth__note {
+      margin: 0.35rem 0 0;
+      font-size: 0.78rem;
+      color: var(--paper-faint);
+    }
+
+    @media (max-width: 800px) {
+      .booth {
+        align-items: flex-end;
+      }
+
+      .booth__panel {
+        width: 100%;
+        height: min(92dvh, 100%);
+        border-left: none;
+        border-top: 1px solid rgba(180, 140, 255, 0.45);
+        border-radius: 0;
+      }
     }
 
     .nav__theme {
@@ -1983,6 +2187,7 @@
         <li><a class="nav__cta" href="#marathon">LA Marathon</a></li>
         <li><a class="nav__cta" href="#comments">Comments</a></li>
         <li><a class="nav__cta" href="/game">Game</a></li>
+        <li><button type="button" class="nav__cta" id="booth-open">Photo booth</button></li>
         <li><button class="nav__theme" id="theme-toggle" type="button" aria-label="Switch color theme">Dark</button></li>
         <li><a class="nav__cta" href="https://haku.ly/9795a39b3b" target="_blank" rel="noopener noreferrer">Donate</a></li>
       </ul>
@@ -2013,6 +2218,56 @@
       <p class="race-clock__caption">Until race morning · <strong>March 7, 2027</strong></p>
     </div>
   </header>
+
+  <div class="booth" id="booth" hidden aria-hidden="true">
+    <div
+      class="booth__panel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="booth-title"
+    >
+      <div class="booth__head">
+        <div>
+          <p class="booth__eyebrow">Neon Superimpose</p>
+          <h2 class="booth__title" id="booth-title">Photo booth</h2>
+        </div>
+        <button class="booth__close" type="button" id="booth-close" aria-label="Close photo booth">✕</button>
+      </div>
+      <p class="booth__copy">
+        Upload a photo, layer glowing neon race stickers, then download it to share.
+      </p>
+      <div class="booth__stage" id="booth-stage">
+        <canvas id="booth-canvas" width="900" height="900" aria-label="Photo booth canvas"></canvas>
+        <p class="booth__hint" id="booth-hint">Upload a photo to start your neon overlay</p>
+      </div>
+      <div class="booth__row">
+        <label class="btn btn--purple booth__file">
+          Upload photo
+          <input id="booth-upload" type="file" accept="image/*" />
+        </label>
+        <button class="btn btn--purple" type="button" id="booth-download" disabled>Download</button>
+        <button class="btn btn--ghost" type="button" id="booth-clear" disabled>Clear stickers</button>
+      </div>
+      <p class="booth__eyebrow">Stickers</p>
+      <div class="booth__stickers" id="booth-stickers">
+        <button class="booth__sticker" type="button" data-sticker="lightning">Lightning</button>
+        <button class="booth__sticker" type="button" data-sticker="bolt">Bolt</button>
+        <button class="booth__sticker" type="button" data-sticker="26.2">26.2</button>
+        <button class="booth__sticker" type="button" data-sticker="stadium">Stadium to the Stars</button>
+        <button class="booth__sticker" type="button" data-sticker="epilepsy">Epilepsy Sucks</button>
+        <button class="booth__sticker" type="button" data-sticker="race">March 7, 2027</button>
+        <button class="booth__sticker" type="button" data-sticker="cure">Team CURE</button>
+        <button class="booth__sticker" type="button" data-sticker="frame">Neon frame</button>
+      </div>
+      <p class="booth__note">Drag stickers to move. Use + / − to resize the selected sticker.</p>
+      <div class="booth__row">
+        <button class="btn btn--ghost" type="button" id="booth-smaller" disabled>− Smaller</button>
+        <button class="btn btn--ghost" type="button" id="booth-bigger" disabled>+ Bigger</button>
+        <button class="btn btn--ghost" type="button" id="booth-rotate" disabled>Rotate</button>
+        <button class="btn btn--ghost" type="button" id="booth-delete" disabled>Delete</button>
+      </div>
+    </div>
+  </div>
 
   <main id="top">
     <section class="hero" aria-label="Introduction">
@@ -2535,6 +2790,314 @@
         toggle.textContent = "☰";
       });
     });
+
+    (function initPhotoBooth() {
+      const booth = document.getElementById("booth");
+      const openBtn = document.getElementById("booth-open");
+      const closeBtn = document.getElementById("booth-close");
+      const canvas = document.getElementById("booth-canvas");
+      const hint = document.getElementById("booth-hint");
+      const upload = document.getElementById("booth-upload");
+      const downloadBtn = document.getElementById("booth-download");
+      const clearBtn = document.getElementById("booth-clear");
+      const smallerBtn = document.getElementById("booth-smaller");
+      const biggerBtn = document.getElementById("booth-bigger");
+      const rotateBtn = document.getElementById("booth-rotate");
+      const deleteBtn = document.getElementById("booth-delete");
+      const stickerBtns = document.getElementById("booth-stickers");
+      if (!booth || !openBtn || !canvas || !upload) return;
+
+      const ctx = canvas.getContext("2d");
+      const SIZE = canvas.width;
+      let photo = null;
+      let stickers = [];
+      let selected = -1;
+      let drag = null;
+      const lightningImg = new Image();
+      lightningImg.crossOrigin = "anonymous";
+      lightningImg.src = "epilepsy-sucks-images/lightning-seizure.jpg";
+
+      function openBooth() {
+        booth.hidden = false;
+        booth.classList.add("is-open");
+        booth.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+        if (links && toggle) {
+          links.classList.remove("is-open");
+          toggle.setAttribute("aria-expanded", "false");
+          toggle.textContent = "☰";
+        }
+        redraw();
+      }
+
+      function closeBooth() {
+        booth.hidden = true;
+        booth.classList.remove("is-open");
+        booth.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+      }
+
+      function setControls(enabled) {
+        downloadBtn.disabled = !enabled;
+        clearBtn.disabled = !enabled || !stickers.length;
+        const hasSel = enabled && selected >= 0;
+        smallerBtn.disabled = !hasSel;
+        biggerBtn.disabled = !hasSel;
+        rotateBtn.disabled = !hasSel;
+        deleteBtn.disabled = !hasSel;
+      }
+
+      function redraw() {
+        ctx.clearRect(0, 0, SIZE, SIZE);
+        ctx.fillStyle = "#07050c";
+        ctx.fillRect(0, 0, SIZE, SIZE);
+
+        if (!photo) {
+          hint.hidden = false;
+          setControls(false);
+          return;
+        }
+
+        hint.hidden = true;
+        const scale = Math.max(SIZE / photo.width, SIZE / photo.height);
+        const w = photo.width * scale;
+        const h = photo.height * scale;
+        ctx.drawImage(photo, (SIZE - w) / 2, (SIZE - h) / 2, w, h);
+
+        stickers.forEach((s, i) => {
+          ctx.save();
+          ctx.translate(s.x, s.y);
+          ctx.rotate(s.rotation);
+          ctx.scale(s.scale, s.scale);
+          if (s.kind === "lightning" && lightningImg.complete && lightningImg.naturalWidth) {
+            const iw = 280;
+            const ih = (lightningImg.naturalHeight / lightningImg.naturalWidth) * iw;
+            ctx.globalCompositeOperation = "screen";
+            ctx.drawImage(lightningImg, -iw / 2, -ih / 2, iw, ih);
+            ctx.globalCompositeOperation = "source-over";
+          } else if (s.kind === "bolt") {
+            ctx.fillStyle = "#b48cff";
+            ctx.shadowColor = "#9b6bff";
+            ctx.shadowBlur = 18;
+            ctx.beginPath();
+            ctx.moveTo(-10, -40);
+            ctx.lineTo(8, -8);
+            ctx.lineTo(-2, -8);
+            ctx.lineTo(14, 40);
+            ctx.lineTo(-10, 4);
+            ctx.lineTo(2, 4);
+            ctx.closePath();
+            ctx.fill();
+          } else if (s.kind === "frame") {
+            ctx.strokeStyle = "#c4a4ff";
+            ctx.lineWidth = 10;
+            ctx.shadowColor = "#9b6bff";
+            ctx.shadowBlur = 22;
+            ctx.strokeRect(-SIZE * 0.42, -SIZE * 0.42, SIZE * 0.84, SIZE * 0.84);
+            ctx.lineWidth = 2;
+            ctx.strokeRect(-SIZE * 0.39, -SIZE * 0.39, SIZE * 0.78, SIZE * 0.78);
+          } else if (s.text) {
+            ctx.font = "700 42px Bebas Neue, Impact, sans-serif";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.lineJoin = "round";
+            ctx.shadowColor = "#9b6bff";
+            ctx.shadowBlur = 16;
+            ctx.strokeStyle = "rgba(20, 8, 40, 0.85)";
+            ctx.lineWidth = 8;
+            ctx.strokeText(s.text, 0, 0);
+            ctx.fillStyle = "#e8dcff";
+            ctx.fillText(s.text, 0, 0);
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = "#b48cff";
+            ctx.globalAlpha = 0.9;
+            ctx.fillText(s.text, 0, 0);
+            ctx.globalAlpha = 1;
+          }
+          if (i === selected) {
+            ctx.shadowBlur = 0;
+            ctx.strokeStyle = "rgba(224, 208, 255, 0.9)";
+            ctx.lineWidth = 2 / Math.max(s.scale, 0.01);
+            ctx.setLineDash([8 / s.scale, 6 / s.scale]);
+            const box = s.kind === "frame" ? SIZE * 0.44 : s.kind === "lightning" ? 160 : 90;
+            ctx.strokeRect(-box, -box * 0.7, box * 2, box * 1.4);
+            ctx.setLineDash([]);
+          }
+          ctx.restore();
+        });
+
+        setControls(true);
+      }
+
+      function addSticker(kind) {
+        if (!photo) return;
+        const map = {
+          lightning: { kind: "lightning", scale: 0.9 },
+          bolt: { kind: "bolt", scale: 1.1 },
+          "26.2": { kind: "text", text: "26.2", scale: 1.2 },
+          stadium: { kind: "text", text: "STADIUM TO THE STARS", scale: 0.72 },
+          epilepsy: { kind: "text", text: "EPILEPSY SUCKS", scale: 0.85 },
+          race: { kind: "text", text: "MARCH 7, 2027", scale: 0.8 },
+          cure: { kind: "text", text: "TEAM CURE", scale: 0.9 },
+          frame: { kind: "frame", scale: 1, x: SIZE / 2, y: SIZE / 2 }
+        };
+        const base = map[kind];
+        if (!base) return;
+        stickers.push({
+          kind: base.kind,
+          text: base.text || "",
+          x: base.x != null ? base.x : SIZE * (0.35 + Math.random() * 0.3),
+          y: base.y != null ? base.y : SIZE * (0.35 + Math.random() * 0.3),
+          scale: base.scale || 1,
+          rotation: 0
+        });
+        selected = stickers.length - 1;
+        redraw();
+      }
+
+      function canvasPoint(event) {
+        const rect = canvas.getBoundingClientRect();
+        const src = event.touches ? event.touches[0] : event;
+        return {
+          x: ((src.clientX - rect.left) / rect.width) * SIZE,
+          y: ((src.clientY - rect.top) / rect.height) * SIZE
+        };
+      }
+
+      function hitTest(x, y) {
+        for (let i = stickers.length - 1; i >= 0; i--) {
+          const s = stickers[i];
+          const dx = x - s.x;
+          const dy = y - s.y;
+          const cos = Math.cos(-s.rotation);
+          const sin = Math.sin(-s.rotation);
+          const lx = (dx * cos - dy * sin) / s.scale;
+          const ly = (dx * sin + dy * cos) / s.scale;
+          const box = s.kind === "frame" ? SIZE * 0.44 : s.kind === "lightning" ? 160 : 90;
+          if (Math.abs(lx) <= box && Math.abs(ly) <= box * 0.7) return i;
+        }
+        return -1;
+      }
+
+      function onPointerDown(event) {
+        if (!photo) return;
+        event.preventDefault();
+        const p = canvasPoint(event);
+        selected = hitTest(p.x, p.y);
+        if (selected >= 0) {
+          drag = {
+            id: selected,
+            ox: p.x - stickers[selected].x,
+            oy: p.y - stickers[selected].y
+          };
+          canvas.classList.add("is-dragging");
+        }
+        redraw();
+      }
+
+      function onPointerMove(event) {
+        if (!drag) return;
+        event.preventDefault();
+        const p = canvasPoint(event);
+        stickers[drag.id].x = p.x - drag.ox;
+        stickers[drag.id].y = p.y - drag.oy;
+        redraw();
+      }
+
+      function onPointerUp() {
+        drag = null;
+        canvas.classList.remove("is-dragging");
+      }
+
+      openBtn.addEventListener("click", openBooth);
+      closeBtn.addEventListener("click", closeBooth);
+      booth.addEventListener("click", (event) => {
+        if (event.target === booth) closeBooth();
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !booth.hidden) closeBooth();
+      });
+
+      upload.addEventListener("change", () => {
+        const file = upload.files && upload.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          const img = new Image();
+          img.onload = () => {
+            photo = img;
+            stickers = [];
+            selected = -1;
+            redraw();
+          };
+          img.src = reader.result;
+        };
+        reader.readAsDataURL(file);
+      });
+
+      stickerBtns.addEventListener("click", (event) => {
+        const btn = event.target.closest("[data-sticker]");
+        if (!btn) return;
+        if (!photo) {
+          hint.textContent = "Upload a photo first, then add stickers";
+          return;
+        }
+        addSticker(btn.getAttribute("data-sticker"));
+      });
+
+      clearBtn.addEventListener("click", () => {
+        stickers = [];
+        selected = -1;
+        redraw();
+      });
+
+      smallerBtn.addEventListener("click", () => {
+        if (selected < 0) return;
+        stickers[selected].scale = Math.max(0.35, stickers[selected].scale * 0.9);
+        redraw();
+      });
+
+      biggerBtn.addEventListener("click", () => {
+        if (selected < 0) return;
+        stickers[selected].scale = Math.min(3, stickers[selected].scale * 1.1);
+        redraw();
+      });
+
+      rotateBtn.addEventListener("click", () => {
+        if (selected < 0) return;
+        stickers[selected].rotation += Math.PI / 8;
+        redraw();
+      });
+
+      deleteBtn.addEventListener("click", () => {
+        if (selected < 0) return;
+        stickers.splice(selected, 1);
+        selected = -1;
+        redraw();
+      });
+
+      downloadBtn.addEventListener("click", () => {
+        if (!photo) return;
+        const prev = selected;
+        selected = -1;
+        redraw();
+        const link = document.createElement("a");
+        link.download = "epilepsy-sucks-neon-booth.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+        selected = prev;
+        redraw();
+      });
+
+      canvas.addEventListener("pointerdown", onPointerDown);
+      window.addEventListener("pointermove", onPointerMove);
+      window.addEventListener("pointerup", onPointerUp);
+      lightningImg.addEventListener("load", () => {
+        if (photo) redraw();
+      });
+
+      redraw();
+    })();
 
     const revealEls = document.querySelectorAll(".reveal");
     if ("IntersectionObserver" in window) {
