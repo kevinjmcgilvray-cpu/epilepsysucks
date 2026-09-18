@@ -1018,6 +1018,151 @@
       min-width: 5.5rem;
     }
 
+    .funds-bar {
+      margin-top: 0.35rem;
+      width: min(100%, 16rem);
+      height: 0.45rem;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--epi) 18%, transparent);
+      overflow: hidden;
+    }
+
+    .funds-bar__fill {
+      display: block;
+      height: 100%;
+      width: 0%;
+      background: var(--epi);
+      transition: width 0.6s ease;
+    }
+
+    .nav__funds-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.35rem;
+      max-width: 100%;
+    }
+
+    .training-status {
+      margin-top: 2rem;
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+    }
+
+    .training-status__card {
+      border: 1px solid var(--line);
+      padding: 1rem 1.1rem;
+      background: var(--surface-muted);
+    }
+
+    .training-status__label {
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--paper-faint);
+      margin-bottom: 0.4rem;
+    }
+
+    .training-status__value {
+      font-family: var(--font-display);
+      font-size: 1.65rem;
+      letter-spacing: 0.04em;
+      color: var(--paper);
+      line-height: 1.1;
+    }
+
+    .training-status__detail {
+      margin-top: 0.35rem;
+      font-size: 0.85rem;
+      color: var(--paper-dim);
+    }
+
+    .training-log {
+      margin-top: 2rem;
+    }
+
+    .training-log__title {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .training-chart {
+      border: 1px solid var(--line);
+      background: var(--ink-2);
+      padding: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .training-chart svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .training-chart__line {
+      fill: none;
+      stroke: var(--epi);
+      stroke-width: 2.5;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+    }
+
+    .training-chart__area {
+      fill: color-mix(in srgb, var(--epi) 18%, transparent);
+    }
+
+    .training-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+    }
+
+    .training-table th,
+    .training-table td {
+      text-align: left;
+      padding: 0.65rem 0.5rem;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+
+    .training-table th {
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--paper-faint);
+    }
+
+    .training-table td {
+      color: var(--paper-dim);
+    }
+
+    .training-table .is-muted {
+      color: var(--paper-faint);
+    }
+
+    .marathon-progress {
+      margin-top: 1.25rem;
+      max-width: 38rem;
+    }
+
+    .marathon-progress__label {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.9rem;
+      color: var(--paper-dim);
+      margin-bottom: 0.45rem;
+    }
+
+    .marathon-progress .funds-bar {
+      width: 100%;
+      height: 0.65rem;
+    }
+
     .comments-list {
       list-style: none;
       margin: 2rem 0 0;
@@ -1547,8 +1692,13 @@
           rel="noopener noreferrer"
           aria-label="Fundraising progress"
         >
-          <strong id="funds-raised">$1,851</strong>
-          <span>raised of <span id="funds-goal">$3,000</span></span>
+          <span class="nav__funds-wrap">
+            <span>
+              <strong id="funds-raised">$1,851</strong>
+              <span>raised of <span id="funds-goal">$3,000</span></span>
+            </span>
+            <span class="funds-bar" aria-hidden="true"><span class="funds-bar__fill" id="funds-bar-fill"></span></span>
+          </span>
         </a>
         <div class="nav__cause">
           <img
@@ -1566,6 +1716,7 @@
         <li><a href="#story">My story</a></li>
         <li><a href="#freedom">Freedom</a></li>
         <li><a href="#weight">Weight loss</a></li>
+        <li><a href="#training">Training</a></li>
         <li><a href="#marathon">LA Marathon</a></li>
         <li><a href="#comments">Comments</a></li>
         <li><a href="/game">Game</a></li>
@@ -1684,11 +1835,11 @@
     <section class="section section--alt" id="weight">
       <div class="section__inner reveal">
         <p class="eyebrow">Another fight I won</p>
-        <h2>154 pounds</h2>
-        <p>Epilepsy wasn’t the only weight I was carrying. For a long time my body felt like another chain — heavy, slow, and hard to trust. At my heaviest I was <span class="key">368 pounds</span>. Every step took more than it should. Every seizure recovery felt harder. Clothes, chairs, flights of stairs, the quiet math of what I could or couldn’t do — it all added up. I was surviving. I was not free in my own skin.</p>
+        <h2><span id="weight-lost-heading">154</span> pounds</h2>
+        <p>Epilepsy wasn’t the only weight I was carrying. For a long time my body felt like another chain — heavy, slow, and hard to trust. At my heaviest I was <span class="key" id="weight-start-text">368 pounds</span>. Every step took more than it should. Every seizure recovery felt harder. Clothes, chairs, flights of stairs, the quiet math of what I could or couldn’t do — it all added up. I was surviving. I was not free in my own skin.</p>
         <p>So I decided to change that, too. Not overnight. Not with a miracle. <span class="key">Over three years</span> I showed up for myself the same way I showed up for surgery, for programming appointments, for the long haul of treatment: one hard day after another. I learned what it meant to be hungry for a different life and to keep going when the scale barely moved. I learned that discipline isn’t loud — it’s quiet, and it compounds.</p>
         <p>Pound by pound, the number came down. Months turned into years. The mirror started telling a different story. People who hadn’t seen me in a while did a double take. More than that — <span class="key">I</span> did a double take. I could move again. Train again. Believe that a marathon wasn’t a fantasy reserved for someone else’s body.</p>
-        <p>Today I stand at <span class="key">214 pounds</span>. That’s <span class="key">154 pounds gone</span> — more than the weight of a whole person lifted off my frame. I didn’t just lose weight. I took back miles of my life. The same resolve that walked me into operating rooms is the resolve that got me here: lighter, stronger, and lining up for 26.2 with Team CURE Epilepsy.</p>
+        <p>Today I stand at <span class="key" id="weight-current-text">214 pounds</span>. That’s <span class="key" id="weight-lost-text">154 pounds gone</span> — more than the weight of a whole person lifted off my frame. I didn’t just lose weight. I took back miles of my life. The same resolve that walked me into operating rooms is the resolve that got me here: lighter, stronger, and lining up for 26.2 with Team CURE Epilepsy.</p>
         <p>Epilepsy tried to write my limits. The scale tried too. I’m still rewriting both.</p>
 
         <div class="weight-photos reveal">
@@ -1719,58 +1870,36 @@
         </div>
 
         <div class="weight-chart reveal">
-          <p class="weight-chart__title">The weigh-ins — Aug 2023 to Aug 2026</p>
+          <p class="weight-chart__title" id="weight-chart-title">The weigh-ins</p>
           <div class="weight-chart__frame" id="weight-chart-frame">
-            <svg viewBox="0 0 800 320" role="img" aria-label="Line chart of weight loss from 368 pounds in August 2023 to 214 pounds in August 2026. Hover or focus points for exact weigh-ins.">
-              <title>Weight over time: 368 lb to 214 lb</title>
-              <g class="weight-chart__grid" fill="none" stroke-width="1">
-                <line x1="56" y1="40.5" x2="776" y2="40.5" />
-                <line x1="56" y1="95.8" x2="776" y2="95.8" />
-                <line x1="56" y1="151.1" x2="776" y2="151.1" />
-                <line x1="56" y1="206.4" x2="776" y2="206.4" />
-                <line x1="56" y1="261.7" x2="776" y2="261.7" />
-              </g>
+            <svg viewBox="0 0 800 320" role="img" aria-label="Line chart of weight over time">
+              <title id="weight-chart-svg-title">Weight over time</title>
+              <g class="weight-chart__grid" fill="none" stroke-width="1" id="weight-chart-grid"></g>
               <g class="weight-chart__axis" fill="none" stroke-width="1.25">
                 <line x1="56" y1="24" x2="56" y2="272" />
                 <line x1="56" y1="272" x2="776" y2="272" />
               </g>
-              <g class="weight-chart__label" font-family="DM Sans, sans-serif" font-size="12" text-anchor="end">
-                <text x="48" y="44">368</text>
-                <text x="48" y="99">320</text>
-                <text x="48" y="155">280</text>
-                <text x="48" y="210">240</text>
-                <text x="48" y="265">200</text>
-              </g>
-              <g class="weight-chart__label" font-family="DM Sans, sans-serif" font-size="12" text-anchor="middle">
-                <text x="56" y="296">Aug ’23</text>
-                <text x="292.8" y="296">Aug ’24</text>
-                <text x="550.9" y="296">Sep ’25</text>
-                <text x="776" y="296">Aug ’26</text>
-              </g>
-              <path
-                class="weight-chart__area"
-                d="M56.0,40.5 83.8,79.1 109.0,84.6 151.1,88.8 260.4,87.4 286.3,126.0 292.8,137.0 314.1,153.5 324.5,164.5 333.5,167.3 338.7,170.0 360.7,181.1 378.8,190.7 422.8,192.1 433.1,196.2 440.9,200.4 450.0,205.9 470.0,212.8 497.2,216.9 504.9,221.0 517.9,226.5 520.5,229.3 533.4,232.0 550.9,234.8 720.4,234.8 723.0,236.2 730.1,244.4 731.4,248.6 776.0,252.7 L776,272 L56,272 Z"
-              />
+              <g class="weight-chart__label" font-family="DM Sans, sans-serif" font-size="12" text-anchor="end" id="weight-y-labels"></g>
+              <g class="weight-chart__label" font-family="DM Sans, sans-serif" font-size="12" text-anchor="middle" id="weight-x-labels"></g>
+              <path class="weight-chart__area" id="weight-chart-area" d="" />
               <polyline
                 class="weight-chart__line"
+                id="weight-chart-line"
                 fill="none"
                 stroke-width="2.5"
                 stroke-linejoin="round"
                 stroke-linecap="round"
-                points="56.0,40.5 83.8,79.1 109.0,84.6 151.1,88.8 260.4,87.4 286.3,126.0 292.8,137.0 314.1,153.5 324.5,164.5 333.5,167.3 338.7,170.0 360.7,181.1 378.8,190.7 422.8,192.1 433.1,196.2 440.9,200.4 450.0,205.9 470.0,212.8 497.2,216.9 504.9,221.0 517.9,226.5 520.5,229.3 533.4,232.0 550.9,234.8 720.4,234.8 723.0,236.2 730.1,244.4 731.4,248.6 776.0,252.7"
+                points=""
               />
               <g id="weight-chart-points"></g>
-              <g class="weight-chart__callout" font-family="DM Sans, sans-serif" font-size="13" font-weight="600">
-                <text x="68" y="36">368 lb</text>
-                <text x="700" y="248">214 lb</text>
-              </g>
+              <g class="weight-chart__callout" font-family="DM Sans, sans-serif" font-size="13" font-weight="600" id="weight-chart-callouts"></g>
             </svg>
             <div class="weight-chart__tooltip" id="weight-tooltip" hidden>
               <strong></strong>
               <span></span>
             </div>
           </div>
-          <p class="weight-chart__note">Hover any dot for the exact date and weight — from 368 lb on Aug 9, 2023 to 214 lb on Aug 26, 2026.</p>
+          <p class="weight-chart__note" id="weight-chart-note">Hover any dot for the exact date and weight.</p>
         </div>
       </div>
     </section>
@@ -1784,6 +1913,63 @@
         <p>I started running regularly, about five days a week. Then I started to fall. My right foot would drag, catch, and down I’d go. That was a simple fix: I got an <span class="key">AFO</span> — an ankle-foot orthosis that picks my right foot up. I kept running. I recently fell again, so I’ve been on a sabbatical for a few weeks. Rest now. Miles later.</p>
         <p>None of this — the walks, the weight vest, the first six miles, the AFO, the road back — happens without the <span class="key">DBS</span>. That low pulse stimulation 24/7 didn’t just quiet the seizures enough for me to move again. It gave me my days back. My depression lifted. Hope stopped feeling like a rumor.</p>
         <p><span class="key">I love my life</span> and I am always so thankful for the life that I was given — for the surgeons and the Medtronic team who kept tuning until we found the setting that held, for a body that still shows up even when the right side fights me, and for every hard mile that proved epilepsy doesn’t get the last word.</p>
+      </div>
+    </section>
+
+    <section class="section section--alt" id="training">
+      <div class="section__inner reveal">
+        <p class="eyebrow">Training log</p>
+        <h2>Where I am now</h2>
+        <p>Every run gets logged — distance, time, pace, and notes. This is the live picture of the road to March 7, 2027.</p>
+
+        <div class="training-status" id="training-status">
+          <div class="training-status__card">
+            <div class="training-status__label">Longest run</div>
+            <div class="training-status__value" id="stat-longest">—</div>
+            <div class="training-status__detail" id="stat-longest-detail">No runs logged yet</div>
+          </div>
+          <div class="training-status__card">
+            <div class="training-status__label">Last 7 days</div>
+            <div class="training-status__value" id="stat-weekly">—</div>
+            <div class="training-status__detail">Miles this week</div>
+          </div>
+          <div class="training-status__card">
+            <div class="training-status__label">Race day</div>
+            <div class="training-status__value" id="stat-race-days">—</div>
+            <div class="training-status__detail">Days until LA Marathon</div>
+          </div>
+          <div class="training-status__card">
+            <div class="training-status__label">Next milestone</div>
+            <div class="training-status__value" id="stat-milestone" style="font-size:1.15rem;">—</div>
+            <div class="training-status__detail" id="stat-milestone-detail">Loading…</div>
+          </div>
+        </div>
+
+        <div class="training-log">
+          <p class="training-log__title">Mileage over time</p>
+          <div class="training-chart" id="training-chart">
+            <svg viewBox="0 0 800 220" role="img" aria-label="Training mileage chart">
+              <path class="training-chart__area" id="training-chart-area" d=""></path>
+              <polyline class="training-chart__line" id="training-chart-line" points=""></polyline>
+            </svg>
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="training-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Miles</th>
+                  <th>Duration</th>
+                  <th>Pace</th>
+                  <th>Notes</th>
+                </tr>
+              </thead>
+              <tbody id="training-table-body">
+                <tr><td colspan="5" class="is-muted">Loading training log…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -1801,6 +1987,13 @@
               <div><strong>Team</strong> Team CURE Epilepsy</div>
               <div><strong>Raised</strong> <span id="funds-raised-meta">$1,851</span></div>
               <div><strong>Goal</strong> <span id="funds-goal-meta">$3,000</span></div>
+            </div>
+            <div class="marathon-progress">
+              <div class="marathon-progress__label">
+                <span id="funds-progress-label">Fundraising progress</span>
+                <span id="funds-percent">0%</span>
+              </div>
+              <div class="funds-bar" aria-hidden="true"><span class="funds-bar__fill" id="funds-bar-fill-meta"></span></div>
             </div>
             <div class="hero__actions" style="justify-content: flex-start; margin-top: 2rem; animation: none;">
               <a class="btn btn--purple" href="https://haku.ly/9795a39b3b" target="_blank" rel="noopener noreferrer">Donate now</a>
@@ -1866,6 +2059,63 @@
           </form>
           <p class="moderation-status" id="moderation-status" hidden></p>
           <ul class="moderation-list" id="moderation-list" hidden></ul>
+        </details>
+
+        <details class="owner-update-form" id="admin-log-wrap">
+          <summary>Kevin — log training, weigh-in, funds, milestone</summary>
+          <form class="comment-form" id="admin-run-form" novalidate>
+            <p class="comment-form__note" style="margin:0;">Add a training run</p>
+            <label>Password<input id="admin-run-password" name="password" type="password" required autocomplete="current-password" /></label>
+            <label>Date<input id="admin-run-date" name="date" type="date" required /></label>
+            <label>Miles<input id="admin-run-miles" name="miles" type="number" min="0.1" step="0.1" required /></label>
+            <label>Duration (minutes)<input id="admin-run-minutes" name="durationMinutes" type="number" min="1" step="0.1" required /></label>
+            <label>Notes<textarea id="admin-run-notes" name="notes" maxlength="500" placeholder="Optional notes"></textarea></label>
+            <div class="comment-form__actions">
+              <button class="btn btn--purple" type="submit">Save run</button>
+            </div>
+            <p class="comment-form__error" id="admin-run-error" hidden></p>
+          </form>
+
+          <form class="comment-form" id="admin-weigh-form" novalidate>
+            <p class="comment-form__note" style="margin:0;">Add a weigh-in</p>
+            <label>Password<input id="admin-weigh-password" name="password" type="password" required autocomplete="current-password" /></label>
+            <label>Date<input id="admin-weigh-date" name="date" type="date" required /></label>
+            <label>Weight (lb)<input id="admin-weigh-lb" name="weightLb" type="number" min="1" step="0.1" required /></label>
+            <div class="comment-form__actions">
+              <button class="btn btn--purple" type="submit">Save weigh-in</button>
+            </div>
+            <p class="comment-form__error" id="admin-weigh-error" hidden></p>
+          </form>
+
+          <form class="comment-form" id="admin-funds-form" novalidate>
+            <p class="comment-form__note" style="margin:0;">Set fundraising totals (manual override)</p>
+            <label>Password<input id="admin-funds-password" name="password" type="password" required autocomplete="current-password" /></label>
+            <label>Raised ($)<input id="admin-funds-raised" name="raised" type="number" min="0" step="1" required /></label>
+            <label>Goal ($)<input id="admin-funds-goal" name="goal" type="number" min="1" step="1" required /></label>
+            <div class="comment-form__actions">
+              <button class="btn btn--purple" type="submit">Save totals</button>
+            </div>
+            <p class="comment-form__error" id="admin-funds-error" hidden></p>
+          </form>
+
+          <form class="comment-form" id="admin-milestone-form" novalidate>
+            <p class="comment-form__note" style="margin:0;">Add a milestone</p>
+            <label>Password<input id="admin-milestone-password" name="password" type="password" required autocomplete="current-password" /></label>
+            <label>Title<input id="admin-milestone-title" name="title" type="text" maxlength="120" required /></label>
+            <label>Detail<textarea id="admin-milestone-detail" name="detail" maxlength="500"></textarea></label>
+            <label>Date (optional)<input id="admin-milestone-date" name="occurredOn" type="date" /></label>
+            <label>Kind
+              <select id="admin-milestone-kind" name="kind">
+                <option value="training">Training</option>
+                <option value="event">Event</option>
+                <option value="note">Note</option>
+              </select>
+            </label>
+            <div class="comment-form__actions">
+              <button class="btn btn--purple" type="submit">Save milestone</button>
+            </div>
+            <p class="comment-form__error" id="admin-milestone-error" hidden></p>
+          </form>
         </details>
 
         <details class="owner-update-form" id="owner-update-form-wrap">
@@ -2049,6 +2299,9 @@
       const goalEl = document.getElementById("funds-goal");
       const raisedMeta = document.getElementById("funds-raised-meta");
       const goalMeta = document.getElementById("funds-goal-meta");
+      const bar = document.getElementById("funds-bar-fill");
+      const barMeta = document.getElementById("funds-bar-fill-meta");
+      const percentEl = document.getElementById("funds-percent");
       if (!raisedEl || !goalEl) return;
 
       fetch("/api/raised")
@@ -2059,6 +2312,10 @@
           goalEl.textContent = data.goalFormatted;
           if (raisedMeta) raisedMeta.textContent = data.raisedFormatted;
           if (goalMeta) goalMeta.textContent = data.goalFormatted;
+          const pct = Math.max(0, Math.min(100, Number(data.percent) || 0));
+          if (bar) bar.style.width = pct + "%";
+          if (barMeta) barMeta.style.width = pct + "%";
+          if (percentEl) percentEl.textContent = pct + "%";
         })
         .catch(() => {});
     })();
@@ -2108,49 +2365,41 @@
       setInterval(refreshCountdown, 60 * 1000);
     })();
 
-    (function initWeightChartHover() {
+    (function initWeightChart() {
       const frame = document.getElementById("weight-chart-frame");
       const pointsGroup = document.getElementById("weight-chart-points");
       const tooltip = document.getElementById("weight-tooltip");
-      if (!frame || !pointsGroup || !tooltip) return;
+      const areaEl = document.getElementById("weight-chart-area");
+      const lineEl = document.getElementById("weight-chart-line");
+      const gridEl = document.getElementById("weight-chart-grid");
+      const yLabels = document.getElementById("weight-y-labels");
+      const xLabels = document.getElementById("weight-x-labels");
+      const callouts = document.getElementById("weight-chart-callouts");
+      if (!frame || !pointsGroup || !tooltip || !areaEl || !lineEl) return;
 
       const tipStrong = tooltip.querySelector("strong");
       const tipSpan = tooltip.querySelector("span");
       const svg = frame.querySelector("svg");
-
-      const weighIns = [
-        { date: "Aug 9, 2023", lb: 368, x: 56.0, y: 40.5 },
-        { date: "Sep 21, 2023", lb: 340, x: 83.8, y: 79.1 },
-        { date: "Oct 30, 2023", lb: 336, x: 109.0, y: 84.6 },
-        { date: "Jan 3, 2024", lb: 333, x: 151.1, y: 88.8 },
-        { date: "Jun 20, 2024", lb: 334, x: 260.4, y: 87.4 },
-        { date: "Jul 30, 2024", lb: 306, x: 286.3, y: 126.0 },
-        { date: "Aug 9, 2024", lb: 298, x: 292.8, y: 137.0 },
-        { date: "Sep 11, 2024", lb: 286, x: 314.1, y: 153.5 },
-        { date: "Sep 27, 2024", lb: 278, x: 324.5, y: 164.5 },
-        { date: "Oct 11, 2024", lb: 276, x: 333.5, y: 167.3 },
-        { date: "Oct 19, 2024", lb: 274, x: 338.7, y: 170.0 },
-        { date: "Nov 22, 2024", lb: 266, x: 360.7, y: 181.1 },
-        { date: "Dec 20, 2024", lb: 259, x: 378.8, y: 190.7 },
-        { date: "Feb 26, 2025", lb: 258, x: 422.8, y: 192.1 },
-        { date: "Mar 14, 2025", lb: 255, x: 433.1, y: 196.2 },
-        { date: "Mar 26, 2025", lb: 252, x: 440.9, y: 200.4 },
-        { date: "Apr 9, 2025", lb: 248, x: 450.0, y: 205.9 },
-        { date: "May 10, 2025", lb: 243, x: 470.0, y: 212.8 },
-        { date: "Jun 21, 2025", lb: 240, x: 497.2, y: 216.9 },
-        { date: "Jul 3, 2025", lb: 237, x: 504.9, y: 221.0 },
-        { date: "Jul 23, 2025", lb: 233, x: 517.9, y: 226.5 },
-        { date: "Jul 27, 2025", lb: 231, x: 520.5, y: 229.3 },
-        { date: "Aug 16, 2025", lb: 229, x: 533.4, y: 232.0 },
-        { date: "Sep 12, 2025", lb: 227, x: 550.9, y: 234.8 },
-        { date: "Jun 1, 2026", lb: 227, x: 720.4, y: 234.8 },
-        { date: "Jun 5, 2026", lb: 226, x: 723.0, y: 236.2 },
-        { date: "Jun 16, 2026", lb: 220, x: 730.1, y: 244.4 },
-        { date: "Jun 18, 2026", lb: 217, x: 731.4, y: 248.6 },
-        { date: "Aug 26, 2026", lb: 214, x: 776.0, y: 252.7 }
-      ];
-
       const ns = "http://www.w3.org/2000/svg";
+      const X0 = 56, X1 = 776, Y0 = 40.5, Y1 = 261.7, BASE = 272;
+
+      function formatDateLabel(iso) {
+        try {
+          const d = new Date(iso + "T12:00:00");
+          return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+        } catch (e) {
+          return iso;
+        }
+      }
+
+      function formatShort(iso) {
+        try {
+          const d = new Date(iso + "T12:00:00");
+          return d.toLocaleDateString("en-US", { month: "short", year: "2-digit" });
+        } catch (e) {
+          return iso;
+        }
+      }
 
       function placeTooltip(point) {
         const ctm = svg.getScreenCTM();
@@ -2164,12 +2413,12 @@
         const top = screen.y - frameRect.top;
         const tipWidth = tooltip.offsetWidth || 120;
         left = Math.max(tipWidth / 2 + 4, Math.min(left, frameRect.width - tipWidth / 2 - 4));
-        tooltip.style.left = `${left}px`;
-        tooltip.style.top = `${top}px`;
+        tooltip.style.left = left + "px";
+        tooltip.style.top = top + "px";
       }
 
       function showTip(point, group) {
-        tipStrong.textContent = `${point.lb} lb`;
+        tipStrong.textContent = point.lb + " lb";
         tipSpan.textContent = point.date;
         tooltip.hidden = false;
         tooltip.classList.add("is-on");
@@ -2191,36 +2440,280 @@
         });
       }
 
-      weighIns.forEach((point, index) => {
-        const group = document.createElementNS(ns, "g");
-        group.classList.add("weight-chart__point");
-        if (index === 0) group.dataset.start = "1";
-        if (index === weighIns.length - 1) group.dataset.end = "1";
-        group.setAttribute("tabindex", "0");
-        group.setAttribute("role", "button");
-        group.setAttribute("aria-label", `${point.lb} pounds on ${point.date}`);
+      function render(weighIns, stats) {
+        if (!weighIns.length) return;
+        const times = weighIns.map((w) => new Date(w.date + "T12:00:00").getTime());
+        const lbs = weighIns.map((w) => w.weightLb);
+        const tMin = Math.min.apply(null, times);
+        const tMax = Math.max.apply(null, times) || tMin + 1;
+        const maxLb = Math.ceil(Math.max.apply(null, lbs) / 10) * 10;
+        const minLb = Math.floor(Math.min.apply(null, lbs) / 10) * 10;
+        const lbSpan = Math.max(10, maxLb - minLb);
 
-        const hit = document.createElementNS(ns, "circle");
-        hit.classList.add("weight-chart__hit");
-        hit.setAttribute("cx", point.x);
-        hit.setAttribute("cy", point.y);
-        hit.setAttribute("r", "14");
+        const points = weighIns.map((w, i) => {
+          const t = times[i];
+          const x = X0 + ((t - tMin) / (tMax - tMin)) * (X1 - X0);
+          const y = Y0 + ((maxLb - w.weightLb) / lbSpan) * (Y1 - Y0);
+          return { date: formatDateLabel(w.date), lb: w.weightLb, x: x, y: y };
+        });
 
-        const dot = document.createElementNS(ns, "circle");
-        dot.classList.add("weight-chart__dot-visible");
-        dot.setAttribute("cx", point.x);
-        dot.setAttribute("cy", point.y);
-        dot.setAttribute("r", index === 0 || index === weighIns.length - 1 ? "4.5" : "3");
+        if (gridEl) {
+          gridEl.innerHTML = "";
+          for (let i = 0; i < 5; i++) {
+            const y = Y0 + (i / 4) * (Y1 - Y0);
+            const line = document.createElementNS(ns, "line");
+            line.setAttribute("x1", X0);
+            line.setAttribute("y1", y);
+            line.setAttribute("x2", X1);
+            line.setAttribute("y2", y);
+            gridEl.appendChild(line);
+          }
+        }
 
-        group.appendChild(hit);
-        group.appendChild(dot);
-        pointsGroup.appendChild(group);
+        if (yLabels) {
+          yLabels.innerHTML = "";
+          for (let i = 0; i < 5; i++) {
+            const lb = maxLb - (i / 4) * lbSpan;
+            const y = Y0 + (i / 4) * (Y1 - Y0) + 4;
+            const text = document.createElementNS(ns, "text");
+            text.setAttribute("x", "48");
+            text.setAttribute("y", y);
+            text.textContent = String(Math.round(lb));
+            yLabels.appendChild(text);
+          }
+        }
 
-        group.addEventListener("pointerenter", () => showTip(point, group));
-        group.addEventListener("pointerleave", hideTip);
-        group.addEventListener("focus", () => showTip(point, group));
-        group.addEventListener("blur", hideTip);
-      });
+        if (xLabels) {
+          xLabels.innerHTML = "";
+          const ticks = [0, 0.33, 0.66, 1].map((p) => {
+            const t = tMin + p * (tMax - tMin);
+            return { x: X0 + p * (X1 - X0), label: formatShort(new Date(t).toISOString().slice(0, 10)) };
+          });
+          ticks.forEach((tick) => {
+            const text = document.createElementNS(ns, "text");
+            text.setAttribute("x", tick.x);
+            text.setAttribute("y", "296");
+            text.textContent = tick.label;
+            xLabels.appendChild(text);
+          });
+        }
+
+        const pts = points.map((p) => p.x.toFixed(1) + "," + p.y.toFixed(1)).join(" ");
+        lineEl.setAttribute("points", pts);
+        areaEl.setAttribute("d", "M" + pts.replace(/ /g, " ") + " L" + X1 + "," + BASE + " L" + X0 + "," + BASE + " Z");
+
+        if (callouts) {
+          callouts.innerHTML = "";
+          const first = points[0];
+          const last = points[points.length - 1];
+          [[first, true], [last, false]].forEach(([p, isFirst]) => {
+            const text = document.createElementNS(ns, "text");
+            text.setAttribute("x", isFirst ? Math.min(p.x + 12, 700) : Math.max(p.x - 70, 60));
+            text.setAttribute("y", Math.max(28, p.y - 8));
+            text.textContent = p.lb + " lb";
+            callouts.appendChild(text);
+          });
+        }
+
+        pointsGroup.innerHTML = "";
+        points.forEach((point, index) => {
+          const group = document.createElementNS(ns, "g");
+          group.classList.add("weight-chart__point");
+          if (index === 0) group.dataset.start = "1";
+          if (index === points.length - 1) group.dataset.end = "1";
+          group.setAttribute("tabindex", "0");
+          group.setAttribute("role", "button");
+          group.setAttribute("aria-label", point.lb + " pounds on " + point.date);
+          const hit = document.createElementNS(ns, "circle");
+          hit.classList.add("weight-chart__hit");
+          hit.setAttribute("cx", point.x);
+          hit.setAttribute("cy", point.y);
+          hit.setAttribute("r", "14");
+          const dot = document.createElementNS(ns, "circle");
+          dot.classList.add("weight-chart__dot-visible");
+          dot.setAttribute("cx", point.x);
+          dot.setAttribute("cy", point.y);
+          dot.setAttribute("r", index === 0 || index === points.length - 1 ? "4.5" : "3");
+          group.appendChild(hit);
+          group.appendChild(dot);
+          pointsGroup.appendChild(group);
+          group.addEventListener("pointerenter", () => showTip(point, group));
+          group.addEventListener("pointerleave", hideTip);
+          group.addEventListener("focus", () => showTip(point, group));
+          group.addEventListener("blur", hideTip);
+        });
+
+        if (stats) {
+          const startEl = document.getElementById("weight-start-text");
+          const currentEl = document.getElementById("weight-current-text");
+          const lostEl = document.getElementById("weight-lost-text");
+          const heading = document.getElementById("weight-lost-heading");
+          const title = document.getElementById("weight-chart-title");
+          const note = document.getElementById("weight-chart-note");
+          if (startEl && stats.startLb != null) startEl.textContent = stats.startLb + " pounds";
+          if (currentEl && stats.currentLb != null) currentEl.textContent = stats.currentLb + " pounds";
+          if (lostEl && stats.lostLb != null) lostEl.textContent = stats.lostLb + " pounds gone";
+          if (heading && stats.lostLb != null) heading.textContent = String(Math.round(stats.lostLb));
+          if (title && weighIns.length) {
+            title.textContent = "The weigh-ins — " + formatShort(weighIns[0].date) + " to " + formatShort(weighIns[weighIns.length - 1].date);
+          }
+          if (note && weighIns.length) {
+            note.textContent = "Hover any dot for the exact date and weight — from " + stats.startLb + " lb to " + stats.currentLb + " lb.";
+          }
+        }
+      }
+
+      fetch("/api/weigh-ins")
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (!data || !data.ok || !data.weighIns || !data.weighIns.length) return;
+          render(data.weighIns, data.stats);
+        })
+        .catch(() => {});
+    })();
+
+    (function initTraining() {
+      const tbody = document.getElementById("training-table-body");
+      const longestEl = document.getElementById("stat-longest");
+      const longestDetail = document.getElementById("stat-longest-detail");
+      const weeklyEl = document.getElementById("stat-weekly");
+      const raceDaysEl = document.getElementById("stat-race-days");
+      const milestoneEl = document.getElementById("stat-milestone");
+      const milestoneDetail = document.getElementById("stat-milestone-detail");
+      const areaEl = document.getElementById("training-chart-area");
+      const lineEl = document.getElementById("training-chart-line");
+      if (!tbody) return;
+
+      function escapeHtml(value) {
+        return String(value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function formatDate(iso) {
+        try {
+          return new Date(iso + (String(iso).length <= 10 ? "T12:00:00" : "")).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric"
+          });
+        } catch (e) {
+          return iso || "";
+        }
+      }
+
+      function formatDuration(seconds) {
+        const s = Math.round(Number(seconds) || 0);
+        const m = Math.floor(s / 60);
+        const r = s % 60;
+        return m + ":" + String(r).padStart(2, "0");
+      }
+
+      function daysUntilRace() {
+        const end = Date.UTC(2027, 2, 7);
+        const parts = new Intl.DateTimeFormat("en-CA", {
+          timeZone: "America/Los_Angeles",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit"
+        }).format(new Date()).split("-").map(Number);
+        const today = Date.UTC(parts[0], parts[1] - 1, parts[2]);
+        return Math.max(0, Math.round((end - today) / 86400000));
+      }
+
+      if (raceDaysEl) raceDaysEl.textContent = String(daysUntilRace());
+
+      function renderChart(runs) {
+        if (!areaEl || !lineEl || !runs.length) {
+          if (areaEl) areaEl.setAttribute("d", "");
+          if (lineEl) lineEl.setAttribute("points", "");
+          return;
+        }
+        const chronological = runs.slice().reverse();
+        const X0 = 40, X1 = 760, Y0 = 20, Y1 = 180, BASE = 200;
+        const miles = chronological.map((r) => r.miles);
+        const maxM = Math.max.apply(null, miles);
+        const points = chronological.map((r, i) => {
+          const x = X0 + (i / Math.max(1, chronological.length - 1)) * (X1 - X0);
+          const y = Y0 + (1 - r.miles / maxM) * (Y1 - Y0);
+          return x.toFixed(1) + "," + y.toFixed(1);
+        });
+        const pts = points.join(" ");
+        lineEl.setAttribute("points", pts);
+        areaEl.setAttribute("d", "M" + pts + " L" + X1 + "," + BASE + " L" + X0 + "," + BASE + " Z");
+      }
+
+      function renderRuns(data) {
+        const runs = data.runs || [];
+        const stats = data.stats || {};
+        if (longestEl) {
+          longestEl.textContent = stats.longestRun ? stats.longestRun.miles + " mi" : "—";
+        }
+        if (longestDetail) {
+          longestDetail.textContent = stats.longestRun
+            ? formatDate(stats.longestRun.date) + (stats.longestRun.pace ? " · " + stats.longestRun.pace : "")
+            : "No runs logged yet";
+        }
+        if (weeklyEl) weeklyEl.textContent = (Number(stats.weeklyMiles) || 0).toFixed(1) + " mi";
+
+        renderChart(runs);
+
+        if (!runs.length) {
+          tbody.innerHTML = '<tr><td colspan="5" class="is-muted">No runs logged yet — Kevin can add them from the admin form below.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = runs
+          .slice(0, 20)
+          .map(
+            (r) =>
+              "<tr>" +
+              "<td>" + escapeHtml(formatDate(r.date)) + "</td>" +
+              "<td>" + escapeHtml(String(r.miles)) + "</td>" +
+              "<td>" + escapeHtml(formatDuration(r.durationSeconds)) + "</td>" +
+              "<td>" + escapeHtml(r.pace || "—") + "</td>" +
+              "<td>" + escapeHtml(r.notes || "—") + "</td>" +
+              "</tr>"
+          )
+          .join("");
+      }
+
+      fetch("/api/training")
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (!data || !data.ok) {
+            tbody.innerHTML = '<tr><td colspan="5" class="is-muted">Training log unavailable.</td></tr>';
+            return;
+          }
+          renderRuns(data);
+        })
+        .catch(() => {
+          tbody.innerHTML = '<tr><td colspan="5" class="is-muted">Training log unavailable.</td></tr>';
+        });
+
+      fetch("/api/milestones")
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (!data || !data.ok || !data.milestones || !data.milestones.length) {
+            if (milestoneEl) milestoneEl.textContent = "—";
+            if (milestoneDetail) milestoneDetail.textContent = "No milestones yet";
+            return;
+          }
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          const upcoming = data.milestones.find((m) => {
+            if (!m.occurredOn) return true;
+            return new Date(m.occurredOn + "T12:00:00") >= today;
+          }) || data.milestones[data.milestones.length - 1];
+          if (milestoneEl) milestoneEl.textContent = upcoming.title;
+          if (milestoneDetail) {
+            milestoneDetail.textContent = upcoming.occurredOn
+              ? formatDate(upcoming.occurredOn) + (upcoming.detail ? " — " + upcoming.detail : "")
+              : (upcoming.detail || upcoming.kind);
+          }
+        })
+        .catch(() => {});
     })();
 
     (function initComments() {
@@ -2531,6 +3024,162 @@
             button.disabled = false;
           });
       });
+    })();
+
+    (function initAdminLogs() {
+      function todayIso() {
+        const d = new Date();
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, "0");
+        const day = String(d.getDate()).padStart(2, "0");
+        return `${y}-${m}-${day}`;
+      }
+
+      function wireForm(formId, errorId, buildPayload, endpoint) {
+        const form = document.getElementById(formId);
+        const errorEl = document.getElementById(errorId);
+        if (!form) return;
+
+        function showError(message) {
+          if (!errorEl) return;
+          if (!message) {
+            errorEl.hidden = true;
+            errorEl.textContent = "";
+            return;
+          }
+          errorEl.hidden = false;
+          errorEl.textContent = message;
+        }
+
+        form.addEventListener("submit", (event) => {
+          event.preventDefault();
+          showError("");
+          let payload;
+          try {
+            payload = buildPayload(form);
+          } catch (err) {
+            showError(err.message || "Invalid form values.");
+            return;
+          }
+
+          const btn = form.querySelector('button[type="submit"]');
+          if (btn) {
+            btn.disabled = true;
+            btn.textContent = "Saving…";
+          }
+
+          fetch(endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          })
+            .then((res) => res.json().then((data) => ({ res, data })))
+            .then(({ res, data }) => {
+              if (!res.ok || !data || !data.ok) {
+                throw new Error((data && data.error) || "Save failed");
+              }
+              showError("");
+              window.location.reload();
+            })
+            .catch((err) => {
+              showError(err.message || "Could not save. Please try again.");
+              if (btn) {
+                btn.disabled = false;
+                const labels = {
+                  "admin-run-form": "Save run",
+                  "admin-weigh-form": "Save weigh-in",
+                  "admin-funds-form": "Save totals",
+                  "admin-milestone-form": "Save milestone"
+                };
+                btn.textContent = labels[formId] || "Save";
+              }
+            });
+        });
+      }
+
+      const runDate = document.getElementById("admin-run-date");
+      const weighDate = document.getElementById("admin-weigh-date");
+      if (runDate && !runDate.value) runDate.value = todayIso();
+      if (weighDate && !weighDate.value) weighDate.value = todayIso();
+
+      wireForm(
+        "admin-run-form",
+        "admin-run-error",
+        (form) => {
+          const password = (form.password.value || "").trim();
+          const date = (form.date.value || "").trim();
+          const miles = Number(form.miles.value);
+          const durationMinutes = Number(form.durationMinutes.value);
+          const notes = (form.notes.value || "").trim();
+          if (!password) throw new Error("Password is required.");
+          if (!date) throw new Error("Date is required.");
+          if (!Number.isFinite(miles) || miles <= 0) throw new Error("Miles must be greater than 0.");
+          if (!Number.isFinite(durationMinutes) || durationMinutes <= 0) {
+            throw new Error("Duration minutes must be greater than 0.");
+          }
+          return { password, date, miles, durationMinutes, notes };
+        },
+        "/api/training"
+      );
+
+      wireForm(
+        "admin-weigh-form",
+        "admin-weigh-error",
+        (form) => {
+          const password = (form.password.value || "").trim();
+          const date = (form.date.value || "").trim();
+          const weightLb = Number(form.weightLb.value);
+          if (!password) throw new Error("Password is required.");
+          if (!date) throw new Error("Date is required.");
+          if (!Number.isFinite(weightLb) || weightLb <= 0) {
+            throw new Error("Weight must be greater than 0.");
+          }
+          return { password, date, weightLb };
+        },
+        "/api/weigh-ins"
+      );
+
+      wireForm(
+        "admin-funds-form",
+        "admin-funds-error",
+        (form) => {
+          const password = (form.password.value || "").trim();
+          const raised = Number(form.raised.value);
+          const goal = Number(form.goal.value);
+          if (!password) throw new Error("Password is required.");
+          if (!Number.isFinite(raised) || raised < 0) throw new Error("Raised amount is invalid.");
+          if (!Number.isFinite(goal) || goal <= 0) throw new Error("Goal is invalid.");
+          return { password, raised, goal };
+        },
+        "/api/raised"
+      );
+
+      wireForm(
+        "admin-milestone-form",
+        "admin-milestone-error",
+        (form) => {
+          const password = (form.password.value || "").trim();
+          const title = (form.title.value || "").trim();
+          const detail = (form.detail.value || "").trim();
+          const occurredOn = (form.occurredOn.value || "").trim();
+          const kind = form.kind.value || "note";
+          if (!password) throw new Error("Password is required.");
+          if (title.length < 2) throw new Error("Title is required.");
+          return { password, title, detail, occurredOn, kind };
+        },
+        "/api/milestones"
+      );
+
+      fetch("/api/raised")
+        .then((r) => r.json())
+        .then((data) => {
+          if (!data || !data.ok) return;
+          const raisedEl = document.getElementById("admin-funds-raised");
+          const goalEl = document.getElementById("admin-funds-goal");
+          if (raisedEl && !raisedEl.value) raisedEl.value = String(Math.round(data.raised));
+          if (goalEl && !goalEl.value) goalEl.value = String(Math.round(data.goal));
+        })
+        .catch(() => {});
     })();
 
     (function initOwnerUpdate() {

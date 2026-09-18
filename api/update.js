@@ -1,63 +1,22 @@
-const OWNER = "kevinjmcgilvray-cpu";
-const REPO = "epilepsysucks";
+import {
+  checkOwnerPassword,
+  cors,
+  getSql,
+  parseBody,
+  sanitizePlain
+} from "./_db.js";
+
 const MAX_MESSAGE = 2000;
-
-function cors(res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-}
-
-function getConfig() {
-  return {
-    token: process.env.COMMENTS_GITHUB_TOKEN,
-    issueNumber: Number(process.env.OWNER_UPDATE_ISSUE_NUMBER || "2"),
-    password: process.env.OWNER_UPDATE_PASSWORD || ""
-  };
-}
-
-function sanitizePlain(value, max) {
-  return String(value || "")
-    .replace(/\r\n/g, "\n")
-    .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, "")
-    .trim()
-    .slice(0, max);
-}
-
-async function github(path, { token, method = "GET", body } = {}) {
-  const response = await fetch(`https://api.github.com${path}`, {
-    method,
-    headers: {
-      Accept: "application/vnd.github+json",
-      Authorization: `Bearer ${token}`,
-      "User-Agent": "epilepsysucks.org-owner-update",
-      "X-GitHub-Api-Version": "2022-11-28",
-      ...(body ? { "Content-Type": "application/json" } : {})
-    },
-    body: body ? JSON.stringify(body) : undefined
-  });
-
-  const text = await response.text();
-  let data = null;
-  try {
-    data = text ? JSON.parse(text) : null;
-  } catch {
-    data = { message: text };
-  }
-
-  return { ok: response.ok, status: response.status, data };
-}
 
 export default async function handler(req, res) {
   cors(res);
-
   if (req.method === "OPTIONS") {
     res.status(204).end();
     return;
   }
 
-  const { token, issueNumber, password } = getConfig();
-  if (!token || !issueNumber) {
+  const sql = getSql();
+  if (!sql) {
     res.status(500).json({ ok: false, error: "Updates are not configured" });
     return;
   }
@@ -65,19 +24,19 @@ export default async function handler(req, res) {
   try {
     if (req.method === "GET") {
       res.setHeader("Cache-Control", "s-maxage=15, stale-while-revalidate=30");
-      const result = await github(`/repos/${OWNER}/${REPO}/issues/${issueNumber}`, { token });
-      if (!result.ok) {
-        res.status(502).json({ ok: false, error: "Could not load update" });
-        return;
-      }
-
-      const body = String(result.data.body || "").trim();
+      const rows = await sql`
+        SELECT body, updated_at
+        FROM posts
+        ORDER BY updated_at DESC, id DESC
+        LIMIT 1
+      `;
+      const row = rows[0];
       res.status(200).json({
         ok: true,
-        update: body
+        update: row
           ? {
-              body,
-              updatedAt: result.data.updated_at
+              body: row.body,
+              updatedAt: row.updated_at
             }
           : null
       });
@@ -85,36 +44,44 @@ export default async function handler(req, res) {
     }
 
     if (req.method === "POST") {
-      const payload = typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};
-      const given = String(payload.password || "");
-      const message = sanitizePlain(payload.message, MAX_MESSAGE);
-
-      if (!password || given !== password) {
+      const payload = parseBody(req);
+      if (!checkOwnerPassword(payload)) {
         res.status(401).json({ ok: false, error: "Wrong password" });
         return;
       }
 
+      const message = sanitizePlain(payload.message, MAX_MESSAGE);
       if (message.length < 2) {
         res.status(400).json({ ok: false, error: "Update message is required" });
         return;
       }
 
-      const result = await github(`/repos/${OWNER}/${REPO}/issues/${issueNumber}`, {
-        token,
-        method: "PATCH",
-        body: { body: message, state: "open" }
-      });
-
-      if (!result.ok) {
-        res.status(502).json({ ok: false, error: "Could not save update" });
-        return;
+      const existing = await sql`SELECT id FROM posts ORDER BY updated_at DESC, id DESC LIMIT 1`;
+      let row;
+      if (existing[0]) {
+        row = (
+          await sql`
+            UPDATE posts
+            SET body = ${message}, updated_at = NOW()
+            WHERE id = ${existing[0].id}
+            RETURNING body, updated_at
+          `
+        )[0];
+      } else {
+        row = (
+          await sql`
+            INSERT INTO posts (body)
+            VALUES (${message})
+            RETURNING body, updated_at
+          `
+        )[0];
       }
 
       res.status(200).json({
         ok: true,
         update: {
-          body: String(result.data.body || "").trim(),
-          updatedAt: result.data.updated_at
+          body: row.body,
+          updatedAt: row.updated_at
         }
       });
       return;
