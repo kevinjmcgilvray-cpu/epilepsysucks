@@ -1091,16 +1091,18 @@
     }
 
     .training-chart {
+      position: relative;
       border: 1px solid var(--line);
       background: var(--ink-2);
       padding: 0.75rem;
-      margin-bottom: 1.25rem;
+      margin-bottom: 0.75rem;
     }
 
     .training-chart svg {
       width: 100%;
       height: auto;
       display: block;
+      overflow: visible;
     }
 
     .training-chart__line {
@@ -1109,39 +1111,58 @@
       stroke-width: 2.5;
       stroke-linejoin: round;
       stroke-linecap: round;
+      pointer-events: none;
     }
 
     .training-chart__area {
       fill: color-mix(in srgb, var(--epi) 18%, transparent);
+      pointer-events: none;
     }
 
-    .training-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.92rem;
+    .training-chart__dot {
+      fill: var(--epi);
     }
 
-    .training-table th,
-    .training-table td {
-      text-align: left;
-      padding: 0.65rem 0.5rem;
-      border-bottom: 1px solid var(--line);
-      vertical-align: top;
+    .training-chart__hit {
+      fill: transparent;
+      cursor: pointer;
     }
 
-    .training-table th {
-      font-size: 0.75rem;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
+    .training-chart__tooltip {
+      position: absolute;
+      z-index: 2;
+      transform: translate(-50%, calc(-100% - 10px));
+      padding: 0.4rem 0.65rem;
+      border: 1px solid var(--line);
+      background: var(--ink);
+      color: var(--paper);
+      font-size: 0.85rem;
+      line-height: 1.3;
+      pointer-events: none;
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .training-chart__tooltip.is-on {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .training-chart__tooltip strong {
+      display: block;
+      font-weight: 600;
+    }
+
+    .training-chart__tooltip span {
       color: var(--paper-faint);
+      font-size: 0.8rem;
     }
 
-    .training-table td {
-      color: var(--paper-dim);
-    }
-
-    .training-table .is-muted {
+    .training-chart__note {
+      margin: 0;
       color: var(--paper-faint);
+      font-size: 0.9rem;
     }
 
     .marathon-progress {
@@ -1948,27 +1969,17 @@
         <div class="training-log">
           <p class="training-log__title">Mileage over time</p>
           <div class="training-chart" id="training-chart">
-            <svg viewBox="0 0 800 220" role="img" aria-label="Training mileage chart">
+            <svg viewBox="0 0 800 220" role="img" aria-label="Training mileage chart. Hover or focus points for exact dates.">
               <path class="training-chart__area" id="training-chart-area" d=""></path>
               <polyline class="training-chart__line" id="training-chart-line" points=""></polyline>
+              <g id="training-chart-points"></g>
             </svg>
+            <div class="training-chart__tooltip" id="training-tooltip" hidden>
+              <strong></strong>
+              <span></span>
+            </div>
           </div>
-          <div style="overflow-x:auto;">
-            <table class="training-table">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Miles</th>
-                  <th>Duration</th>
-                  <th>Pace</th>
-                  <th>Notes</th>
-                </tr>
-              </thead>
-              <tbody id="training-table-body">
-                <tr><td colspan="5" class="is-muted">Loading training log…</td></tr>
-              </tbody>
-            </table>
-          </div>
+          <p class="training-chart__note" id="training-chart-note">Hover any dot for the exact date.</p>
         </div>
       </div>
     </section>
@@ -2444,39 +2455,6 @@
         });
       }
 
-      function renderTable(weighIns) {
-        const tbody = document.getElementById("weigh-ins-table-body");
-        if (!tbody) return;
-        if (!weighIns.length) {
-          tbody.innerHTML = '<tr><td colspan="3" class="is-muted">No weigh-ins yet.</td></tr>';
-          return;
-        }
-        const rows = weighIns.slice().reverse();
-        tbody.innerHTML = rows
-          .map((w, i) => {
-            const prev = rows[i + 1];
-            let change = "—";
-            if (prev) {
-              const delta = Number((w.weightLb - prev.weightLb).toFixed(1));
-              change = (delta > 0 ? "+" : "") + delta + " lb";
-            }
-            return (
-              "<tr>" +
-              "<td>" +
-              formatDateLabel(w.date) +
-              "</td>" +
-              "<td>" +
-              w.weightLb +
-              " lb</td>" +
-              "<td>" +
-              change +
-              "</td>" +
-              "</tr>"
-            );
-          })
-          .join("");
-      }
-
       function render(weighIns, stats) {
         if (!weighIns.length) return;
         const times = weighIns.map((w) => new Date(dayKey(w.date) + "T12:00:00").getTime());
@@ -2610,7 +2588,7 @@
     })();
 
     (function initTraining() {
-      const tbody = document.getElementById("training-table-body");
+      const chartFrame = document.getElementById("training-chart");
       const longestEl = document.getElementById("stat-longest");
       const longestDetail = document.getElementById("stat-longest-detail");
       const weeklyEl = document.getElementById("stat-weekly");
@@ -2619,33 +2597,30 @@
       const milestoneDetail = document.getElementById("stat-milestone-detail");
       const areaEl = document.getElementById("training-chart-area");
       const lineEl = document.getElementById("training-chart-line");
-      if (!tbody) return;
+      const pointsGroup = document.getElementById("training-chart-points");
+      const tooltip = document.getElementById("training-tooltip");
+      const noteEl = document.getElementById("training-chart-note");
+      if (!areaEl || !lineEl) return;
 
-      function escapeHtml(value) {
-        return String(value)
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;");
+      const tipStrong = tooltip ? tooltip.querySelector("strong") : null;
+      const tipSpan = tooltip ? tooltip.querySelector("span") : null;
+      const svg = chartFrame ? chartFrame.querySelector("svg") : null;
+      const ns = "http://www.w3.org/2000/svg";
+
+      function dayKey(iso) {
+        return String(iso || "").slice(0, 10);
       }
 
       function formatDate(iso) {
         try {
-          return new Date(iso + (String(iso).length <= 10 ? "T12:00:00" : "")).toLocaleDateString("en-US", {
+          return new Date(dayKey(iso) + "T12:00:00").toLocaleDateString("en-US", {
             month: "short",
             day: "numeric",
             year: "numeric"
           });
         } catch (e) {
-          return iso || "";
+          return dayKey(iso) || "";
         }
-      }
-
-      function formatDuration(seconds) {
-        const s = Math.round(Number(seconds) || 0);
-        const m = Math.floor(s / 60);
-        const r = s % 60;
-        return m + ":" + String(r).padStart(2, "0");
       }
 
       function daysUntilRace() {
@@ -2662,24 +2637,106 @@
 
       if (raceDaysEl) raceDaysEl.textContent = String(daysUntilRace());
 
+      function placeTooltip(point) {
+        if (!tooltip || !svg || !chartFrame) return;
+        const ctm = svg.getScreenCTM();
+        if (!ctm) return;
+        const pt = svg.createSVGPoint();
+        pt.x = point.x;
+        pt.y = point.y;
+        const screen = pt.matrixTransform(ctm);
+        const frameRect = chartFrame.getBoundingClientRect();
+        let left = screen.x - frameRect.left;
+        const top = screen.y - frameRect.top;
+        const tipWidth = tooltip.offsetWidth || 120;
+        left = Math.max(tipWidth / 2 + 4, Math.min(left, frameRect.width - tipWidth / 2 - 4));
+        tooltip.style.left = left + "px";
+        tooltip.style.top = top + "px";
+      }
+
+      function showTip(point, group) {
+        if (!tooltip || !tipStrong || !tipSpan) return;
+        tipStrong.textContent = point.miles + " mi";
+        tipSpan.textContent = point.date;
+        tooltip.hidden = false;
+        tooltip.classList.add("is-on");
+        if (pointsGroup) {
+          pointsGroup.querySelectorAll(".training-chart__point").forEach((el) => {
+            el.classList.toggle("is-active", el === group);
+            const dot = el.querySelector(".training-chart__dot");
+            if (dot) dot.setAttribute("r", el === group ? "5.5" : "3");
+          });
+        }
+        placeTooltip(point);
+      }
+
+      function hideTip() {
+        if (!tooltip) return;
+        tooltip.classList.remove("is-on");
+        tooltip.hidden = true;
+        if (pointsGroup) {
+          pointsGroup.querySelectorAll(".training-chart__point").forEach((el) => {
+            el.classList.remove("is-active");
+            const dot = el.querySelector(".training-chart__dot");
+            if (dot) dot.setAttribute("r", "3");
+          });
+        }
+      }
+
       function renderChart(runs) {
-        if (!areaEl || !lineEl || !runs.length) {
-          if (areaEl) areaEl.setAttribute("d", "");
-          if (lineEl) lineEl.setAttribute("points", "");
+        if (!runs.length) {
+          areaEl.setAttribute("d", "");
+          lineEl.setAttribute("points", "");
+          if (pointsGroup) pointsGroup.innerHTML = "";
           return;
         }
         const chronological = runs.slice().reverse();
         const X0 = 40, X1 = 760, Y0 = 20, Y1 = 180, BASE = 200;
         const miles = chronological.map((r) => r.miles);
-        const maxM = Math.max.apply(null, miles);
+        const maxM = Math.max.apply(null, miles) || 1;
         const points = chronological.map((r, i) => {
           const x = X0 + (i / Math.max(1, chronological.length - 1)) * (X1 - X0);
           const y = Y0 + (1 - r.miles / maxM) * (Y1 - Y0);
-          return x.toFixed(1) + "," + y.toFixed(1);
+          return {
+            x: x,
+            y: y,
+            miles: r.miles,
+            date: formatDate(r.date),
+            pace: r.pace || ""
+          };
         });
-        const pts = points.join(" ");
+        const pts = points.map((p) => p.x.toFixed(1) + "," + p.y.toFixed(1)).join(" ");
         lineEl.setAttribute("points", pts);
         areaEl.setAttribute("d", "M" + pts + " L" + X1 + "," + BASE + " L" + X0 + "," + BASE + " Z");
+
+        if (!pointsGroup) return;
+        pointsGroup.innerHTML = "";
+        points.forEach((point) => {
+          const group = document.createElementNS(ns, "g");
+          group.classList.add("training-chart__point");
+          group.setAttribute("tabindex", "0");
+          group.setAttribute("role", "button");
+          group.setAttribute("aria-label", point.miles + " miles on " + point.date);
+          const hit = document.createElementNS(ns, "circle");
+          hit.classList.add("training-chart__hit");
+          hit.setAttribute("cx", point.x);
+          hit.setAttribute("cy", point.y);
+          hit.setAttribute("r", "12");
+          const dot = document.createElementNS(ns, "circle");
+          dot.classList.add("training-chart__dot");
+          dot.setAttribute("cx", point.x);
+          dot.setAttribute("cy", point.y);
+          dot.setAttribute("r", "3");
+          group.appendChild(hit);
+          group.appendChild(dot);
+          pointsGroup.appendChild(group);
+          group.addEventListener("pointerenter", () => showTip(point, group));
+          group.addEventListener("pointerleave", hideTip);
+          group.addEventListener("focus", () => showTip(point, group));
+          group.addEventListener("blur", hideTip);
+        });
+
+        if (noteEl) noteEl.textContent = "Hover any dot for the exact date.";
       }
 
       function renderRuns(data) {
@@ -2694,40 +2751,16 @@
             : "No runs logged yet";
         }
         if (weeklyEl) weeklyEl.textContent = (Number(stats.weeklyMiles) || 0).toFixed(1) + " mi";
-
         renderChart(runs);
-
-        if (!runs.length) {
-          tbody.innerHTML = '<tr><td colspan="5" class="is-muted">No runs logged yet — Kevin can add them from the admin form below.</td></tr>';
-          return;
-        }
-        tbody.innerHTML = runs
-          .slice(0, 20)
-          .map(
-            (r) =>
-              "<tr>" +
-              "<td>" + escapeHtml(formatDate(r.date)) + "</td>" +
-              "<td>" + escapeHtml(String(r.miles)) + "</td>" +
-              "<td>" + escapeHtml(formatDuration(r.durationSeconds)) + "</td>" +
-              "<td>" + escapeHtml(r.pace || "—") + "</td>" +
-              "<td>" + escapeHtml(r.notes || "—") + "</td>" +
-              "</tr>"
-          )
-          .join("");
       }
 
       fetch("/api/training")
         .then((res) => (res.ok ? res.json() : null))
         .then((data) => {
-          if (!data || !data.ok) {
-            tbody.innerHTML = '<tr><td colspan="5" class="is-muted">Training log unavailable.</td></tr>';
-            return;
-          }
+          if (!data || !data.ok) return;
           renderRuns(data);
         })
-        .catch(() => {
-          tbody.innerHTML = '<tr><td colspan="5" class="is-muted">Training log unavailable.</td></tr>';
-        });
+        .catch(() => {});
 
       fetch("/api/milestones")
         .then((res) => (res.ok ? res.json() : null))
@@ -2741,7 +2774,7 @@
           today.setHours(0, 0, 0, 0);
           const upcoming = data.milestones.find((m) => {
             if (!m.occurredOn) return true;
-            return new Date(m.occurredOn + "T12:00:00") >= today;
+            return new Date(dayKey(m.occurredOn) + "T12:00:00") >= today;
           }) || data.milestones[data.milestones.length - 1];
           if (milestoneEl) milestoneEl.textContent = upcoming.title;
           if (milestoneDetail) {
