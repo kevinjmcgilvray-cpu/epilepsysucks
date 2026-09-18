@@ -17,7 +17,7 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
   <style>
     :root {
       --ink: #14110f;
@@ -212,6 +212,132 @@
       font-size: clamp(0.78rem, 1.7vw, 0.9rem);
       line-height: 1.25;
       letter-spacing: 0.01em;
+    }
+
+    .race-clock {
+      --neon: #2ef7ff;
+      --neon-dim: rgba(46, 247, 255, 0.35);
+      --tube: #071018;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.35rem 0.5rem 0.15rem;
+      margin: 0;
+    }
+
+    .race-clock__units {
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      gap: clamp(0.45rem, 2vw, 0.85rem);
+    }
+
+    .race-clock__unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.28rem;
+    }
+
+    .race-clock__digits {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: clamp(2.6rem, 9vw, 3.4rem);
+      padding: 0.35rem 0.45rem 0.28rem;
+      font-family: "Share Tech Mono", ui-monospace, monospace;
+      font-size: clamp(1.35rem, 4.5vw, 1.85rem);
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      line-height: 1;
+      color: var(--neon);
+      background:
+        linear-gradient(180deg, rgba(46, 247, 255, 0.08), transparent 40%),
+        var(--tube);
+      border: 1px solid color-mix(in srgb, var(--neon) 45%, transparent);
+      box-shadow:
+        0 0 10px var(--neon-dim),
+        0 0 24px rgba(46, 247, 255, 0.18),
+        inset 0 0 12px rgba(46, 247, 255, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      text-shadow:
+        0 0 6px var(--neon),
+        0 0 14px var(--neon-dim),
+        0 0 28px rgba(46, 247, 255, 0.45);
+      overflow: hidden;
+    }
+
+    .race-clock__digits::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      height: 1px;
+      background: rgba(0, 0, 0, 0.55);
+      box-shadow: 0 1px 0 rgba(46, 247, 255, 0.08);
+      pointer-events: none;
+    }
+
+    .race-clock__digits.is-flip {
+      animation: race-clock-flip 0.45s ease;
+    }
+
+    @keyframes race-clock-flip {
+      0% { transform: perspective(220px) rotateX(0deg); }
+      45% { transform: perspective(220px) rotateX(-78deg); filter: brightness(1.35); }
+      100% { transform: perspective(220px) rotateX(0deg); }
+    }
+
+    .race-clock__label {
+      font-family: var(--font-body);
+      font-size: 0.62rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: color-mix(in srgb, var(--neon) 72%, var(--paper-faint));
+      text-shadow: 0 0 8px var(--neon-dim);
+    }
+
+    .race-clock__sep {
+      align-self: center;
+      padding-bottom: 1.05rem;
+      font-family: "Share Tech Mono", ui-monospace, monospace;
+      font-size: clamp(1.1rem, 3.5vw, 1.45rem);
+      color: var(--neon);
+      text-shadow: 0 0 10px var(--neon);
+      opacity: 0.85;
+      animation: race-clock-blink 1.2s steps(1, end) infinite;
+    }
+
+    @keyframes race-clock-blink {
+      0%, 49% { opacity: 0.9; }
+      50%, 100% { opacity: 0.2; }
+    }
+
+    .race-clock__caption {
+      margin: 0;
+      font-size: clamp(0.68rem, 1.6vw, 0.78rem);
+      letter-spacing: 0.04em;
+      color: var(--paper-faint);
+    }
+
+    .race-clock__caption strong {
+      color: var(--neon);
+      font-weight: 500;
+      text-shadow: 0 0 8px var(--neon-dim);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .race-clock__digits.is-flip {
+        animation: none;
+      }
+      .race-clock__sep {
+        animation: none;
+        opacity: 0.75;
+      }
     }
 
     .nav__links {
@@ -1594,6 +1720,15 @@
         font-size: 0.78rem;
       }
 
+      .race-clock {
+        padding-top: 0.25rem;
+      }
+
+      .race-clock__digits {
+        min-width: 2.35rem;
+        padding: 0.28rem 0.35rem 0.22rem;
+      }
+
       .nav__toggle {
         display: grid;
         place-items: center;
@@ -1794,6 +1929,31 @@
         <li><button class="nav__theme" id="theme-toggle" type="button" aria-label="Switch color theme">Dark</button></li>
         <li><a class="nav__cta" href="https://haku.ly/9795a39b3b" target="_blank" rel="noopener noreferrer">Donate</a></li>
       </ul>
+    </div>
+    <div
+      class="race-clock"
+      id="race-clock"
+      role="timer"
+      aria-live="polite"
+      aria-label="Countdown to LA Marathon race morning, March 7, 2027"
+    >
+      <div class="race-clock__units">
+        <div class="race-clock__unit">
+          <span class="race-clock__digits" id="race-days" data-value="">000</span>
+          <span class="race-clock__label">Days</span>
+        </div>
+        <span class="race-clock__sep" aria-hidden="true">:</span>
+        <div class="race-clock__unit">
+          <span class="race-clock__digits" id="race-hours" data-value="">00</span>
+          <span class="race-clock__label">Hours</span>
+        </div>
+        <span class="race-clock__sep" aria-hidden="true">:</span>
+        <div class="race-clock__unit">
+          <span class="race-clock__digits" id="race-mins" data-value="">00</span>
+          <span class="race-clock__label">Mins</span>
+        </div>
+      </div>
+      <p class="race-clock__caption">Until race morning · <strong>March 7, 2027</strong></p>
     </div>
   </header>
 
@@ -2392,6 +2552,56 @@
           if (percentEl) percentEl.textContent = pct + "%";
         })
         .catch(() => {});
+    })();
+
+    (function initRaceClock() {
+      const root = document.getElementById("race-clock");
+      const daysEl = document.getElementById("race-days");
+      const hoursEl = document.getElementById("race-hours");
+      const minsEl = document.getElementById("race-mins");
+      if (!root || !daysEl || !hoursEl || !minsEl) return;
+
+      // Race morning: ASICS LA Marathon start window — 7:00am Pacific, March 7, 2027.
+      const RACE_MS = Date.parse("2027-03-07T07:00:00-07:00");
+
+      function pad(n, width) {
+        return String(Math.max(0, n)).padStart(width, "0");
+      }
+
+      function setDigit(el, value, width) {
+        const next = pad(value, width);
+        if (el.dataset.value === next) return;
+        el.dataset.value = next;
+        el.textContent = next;
+        el.classList.remove("is-flip");
+        void el.offsetWidth;
+        el.classList.add("is-flip");
+      }
+
+      function tick() {
+        const remaining = Math.max(0, RACE_MS - Date.now());
+        const totalMins = Math.floor(remaining / 60000);
+        const days = Math.floor(totalMins / (60 * 24));
+        const hours = Math.floor((totalMins % (60 * 24)) / 60);
+        const mins = totalMins % 60;
+
+        setDigit(daysEl, days, 3);
+        setDigit(hoursEl, hours, 2);
+        setDigit(minsEl, mins, 2);
+
+        root.setAttribute(
+          "aria-label",
+          days +
+            " days, " +
+            hours +
+            " hours, and " +
+            mins +
+            " minutes until LA Marathon race morning, March 7, 2027"
+        );
+      }
+
+      tick();
+      setInterval(tick, 1000);
     })();
 
     (function initCourseMap() {
