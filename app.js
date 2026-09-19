@@ -1748,14 +1748,29 @@
     })();
 
     (function () {
+      if (!window.mermaid) return;
+
       const details = document.getElementById("site-architecture-wrap");
+
+      const publicDiagrams = Array.prototype.filter.call(
+        document.querySelectorAll(".mermaid"),
+        (el) => !details || !details.contains(el)
+      );
+      if (publicDiagrams.length) {
+        try {
+          window.mermaid.run({ nodes: publicDiagrams });
+        } catch (err) {
+          /* ignore render errors, diagrams just stay as plain text */
+        }
+      }
+
       if (!details) return;
       let rendered = false;
       details.addEventListener("toggle", () => {
-        if (!details.open || rendered || !window.mermaid) return;
+        if (!details.open || rendered) return;
         rendered = true;
         try {
-          window.mermaid.run({ querySelector: "#arch-mermaid" });
+          window.mermaid.run({ nodes: Array.from(details.querySelectorAll(".mermaid")) });
         } catch (err) {
           rendered = false;
         }

@@ -153,6 +153,26 @@
 
     <section class="section" id="story">
       <div class="section__inner section__inner--wide">
+        <div class="diagram-block reveal">
+          <p class="eyebrow">Diagram — the story at a glance</p>
+          <div class="arch-diagram">
+            <pre class="mermaid" id="mermaid-timeline">
+timeline
+    title Kevin's epilepsy story
+    Age 8 : Diagnosed with cerebral hemiatrophy
+    Childhood into high school : A massive seizure — hospitalized
+                                : Years of undiagnosed focal aware seizures
+    Community college : Generalized tonic-clonic seizures begin
+                       : UCLA telemetry maps the seizures
+    2017 : Left anterior temporal lobectomy
+    2019 : Vagus nerve stimulator (VNS)
+    2022 : Deep brain stimulation (DBS), two leads placed
+    2026 : Golden DBS setting found, March 18
+    2027 : Running the LA Marathon for CURE Epilepsy
+            </pre>
+          </div>
+        </div>
+
         <article class="chapter reveal">
           <p class="chapter__year">Kevin’s story</p>
           <h3>How it started</h3>
@@ -220,6 +240,49 @@
             <figcaption>2022 — after DBS</figcaption>
           </figure>
         </article>
+
+        <div class="diagram-block reveal">
+          <p class="eyebrow">Diagram — everything tried</p>
+          <div class="arch-diagram">
+            <pre class="mermaid" id="mermaid-mindmap">
+mindmap
+  root((Fighting Epilepsy))
+    Medication
+      Tried early on
+      Breakthroughs kept coming
+    Resection 2017
+      Left anterior temporal lobectomy
+      Reduced but didn't stop seizures
+    VNS 2019
+      Vagus nerve stimulator
+      Helped a little
+    DBS 2022
+      Two deep leads
+      Golden setting found 2026
+      Life changed
+            </pre>
+          </div>
+        </div>
+
+        <div class="diagram-block reveal">
+          <p class="eyebrow">Diagram — invasiveness vs effectiveness</p>
+          <div class="arch-diagram">
+            <pre class="mermaid" id="mermaid-quadrant">
+quadrantChart
+    title Treatments — invasiveness vs effectiveness
+    x-axis Less invasive --> More invasive
+    y-axis Less effective --> More effective
+    quadrant-1 Big ask, big win
+    quadrant-2 Gentle but limited
+    quadrant-3 Low risk, low reward
+    quadrant-4 High risk, mixed reward
+    Medication: [0.15, 0.25]
+    Resection: [0.75, 0.45]
+    VNS: [0.55, 0.35]
+    DBS: [0.85, 0.85]
+            </pre>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -235,6 +298,30 @@
           </div>
           <div class="split__image split__image--family reveal">
             <img src="epilepsy-sucks-images/IMG_7086.jpeg" alt="Kevin with family and friends" width="1066" height="1600" loading="lazy" decoding="async" />
+          </div>
+        </div>
+
+        <div class="diagram-block reveal">
+          <p class="eyebrow">Diagram — the emotional arc</p>
+          <div class="arch-diagram">
+            <pre class="mermaid" id="mermaid-journey">
+journey
+    title Kevin's road to freedom
+    section Diagnosis
+      Cerebral hemiatrophy at 8: 3: Kevin
+      Undiagnosed focal seizures for years: 2: Kevin
+    section The storm
+      Massive seizure and hospital days: 1: Kevin
+      Tonic-clonic seizures in college: 1: Kevin
+    section Fighting back
+      UCLA telemetry: 3: Kevin
+      2017 lobectomy: 4: Kevin
+      2019 VNS: 4: Kevin
+      2022 DBS: 5: Kevin
+    section Freedom
+      Golden DBS setting found: 5: Kevin
+      Training for the LA Marathon: 5: Kevin
+            </pre>
           </div>
         </div>
       </div>
@@ -309,6 +396,18 @@
           </div>
           <p class="weight-chart__note" id="weight-chart-note">Hover any dot for the exact date and weight.</p>
         </div>
+
+        <div class="diagram-block reveal">
+          <p class="eyebrow">Diagram — the numbers</p>
+          <div class="arch-diagram">
+            <pre class="mermaid" id="mermaid-weight-pie">
+pie showData
+    title 368 lb at my heaviest
+    "Lost — 154 lb" : 154
+    "Remaining — 214 lb" : 214
+            </pre>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -367,6 +466,42 @@
             </div>
           </div>
           <p class="training-chart__note" id="training-chart-note">Hover any dot for the exact date.</p>
+        </div>
+
+        <div class="diagram-block reveal">
+          <p class="eyebrow">Diagram — countdown to race day</p>
+          <div class="arch-diagram">
+            <pre class="mermaid" id="mermaid-gantt">
+gantt
+    title Countdown to the 2027 LA Marathon
+    dateFormat YYYY-MM-DD
+    axisFormat %b %d
+    section Base building
+    Rebuild the engine : base, 2026-09-19, 2026-11-08
+    section Build phase
+    Add mileage and speed : build, 2026-11-09, 2027-01-03
+    section Peak mileage
+    Longest runs : peak, 2027-01-04, 2027-02-14
+    section Taper
+    Rest and sharpen : taper, 2027-02-15, 2027-03-06
+    section Race day
+    LA Marathon :milestone, race, 2027-03-07, 0d
+            </pre>
+          </div>
+        </div>
+
+        <div class="diagram-block reveal">
+          <p class="eyebrow">Diagram — Live Track beacon states</p>
+          <div class="arch-diagram">
+            <pre class="mermaid" id="mermaid-state">
+stateDiagram-v2
+    [*] --> Armed
+    Armed --> Scanning : race day begins (Pacific time)
+    Scanning --> Live : GPS beacon posted
+    Live --> Scanning : beacon cleared after finish
+    Scanning --> [*]
+            </pre>
+          </div>
         </div>
 
         <div class="course-map__block" id="course">
@@ -591,6 +726,8 @@
 
         <details class="owner-update-form" id="site-architecture-wrap">
           <summary>Kevin — site architecture</summary>
+
+          <p class="arch-diagram-title">Request flow</p>
           <div class="arch-diagram">
             <pre class="mermaid" id="arch-mermaid">
 flowchart TD
@@ -608,8 +745,105 @@ flowchart TD
     API -->|"SQL over DATABASE_URL"| DB
     GitHub --> Deploy -->|"Vercel auto-deploy"| Static
             </pre>
-            <p class="arch-fallback-note">Diagram renders when you expand this panel.</p>
           </div>
+
+          <p class="arch-diagram-title">Neon schema</p>
+          <div class="arch-diagram">
+            <pre class="mermaid" id="arch-mermaid-er">
+erDiagram
+    training_runs {
+        bigserial id
+        date run_date
+        numeric miles
+        integer duration_seconds
+        text notes
+    }
+    weigh_ins {
+        bigserial id
+        date weigh_date
+        numeric weight_lb
+    }
+    fundraising {
+        integer id
+        numeric amount_raised
+        numeric goal
+        text source
+    }
+    milestones {
+        bigserial id
+        text title
+        text detail
+        date occurred_on
+        text kind
+    }
+    posts {
+        bigserial id
+        text body
+        timestamptz updated_at
+    }
+    comments {
+        bigserial id
+        text name
+        text message
+        boolean approved
+        boolean spam
+    }
+    live_track {
+        integer id
+        boolean is_live
+        double lat
+        double lng
+        numeric mile
+        text label
+    }
+    marathon_routes {
+        text id
+        text name
+        numeric distance_miles
+        geometry geom
+    }
+            </pre>
+          </div>
+
+          <p class="arch-diagram-title">Live Track request/response</p>
+          <div class="arch-diagram">
+            <pre class="mermaid" id="arch-mermaid-sequence">
+sequenceDiagram
+    participant Kevin as Kevin's phone
+    participant API as /api/live-track
+    participant DB as Neon (live_track)
+    participant Fan as Fan's browser
+
+    Kevin->>API: POST password, lat, lng, mile
+    API->>API: checkOwnerPassword()
+    API->>DB: UPDATE is_live=TRUE, lat, lng, mile
+    DB-->>API: updated row
+    API-->>Kevin: ok, live true, lat, lng
+
+    loop every few seconds
+        Fan->>API: GET /api/live-track
+        API->>DB: SELECT row WHERE id=1
+        DB-->>API: row
+        API-->>Fan: status, lat, lng, mile
+    end
+            </pre>
+          </div>
+
+          <p class="arch-diagram-title">Commit history (this build)</p>
+          <div class="arch-diagram">
+            <pre class="mermaid" id="arch-mermaid-git">
+gitGraph
+    commit id: "story content + layout"
+    commit id: "images + a11y + Live Track"
+    commit id: "best-practices pass"
+    commit id: "split into styles.css / app.js"
+    commit id: "architecture diagram"
+    commit id: "mermaid flowchart"
+    commit id: "diagrams throughout the story"
+            </pre>
+          </div>
+
+          <p class="arch-fallback-note">Diagrams render when you expand this panel.</p>
         </details>
       </div>
     </section>
@@ -663,6 +897,18 @@ flowchart TD
             </a>
           </li>
         </ul>
+
+        <div class="diagram-block reveal">
+          <p class="eyebrow">Diagram — where a donation goes</p>
+          <div class="arch-diagram">
+            <pre class="mermaid" id="mermaid-sankey">
+sankey-beta
+
+Donors,LA Marathon Campaign,100
+LA Marathon Campaign,CURE Epilepsy,100
+            </pre>
+          </div>
+        </div>
       </div>
     </section>
   </main>
