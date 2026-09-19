@@ -1429,6 +1429,18 @@
       font-size: 0.9rem;
     }
 
+    .kevin-storybook {
+      min-height: 28rem;
+      border: 1px solid rgba(139, 61, 255, 0.35);
+      background: rgba(15, 16, 21, 0.72);
+      box-shadow: 0 0 28px rgba(139, 61, 255, 0.18);
+      overflow: hidden;
+    }
+
+    .kevin-storybook .theme {
+      min-height: 28rem;
+    }
+
     .course-map {
       --neon-cyan: #2ef7ff;
       --neon-cyan-soft: rgba(46, 247, 255, 0.35);
@@ -2117,6 +2129,7 @@
     }
 
   </style>
+  <link rel="stylesheet" href="/kevin-storybook/storybook.css" />
 </head>
 <body>
 
@@ -2235,67 +2248,12 @@
 
     <section class="section" id="story">
       <div class="section__inner section__inner--wide">
-        <div class="reveal">
+        <div class="kevin-storybook reveal is-in" id="kevin-storybook-root" aria-label="Kevin’s story — Canva Storybook"></div>
+        <noscript>
           <p class="eyebrow">Kevin’s story</p>
           <h2>How it started</h2>
-          <p>When I was young, life threw me a curveball I never saw coming — <span class="key">weakness down the right side of my body</span>. My parents were incredibly concerned, so we went straight to the doctor. After MRIs, CT scans, and more, I was wheeled into the operating room to see if I had a <span class="key">tumor in my brain — which I didn’t, thank God</span>!</p>
-          <p>After all those tests, they decided I had <span class="key">cerebral hemiatrophy</span>. <span class="key">I was eight years old.</span> In plain English: <span class="key">one half of my brain is smaller than the other</span> — “hemi” means half, and “atrophy” means that part of the brain didn’t grow or stay as large as it should. That difference on one side of the brain is what set the stage for everything that came next. A few years later? Oh man — <em>this</em> is where the fun begins.</p>
-        </div>
-
-        <article class="chapter reveal">
-          <p class="chapter__year">The first big one</p>
-          <h3>A massive seizure</h3>
-          <p>I had a <span class="key">massive seizure</span> — the kind that stops everything. One minute life is moving; the next, your body is gone and there’s nothing you can do about it. I ended up in the hospital for a few days to recover. Monitors. Questions. Waiting. The slow, shaky climb back to feeling like yourself again.</p>
-          <p>Those days in a hospital bed change you. You’re not just tired — you’re depleted. Your muscles ache. Your head feels wrong. People you love are scared in a way you can see on their faces even when they try to hide it. Doctors run tests and speak carefully. You start to understand that this wasn’t a fluke. Something in your brain had declared war, and recovery wasn’t overnight — it was hours and days of rest, of being watched, of wondering what comes next.</p>
-          <p>Throughout my life until I graduated high school, I was also having <span class="key">focal aware</span> — or simple partial — seizures. In plain English: a <span class="key">focal aware</span> seizure starts in one area of the brain, and <span class="key">you stay awake and aware while it’s happening</span> — your body or senses may act up, but you’re still “there.” It might be a weird feeling, a twitch, a wave through your arm or face, something you can’t quite name. You’re present for all of it. You’re not unconscious. You’re just… interrupted.</p>
-          <p>Looking back, those moments were there for years — woven into ordinary days so tightly I treated them like nothing. A strange sensation. A brief glitch. Something I’d shrug off and keep moving. It didn’t bother me at all, because <span class="key">I did not know that I was having seizures</span>. Nobody had given those episodes a name yet. To me, it was just how my body was. The massive seizure in the hospital was the thunderclap. The focal aware seizures were the quiet weather I’d been living in without realizing the storm had a label.</p>
-        </article>
-
-        <article class="chapter reveal">
-          <p class="chapter__year">Community college</p>
-          <h3>When everything changed</h3>
-          <p>In community college I started to have <span class="key">generalized tonic-clonic seizures</span>. In plain English: these are the big ones people usually picture — <span class="key">your whole body stiffens (tonic), then jerks (clonic)</span>, and it involves both sides of the brain. You lose awareness. It’s intense, scary, and nothing like the quieter seizures I’d had before. After seeing my neurologist in my hometown, I was still having breakthrough seizures.</p>
-          <p>What that actually meant was darker than any textbook line. Consciousness gone. Your body seized by something you can’t bargain with — locked, then thrashing, while the world keeps moving without you. You don’t get to watch it. You wake up emptied, confused, sore, sometimes injured, staring at faces that saw what you couldn’t. The quiet seizures had been a secret glitch. These were a blackout. A theft. And even after the hometown neurologist, the breakthroughs kept coming — proof that the dark wasn’t done with me yet.</p>
-          <p>After much contemplation, I decided to go down to <span class="key">UCLA Medical Center</span>. UCLA’s Neurology & Neurosurgery department routinely ranks among the top 10 in the nation and #1 in Southern California. I was instantly into telemetry so the doctors could find the focal point of my seizures.</p>
-          <p>Choosing UCLA felt like stepping toward light. I wasn’t running from epilepsy anymore — I was walking into a place built to understand it. Telemetry meant answers: mapping the storm so we could finally see where it started. It wasn’t only fear; it was hope with a plan. A team skilled enough to fight for my future. A path that said my life could be more than breakthroughs and recovery beds. For the first time in a long time, the next chapter had a destination — and I believed I might get there.</p>
-        </article>
-
-        <article class="chapter chapter--with-photo reveal">
-          <figure class="chapter__photo">
-            <img src="epilepsy-sucks-images/IMG_0659.JPG" alt="After left anterior temporal lobectomy surgery in 2017, stapled incision on the left side of the head" />
-            <figcaption>2017 — after the resection</figcaption>
-          </figure>
-          <div class="chapter__body">
-            <p class="chapter__year">2017</p>
-            <h3>Left anterior temporal lobectomy</h3>
-            <p>In 2017, I went all in. Surgeons performed a <span class="key">left anterior temporal lobectomy</span> — they cut out part of my brain in a desperate, calculated fight to stop the seizures. For a moment, it felt like the war might finally be over.</p>
-            <p>That decision was not casual. The left temporal lobe is where a lot of what makes you <span class="key">you</span> lives — language, naming, verbal memory, the ability to pull a word when you need it. On the dominant side, a resection like mine carries real risk: lasting speech problems, memory loss, trouble finding words, changes in mood or personality, infection, bleeding, stroke, even deficits that don’t fully reverse. You don’t sign those papers lightly. You sit with the fear that the cure could cost pieces of who you are.</p>
-            <p>I knew the stakes. My family knew the stakes. The surgeons were clear: this was major brain surgery, and there were no guarantees — not that the seizures would stop, and not that I’d walk out exactly the same person who walked in. Still, the seizures were already stealing my life. So I chose the risk. I chose the operating room. I chose to fight.</p>
-            <p>Then, a few months later, lightning struck again: a <span class="key">breakthrough seizure</span>. Hope cracked. The operating room hadn’t been enough. <span class="key">Back to the drawing board.</span></p>
-          </div>
-        </article>
-
-        <article class="chapter reveal">
-          <p class="chapter__year">2019</p>
-          <h3>Vagus nerve stimulator</h3>
-          <p>In 2019 I chose to have a <span class="key">vagus nerve stimulator</span> put in. I wasn’t finished fighting. It helped a little — but breakthrough seizures still came. That didn’t stop me. Resection and VNS were already in. <span class="key">The big guns were out to play</span> — and I was still standing.</p>
-          <p>By then I’d already walked a long road to get there. Cerebral hemiatrophy as a kid. A massive seizure and hospital days. Years of focal aware seizures I didn’t even recognize. Then the big tonic-clonic seizures in community college, breakthroughs that kept coming, UCLA and telemetry to map the storm, and in 2017 a left anterior temporal lobectomy that still couldn’t finish the war. The VNS was the next move after all of that — resection plus stimulator, everything we had short of going deeper. And when the breakthroughs still showed up, the path ahead pointed somewhere harder: <span class="key">DBS</span>.</p>
-        </article>
-
-        <article class="chapter chapter--with-photo chapter--with-photo--right reveal">
-          <div class="chapter__body">
-            <p class="chapter__year">2022</p>
-            <h3>Deep brain stimulation</h3>
-            <p>I was done waiting for epilepsy to decide my life. <span class="key">DBS</span> was next — and I chose it on purpose. In consultation with my surgeon, I committed to putting <span class="key">two deep leads in my brain</span>. In 2022, I walked into that operating room ready. This was the line I would not retreat from.</p>
-            <p>DBS is not a small step. You’re asking a surgical team to place hardware deep in the brain — leads, wires, a stimulator under the skin — and live with it. The risks are real: bleeding, infection, hardware problems, stroke, pain at the implant site, unwanted stimulation side effects, mood changes, and the chance it simply doesn’t help enough. You can need revisions. Batteries don’t last forever. You’re signing up for appointments, programming sessions, and a device that becomes part of your body.</p>
-            <p>The reward, if it works, is the reason people still choose it: a chance to turn the volume down on seizures, to get days back, to feel like yourself again. For me the upside was worth the gamble — not because the risk disappeared, but because living without trying was already costing too much.</p>
-            <p>Then came the long fight after the fight: nearly four years with my doctors and the team at Medtronic, refusing to quit until we found a <span class="key">golden setting</span>. On <span class="key">March 18, 2026</span>, they started testing <span class="key">low pulse stimulation 24/7</span>. It’s been about seven months since they added that setting — and it was the right choice. <span class="key">The DBS has changed my life.</span> My depression has evaporated. I stayed the course. And it held.</p>
-          </div>
-          <figure class="chapter__photo">
-            <img src="epilepsy-sucks-images/IMG_3397.jpeg" alt="After deep brain stimulation surgery in 2022, two sutured incisions on the top of the head" />
-            <figcaption>2022 — after DBS</figcaption>
-          </figure>
-        </article>
+          <p>Enable JavaScript to read Kevin’s interactive storybook from how it started through where he is now.</p>
+        </noscript>
       </div>
     </section>
 
@@ -2304,10 +2262,8 @@
         <div class="split">
           <div class="reveal">
             <p class="eyebrow">Where I am now</p>
-            <h2>The sting isn’t there anymore</h2>
-            <p>Now, I am running the LA Marathon. Not as a stunt. Not as a maybe. As a real finish line I am training toward — miles under my feet after years when even a steady day felt like a gamble. I am still having breakthrough seizures about once a month or so. That part didn’t vanish. But <span class="key">the sting isn’t there anymore</span>. The fear that used to sit in my chest before every outing, every night’s sleep, every plan I was afraid to make — that weight has eased. A seizure can still come. It no longer owns the whole day before it arrives.</p>
-            <p><span class="key">The chains of epilepsy that had bound me for so long were broken.</span> Not because epilepsy disappeared, but because it stopped deciding who I got to be. <span class="key">I no longer fear having a seizure.</span> I respect what my body can do. I prepare. I keep going. It’s just the way my life is — and for the first time in a long time, that sentence feels like freedom instead of a sentence.</p>
-            <p>I am so thankful that I have an <span class="key">awesome family</span> that has supported me throughout this long process. They sat in waiting rooms. They drove me to appointments. They held the hard days when I couldn’t. They believed in a future I sometimes couldn’t see yet — through childhood scans, telemetry, resection, VNS, DBS, and every breakthrough that tried to knock me back. This story is mine, but I did not walk it alone. Their love is part of why I’m still standing, still training, still choosing the next mile.</p>
+            <h2>Still choosing the next mile</h2>
+            <p>The full story lives in the Canva storybook above — from cerebral hemiatrophy at eight years old to DBS, freedom, and the road to the LA Marathon. The chains don’t get the last word.</p>
           </div>
           <div class="split__image split__image--family reveal">
             <img src="epilepsy-sucks-images/IMG_7086.jpeg" alt="Kevin with family and friends" />
@@ -4475,5 +4431,6 @@
       photos.forEach((el) => io.observe(el));
     })();
   </script>
+  <script type="module" src="/kevin-storybook/storybook.js"></script>
 </body>
 </html>
