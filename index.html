@@ -17,16 +17,6 @@
       (d.body || d.head).appendChild(s);
     })(document);
   </script>
-  <script>
-    (function () {
-      try {
-        var saved = localStorage.getItem("epilepsy-theme");
-        if (saved === "dark" || saved === "light") {
-          document.documentElement.setAttribute("data-theme", saved);
-        }
-      } catch (e) {}
-    })();
-  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
@@ -700,27 +690,6 @@
         border-top: 1px solid rgba(180, 140, 255, 0.45);
         border-radius: 0;
       }
-    }
-
-    .nav__theme {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.55rem 0.85rem;
-      border: 1px solid var(--line);
-      background: transparent;
-      color: var(--paper);
-      font-family: var(--font-body);
-      font-size: 0.8rem;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
-    }
-
-    .nav__theme:hover {
-      border-color: var(--epi);
-      color: var(--epi);
     }
 
     .nav__toggle {
@@ -2293,7 +2262,6 @@
         <li><a class="nav__cta" href="#comments">Comments</a></li>
         <li><a class="nav__cta" href="/game">Game</a></li>
         <li><button type="button" class="nav__cta" id="booth-open">Photo booth</button></li>
-        <li><button class="nav__theme" id="theme-toggle" type="button" aria-label="Switch color theme">Dark</button></li>
         <li><a class="nav__cta" href="https://haku.ly/9795a39b3b" target="_blank" rel="noopener noreferrer">Donate</a></li>
       </ul>
     </div>
@@ -2854,31 +2822,6 @@
   </footer>
 
   <script>
-    const themeToggle = document.getElementById("theme-toggle");
-
-    function syncThemeToggle() {
-      const theme = document.documentElement.getAttribute("data-theme") || "light";
-      themeToggle.textContent = theme === "light" ? "Dark" : "Light";
-      themeToggle.setAttribute(
-        "aria-label",
-        theme === "light" ? "Switch to dark mode" : "Switch to light mode"
-      );
-    }
-
-    syncThemeToggle();
-
-    themeToggle.addEventListener("click", () => {
-      const next =
-        document.documentElement.getAttribute("data-theme") === "light"
-          ? "dark"
-          : "light";
-      document.documentElement.setAttribute("data-theme", next);
-      try {
-        localStorage.setItem("epilepsy-theme", next);
-      } catch (e) {}
-      syncThemeToggle();
-    });
-
     const nav = document.getElementById("nav");
     const toggle = document.getElementById("nav-toggle");
     const links = document.getElementById("nav-links");
