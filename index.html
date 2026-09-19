@@ -1484,12 +1484,132 @@
       box-shadow: 0 0 10px var(--neon-cyan-soft), 0 0 18px rgba(46, 247, 255, 0.45);
     }
 
+    .course-map__swatch--live {
+      width: 0.55rem;
+      height: 0.55rem;
+      background: #ff4fd8;
+      box-shadow: 0 0 10px rgba(255, 79, 216, 0.7), 0 0 18px rgba(255, 79, 216, 0.45);
+      animation: live-track-blink 0.55s steps(2, end) infinite;
+    }
+
     .course-map .training-status {
       margin-top: 0;
     }
 
     .course-map__block {
       margin-top: 2.5rem;
+    }
+
+    .course-map__intro {
+      display: grid;
+      grid-template-columns: minmax(11rem, 14rem) minmax(0, 1fr);
+      gap: clamp(1rem, 3vw, 1.75rem);
+      align-items: center;
+      margin-bottom: 1.25rem;
+    }
+
+    .course-map__intro-copy .eyebrow {
+      margin-top: 0;
+    }
+
+    .course-map__intro-copy h2 {
+      margin-bottom: 0.45rem;
+    }
+
+    .live-track {
+      --lt-neon: #2ef7ff;
+      --lt-neon-soft: rgba(46, 247, 255, 0.35);
+      --lt-magenta: #ff4fd8;
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1;
+      border: 1px solid rgba(46, 247, 255, 0.45);
+      background:
+        radial-gradient(circle at center, rgba(46, 247, 255, 0.12), transparent 58%),
+        #070b10;
+      box-shadow:
+        0 0 0 1px rgba(46, 247, 255, 0.12) inset,
+        0 0 28px rgba(46, 247, 255, 0.22);
+      overflow: hidden;
+    }
+
+    .live-track__canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .live-track__badge {
+      position: absolute;
+      top: 0.55rem;
+      left: 0.55rem;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.2rem 0.45rem;
+      border: 1px solid rgba(46, 247, 255, 0.5);
+      background: rgba(4, 12, 18, 0.82);
+      color: var(--lt-neon);
+      font-family: "Share Tech Mono", ui-monospace, monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-shadow: 0 0 8px var(--lt-neon-soft);
+    }
+
+    .live-track__badge-dot {
+      width: 0.45rem;
+      height: 0.45rem;
+      border-radius: 50%;
+      background: var(--lt-neon);
+      box-shadow: 0 0 8px var(--lt-neon), 0 0 16px var(--lt-neon-soft);
+      animation: live-track-blink 1s steps(2, end) infinite;
+    }
+
+    .live-track.is-live .live-track__badge-dot {
+      background: var(--lt-magenta);
+      box-shadow: 0 0 8px var(--lt-magenta), 0 0 18px rgba(255, 79, 216, 0.55);
+      animation-duration: 0.55s;
+    }
+
+    .live-track__meta {
+      position: absolute;
+      right: 0.55rem;
+      bottom: 0.55rem;
+      left: 0.55rem;
+      z-index: 2;
+      padding: 0.35rem 0.45rem;
+      border: 1px solid rgba(46, 247, 255, 0.28);
+      background: rgba(4, 12, 18, 0.78);
+      color: rgba(210, 245, 255, 0.88);
+      font-family: "Share Tech Mono", ui-monospace, monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.04em;
+      line-height: 1.35;
+    }
+
+    .live-track__meta strong {
+      color: var(--lt-neon);
+      font-weight: 600;
+    }
+
+    @keyframes live-track-blink {
+      0%,
+      49% { opacity: 1; }
+      50%,
+      100% { opacity: 0.25; }
+    }
+
+    @media (max-width: 800px) {
+      .course-map__intro {
+        grid-template-columns: 1fr;
+        justify-items: start;
+      }
+
+      .live-track {
+        width: min(14rem, 70vw);
+      }
     }
 
     .course-map__block .eyebrow {
@@ -2326,9 +2446,33 @@
         </div>
 
         <div class="course-map__block" id="course">
-          <p class="eyebrow">March 7, 2027</p>
-          <h2>Stadium to the Stars</h2>
-          <p>From Dodger Stadium to Century City — the finish line I’m training toward.</p>
+          <div class="course-map__intro">
+            <aside
+              class="live-track"
+              id="live-track"
+              aria-label="Live Track radar for race-day GPS on the LA Marathon course"
+            >
+              <div class="live-track__badge">
+                <span class="live-track__badge-dot" aria-hidden="true"></span>
+                <span id="live-track-status">Live Track</span>
+              </div>
+              <canvas
+                class="live-track__canvas"
+                id="live-track-canvas"
+                width="360"
+                height="360"
+                aria-hidden="true"
+              ></canvas>
+              <p class="live-track__meta" id="live-track-meta">
+                Neon beacon armed · <strong>Stadium to the Stars</strong>
+              </p>
+            </aside>
+            <div class="course-map__intro-copy">
+              <p class="eyebrow">March 7, 2027</p>
+              <h2>Stadium to the Stars</h2>
+              <p>From Dodger Stadium to Century City — the finish line I’m training toward.</p>
+            </div>
+          </div>
           <div class="course-map__frame">
             <div class="course-map__canvas" id="marathon-map" role="img" aria-label="Interactive map of the LA Marathon route from Dodger Stadium to Century City"></div>
           </div>
@@ -2337,6 +2481,7 @@
             <span id="course-map-distance">26.2 miles</span>
             <span>Start: Dodger Stadium</span>
             <span>Finish: Avenue of the Stars</span>
+            <span id="live-track-legend" hidden><span class="course-map__swatch course-map__swatch--live" aria-hidden="true"></span>Live beacon</span>
           </div>
         </div>
       </div>
@@ -2484,6 +2629,20 @@
               <button class="btn btn--purple" type="submit">Save milestone</button>
             </div>
             <p class="comment-form__error" id="admin-milestone-error" hidden></p>
+          </form>
+
+          <form class="comment-form" id="admin-live-track-form" novalidate>
+            <p class="comment-form__note" style="margin:0;">Race-day Live Track GPS beacon</p>
+            <label>Password<input id="admin-live-password" name="password" type="password" required autocomplete="current-password" /></label>
+            <label>Latitude<input id="admin-live-lat" name="lat" type="number" step="any" placeholder="Optional if using Share my location" /></label>
+            <label>Longitude<input id="admin-live-lng" name="lng" type="number" step="any" placeholder="Optional if using Share my location" /></label>
+            <label>Mile (optional)<input id="admin-live-mile" name="mile" type="number" min="0" max="30" step="0.1" /></label>
+            <div class="comment-form__actions">
+              <button class="btn btn--purple" type="button" id="admin-live-share">Share my location</button>
+              <button class="btn btn--purple" type="submit">Push beacon</button>
+              <button class="btn btn--ghost" type="button" id="admin-live-clear">Clear beacon</button>
+            </div>
+            <p class="comment-form__error" id="admin-live-error" hidden></p>
           </form>
         </details>
 
@@ -2829,6 +2988,7 @@
             { north: b.north, south: b.south, east: b.east, west: b.west },
             48
           );
+          return { kind: "google", map: map };
         });
       }
 
@@ -2851,64 +3011,309 @@
             attributionControl: true
           });
           map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
-          map.on("load", () => {
-            map.addSource("marathon-route", { type: "geojson", data: geojson });
-            map.addLayer({
-              id: "marathon-glow-wide",
-              type: "line",
-              source: "marathon-route",
-              paint: {
-                "line-color": NEON,
-                "line-width": 14,
-                "line-opacity": 0.18,
-                "line-blur": 8
-              }
-            });
-            map.addLayer({
-              id: "marathon-glow-mid",
-              type: "line",
-              source: "marathon-route",
-              paint: {
-                "line-color": NEON,
-                "line-width": 7,
-                "line-opacity": 0.4,
-                "line-blur": 2
-              }
-            });
-            map.addLayer({
-              id: "marathon-core",
-              type: "line",
-              source: "marathon-route",
-              paint: {
-                "line-color": NEON,
-                "line-width": 2.75,
-                "line-opacity": 1
-              }
-            });
+          return new Promise((resolve) => {
+            map.on("load", () => {
+              map.addSource("marathon-route", { type: "geojson", data: geojson });
+              map.addLayer({
+                id: "marathon-glow-wide",
+                type: "line",
+                source: "marathon-route",
+                paint: {
+                  "line-color": NEON,
+                  "line-width": 14,
+                  "line-opacity": 0.18,
+                  "line-blur": 8
+                }
+              });
+              map.addLayer({
+                id: "marathon-glow-mid",
+                type: "line",
+                source: "marathon-route",
+                paint: {
+                  "line-color": NEON,
+                  "line-width": 7,
+                  "line-opacity": 0.4,
+                  "line-blur": 2
+                }
+              });
+              map.addLayer({
+                id: "marathon-core",
+                type: "line",
+                source: "marathon-route",
+                paint: {
+                  "line-color": NEON,
+                  "line-width": 2.75,
+                  "line-opacity": 1
+                }
+              });
 
-            const b = boundsFromPath(path);
-            map.fitBounds(
-              [
-                [b.west, b.south],
-                [b.east, b.north]
-              ],
-              { padding: 48, duration: 0 }
-            );
+              const b = boundsFromPath(path);
+              map.fitBounds(
+                [
+                  [b.west, b.south],
+                  [b.east, b.north]
+                ],
+                { padding: 48, duration: 0 }
+              );
 
-            new maplibregl.Marker({ color: NEON })
-              .setLngLat([path[0].lng, path[0].lat])
-              .setPopup(new maplibregl.Popup().setText(feature.properties.start || "Dodger Stadium"))
-              .addTo(map);
-            new maplibregl.Marker({ color: NEON })
-              .setLngLat([path[path.length - 1].lng, path[path.length - 1].lat])
-              .setPopup(
-                new maplibregl.Popup().setText(
-                  feature.properties.finish || "Avenue of the Stars"
+              new maplibregl.Marker({ color: NEON })
+                .setLngLat([path[0].lng, path[0].lat])
+                .setPopup(new maplibregl.Popup().setText(feature.properties.start || "Dodger Stadium"))
+                .addTo(map);
+              new maplibregl.Marker({ color: NEON })
+                .setLngLat([path[path.length - 1].lng, path[path.length - 1].lat])
+                .setPopup(
+                  new maplibregl.Popup().setText(
+                    feature.properties.finish || "Avenue of the Stars"
+                  )
                 )
-              )
-              .addTo(map);
+                .addTo(map);
+              resolve({ kind: "maplibre", map: map });
+            });
           });
         });
+      }
+
+      let coursePath = [];
+      let mapApi = null;
+      let liveMarker = null;
+      let liveMarkerPulse = null;
+
+      function nearestPointOnPath(path, lat, lng) {
+        let best = path[0] || null;
+        let bestD = Infinity;
+        path.forEach((p) => {
+          const d = (p.lat - lat) * (p.lat - lat) + (p.lng - lng) * (p.lng - lng);
+          if (d < bestD) {
+            bestD = d;
+            best = p;
+          }
+        });
+        return best;
+      }
+
+      function clearLiveMapMarker() {
+        if (liveMarker && liveMarker.setMap) liveMarker.setMap(null);
+        if (liveMarker && liveMarker.remove) liveMarker.remove();
+        if (liveMarkerPulse && liveMarkerPulse.setMap) liveMarkerPulse.setMap(null);
+        if (liveMarkerPulse && liveMarkerPulse.remove) liveMarkerPulse.remove();
+        liveMarker = null;
+        liveMarkerPulse = null;
+      }
+
+      function updateLiveMapMarker(lat, lng) {
+        if (!mapApi || !Number.isFinite(lat) || !Number.isFinite(lng)) {
+          clearLiveMapMarker();
+          return;
+        }
+        const snapped = nearestPointOnPath(coursePath, lat, lng) || { lat, lng };
+        if (mapApi.kind === "google") {
+          if (!liveMarker) {
+            liveMarkerPulse = new google.maps.Marker({
+              map: mapApi.map,
+              position: snapped,
+              clickable: false,
+              icon: {
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 18,
+                fillColor: "#ff4fd8",
+                fillOpacity: 0.2,
+                strokeColor: "#ff4fd8",
+                strokeOpacity: 0.55,
+                strokeWeight: 2
+              }
+            });
+            liveMarker = new google.maps.Marker({
+              map: mapApi.map,
+              position: snapped,
+              title: "Live Track",
+              icon: {
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 7,
+                fillColor: "#ff4fd8",
+                fillOpacity: 1,
+                strokeColor: "#ffffff",
+                strokeWeight: 2
+              }
+            });
+          } else {
+            liveMarker.setPosition(snapped);
+            if (liveMarkerPulse) liveMarkerPulse.setPosition(snapped);
+          }
+          return;
+        }
+        if (mapApi.kind === "maplibre") {
+          if (!liveMarker) {
+            const pulseEl = document.createElement("div");
+            pulseEl.style.cssText =
+              "width:28px;height:28px;border-radius:50%;background:rgba(255,79,216,0.25);box-shadow:0 0 18px rgba(255,79,216,0.7);border:1px solid rgba(255,79,216,0.7);animation:live-track-blink 0.55s steps(2,end) infinite;";
+            liveMarkerPulse = new maplibregl.Marker({ element: pulseEl })
+              .setLngLat([snapped.lng, snapped.lat])
+              .addTo(mapApi.map);
+            const el = document.createElement("div");
+            el.style.cssText =
+              "width:12px;height:12px;border-radius:50%;background:#ff4fd8;box-shadow:0 0 12px #ff4fd8,0 0 22px rgba(255,79,216,0.7);border:2px solid #fff;";
+            liveMarker = new maplibregl.Marker({ element: el })
+              .setLngLat([snapped.lng, snapped.lat])
+              .setPopup(new maplibregl.Popup().setText("Live Track — Kevin"))
+              .addTo(mapApi.map);
+          } else {
+            liveMarker.setLngLat([snapped.lng, snapped.lat]);
+            if (liveMarkerPulse) liveMarkerPulse.setLngLat([snapped.lng, snapped.lat]);
+          }
+        }
+      }
+
+      function initLiveTrackRadar(path) {
+        const root = document.getElementById("live-track");
+        const canvas = document.getElementById("live-track-canvas");
+        const statusEl = document.getElementById("live-track-status");
+        const metaEl = document.getElementById("live-track-meta");
+        const legendEl = document.getElementById("live-track-legend");
+        if (!root || !canvas) return;
+
+        const ctx = canvas.getContext("2d");
+        const SIZE = canvas.width;
+        const CX = SIZE / 2;
+        const CY = SIZE / 2;
+        const R = SIZE * 0.42;
+        let sweep = 0;
+        let track = { status: "armed", live: false, lat: null, lng: null, mile: null };
+        let blink = 0;
+
+        const projected = path.map((p) => ({ lat: p.lat, lng: p.lng }));
+        let minLat = Infinity, maxLat = -Infinity, minLng = Infinity, maxLng = -Infinity;
+        projected.forEach((p) => {
+          minLat = Math.min(minLat, p.lat);
+          maxLat = Math.max(maxLat, p.lat);
+          minLng = Math.min(minLng, p.lng);
+          maxLng = Math.max(maxLng, p.lng);
+        });
+        const pad = 0.08;
+        const dLat = Math.max(0.0001, maxLat - minLat);
+        const dLng = Math.max(0.0001, maxLng - minLng);
+
+        function toRadar(lat, lng) {
+          const xN = (lng - minLng) / dLng;
+          const yN = (lat - minLat) / dLat;
+          const x = CX + (xN - 0.5) * R * 2 * (1 - pad);
+          const y = CY - (yN - 0.5) * R * 2 * (1 - pad);
+          return { x, y };
+        }
+
+        function draw() {
+          sweep = (sweep + 0.035) % (Math.PI * 2);
+          blink = (blink + 1) % 40;
+          ctx.clearRect(0, 0, SIZE, SIZE);
+          ctx.fillStyle = "#070b10";
+          ctx.fillRect(0, 0, SIZE, SIZE);
+
+          ctx.strokeStyle = "rgba(46, 247, 255, 0.18)";
+          ctx.lineWidth = 1;
+          for (let i = 1; i <= 4; i++) {
+            ctx.beginPath();
+            ctx.arc(CX, CY, (R * i) / 4, 0, Math.PI * 2);
+            ctx.stroke();
+          }
+          ctx.beginPath();
+          ctx.moveTo(CX - R, CY);
+          ctx.lineTo(CX + R, CY);
+          ctx.moveTo(CX, CY - R);
+          ctx.lineTo(CX, CY + R);
+          ctx.stroke();
+
+          const grad = ctx.createRadialGradient(CX, CY, 0, CX, CY, R);
+          grad.addColorStop(0, "rgba(46, 247, 255, 0.18)");
+          grad.addColorStop(1, "rgba(46, 247, 255, 0)");
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.moveTo(CX, CY);
+          ctx.arc(CX, CY, R, sweep - 0.55, sweep);
+          ctx.closePath();
+          ctx.fill();
+
+          if (projected.length > 1) {
+            ctx.beginPath();
+            projected.forEach((p, i) => {
+              const pt = toRadar(p.lat, p.lng);
+              if (i === 0) ctx.moveTo(pt.x, pt.y);
+              else ctx.lineTo(pt.x, pt.y);
+            });
+            ctx.strokeStyle = "rgba(46, 247, 255, 0.85)";
+            ctx.lineWidth = 2.2;
+            ctx.shadowColor = "#2ef7ff";
+            ctx.shadowBlur = 10;
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+          }
+
+          const beaconLat = track.live ? track.lat : projected[0] && projected[0].lat;
+          const beaconLng = track.live ? track.lng : projected[0] && projected[0].lng;
+          if (beaconLat != null && beaconLng != null) {
+            const b = toRadar(beaconLat, beaconLng);
+            const pulse = track.live ? 16 + (blink % 20) * 0.45 : 12;
+            ctx.beginPath();
+            ctx.arc(b.x, b.y, pulse, 0, Math.PI * 2);
+            ctx.fillStyle = track.live
+              ? "rgba(255, 79, 216, 0.18)"
+              : "rgba(46, 247, 255, 0.14)";
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(b.x, b.y, track.live ? 5.5 : 4.5, 0, Math.PI * 2);
+            ctx.fillStyle = track.live ? "#ff4fd8" : "#2ef7ff";
+            ctx.shadowColor = track.live ? "#ff4fd8" : "#2ef7ff";
+            ctx.shadowBlur = blink < 20 ? 18 : 8;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+          }
+
+          requestAnimationFrame(draw);
+        }
+
+        function applyTrack(data) {
+          if (!data || !data.ok) return;
+          track = data;
+          root.classList.toggle("is-live", Boolean(data.live));
+          if (statusEl) {
+            statusEl.textContent = data.live
+              ? "Live Track"
+              : data.status === "scanning"
+                ? "Scanning"
+                : "Armed";
+          }
+          if (metaEl) {
+            if (data.live) {
+              const mile =
+                data.mile != null ? data.mile.toFixed(1) + " mi" : "on course";
+              metaEl.innerHTML =
+                "Neon beacon <strong>LIVE</strong> · " +
+                mile +
+                " · " +
+                (data.label || "Kevin");
+            } else if (data.status === "scanning") {
+              metaEl.innerHTML =
+                "Race morning · waiting for GPS lock on <strong>26.2</strong>";
+            } else {
+              metaEl.innerHTML =
+                "Neon beacon armed · <strong>Stadium to the Stars</strong>";
+            }
+          }
+          if (legendEl) legendEl.hidden = !data.live;
+          if (data.live) updateLiveMapMarker(data.lat, data.lng);
+          else clearLiveMapMarker();
+        }
+
+        function poll() {
+          fetch("/api/live-track")
+            .then((r) => (r.ok ? r.json() : null))
+            .then(applyTrack)
+            .catch(() => {});
+        }
+
+        draw();
+        poll();
+        setInterval(poll, 8000);
+        window.__liveTrackRefresh = poll;
       }
 
       Promise.all([
@@ -2917,22 +3322,32 @@
       ])
         .then(([config, route]) => {
           if (!route || !route.ok || !route.feature) {
+            initLiveTrackRadar([]);
             return;
           }
           const feature = route.feature;
           const path = pathFromFeature(feature);
+          coursePath = path;
           if (!path.length) {
+            initLiveTrackRadar([]);
             return;
           }
           if (distanceEl && feature.properties.distanceMiles) {
             distanceEl.textContent = feature.properties.distanceMiles + " miles (map corridor)";
           }
-          if (config && config.provider === "google" && config.googleMapsApiKey) {
-            return renderGoogle(path, feature, config.googleMapsApiKey);
-          }
-          return renderMapLibre(path, feature);
+          initLiveTrackRadar(path);
+          const render =
+            config && config.provider === "google" && config.googleMapsApiKey
+              ? renderGoogle(path, feature, config.googleMapsApiKey)
+              : renderMapLibre(path, feature);
+          return render.then((api) => {
+            mapApi = api;
+            if (window.__liveTrackRefresh) window.__liveTrackRefresh();
+          });
         })
-        .catch(() => {});
+        .catch(() => {
+          initLiveTrackRadar([]);
+        });
     })();
 
     (function initWeightChart() {
@@ -3798,6 +4213,128 @@
         },
         "/api/milestones"
       );
+
+      (function wireLiveTrackAdmin() {
+        const form = document.getElementById("admin-live-track-form");
+        const errorEl = document.getElementById("admin-live-error");
+        const shareBtn = document.getElementById("admin-live-share");
+        const clearBtn = document.getElementById("admin-live-clear");
+        if (!form) return;
+
+        function showError(msg) {
+          if (!errorEl) return;
+          if (!msg) {
+            errorEl.hidden = true;
+            errorEl.textContent = "";
+            return;
+          }
+          errorEl.hidden = false;
+          errorEl.textContent = msg;
+        }
+
+        function postTrack(body) {
+          return fetch("/api/live-track", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+          }).then((res) => res.json().then((data) => ({ res, data })));
+        }
+
+        form.addEventListener("submit", (event) => {
+          event.preventDefault();
+          showError("");
+          const password = (form.password.value || "").trim();
+          const lat = Number(form.lat.value);
+          const lng = Number(form.lng.value);
+          const mileRaw = form.mile.value;
+          const mile = mileRaw === "" ? null : Number(mileRaw);
+          if (!password) {
+            showError("Password is required.");
+            return;
+          }
+          if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+            showError("Latitude and longitude are required (or use Share my location).");
+            return;
+          }
+          const payload = { password, lat, lng, label: "Kevin" };
+          if (mile != null && Number.isFinite(mile)) payload.mile = mile;
+          postTrack(payload)
+            .then(({ res, data }) => {
+              if (!res.ok || !data || !data.ok) {
+                throw new Error((data && data.error) || "Could not push beacon");
+              }
+              showError("");
+              if (window.__liveTrackRefresh) window.__liveTrackRefresh();
+            })
+            .catch((err) => showError(err.message || "Could not push beacon."));
+        });
+
+        if (shareBtn) {
+          shareBtn.addEventListener("click", () => {
+            showError("");
+            const password = (form.password.value || "").trim();
+            if (!password) {
+              showError("Password is required.");
+              return;
+            }
+            if (!navigator.geolocation) {
+              showError("Geolocation is not available on this device.");
+              return;
+            }
+            shareBtn.disabled = true;
+            navigator.geolocation.getCurrentPosition(
+              (pos) => {
+                form.lat.value = String(pos.coords.latitude);
+                form.lng.value = String(pos.coords.longitude);
+                postTrack({
+                  password,
+                  lat: pos.coords.latitude,
+                  lng: pos.coords.longitude,
+                  label: "Kevin"
+                })
+                  .then(({ res, data }) => {
+                    shareBtn.disabled = false;
+                    if (!res.ok || !data || !data.ok) {
+                      throw new Error((data && data.error) || "Could not share location");
+                    }
+                    if (window.__liveTrackRefresh) window.__liveTrackRefresh();
+                  })
+                  .catch((err) => {
+                    shareBtn.disabled = false;
+                    showError(err.message || "Could not share location.");
+                  });
+              },
+              () => {
+                shareBtn.disabled = false;
+                showError("Location permission denied or unavailable.");
+              },
+              { enableHighAccuracy: true, timeout: 15000 }
+            );
+          });
+        }
+
+        if (clearBtn) {
+          clearBtn.addEventListener("click", () => {
+            showError("");
+            const password = (form.password.value || "").trim();
+            if (!password) {
+              showError("Password is required.");
+              return;
+            }
+            postTrack({ password, action: "clear" })
+              .then(({ res, data }) => {
+                if (!res.ok || !data || !data.ok) {
+                  throw new Error((data && data.error) || "Could not clear beacon");
+                }
+                form.lat.value = "";
+                form.lng.value = "";
+                form.mile.value = "";
+                if (window.__liveTrackRefresh) window.__liveTrackRefresh();
+              })
+              .catch((err) => showError(err.message || "Could not clear beacon."));
+          });
+        }
+      })();
 
       fetch("/api/raised")
         .then((r) => r.json())
