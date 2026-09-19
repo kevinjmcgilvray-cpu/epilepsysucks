@@ -795,8 +795,7 @@
 
     .canva-play-pair {
       position: relative;
-      display: grid;
-      grid-template-columns: 1fr;
+      display: block;
       margin-bottom: 1.75rem;
       width: 100%;
     }
@@ -806,60 +805,42 @@
     }
 
     .canva-play-pair > .canva-play:first-child {
-      width: min(50%, 100%);
-      max-width: 100%;
-      margin-left: 0;
+      display: block;
+      width: 50vw;
+      max-width: none;
+      margin-left: calc(-1 * clamp(1.25rem, 4vw, 2.5rem));
       margin-right: auto;
       z-index: 1;
     }
 
     .canva-play-pair > .canva-play--overlap {
-      width: min(50%, 100%);
-      max-width: 100%;
+      display: block;
+      width: min(36rem, 48%);
+      max-width: calc(50% + clamp(1.25rem, 4vw, 2.5rem));
       margin-left: auto;
-      margin-right: 0;
+      margin-right: calc(-1 * clamp(1.25rem, 4vw, 2.5rem));
       margin-top: clamp(-4.5rem, -8vw, -2rem);
       z-index: 2;
     }
 
     @media (min-width: 900px) {
-      .canva-play-pair {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-        align-items: start;
-        column-gap: 0;
-      }
-
-      .canva-play-pair > .canva-play:first-child {
-        grid-column: 1;
-        grid-row: 1;
-        width: 50vw;
-        max-width: none;
-        margin-left: calc(-1 * clamp(1.25rem, 4vw, 2.5rem));
-        margin-right: 0;
-        justify-self: start;
-      }
-
       .canva-play-pair > .canva-play--overlap {
-        grid-column: 2;
-        grid-row: 1;
-        width: min(36rem, 100%);
-        max-width: calc(100% + clamp(1.25rem, 4vw, 2.5rem));
-        margin-top: 0;
-        margin-left: 0;
-        margin-right: calc(-1 * clamp(1.25rem, 4vw, 2.5rem));
-        justify-self: end;
-        align-self: start;
+        margin-top: clamp(-2rem, -4vw, 0rem);
+        width: min(36rem, 42vw);
       }
     }
 
     @media (max-width: 899px) {
       .canva-play-pair > .canva-play:first-child {
-        width: 100%;
+        width: calc(100% + 2 * clamp(1.25rem, 4vw, 2.5rem));
+        margin-right: calc(-1 * clamp(1.25rem, 4vw, 2.5rem));
       }
 
       .canva-play-pair > .canva-play--overlap {
-        width: 100%;
+        width: calc(100% + 2 * clamp(1.25rem, 4vw, 2.5rem));
+        max-width: none;
+        margin-left: calc(-1 * clamp(1.25rem, 4vw, 2.5rem));
+        margin-right: calc(-1 * clamp(1.25rem, 4vw, 2.5rem));
       }
     }
 
