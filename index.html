@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -695,20 +695,33 @@ flowchart TD
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
   <script>
     if (window.mermaid) {
+      var isLightTheme = document.documentElement.getAttribute("data-theme") === "light";
       mermaid.initialize({
         startOnLoad: false,
-        theme: "dark",
-        themeVariables: {
-          darkMode: true,
-          background: "#14110f",
-          primaryColor: "#211c2e",
-          primaryTextColor: "#ebe4d8",
-          primaryBorderColor: "#9b6bff",
-          lineColor: "#9b6bff",
-          secondaryColor: "#211714",
-          tertiaryColor: "#1a1613",
-          fontFamily: "DM Sans, sans-serif"
-        }
+        theme: isLightTheme ? "default" : "dark",
+        themeVariables: isLightTheme
+          ? {
+              darkMode: false,
+              background: "#faf7f2",
+              primaryColor: "#e4d9ff",
+              primaryTextColor: "#1c1915",
+              primaryBorderColor: "#6d3fe8",
+              lineColor: "#6d3fe8",
+              secondaryColor: "#ddd2c8",
+              tertiaryColor: "#e2dbd0",
+              fontFamily: "DM Sans, sans-serif"
+            }
+          : {
+              darkMode: true,
+              background: "#14110f",
+              primaryColor: "#211c2e",
+              primaryTextColor: "#ebe4d8",
+              primaryBorderColor: "#9b6bff",
+              lineColor: "#9b6bff",
+              secondaryColor: "#211714",
+              tertiaryColor: "#1a1613",
+              fontFamily: "DM Sans, sans-serif"
+            }
       });
     }
   </script>
