@@ -773,8 +773,10 @@
     }
 
     #story > .section__inner {
+      max-width: none;
+      width: 100%;
       margin-left: 0;
-      margin-right: auto;
+      margin-right: 0;
     }
 
     main,
@@ -819,6 +821,17 @@
 
     .chapter:first-of-type {
       margin-top: 2rem;
+    }
+
+    .chapter--right {
+      margin-left: auto;
+      margin-right: 0;
+      max-width: min(38rem, 100%);
+      padding-left: 0;
+      padding-right: 1.5rem;
+      border-left: none;
+      border-right: 1px solid var(--line);
+      text-align: left;
     }
 
     .chapter__year {
@@ -2201,7 +2214,7 @@
           <p>After all those tests, they decided I had <span class="key">cerebral hemiatrophy</span>. <span class="key">I was eight years old.</span> In plain English: <span class="key">one half of my brain is smaller than the other</span> — “hemi” means half, and “atrophy” means that part of the brain didn’t grow or stay as large as it should. That difference on one side of the brain is what set the stage for everything that came next. A few years later? Oh man — <em>this</em> is where the fun begins.</p>
         </article>
 
-        <article class="chapter reveal">
+        <article class="chapter chapter--right reveal">
           <p class="chapter__year">The first big one</p>
           <h3>A massive seizure</h3>
           <p>I had a <span class="key">massive seizure</span> — the kind that stops everything. One minute life is moving; the next, your body is gone and there’s nothing you can do about it. I ended up in the hospital for a few days to recover. Monitors. Questions. Waiting. The slow, shaky climb back to feeling like yourself again.</p>
