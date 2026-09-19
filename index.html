@@ -588,6 +588,80 @@
             <p class="comment-form__error" id="owner-update-error" hidden></p>
           </form>
         </details>
+
+        <details class="owner-update-form" id="site-architecture-wrap">
+          <summary>Kevin — site architecture</summary>
+          <div class="arch-diagram">
+            <div class="arch-tier">
+              <div class="arch-box arch-box--edge">
+                <p class="arch-box__title">Visitor’s browser</p>
+                <p class="arch-box__sub">Requests epilepsysucks.org</p>
+              </div>
+            </div>
+
+            <div class="arch-arrow" aria-hidden="true">↓</div>
+
+            <div class="arch-row">
+              <div class="arch-box">
+                <p class="arch-box__title">Vercel — static hosting</p>
+                <p class="arch-box__sub">Served straight from the repo, no build step</p>
+                <div class="arch-pills">
+                  <span class="arch-pill">index.html</span>
+                  <span class="arch-pill">styles.css</span>
+                  <span class="arch-pill">app.js</span>
+                  <span class="arch-pill">game.html</span>
+                </div>
+              </div>
+              <div class="arch-box arch-box--muted">
+                <p class="arch-box__title">Third-party embeds</p>
+                <p class="arch-box__sub">Loaded directly in the browser</p>
+                <div class="arch-pills">
+                  <span class="arch-pill">Google Maps / MapLibre</span>
+                  <span class="arch-pill">UserWay a11y widget</span>
+                  <span class="arch-pill">Google Fonts</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="arch-arrow" aria-hidden="true">↓ fetch("/api/…")</div>
+
+            <div class="arch-tier">
+              <div class="arch-box">
+                <p class="arch-box__title">Vercel — serverless functions</p>
+                <p class="arch-box__sub">Each file below shares cors · getSql · checkOwnerPassword from api/_db.js</p>
+                <div class="arch-pills">
+                  <span class="arch-pill">raised.js</span>
+                  <span class="arch-pill">training.js</span>
+                  <span class="arch-pill">weigh-ins.js</span>
+                  <span class="arch-pill">milestones.js</span>
+                  <span class="arch-pill">update.js</span>
+                  <span class="arch-pill">comments.js</span>
+                  <span class="arch-pill">moderate.js</span>
+                  <span class="arch-pill">live-track.js</span>
+                  <span class="arch-pill">maps-config.js</span>
+                  <span class="arch-pill">marathon-route.js</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="arch-arrow" aria-hidden="true">↓ SQL over DATABASE_URL</div>
+
+            <div class="arch-tier">
+              <div class="arch-box arch-box--db">
+                <p class="arch-box__title">Neon Postgres</p>
+                <p class="arch-box__sub">training_runs · weigh_ins · milestones · funds · comments · live_track</p>
+              </div>
+            </div>
+
+            <div class="arch-footnote">
+              <span class="arch-pill arch-pill--muted">GitHub repo</span>
+              <span aria-hidden="true">→</span>
+              <span class="arch-pill arch-pill--muted">git push origin main</span>
+              <span aria-hidden="true">→</span>
+              <span class="arch-pill arch-pill--muted">Vercel auto-deploy</span>
+            </div>
+          </div>
+        </details>
       </div>
     </section>
 

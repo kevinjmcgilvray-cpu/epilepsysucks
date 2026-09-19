@@ -1868,6 +1868,105 @@
       font-size: 0.9rem;
     }
 
+    .arch-diagram {
+      display: grid;
+      gap: 0.85rem;
+      max-width: 42rem;
+    }
+
+    .arch-tier,
+    .arch-row {
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    .arch-row {
+      grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 640px) {
+      .arch-row {
+        grid-template-columns: 1.3fr 1fr;
+      }
+    }
+
+    .arch-box {
+      border: 1px solid var(--line);
+      border-radius: 0.65rem;
+      padding: 1rem 1.15rem;
+      background: var(--surface-muted);
+    }
+
+    .arch-box--edge {
+      border-color: var(--epi);
+      box-shadow: 0 0 0 1px rgba(155, 107, 255, 0.18);
+    }
+
+    .arch-box--db {
+      border-color: var(--accent);
+    }
+
+    .arch-box--muted {
+      opacity: 0.85;
+    }
+
+    .arch-box__title {
+      margin: 0 0 0.3rem;
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--paper);
+    }
+
+    .arch-box__sub {
+      margin: 0 0 0.65rem;
+      font-size: 0.85rem;
+      color: var(--paper-faint);
+      max-width: none;
+    }
+
+    .arch-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .arch-pill {
+      font-family: "Share Tech Mono", monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.02em;
+      padding: 0.25rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      color: var(--paper-dim);
+      background: rgba(0, 0, 0, 0.15);
+    }
+
+    .arch-pill--muted {
+      color: var(--paper-faint);
+    }
+
+    .arch-arrow {
+      text-align: center;
+      font-family: "Share Tech Mono", monospace;
+      font-size: 0.78rem;
+      letter-spacing: 0.04em;
+      color: var(--epi);
+    }
+
+    .arch-footnote {
+      margin-top: 0.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--line);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: var(--paper-faint);
+    }
+
     .support-list {
       list-style: none;
       margin-top: 2.5rem;
