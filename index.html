@@ -5,7 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Epilepsy Sucks — Kevin’s Story | LA Marathon 2027</title>
   <meta name="description" content="Kevin’s life with epilepsy — from cerebral hemiatrophy and seizures to resection, VNS, DBS — and running the LA Marathon for CURE Epilepsy on March 7, 2027." />
-  <script src="https://cdn.userway.org/widget.js" data-account="yyjaxwtzU8" async></script>
+  <script>
+    (function (d) {
+      var s = d.createElement("script");
+      s.setAttribute("data-account", "yyjaxwtzU8");
+      s.setAttribute("data-position", "7");
+      s.setAttribute("data-trigger", "userway-trigger");
+      s.setAttribute("data-size", "small");
+      s.setAttribute("data-color", "#9b6bff");
+      s.setAttribute("src", "https://cdn.userway.org/widget.js");
+      (d.body || d.head).appendChild(s);
+    })(document);
+  </script>
   <script>
     (function () {
       try {
@@ -184,6 +195,48 @@
       min-width: 0;
       max-width: calc(100% - 3.25rem);
       overflow: visible;
+    }
+
+    .nav__funds-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.45rem 0.55rem;
+      max-width: 100%;
+    }
+
+    .nav__a11y {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2rem;
+      height: 2rem;
+      padding: 0;
+      border: 1px solid rgba(180, 140, 255, 0.55);
+      border-radius: 999px;
+      background: linear-gradient(135deg, #9b6bff 0%, #7a45e8 100%);
+      color: #f7f3ec;
+      cursor: pointer;
+      box-shadow: 0 0 12px rgba(155, 107, 255, 0.35);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+    }
+
+    .nav__a11y:hover {
+      transform: translateY(-1px) scale(1.05);
+      filter: brightness(1.08);
+      box-shadow: 0 0 18px rgba(180, 140, 255, 0.5);
+    }
+
+    .nav__a11y:focus-visible {
+      outline: 2px solid #e0d0ff;
+      outline-offset: 2px;
+    }
+
+    .nav__a11y svg {
+      width: 1.1rem;
+      height: 1.1rem;
+      display: block;
     }
 
     .nav__funds {
@@ -2193,21 +2246,38 @@
     <div class="nav__top">
       <div class="nav__left">
         <a class="nav__brand" href="#top">Epilepsy Sucks</a>
-        <a
-          class="nav__funds"
-          href="https://fundraisers.hakuapp.com/Kevin-McGilvray"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Fundraising progress"
-        >
-          <span class="nav__funds-wrap">
-            <span>
-              <strong id="funds-raised">$1,851</strong>
-              <span>raised of <span id="funds-goal">$3,000</span></span>
+        <div class="nav__funds-row">
+          <a
+            class="nav__funds"
+            href="https://fundraisers.hakuapp.com/Kevin-McGilvray"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Fundraising progress"
+          >
+            <span class="nav__funds-wrap">
+              <span>
+                <strong id="funds-raised">$1,851</strong>
+                <span>raised of <span id="funds-goal">$3,000</span></span>
+              </span>
+              <span class="funds-bar" aria-hidden="true"><span class="funds-bar__fill" id="funds-bar-fill"></span></span>
             </span>
-            <span class="funds-bar" aria-hidden="true"><span class="funds-bar__fill" id="funds-bar-fill"></span></span>
-          </span>
-        </a>
+          </a>
+          <button
+            type="button"
+            class="nav__a11y"
+            id="userway-trigger"
+            aria-label="Open accessibility menu"
+            title="Accessibility"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <circle cx="12" cy="4.5" r="2.25" fill="currentColor" />
+              <path
+                fill="currentColor"
+                d="M12 8.25c-2.9 0-5.5.85-7.2 2.2-.4.32-.48.9-.16 1.3.32.4.9.48 1.3.16C7.4 10.85 9.55 10.25 12 10.25s4.6.6 5.06 1.66c.2.45.72.66 1.18.48.45-.2.66-.72.48-1.18C17.5 9.1 14.9 8.25 12 8.25zm-3.25 5.5v6.5c0 .55.45 1 1 1s1-.45 1-1v-5.5h.5v5.5c0 .55.45 1 1 1s1-.45 1-1v-5.5h.5v5.5c0 .55.45 1 1 1s1-.45 1-1v-6.5c0-.69-.56-1.25-1.25-1.25h-4.5c-.69 0-1.25.56-1.25 1.25z"
+              />
+            </svg>
+          </button>
+        </div>
         <div class="nav__cause">
           <img
             class="nav__cause-logo"
