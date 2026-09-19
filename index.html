@@ -772,6 +772,11 @@
       max-width: 68rem;
     }
 
+    #story > .section__inner {
+      margin-left: 0;
+      margin-right: auto;
+    }
+
     main,
     .footer {
       position: relative;
@@ -791,10 +796,16 @@
       --canva-purple-deep: #612dae;
       --canva-lilac: #c4a4ff;
       margin-bottom: 0.5rem;
+      width: min(32rem, 100%);
+      margin-right: auto;
+      margin-left: 0;
+      justify-self: start;
     }
 
     .canva-play__slide {
       position: relative;
+      width: 100%;
+      text-align: left;
       padding: clamp(1.5rem, 4vw, 2.35rem) clamp(1.35rem, 3.5vw, 2.25rem);
       border-radius: 1.15rem;
       border: 1px solid rgba(139, 61, 255, 0.45);
