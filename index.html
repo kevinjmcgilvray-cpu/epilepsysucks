@@ -171,6 +171,22 @@
           <a class="btn btn--purple" href="#story">Read my story</a>
           <a class="btn btn--purple" href="/game">Play game</a>
           <a class="btn btn--purple" href="https://haku.ly/9795a39b3b" target="_blank" rel="noopener noreferrer">Donate</a>
+          <div class="share-menu">
+            <button
+              type="button"
+              class="btn btn--purple share-menu__trigger"
+              id="share-trigger"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              Share
+            </button>
+            <div class="share-menu__panel" id="share-panel" hidden>
+              <button type="button" class="share-menu__item" id="share-copy" data-share="copy">Copy link</button>
+              <a class="share-menu__item" id="share-x" data-share="x" target="_blank" rel="noopener noreferrer">Share on X</a>
+              <a class="share-menu__item" id="share-facebook" data-share="facebook" target="_blank" rel="noopener noreferrer">Share on Facebook</a>
+            </div>
+          </div>
         </div>
       </div>
     </section>

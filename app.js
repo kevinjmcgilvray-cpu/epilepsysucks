@@ -35,6 +35,87 @@
       revealEls.forEach((el) => el.classList.add("is-in"));
     }
 
+    (function shareButton() {
+      const trigger = document.getElementById("share-trigger");
+      const panel = document.getElementById("share-panel");
+      if (!trigger || !panel) return;
+
+      const shareData = {
+        title: document.title,
+        text: "Kevin's epilepsy story — running the LA Marathon for CURE Epilepsy.",
+        url: "https://www.epilepsysucks.org/"
+      };
+
+      const xLink = document.getElementById("share-x");
+      const fbLink = document.getElementById("share-facebook");
+      if (xLink) {
+        xLink.href =
+          "https://twitter.com/intent/tweet?text=" +
+          encodeURIComponent(shareData.text) +
+          "&url=" +
+          encodeURIComponent(shareData.url);
+      }
+      if (fbLink) {
+        fbLink.href =
+          "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(shareData.url);
+      }
+
+      if (navigator.share) {
+        // Native share sheet handles everything on supporting devices
+        // (mostly mobile) — no need for the dropdown fallback.
+        trigger.addEventListener("click", () => {
+          navigator.share(shareData).catch(() => {
+            /* user cancelled or share failed; no-op */
+          });
+        });
+        return;
+      }
+
+      function closePanel() {
+        panel.hidden = true;
+        trigger.setAttribute("aria-expanded", "false");
+      }
+      function openPanel() {
+        panel.hidden = false;
+        trigger.setAttribute("aria-expanded", "true");
+      }
+
+      trigger.addEventListener("click", (event) => {
+        event.stopPropagation();
+        if (panel.hidden) openPanel();
+        else closePanel();
+      });
+      document.addEventListener("click", (event) => {
+        if (!panel.hidden && !panel.contains(event.target) && event.target !== trigger) {
+          closePanel();
+        }
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closePanel();
+      });
+
+      const copyBtn = document.getElementById("share-copy");
+      if (copyBtn) {
+        copyBtn.addEventListener("click", () => {
+          const finish = (label) => {
+            const original = copyBtn.textContent;
+            copyBtn.textContent = label;
+            setTimeout(() => {
+              copyBtn.textContent = original;
+            }, 1600);
+          };
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard
+              .writeText(shareData.url)
+              .then(() => finish("Copied!"))
+              .catch(() => finish("Couldn’t copy"));
+          } else {
+            finish("Couldn’t copy");
+          }
+        });
+      }
+    })();
+
     const epiWord = /\b(epilepsy|seizures?)\b/gi;
     function highlightEpiWords(root) {
       const walk = (node) => {
