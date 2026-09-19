@@ -62,7 +62,7 @@
           return;
         }
         if (node.nodeType !== Node.ELEMENT_NODE) return;
-        if (node.matches("script, style, .hl-epi")) return;
+        if (node.matches("script, style, .hl-epi, .mermaid")) return;
         Array.from(node.childNodes).forEach(walk);
       };
       walk(root);
