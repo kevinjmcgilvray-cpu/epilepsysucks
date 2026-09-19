@@ -848,7 +848,8 @@
 
     .chapter-split__media {
       margin: 0;
-      max-width: 16rem;
+      max-width: 28rem;
+      width: 100%;
       justify-self: start;
     }
 
@@ -872,8 +873,12 @@
 
     @media (min-width: 900px) {
       .chapter-split {
-        grid-template-columns: minmax(10rem, 16rem) minmax(0, 1fr);
+        grid-template-columns: minmax(18rem, 32rem) minmax(0, 1fr);
         gap: 2.5rem;
+      }
+
+      .chapter-split__media {
+        max-width: 32rem;
       }
 
       .chapter-split .chapter--right {
