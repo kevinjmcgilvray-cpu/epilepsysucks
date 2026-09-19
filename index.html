@@ -804,7 +804,7 @@
     }
 
     .canva-play-pair > .canva-play:first-child {
-      width: min(46rem, 52%, 100%);
+      width: min(50%, 100%);
       max-width: 100%;
       margin-left: 0;
       margin-right: auto;
@@ -812,7 +812,7 @@
     }
 
     .canva-play-pair > .canva-play--overlap {
-      width: min(46rem, 52%, 100%);
+      width: min(50%, 100%);
       max-width: 100%;
       margin-left: auto;
       margin-right: 0;
@@ -822,25 +822,31 @@
 
     @media (min-width: 900px) {
       .canva-play-pair {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-        align-items: start;
-        column-gap: 0;
+        display: block;
+        position: relative;
       }
 
       .canva-play-pair > .canva-play:first-child {
-        grid-column: 1 / 2;
-        width: 100%;
+        width: 50%;
         max-width: none;
       }
 
       .canva-play-pair > .canva-play--overlap {
-        grid-column: 2 / 3;
-        width: 100%;
+        width: 58%;
         max-width: none;
         margin-top: clamp(5rem, 12vw, 9rem);
-        margin-left: -18%;
-        justify-self: stretch;
+        margin-left: 42%;
+        margin-right: 0;
+      }
+    }
+
+    @media (max-width: 899px) {
+      .canva-play-pair > .canva-play:first-child {
+        width: 100%;
+      }
+
+      .canva-play-pair > .canva-play--overlap {
+        width: 100%;
       }
     }
 
