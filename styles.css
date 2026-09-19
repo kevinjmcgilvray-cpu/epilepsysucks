@@ -1868,6 +1868,15 @@
       font-size: 0.9rem;
     }
 
+    .diagram-block {
+      margin: 2.25rem 0;
+      max-width: 100%;
+    }
+
+    .diagram-block .eyebrow {
+      margin-bottom: 0.65rem;
+    }
+
     .arch-diagram {
       max-width: 46rem;
       border: 1px solid var(--line);
