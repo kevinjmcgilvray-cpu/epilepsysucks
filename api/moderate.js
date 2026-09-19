@@ -1,16 +1,4 @@
-import { neon } from "@neondatabase/serverless";
-
-function cors(res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-}
-
-function getSql() {
-  const url = process.env.DATABASE_URL;
-  if (!url) return null;
-  return neon(url);
-}
+import { cors, getSql, checkOwnerPassword } from "./_db.js";
 
 function mapComment(row) {
   return {
@@ -24,14 +12,8 @@ function mapComment(row) {
   };
 }
 
-function checkPassword(payload) {
-  const expected = process.env.OWNER_UPDATE_PASSWORD || "";
-  const given = String(payload.password || "");
-  return Boolean(expected) && given === expected;
-}
-
 export default async function handler(req, res) {
-  cors(res);
+  cors(res, "GET, POST, OPTIONS", req);
 
   if (req.method === "OPTIONS") {
     res.status(204).end();
@@ -48,7 +30,7 @@ export default async function handler(req, res) {
     if (req.method === "POST") {
       const payload = typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};
 
-      if (!checkPassword(payload)) {
+      if (!checkOwnerPassword(payload)) {
         res.status(401).json({ ok: false, error: "Wrong password" });
         return;
       }

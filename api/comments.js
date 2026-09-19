@@ -1,27 +1,7 @@
-import { neon } from "@neondatabase/serverless";
+import { cors, getSql, sanitizePlain } from "./_db.js";
 
 const MAX_NAME = 40;
 const MAX_MESSAGE = 1000;
-
-function cors(res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-}
-
-function getSql() {
-  const url = process.env.DATABASE_URL;
-  if (!url) return null;
-  return neon(url);
-}
-
-function sanitizePlain(value, max) {
-  return String(value || "")
-    .replace(/\r\n/g, "\n")
-    .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, "")
-    .trim()
-    .slice(0, max);
-}
 
 function mapComment(row) {
   return {
@@ -36,7 +16,7 @@ function mapComment(row) {
 }
 
 export default async function handler(req, res) {
-  cors(res);
+  cors(res, "GET, POST, OPTIONS", req);
 
   if (req.method === "OPTIONS") {
     res.status(204).end();

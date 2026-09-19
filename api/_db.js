@@ -1,7 +1,15 @@
 import { neon } from "@neondatabase/serverless";
 
-export function cors(res, methods = "GET, POST, OPTIONS") {
-  res.setHeader("Access-Control-Allow-Origin", "*");
+const ALLOWED_ORIGINS = new Set([
+  "https://www.epilepsysucks.org",
+  "https://epilepsysucks.org"
+]);
+
+export function cors(res, methods = "GET, POST, OPTIONS", req) {
+  const origin = req && req.headers && req.headers.origin;
+  const allowOrigin = origin && ALLOWED_ORIGINS.has(origin) ? origin : "https://www.epilepsysucks.org";
+  res.setHeader("Access-Control-Allow-Origin", allowOrigin);
+  res.setHeader("Vary", "Origin");
   res.setHeader("Access-Control-Allow-Methods", methods);
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 }

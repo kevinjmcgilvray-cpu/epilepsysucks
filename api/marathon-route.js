@@ -1,7 +1,7 @@
 import { cors, getSql } from "./_db.js";
 
 export default async function handler(req, res) {
-  cors(res, "GET, OPTIONS");
+  cors(res, "GET, OPTIONS", req);
   if (req.method === "OPTIONS") {
     res.status(204).end();
     return;

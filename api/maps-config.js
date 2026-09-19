@@ -5,7 +5,7 @@ import { cors } from "./_db.js";
  * Without it, the frontend uses MapLibre + a dark free basemap (same neon route).
  */
 export default async function handler(req, res) {
-  cors(res, "GET, OPTIONS");
+  cors(res, "GET, OPTIONS", req);
   if (req.method === "OPTIONS") {
     res.status(204).end();
     return;

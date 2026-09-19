@@ -18,7 +18,7 @@ function mapMilestone(row) {
 }
 
 export default async function handler(req, res) {
-  cors(res);
+  cors(res, "GET, POST, OPTIONS", req);
   if (req.method === "OPTIONS") {
     res.status(204).end();
     return;
