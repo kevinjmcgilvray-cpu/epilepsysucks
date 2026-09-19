@@ -4,7 +4,6 @@
   "description": "Kevin’s story site for the LA Marathon / CURE Epilepsy — hosted at [epilepsysucks.org](https://epilepsysucks.org).",
   "main": "index.js",
   "scripts": {
-    "build:storybook": "vite build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,14 +19,6 @@
   },
   "homepage": "https://github.com/kevinjmcgilvray-cpu/epilepsysucks#readme",
   "dependencies": {
-    "@canva/app-ui-kit": "^5.14.3",
-    "@neondatabase/serverless": "^1.1.0",
-    "mobx": "^6.16.1",
-    "react": "^19.3.0",
-    "react-dom": "^19.3.0"
-  },
-  "devDependencies": {
-    "@vitejs/plugin-react": "^6.1.1",
-    "vite": "^8.3.0"
+    "@neondatabase/serverless": "^1.1.0"
   }
 }
