@@ -922,6 +922,55 @@
       max-width: 16ch;
     }
 
+    .canva-play__slide--with-media {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.15rem;
+      align-items: start;
+    }
+
+    .canva-play__media {
+      margin: 0;
+      width: 100%;
+      max-width: 14rem;
+      justify-self: start;
+    }
+
+    .canva-play__media img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 0.75rem;
+      border: 1px solid rgba(196, 164, 255, 0.35);
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    .canva-play__media figcaption {
+      margin: 0.55rem 0 0;
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--canva-lilac);
+      text-shadow: 0 0 12px rgba(139, 61, 255, 0.45);
+    }
+
+    .canva-play__body {
+      min-width: 0;
+    }
+
+    @media (min-width: 700px) {
+      .canva-play__slide--with-media {
+        grid-template-columns: minmax(7.5rem, 11.5rem) minmax(0, 1fr);
+        gap: 1.35rem;
+      }
+
+      .canva-play__media {
+        max-width: none;
+        justify-self: stretch;
+      }
+    }
+
     .canva-play__slide {
       position: relative;
       width: 100%;
@@ -2447,13 +2496,19 @@
           </div>
 
           <div class="canva-play canva-play--overlap reveal">
-            <div class="canva-play__slide">
-              <p class="canva-play__kicker">The first big one</p>
-              <h2 class="canva-play__title">A massive seizure</h2>
-              <p>I had a <span class="key">massive seizure</span> — the kind that stops everything. One minute life is moving; the next, your body is gone and there’s nothing you can do about it. I ended up in the hospital for a few days to recover. Monitors. Questions. Waiting. The slow, shaky climb back to feeling like yourself again.</p>
-              <p>Those days in a hospital bed change you. You’re not just tired — you’re depleted. Your muscles ache. Your head feels wrong. People you love are scared in a way you can see on their faces even when they try to hide it. Doctors run tests and speak carefully. You start to understand that this wasn’t a fluke. Something in your brain had declared war, and recovery wasn’t overnight — it was hours and days of rest, of being watched, of wondering what comes next.</p>
-              <p>Throughout my life until I graduated high school, I was also having <span class="key">focal aware</span> — or simple partial — seizures. In plain English: a <span class="key">focal aware</span> seizure starts in one area of the brain, and <span class="key">you stay awake and aware while it’s happening</span> — your body or senses may act up, but you’re still “there.” It might be a weird feeling, a twitch, a wave through your arm or face, something you can’t quite name. You’re present for all of it. You’re not unconscious. You’re just… interrupted.</p>
-              <p>Looking back, those moments were there for years — woven into ordinary days so tightly I treated them like nothing. A strange sensation. A brief glitch. Something I’d shrug off and keep moving. It didn’t bother me at all, because <span class="key">I did not know that I was having seizures</span>. Nobody had given those episodes a name yet. To me, it was just how my body was. The massive seizure in the hospital was the thunderclap. The focal aware seizures were the quiet weather I’d been living in without realizing the storm had a label.</p>
+            <div class="canva-play__slide canva-play__slide--with-media">
+              <figure class="canva-play__media">
+                <img src="epilepsy-sucks-images/Spike-waves.png" alt="EEG spike-and-wave pattern" />
+                <figcaption>Electroencephalography (EEG)</figcaption>
+              </figure>
+              <div class="canva-play__body">
+                <p class="canva-play__kicker">The first big one</p>
+                <h2 class="canva-play__title">A massive seizure</h2>
+                <p>I had a <span class="key">massive seizure</span> — the kind that stops everything. One minute life is moving; the next, your body is gone and there’s nothing you can do about it. I ended up in the hospital for a few days to recover. Monitors. Questions. Waiting. The slow, shaky climb back to feeling like yourself again.</p>
+                <p>Those days in a hospital bed change you. You’re not just tired — you’re depleted. Your muscles ache. Your head feels wrong. People you love are scared in a way you can see on their faces even when they try to hide it. Doctors run tests and speak carefully. You start to understand that this wasn’t a fluke. Something in your brain had declared war, and recovery wasn’t overnight — it was hours and days of rest, of being watched, of wondering what comes next.</p>
+                <p>Throughout my life until I graduated high school, I was also having <span class="key">focal aware</span> — or simple partial — seizures. In plain English: a <span class="key">focal aware</span> seizure starts in one area of the brain, and <span class="key">you stay awake and aware while it’s happening</span> — your body or senses may act up, but you’re still “there.” It might be a weird feeling, a twitch, a wave through your arm or face, something you can’t quite name. You’re present for all of it. You’re not unconscious. You’re just… interrupted.</p>
+                <p>Looking back, those moments were there for years — woven into ordinary days so tightly I treated them like nothing. A strange sensation. A brief glitch. Something I’d shrug off and keep moving. It didn’t bother me at all, because <span class="key">I did not know that I was having seizures</span>. Nobody had given those episodes a name yet. To me, it was just how my body was. The massive seizure in the hospital was the thunderclap. The focal aware seizures were the quiet weather I’d been living in without realizing the storm had a label.</p>
+              </div>
             </div>
           </div>
         </div>
