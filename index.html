@@ -592,74 +592,23 @@
         <details class="owner-update-form" id="site-architecture-wrap">
           <summary>Kevin — site architecture</summary>
           <div class="arch-diagram">
-            <div class="arch-tier">
-              <div class="arch-box arch-box--edge">
-                <p class="arch-box__title">Visitor’s browser</p>
-                <p class="arch-box__sub">Requests epilepsysucks.org</p>
-              </div>
-            </div>
+            <pre class="mermaid" id="arch-mermaid">
+flowchart TD
+    Browser["Visitor's Browser"]
+    Static["Vercel Static Hosting\nindex.html · styles.css · app.js · game.html"]
+    ThirdParty["Third-party embeds\nGoogle Maps/MapLibre · UserWay · Google Fonts"]
+    API["Vercel Serverless Functions\napi/*.js (shared api/_db.js)"]
+    DB[("Neon Postgres\ntraining_runs · weigh_ins · milestones · funds · comments · live_track")]
+    GitHub["GitHub repo"]
+    Deploy["git push origin main"]
 
-            <div class="arch-arrow" aria-hidden="true">↓</div>
-
-            <div class="arch-row">
-              <div class="arch-box">
-                <p class="arch-box__title">Vercel — static hosting</p>
-                <p class="arch-box__sub">Served straight from the repo, no build step</p>
-                <div class="arch-pills">
-                  <span class="arch-pill">index.html</span>
-                  <span class="arch-pill">styles.css</span>
-                  <span class="arch-pill">app.js</span>
-                  <span class="arch-pill">game.html</span>
-                </div>
-              </div>
-              <div class="arch-box arch-box--muted">
-                <p class="arch-box__title">Third-party embeds</p>
-                <p class="arch-box__sub">Loaded directly in the browser</p>
-                <div class="arch-pills">
-                  <span class="arch-pill">Google Maps / MapLibre</span>
-                  <span class="arch-pill">UserWay a11y widget</span>
-                  <span class="arch-pill">Google Fonts</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="arch-arrow" aria-hidden="true">↓ fetch("/api/…")</div>
-
-            <div class="arch-tier">
-              <div class="arch-box">
-                <p class="arch-box__title">Vercel — serverless functions</p>
-                <p class="arch-box__sub">Each file below shares cors · getSql · checkOwnerPassword from api/_db.js</p>
-                <div class="arch-pills">
-                  <span class="arch-pill">raised.js</span>
-                  <span class="arch-pill">training.js</span>
-                  <span class="arch-pill">weigh-ins.js</span>
-                  <span class="arch-pill">milestones.js</span>
-                  <span class="arch-pill">update.js</span>
-                  <span class="arch-pill">comments.js</span>
-                  <span class="arch-pill">moderate.js</span>
-                  <span class="arch-pill">live-track.js</span>
-                  <span class="arch-pill">maps-config.js</span>
-                  <span class="arch-pill">marathon-route.js</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="arch-arrow" aria-hidden="true">↓ SQL over DATABASE_URL</div>
-
-            <div class="arch-tier">
-              <div class="arch-box arch-box--db">
-                <p class="arch-box__title">Neon Postgres</p>
-                <p class="arch-box__sub">training_runs · weigh_ins · milestones · funds · comments · live_track</p>
-              </div>
-            </div>
-
-            <div class="arch-footnote">
-              <span class="arch-pill arch-pill--muted">GitHub repo</span>
-              <span aria-hidden="true">→</span>
-              <span class="arch-pill arch-pill--muted">git push origin main</span>
-              <span aria-hidden="true">→</span>
-              <span class="arch-pill arch-pill--muted">Vercel auto-deploy</span>
-            </div>
+    Browser -->|"GET /"| Static
+    Browser -->|"loads"| ThirdParty
+    Browser -->|"fetch('/api/...')"| API
+    API -->|"SQL over DATABASE_URL"| DB
+    GitHub --> Deploy -->|"Vercel auto-deploy"| Static
+            </pre>
+            <p class="arch-fallback-note">Diagram renders when you expand this panel.</p>
           </div>
         </details>
       </div>
@@ -723,6 +672,26 @@
     <p>Not medical advice. Talk with a clinician for care decisions.</p>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+  <script>
+    if (window.mermaid) {
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: "dark",
+        themeVariables: {
+          darkMode: true,
+          background: "#14110f",
+          primaryColor: "#211c2e",
+          primaryTextColor: "#ebe4d8",
+          primaryBorderColor: "#9b6bff",
+          lineColor: "#9b6bff",
+          secondaryColor: "#211714",
+          tertiaryColor: "#1a1613",
+          fontFamily: "DM Sans, sans-serif"
+        }
+      });
+    }
+  </script>
   <script src="app.js"></script>
 </body>
 </html>

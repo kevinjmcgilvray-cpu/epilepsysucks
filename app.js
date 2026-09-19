@@ -1746,3 +1746,18 @@
 
       photos.forEach((el) => io.observe(el));
     })();
+
+    (function () {
+      const details = document.getElementById("site-architecture-wrap");
+      if (!details) return;
+      let rendered = false;
+      details.addEventListener("toggle", () => {
+        if (!details.open || rendered || !window.mermaid) return;
+        rendered = true;
+        try {
+          window.mermaid.run({ querySelector: "#arch-mermaid" });
+        } catch (err) {
+          rendered = false;
+        }
+      });
+    })();
