@@ -773,8 +773,10 @@
     }
 
     #story > .section__inner {
+      max-width: none;
+      width: 100%;
       margin-left: 0;
-      margin-right: auto;
+      margin-right: 0;
     }
 
     main,
@@ -869,10 +871,12 @@
     }
 
     .canva-play--right {
+      display: block;
       margin-left: auto;
       margin-right: 0;
       justify-self: end;
       width: min(32rem, 100%);
+      max-width: 100%;
     }
 
     .canva-play--overlap .canva-play__slide {
