@@ -824,21 +824,29 @@
 
     @media (min-width: 900px) {
       .canva-play-pair {
-        display: block;
-        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        align-items: start;
+        column-gap: 0;
       }
 
       .canva-play-pair > .canva-play:first-child {
-        width: 50%;
+        grid-column: 1;
+        grid-row: 1;
+        width: 100%;
         max-width: none;
       }
 
       .canva-play-pair > .canva-play--overlap {
-        width: 58%;
-        max-width: none;
-        margin-top: clamp(5rem, 12vw, 9rem);
-        margin-left: 42%;
+        grid-column: 2;
+        grid-row: 1;
+        width: min(36rem, 100%);
+        max-width: 100%;
+        margin-top: 0;
+        margin-left: -12%;
         margin-right: 0;
+        justify-self: start;
+        align-self: start;
       }
     }
 
