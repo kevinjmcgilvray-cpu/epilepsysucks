@@ -802,10 +802,18 @@
       justify-self: start;
     }
 
+    .canva-play:not(.canva-play--right) {
+      width: min(46rem, 52%, 100%);
+      max-width: 100%;
+      margin-left: 0;
+      margin-right: auto;
+    }
+
     .canva-play--right {
       margin-left: auto;
       margin-right: 0;
       justify-self: end;
+      width: min(32rem, 100%);
     }
 
     .canva-play__slide {
