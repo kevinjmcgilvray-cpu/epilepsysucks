@@ -1016,6 +1016,32 @@
       color: var(--canva-lilac);
     }
 
+    .canva-play__photo {
+      margin: 1.35rem 0 0;
+      border-radius: 0.85rem;
+      overflow: hidden;
+      border: 1px solid rgba(196, 164, 255, 0.28);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+    }
+
+    .canva-play__photo img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 14rem;
+      object-fit: cover;
+      object-position: center 30%;
+    }
+
+    .canva-play__photo figcaption {
+      margin: 0;
+      padding: 0.45rem 0.7rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.04em;
+      color: rgba(245, 240, 255, 0.55);
+      background: rgba(0, 0, 0, 0.35);
+    }
+
     @keyframes canva-play-in {
       from {
         opacity: 0;
@@ -2443,6 +2469,10 @@
               <h2 class="canva-play__title">How it started</h2>
               <p>When I was young, life threw me a curveball I never saw coming — <span class="key">weakness down the right side of my body</span>. My parents were incredibly concerned, so we went straight to the doctor. After MRIs, CT scans, and more, I was wheeled into the operating room to see if I had a <span class="key">tumor in my brain — which I didn’t, thank God</span>!</p>
               <p>After all those tests, they decided I had <span class="key">cerebral hemiatrophy</span>. <span class="key">I was eight years old.</span> In plain English: <span class="key">one half of my brain is smaller than the other</span> — “hemi” means half, and “atrophy” means that part of the brain didn’t grow or stay as large as it should. That difference on one side of the brain is what set the stage for everything that came next. A few years later? Oh man — <em>this</em> is where the fun begins.</p>
+              <figure class="canva-play__photo">
+                <img src="epilepsy-sucks-images/eeg-stock.jpg" alt="Electroencephalogram recording — EEG cap with electrodes on a person’s head" />
+                <figcaption>EEG — electroencephalogram · photo: Chris Hope / CC BY 2.0</figcaption>
+              </figure>
             </div>
           </div>
 
