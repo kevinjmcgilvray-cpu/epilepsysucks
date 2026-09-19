@@ -1176,46 +1176,6 @@
       }
     }
 
-    .elfsight-float {
-      --elfsight-w: min(18rem, 28vw);
-      --elfsight-gap: 2.75rem;
-      position: fixed;
-      top: 50%;
-      right: var(--elfsight-gap);
-      bottom: auto;
-      z-index: 25;
-      width: var(--elfsight-w);
-      max-height: min(28rem, calc(100vh - 10.5rem));
-      overflow: auto;
-      border: 1px solid rgba(180, 140, 255, 0.4);
-      background: rgba(16, 12, 22, 0.94);
-      box-shadow:
-        0 0 0 1px rgba(155, 107, 255, 0.15),
-        0 10px 28px rgba(0, 0, 0, 0.4),
-        0 0 22px rgba(155, 107, 255, 0.2);
-      backdrop-filter: blur(8px);
-      transform: translateY(-50%);
-    }
-
-    .elfsight-float [class^="elfsight-app-"] {
-      width: 100% !important;
-      max-width: 100%;
-      transform: none;
-    }
-
-    @media (min-width: 801px) {
-      .section,
-      .footer {
-        padding-right: calc(min(18rem, 28vw) + 2.75rem + 0.75rem);
-      }
-    }
-
-    @media (max-width: 800px) {
-      .elfsight-float {
-        display: none !important;
-      }
-    }
-
     .chapter--with-photo {
       display: grid;
       grid-template-columns: minmax(10rem, 0.85fr) 1.15fr;
@@ -2308,12 +2268,6 @@
       <p class="race-clock__caption">Race morning until the LA Marathon!!</p>
     </div>
   </header>
-
-  <aside class="elfsight-float" aria-label="Instagram feed">
-    <!-- Elfsight Instagram Feed | Untitled Instagram Feed -->
-    <script src="https://elfsightcdn.com/platform.js" async></script>
-    <div class="elfsight-app-d22dfe8b-1815-401d-b0cd-a52211042aa6" data-elfsight-app-lazy></div>
-  </aside>
 
   <main id="top">
     <section class="hero" aria-label="Introduction">
