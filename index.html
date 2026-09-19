@@ -1719,12 +1719,6 @@
       box-shadow: 0 0 10px var(--neon-cyan-soft), 0 0 18px rgba(46, 247, 255, 0.45);
     }
 
-    .course-map__note {
-      margin: 0.65rem 0 0;
-      font-size: 0.85rem;
-      color: var(--paper-faint);
-    }
-
     .course-map .training-status {
       margin-top: 0;
     }
@@ -2631,7 +2625,6 @@
             <span>Start: Dodger Stadium</span>
             <span>Finish: Avenue of the Stars</span>
           </div>
-          <p class="course-map__note" id="course-map-note">Dark map · neon course line from Neon PostGIS</p>
         </div>
       </div>
     </section>
@@ -3344,7 +3337,6 @@
     (function initCourseMap() {
       const mapEl = document.getElementById("marathon-map");
       const distanceEl = document.getElementById("course-map-distance");
-      const noteEl = document.getElementById("course-map-note");
       if (!mapEl) return;
 
       const NEON = "#2ef7ff";
@@ -3457,10 +3449,6 @@
             { north: b.north, south: b.south, east: b.east, west: b.west },
             48
           );
-          if (noteEl) {
-            noteEl.textContent =
-              "Google Maps dark basemap · neon course line from Neon PostGIS";
-          }
         });
       }
 
@@ -3540,10 +3528,6 @@
               )
               .addTo(map);
           });
-          if (noteEl) {
-            noteEl.textContent =
-              "Dark vector basemap · neon course line from Neon PostGIS. Add GOOGLE_MAPS_API_KEY on Vercel to switch to Google Maps.";
-          }
         });
       }
 
@@ -3553,13 +3537,11 @@
       ])
         .then(([config, route]) => {
           if (!route || !route.ok || !route.feature) {
-            if (noteEl) noteEl.textContent = "Course map unavailable.";
             return;
           }
           const feature = route.feature;
           const path = pathFromFeature(feature);
           if (!path.length) {
-            if (noteEl) noteEl.textContent = "Course map unavailable.";
             return;
           }
           if (distanceEl && feature.properties.distanceMiles) {
@@ -3570,9 +3552,7 @@
           }
           return renderMapLibre(path, feature);
         })
-        .catch(() => {
-          if (noteEl) noteEl.textContent = "Course map unavailable.";
-        });
+        .catch(() => {});
     })();
 
     (function initWeightChart() {
