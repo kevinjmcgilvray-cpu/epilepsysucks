@@ -1897,27 +1897,6 @@
       max-width: none;
     }
 
-    .arch-diagram-title {
-      margin: 1.75rem 0 0.5rem;
-      font-size: 0.78rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--paper-dim);
-    }
-
-    .arch-diagram-title:first-of-type {
-      margin-top: 0.25rem;
-    }
-
-    .diagram-block {
-      margin: 2.25rem 0;
-      max-width: 100%;
-    }
-
-    .diagram-block .eyebrow {
-      margin-bottom: 0.65rem;
-    }
-
     .support-list {
       list-style: none;
       margin-top: 2.5rem;
