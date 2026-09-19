@@ -134,6 +134,12 @@
   <main id="top">
     <section class="hero" aria-label="Introduction">
       <div class="hero__visual" aria-hidden="true"></div>
+      <canvas
+        class="hero__webgl"
+        id="hero-webgl"
+        aria-hidden="true"
+        role="presentation"
+      ></canvas>
       <div
         class="hero__mri"
         role="img"
@@ -728,5 +734,15 @@ flowchart TD
     }
   </script>
   <script src="app.js"></script>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module" src="neon-scene.js"></script>
 </body>
 </html>
