@@ -53,3 +53,14 @@ CREATE TABLE IF NOT EXISTS posts (
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+-- Cached donor display names, scraped periodically from the public
+-- Haku fundraiser page. Stored as a single cached JSON row (like
+-- `fundraising`) since it's a small, low-write feed.
+CREATE TABLE IF NOT EXISTS donor_feed (
+  id INTEGER PRIMARY KEY CHECK (id = 1),
+  names JSONB NOT NULL DEFAULT '[]'::jsonb,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  source TEXT NOT NULL DEFAULT 'haku'
+    CHECK (source IN ('haku', 'manual'))
+);

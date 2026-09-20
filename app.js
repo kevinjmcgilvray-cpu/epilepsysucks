@@ -54,11 +54,11 @@
       const nameEl = document.getElementById("donor-ticker-name");
       if (!nameEl) return;
 
-      // Snapshot of named (non-anonymous) donors from the McCourt Foundation
-      // donor list as of 09/20/2026. One donor asked to stay anonymous and
-      // is intentionally left out; update this list by hand when a newer
-      // export is provided.
-      const donors = [
+      // Offline fallback snapshot (09/20/2026), used only if /api/donors
+      // can't be reached. The live list normally comes from the fundraiser
+      // page itself, which already respects each donor's own choice to
+      // stay anonymous or show a dedication instead of their name.
+      const fallbackDonors = [
         "Kevin McGilvray",
         "Mark McGilvray",
         "Brittany Knoblock",
@@ -83,23 +83,43 @@
         "Mike Tucker",
         "Charlene Rapp"
       ];
-      if (donors.length < 2) return;
 
       const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      let donors = fallbackDonors;
       let i = 0;
+      let timer = null;
 
-      setInterval(() => {
-        i = (i + 1) % donors.length;
-        if (reduceMotion) {
-          nameEl.textContent = donors[i];
-          return;
-        }
-        nameEl.classList.add("is-fading");
-        setTimeout(() => {
-          nameEl.textContent = donors[i];
-          nameEl.classList.remove("is-fading");
-        }, 350);
-      }, 2600);
+      function start() {
+        if (timer || donors.length < 2) return;
+        timer = setInterval(() => {
+          i = (i + 1) % donors.length;
+          if (reduceMotion) {
+            nameEl.textContent = donors[i];
+            return;
+          }
+          nameEl.classList.add("is-fading");
+          setTimeout(() => {
+            nameEl.textContent = donors[i];
+            nameEl.classList.remove("is-fading");
+          }, 350);
+        }, 2600);
+      }
+
+      nameEl.textContent = donors[0];
+      start();
+
+      fetch("/api/donors")
+        .then((r) => (r.ok ? r.json() : null))
+        .then((data) => {
+          if (!data || !data.ok || !Array.isArray(data.donors) || !data.donors.length) return;
+          donors = data.donors;
+          i = 0;
+          nameEl.textContent = donors[0];
+          if (!timer) start();
+        })
+        .catch(() => {
+          // Keep the offline fallback list on failure
+        });
     })();
 
     (function shareButton() {
