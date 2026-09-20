@@ -1,0 +1,29 @@
+---
+description: Branch + PR + Vercel preview workflow for shipping changes to this site
+alwaysApply: true
+---
+
+# Deploy via preview branches, not straight to main
+
+`main` is this project's production branch — every push to it deploys
+straight to the live site at epilepsysucks.org with no review step. Don't
+push directly to `main` for feature/content/layout work.
+
+For every change (unless the user explicitly says to push straight to
+production):
+
+1. `git checkout -b <short-descriptive-branch-name>` off latest `main`.
+2. Make the change, test locally, commit.
+3. `git push -u origin <branch-name>`.
+4. `gh pr create` — this triggers a Vercel **Preview** deployment (not
+   Production) tied to the branch.
+5. Get the preview URL (`vercel ls`, `gh pr checks`, or the Vercel bot
+   comment on the PR) and share it with the user so they can review the
+   live preview before it ships.
+6. Only after the user approves: merge the PR into `main` (e.g.
+   `gh pr merge --squash --delete-branch`), which triggers the Production
+   deploy.
+
+If the user asks for a quick one-off fix and explicitly says to skip the
+PR/preview step, it's fine to push straight to `main` — but default to the
+branch + PR + preview flow otherwise.
