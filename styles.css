@@ -225,6 +225,26 @@
       font-weight: 600;
     }
 
+    .nav__funds-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.2rem 1.1rem;
+    }
+
+    .nav__funds-stat {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.15;
+    }
+
+    .nav__funds-stat-label {
+      font-size: 0.66rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--paper-dim);
+    }
+
     .nav__funds:hover {
       color: var(--paper);
     }
@@ -628,6 +648,10 @@
       background: var(--nav-menu);
       box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
       z-index: 5;
+    }
+
+    .share-menu__panel[hidden] {
+      display: none;
     }
 
     .share-menu__item {
@@ -2137,6 +2161,14 @@
 
       .nav__funds strong {
         font-size: 0.98rem;
+      }
+
+      .nav__funds-stats {
+        gap: 0.15rem 0.75rem;
+      }
+
+      .nav__funds-stat-label {
+        font-size: 0.6rem;
       }
 
       .nav__cause {

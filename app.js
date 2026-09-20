@@ -153,6 +153,7 @@
     (function syncFundraisingTotals() {
       const raisedEl = document.getElementById("funds-raised");
       const goalEl = document.getElementById("funds-goal");
+      const neededEl = document.getElementById("funds-needed");
       const raisedMeta = document.getElementById("funds-raised-meta");
       const goalMeta = document.getElementById("funds-goal-meta");
       const bar = document.getElementById("funds-bar-fill");
@@ -178,12 +179,12 @@
           if (barMeta) barMeta.style.width = pct + "%";
           if (percentEl) percentEl.textContent = pct + "%";
 
+          const needed = Math.max(0, Number(data.goal) - Number(data.raised));
+          if (neededEl) neededEl.textContent = formatMoney(needed);
+
           if (boxRaisedEl) boxRaisedEl.textContent = data.raisedFormatted;
           if (boxGoalEl) boxGoalEl.textContent = data.goalFormatted;
-          if (boxNeededEl) {
-            const needed = Math.max(0, Number(data.goal) - Number(data.raised));
-            boxNeededEl.textContent = formatMoney(needed);
-          }
+          if (boxNeededEl) boxNeededEl.textContent = formatMoney(needed);
         })
         .catch(() => {});
     })();
