@@ -502,7 +502,7 @@
       display: grid;
       place-items: center;
       min-height: 100dvh;
-      padding: clamp(5rem, 12vh, 7rem) clamp(1.25rem, 4vw, 2.5rem) clamp(3rem, 8vh, 5rem);
+      padding: calc(var(--header-h, 9.5rem) + 1rem) clamp(1.25rem, 4vw, 2.5rem) clamp(3rem, 8vh, 5rem);
       overflow: hidden;
       background:
         radial-gradient(ellipse 80% 60% at 50% 35%, var(--accent-soft), transparent 55%),
@@ -598,6 +598,43 @@
       z-index: 2;
       text-align: center;
       max-width: min(36rem, 92vw);
+    }
+
+    .donor-ticker {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 0.4rem;
+      max-width: min(88vw, 26rem);
+      margin: 0.5rem auto 0;
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid color-mix(in srgb, var(--epi) 35%, transparent);
+      background: color-mix(in srgb, var(--epi) 12%, transparent);
+      font-size: 0.8rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    @media (max-width: 640px) {
+      .donor-ticker {
+        font-size: 0.74rem;
+      }
+    }
+
+    .donor-ticker__label {
+      color: var(--paper-dim);
+    }
+
+    .donor-ticker__name {
+      color: var(--epi);
+      font-weight: 700;
+      transition: opacity 0.35s ease;
+    }
+
+    .donor-ticker__name.is-fading {
+      opacity: 0;
     }
 
     .hero__content h1 {

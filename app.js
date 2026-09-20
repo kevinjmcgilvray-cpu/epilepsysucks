@@ -6,6 +6,21 @@
       nav.classList.toggle("is-scrolled", window.scrollY > 24);
     }, { passive: true });
 
+    // Keep the hero's top padding matched to the real (fixed) header height,
+    // since the header's content (funds stats, race clock, donor ticker,
+    // etc.) can wrap and grow across viewport sizes.
+    (function syncHeaderHeight() {
+      const setVar = () => {
+        document.documentElement.style.setProperty("--header-h", `${nav.getBoundingClientRect().height}px`);
+      };
+      setVar();
+      if ("ResizeObserver" in window) {
+        new ResizeObserver(setVar).observe(nav);
+      } else {
+        window.addEventListener("resize", setVar);
+      }
+    })();
+
     toggle.addEventListener("click", () => {
       const open = links.classList.toggle("is-open");
       toggle.setAttribute("aria-expanded", String(open));
@@ -34,6 +49,58 @@
     } else {
       revealEls.forEach((el) => el.classList.add("is-in"));
     }
+
+    (function donorTicker() {
+      const nameEl = document.getElementById("donor-ticker-name");
+      if (!nameEl) return;
+
+      // Snapshot of named (non-anonymous) donors from the McCourt Foundation
+      // donor list as of 09/20/2026. One donor asked to stay anonymous and
+      // is intentionally left out; update this list by hand when a newer
+      // export is provided.
+      const donors = [
+        "Kevin McGilvray",
+        "Mark McGilvray",
+        "Brittany Knoblock",
+        "Kayleen Stacey",
+        "Alex Himy",
+        "Clifford Gilb",
+        "Eric Tucker",
+        "Jonathan Blanchard",
+        "Michele Rosser",
+        "Molly Hotchkiss",
+        "Nicholas Conforti",
+        "Nicholas McGilvray",
+        "Reed Conforti",
+        "Rob Knight",
+        "Samuel Fernandez",
+        "Brenda Hudson",
+        "Donnette Guiltinan",
+        "Spencer Maxwell",
+        "Megan Burmester",
+        "Ron Lovell",
+        "Sherry Cooper",
+        "Mike Tucker",
+        "Charlene Rapp"
+      ];
+      if (donors.length < 2) return;
+
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      let i = 0;
+
+      setInterval(() => {
+        i = (i + 1) % donors.length;
+        if (reduceMotion) {
+          nameEl.textContent = donors[i];
+          return;
+        }
+        nameEl.classList.add("is-fading");
+        setTimeout(() => {
+          nameEl.textContent = donors[i];
+          nameEl.classList.remove("is-fading");
+        }, 350);
+      }, 2600);
+    })();
 
     (function shareButton() {
       const trigger = document.getElementById("share-trigger");
