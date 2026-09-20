@@ -79,8 +79,8 @@
             href="https://fundraisers.hakuapp.com/Kevin-McGilvray"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Fundraising progress"
           >
+            <span class="sr-only">Fundraising progress:</span>
             <span class="nav__funds-wrap">
               <span class="nav__funds-stats">
                 <span class="nav__funds-stat">
@@ -136,30 +136,35 @@
         <li><a class="nav__cta" href="#comments">Comments</a></li>
         <li><a class="nav__cta" href="https://haku.ly/9795a39b3b" target="_blank" rel="noopener noreferrer">Donate</a></li>
       </ul>
-      <div
-        class="race-clock"
-        id="race-clock"
-        role="timer"
-        aria-live="polite"
-        aria-label="Countdown to LA Marathon race morning, March 7, 2027"
-      >
-        <div class="race-clock__units">
-          <div class="race-clock__unit">
-            <span class="race-clock__digits" id="race-days" data-value="">000</span>
-            <span class="race-clock__label">Days</span>
+      <div class="race-clock-block">
+        <div
+          class="race-clock"
+          id="race-clock"
+          role="timer"
+          aria-live="polite"
+          aria-label="Countdown to LA Marathon race morning, March 7, 2027"
+        >
+          <div class="race-clock__units">
+            <div class="race-clock__unit">
+              <span class="race-clock__digits" id="race-days" data-value="">000</span>
+              <span class="race-clock__label">Days</span>
+            </div>
+            <span class="race-clock__sep" aria-hidden="true">:</span>
+            <div class="race-clock__unit">
+              <span class="race-clock__digits" id="race-hours" data-value="">00</span>
+              <span class="race-clock__label">Hours</span>
+            </div>
+            <span class="race-clock__sep" aria-hidden="true">:</span>
+            <div class="race-clock__unit">
+              <span class="race-clock__digits" id="race-mins" data-value="">00</span>
+              <span class="race-clock__label">Mins</span>
+            </div>
           </div>
-          <span class="race-clock__sep" aria-hidden="true">:</span>
-          <div class="race-clock__unit">
-            <span class="race-clock__digits" id="race-hours" data-value="">00</span>
-            <span class="race-clock__label">Hours</span>
-          </div>
-          <span class="race-clock__sep" aria-hidden="true">:</span>
-          <div class="race-clock__unit">
-            <span class="race-clock__digits" id="race-mins" data-value="">00</span>
-            <span class="race-clock__label">Mins</span>
-          </div>
+          <p class="race-clock__caption">Race morning until the LA Marathon!!</p>
         </div>
-        <p class="race-clock__caption">Race morning until the LA Marathon!!</p>
+        <!-- Kept outside the timer's aria-live region on purpose: this
+             cycles every ~2.6s and would otherwise cause the countdown's
+             live region to re-announce constantly for screen readers. -->
         <div class="donor-ticker" id="donor-ticker">
           <span class="donor-ticker__name" id="donor-ticker-name">Kevin McGilvray</span>
           <span class="donor-ticker__label">thank you for your donation!</span>
@@ -470,7 +475,7 @@ timeline
             </div>
           </div>
           <div class="course-map__frame">
-            <div class="course-map__canvas" id="marathon-map" role="img" aria-label="Interactive map of the LA Marathon route from Dodger Stadium to Century City"></div>
+            <div class="course-map__canvas" id="marathon-map" role="img" aria-label="Map of the LA Marathon route from Dodger Stadium to Century City"></div>
           </div>
           <div class="course-map__legend">
             <span><span class="course-map__swatch" aria-hidden="true"></span>LA Marathon route</span>

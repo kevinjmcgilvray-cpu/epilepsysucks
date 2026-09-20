@@ -70,6 +70,21 @@
       scroll-behavior: smooth;
     }
 
+    /* Visually hidden but still readable by assistive tech — use to
+       give screen readers extra context without duplicating it on
+       screen (e.g. a label prefix before a block of dynamic numbers). */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
     body {
       position: relative;
       font-family: var(--font-body);
@@ -276,10 +291,7 @@
       letter-spacing: 0.01em;
     }
 
-    .race-clock {
-      --neon: #b48cff;
-      --neon-dim: rgba(180, 140, 255, 0.4);
-      --tube: #120e1a;
+    .race-clock-block {
       grid-column: 1 / -1;
       grid-row: 4;
       justify-self: center;
@@ -288,6 +300,16 @@
       align-items: center;
       gap: 0.3rem;
       padding-top: 0.1rem;
+    }
+
+    .race-clock {
+      --neon: #b48cff;
+      --neon-dim: rgba(180, 140, 255, 0.4);
+      --tube: #120e1a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
       margin: 0;
     }
 
@@ -2243,10 +2265,8 @@
         font-size: 0.78rem;
       }
 
-      .race-clock {
+      .race-clock-block {
         width: 100%;
-        justify-self: auto;
-        align-items: center;
         padding-top: 0.25rem;
       }
 
