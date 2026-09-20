@@ -158,20 +158,32 @@
       const bar = document.getElementById("funds-bar-fill");
       const barMeta = document.getElementById("funds-bar-fill-meta");
       const percentEl = document.getElementById("funds-percent");
-      if (!raisedEl || !goalEl) return;
+      const boxRaisedEl = document.getElementById("funds-box-raised");
+      const boxGoalEl = document.getElementById("funds-box-goal");
+      const boxNeededEl = document.getElementById("funds-box-needed");
+      if (!raisedEl && !boxRaisedEl) return;
+
+      const formatMoney = (n) => "$" + Number(n).toLocaleString("en-US", { maximumFractionDigits: 0 });
 
       fetch("/api/raised")
         .then((res) => (res.ok ? res.json() : null))
         .then((data) => {
           if (!data || !data.ok) return;
-          raisedEl.textContent = data.raisedFormatted;
-          goalEl.textContent = data.goalFormatted;
+          if (raisedEl) raisedEl.textContent = data.raisedFormatted;
+          if (goalEl) goalEl.textContent = data.goalFormatted;
           if (raisedMeta) raisedMeta.textContent = data.raisedFormatted;
           if (goalMeta) goalMeta.textContent = data.goalFormatted;
           const pct = Math.max(0, Math.min(100, Number(data.percent) || 0));
           if (bar) bar.style.width = pct + "%";
           if (barMeta) barMeta.style.width = pct + "%";
           if (percentEl) percentEl.textContent = pct + "%";
+
+          if (boxRaisedEl) boxRaisedEl.textContent = data.raisedFormatted;
+          if (boxGoalEl) boxGoalEl.textContent = data.goalFormatted;
+          if (boxNeededEl) {
+            const needed = Math.max(0, Number(data.goal) - Number(data.raised));
+            boxNeededEl.textContent = formatMoney(needed);
+          }
         })
         .catch(() => {});
     })();
