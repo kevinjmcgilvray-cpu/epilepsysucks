@@ -2284,10 +2284,13 @@
       }
 
       .nav__toggle {
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 6;
         display: grid;
         place-items: center;
         flex-shrink: 0;
-        margin-top: 0.05rem;
       }
 
       .nav__links {
