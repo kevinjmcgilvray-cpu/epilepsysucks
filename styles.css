@@ -253,13 +253,13 @@
     }
 
     .nav__cause {
-      grid-column: 1;
-      grid-row: 3;
+      grid-column: 2;
+      grid-row: 2;
+      justify-self: start;
       display: flex;
       align-items: center;
       gap: 0.45rem;
       max-width: 100%;
-      margin-top: 0.15rem;
       color: var(--paper-dim);
     }
 
@@ -280,21 +280,21 @@
       --neon: #b48cff;
       --neon-dim: rgba(180, 140, 255, 0.4);
       --tube: #120e1a;
-      grid-column: 2;
-      grid-row: 2;
-      justify-self: end;
+      grid-column: 1 / -1;
+      grid-row: 3;
+      justify-self: center;
       display: flex;
       flex-direction: column;
-      align-items: flex-end;
+      align-items: center;
       gap: 0.3rem;
-      padding: 0;
+      padding-top: 0.1rem;
       margin: 0;
     }
 
     .race-clock__units {
       display: flex;
       align-items: stretch;
-      justify-content: flex-end;
+      justify-content: center;
       gap: clamp(0.4rem, 1.6vw, 0.65rem);
     }
 
@@ -384,7 +384,7 @@
     .race-clock__caption {
       margin: 0;
       max-width: 16rem;
-      text-align: right;
+      text-align: center;
       font-size: clamp(0.68rem, 1.6vw, 0.78rem);
       letter-spacing: 0.04em;
       color: var(--paper-faint);
