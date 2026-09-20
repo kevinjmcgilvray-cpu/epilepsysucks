@@ -86,13 +86,24 @@
 
       const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       let donors = fallbackDonors;
-      let i = 0;
+      let i = -1;
       let timer = null;
+
+      // Pick a random donor, avoiding an immediate repeat of the one
+      // currently shown (so it always visibly changes).
+      function randomIndex() {
+        if (donors.length < 2) return 0;
+        let idx;
+        do {
+          idx = Math.floor(Math.random() * donors.length);
+        } while (idx === i);
+        return idx;
+      }
 
       function start() {
         if (timer || donors.length < 2) return;
         timer = setInterval(() => {
-          i = (i + 1) % donors.length;
+          i = randomIndex();
           if (reduceMotion) {
             nameEl.textContent = donors[i];
             return;
@@ -105,7 +116,8 @@
         }, 2600);
       }
 
-      nameEl.textContent = donors[0];
+      i = randomIndex();
+      nameEl.textContent = donors[i];
       start();
 
       fetch("/api/donors")
@@ -113,8 +125,8 @@
         .then((data) => {
           if (!data || !data.ok || !Array.isArray(data.donors) || !data.donors.length) return;
           donors = data.donors;
-          i = 0;
-          nameEl.textContent = donors[0];
+          i = randomIndex();
+          nameEl.textContent = donors[i];
           if (!timer) start();
         })
         .catch(() => {
