@@ -139,32 +139,35 @@
     }
 
     .nav__top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 1rem;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: start;
+      column-gap: 1rem;
+      row-gap: 0.2rem;
       width: 100%;
     }
 
     .nav__brand {
+      grid-column: 1;
+      grid-row: 1;
       font-family: var(--font-display);
       font-size: 1.35rem;
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
 
+    /* nav__left keeps its brand/funds/cause markup grouped, but on
+       screens wide enough for the two-column header it becomes a
+       transparent wrapper so its children can be placed directly on
+       the nav__top grid (this is what lines the race clock up with
+       the funds stats on the same row). */
     .nav__left {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.25rem;
-      flex: 1 1 auto;
-      min-width: 0;
-      max-width: calc(100% - 3.25rem);
-      overflow: visible;
+      display: contents;
     }
 
     .nav__funds-row {
+      grid-column: 1;
+      grid-row: 2;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
@@ -250,6 +253,8 @@
     }
 
     .nav__cause {
+      grid-column: 1;
+      grid-row: 3;
       display: flex;
       align-items: center;
       gap: 0.45rem;
@@ -275,20 +280,22 @@
       --neon: #b48cff;
       --neon-dim: rgba(180, 140, 255, 0.4);
       --tube: #120e1a;
-      width: 100%;
+      grid-column: 2;
+      grid-row: 2;
+      justify-self: end;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      gap: 0.35rem;
-      padding: 0.35rem 0.5rem 0.15rem;
+      align-items: flex-end;
+      gap: 0.3rem;
+      padding: 0;
       margin: 0;
     }
 
     .race-clock__units {
       display: flex;
       align-items: stretch;
-      justify-content: center;
-      gap: clamp(0.45rem, 2vw, 0.85rem);
+      justify-content: flex-end;
+      gap: clamp(0.4rem, 1.6vw, 0.65rem);
     }
 
     .race-clock__unit {
@@ -376,6 +383,8 @@
 
     .race-clock__caption {
       margin: 0;
+      max-width: 16rem;
+      text-align: right;
       font-size: clamp(0.68rem, 1.6vw, 0.78rem);
       letter-spacing: 0.04em;
       color: var(--paper-faint);
@@ -398,6 +407,8 @@
     }
 
     .nav__links {
+      grid-column: 2;
+      grid-row: 1;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
@@ -486,6 +497,8 @@
     }
 
     .nav__toggle {
+      grid-column: 2;
+      grid-row: 1;
       display: none;
       background: none;
       border: 1px solid var(--line);
@@ -2178,8 +2191,18 @@
       }
 
       .nav__top {
+        display: flex;
+        flex-direction: column;
         position: relative;
         align-items: flex-start;
+      }
+
+      .nav__left {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+        width: 100%;
       }
 
       .nav__brand {
@@ -2221,7 +2244,18 @@
       }
 
       .race-clock {
+        width: 100%;
+        justify-self: auto;
+        align-items: center;
         padding-top: 0.25rem;
+      }
+
+      .race-clock__units {
+        justify-content: center;
+      }
+
+      .race-clock__caption {
+        text-align: center;
       }
 
       .race-clock__digits {
