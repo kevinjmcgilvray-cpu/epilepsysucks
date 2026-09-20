@@ -253,13 +253,13 @@
     }
 
     .nav__cause {
-      grid-column: 2;
-      grid-row: 2;
-      justify-self: start;
+      grid-column: 1;
+      grid-row: 3;
       display: flex;
       align-items: center;
       gap: 0.45rem;
       max-width: 100%;
+      margin-top: 0.15rem;
       color: var(--paper-dim);
     }
 
@@ -281,7 +281,7 @@
       --neon-dim: rgba(180, 140, 255, 0.4);
       --tube: #120e1a;
       grid-column: 1 / -1;
-      grid-row: 3;
+      grid-row: 4;
       justify-self: center;
       display: flex;
       flex-direction: column;
