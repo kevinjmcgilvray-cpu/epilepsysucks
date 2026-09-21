@@ -58,30 +58,33 @@
       // can't be reached. The live list normally comes from the fundraiser
       // page itself, which already respects each donor's own choice to
       // stay anonymous or show a dedication instead of their name.
+      // Snapshot refreshed 09/20/2026 to match the live feed.
       const fallbackDonors = [
-        "Kevin McGilvray",
-        "Mark McGilvray",
-        "Brittany Knoblock",
-        "Kayleen Stacey",
-        "Alex Himy",
-        "Clifford Gilb",
-        "Eric Tucker",
-        "Jonathan Blanchard",
-        "Michele Rosser",
-        "Molly Hotchkiss",
-        "Nicholas Conforti",
-        "Nicholas McGilvray",
-        "Reed Conforti",
-        "Rob Knight",
-        "Samuel Fernandez",
+        "The Slack Family, friends of Dallas's family",
+        "Marla and Jim Gilb",
+        "In memory of Uncle Bill",
+        "Charlene Rapp",
+        "Mike Tucker",
+        "Sherry Cooper",
+        "Ron Lovell",
+        "In honor of Joyce Burmester",
+        "Spencer Maxwell",
         "Brenda Hudson",
         "Donnette Guiltinan",
-        "Spencer Maxwell",
-        "Megan Burmester",
-        "Ron Lovell",
-        "Sherry Cooper",
-        "Mike Tucker",
-        "Charlene Rapp"
+        "Michele Rosser",
+        "Reed Conforti",
+        "Molly Hotchkiss",
+        "Rob Knight",
+        "Nicholas Conforti",
+        "Eric Tucker",
+        "Samuel Fernandez",
+        "Alex Himy",
+        "Clifford Gilb",
+        "Nicholas McGilvray",
+        "The Knoblock Family",
+        "Kayleen Stacey",
+        "In memory of grandpa Charlie",
+        "Kevin J McGilvray"
       ];
 
       const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
