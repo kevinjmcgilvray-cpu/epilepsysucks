@@ -255,7 +255,7 @@
     (function syncFundraisingTotals() {
       const raisedEl = document.getElementById("funds-raised");
       const goalEl = document.getElementById("funds-goal");
-      const neededEl = document.getElementById("funds-needed");
+      const overachieverEl = document.getElementById("funds-overachiever");
       const raisedMeta = document.getElementById("funds-raised-meta");
       const goalMeta = document.getElementById("funds-goal-meta");
       const bar = document.getElementById("funds-bar-fill");
@@ -263,7 +263,7 @@
       const percentEl = document.getElementById("funds-percent");
       const boxRaisedEl = document.getElementById("funds-box-raised");
       const boxGoalEl = document.getElementById("funds-box-goal");
-      const boxNeededEl = document.getElementById("funds-box-needed");
+      const boxOverachieverEl = document.getElementById("funds-box-overachiever");
       if (!raisedEl && !boxRaisedEl) return;
 
       const formatMoney = (n) => "$" + Number(n).toLocaleString("en-US", { maximumFractionDigits: 0 });
@@ -281,12 +281,14 @@
           if (barMeta) barMeta.style.width = pct + "%";
           if (percentEl) percentEl.textContent = pct + "%";
 
-          const needed = Math.max(0, Number(data.goal) - Number(data.raised));
-          if (neededEl) neededEl.textContent = formatMoney(needed);
+          // Money given past the original goal amount — 0 until it's
+          // actually exceeded.
+          const overachiever = Math.max(0, Number(data.raised) - Number(data.goal));
+          if (overachieverEl) overachieverEl.textContent = formatMoney(overachiever);
 
           if (boxRaisedEl) boxRaisedEl.textContent = data.raisedFormatted;
           if (boxGoalEl) boxGoalEl.textContent = data.goalFormatted;
-          if (boxNeededEl) boxNeededEl.textContent = formatMoney(needed);
+          if (boxOverachieverEl) boxOverachieverEl.textContent = formatMoney(overachiever);
         })
         .catch(() => {});
     })();
