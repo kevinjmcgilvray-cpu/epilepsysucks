@@ -59,9 +59,14 @@ export default async function handler(req, res) {
       const staleMs = 5 * 60 * 1000;
       const updatedAt = row ? new Date(row.updated_at).getTime() : 0;
       const stale = !row || Date.now() - updatedAt > staleMs;
-      const allowHaku = !row || row.source === "haku";
 
-      if (stale && allowHaku) {
+      // Note: a manual POST update (source = 'manual') used to permanently
+      // block future Haku re-syncs here, since this only re-scraped when
+      // the *current* source was already 'haku'. That left the site stuck
+      // showing an old manual figure indefinitely. A manual entry should
+      // only override the number temporarily (until it goes stale, same as
+      // any other value), not disable auto-sync forever.
+      if (stale) {
         try {
           const scraped = await scrapeHaku();
           if (scraped) {
