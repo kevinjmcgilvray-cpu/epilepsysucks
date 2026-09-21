@@ -2066,6 +2066,38 @@
       max-width: none;
     }
 
+    .history-note {
+      margin: 2.5rem 0 1rem;
+      max-width: 46rem;
+      border: 1px solid var(--line);
+      border-radius: 0.75rem;
+      padding: clamp(1.1rem, 3vw, 1.6rem) clamp(1.25rem, 4vw, 1.85rem);
+      background: var(--surface-muted);
+    }
+
+    .history-note .eyebrow {
+      margin-bottom: 0.5rem;
+      font-size: 0.78rem;
+    }
+
+    .history-note h4 {
+      margin: 0 0 0.85rem;
+      font-family: var(--font-display);
+      font-size: clamp(1.1rem, 2.4vw, 1.35rem);
+      letter-spacing: 0.01em;
+    }
+
+    .history-note p {
+      margin: 0 0 0.85rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--paper-dim);
+    }
+
+    .history-note p:last-child {
+      margin-bottom: 0;
+    }
+
     .funds-box {
       margin: 1.75rem 0 2rem;
       padding: 1.5rem 1.75rem;
