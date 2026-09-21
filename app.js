@@ -196,23 +196,47 @@
         if (event.key === "Escape") closePanel();
       });
 
+      function flashLabel(btn, label, ms) {
+        const original = btn.textContent;
+        btn.textContent = label;
+        setTimeout(() => {
+          btn.textContent = original;
+        }, ms || 1600);
+      }
+
       const copyBtn = document.getElementById("share-copy");
       if (copyBtn) {
         copyBtn.addEventListener("click", () => {
-          const finish = (label) => {
-            const original = copyBtn.textContent;
-            copyBtn.textContent = label;
-            setTimeout(() => {
-              copyBtn.textContent = original;
-            }, 1600);
-          };
           if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard
               .writeText(shareData.url)
-              .then(() => finish("Copied!"))
-              .catch(() => finish("Couldn’t copy"));
+              .then(() => flashLabel(copyBtn, "Copied!"))
+              .catch(() => flashLabel(copyBtn, "Couldn’t copy"));
           } else {
-            finish("Couldn’t copy");
+            flashLabel(copyBtn, "Couldn’t copy");
+          }
+        });
+      }
+
+      // Instagram has no public "share this URL" web intent, so the closest
+      // thing to sharing a link there is: copy it, then hand off to
+      // Instagram so it can be pasted into a Story, bio link, or DM.
+      const igBtn = document.getElementById("share-instagram");
+      if (igBtn) {
+        igBtn.addEventListener("click", () => {
+          const openInstagram = () => window.open("https://www.instagram.com/", "_blank", "noopener,noreferrer");
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard
+              .writeText(shareData.url)
+              .then(() => {
+                flashLabel(igBtn, "Link copied — paste in IG!", 2200);
+                openInstagram();
+              })
+              .catch(() => {
+                flashLabel(igBtn, "Couldn’t copy link");
+              });
+          } else {
+            openInstagram();
           }
         });
       }
