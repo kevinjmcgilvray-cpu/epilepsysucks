@@ -1294,6 +1294,28 @@
       }
     }
 
+    /* Surgery/scar photos: shown (softly blurred) in the darker theme,
+       hidden entirely in light mode for a cleaner, more professional
+       read of the story. */
+    .chapter__photo--surgery img {
+      filter: blur(11px) saturate(0.85);
+    }
+
+    .chapter__photo-note {
+      display: block;
+      font-size: 0.75rem;
+      opacity: 0.7;
+      margin-top: 0.15rem;
+    }
+
+    html[data-theme="light"] .chapter--with-photo--surgery .chapter__photo--surgery {
+      display: none;
+    }
+
+    html[data-theme="light"] .chapter--with-photo--surgery {
+      grid-template-columns: 1fr;
+    }
+
     .split {
       display: grid;
       grid-template-columns: 1.1fr 0.9fr;
@@ -2353,7 +2375,8 @@
         padding: 0.9rem 0;
       }
 
-      .nav__links a.nav__cta {
+      .nav__links a.nav__cta,
+      .nav__links button.nav__cta {
         display: inline-flex;
         justify-content: center;
         width: 100%;

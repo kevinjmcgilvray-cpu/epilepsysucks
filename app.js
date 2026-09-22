@@ -6,6 +6,35 @@
       nav.classList.toggle("is-scrolled", window.scrollY > 24);
     }, { passive: true });
 
+    // Light mode = the clean, professional default (no surgery/scar
+    // photos). Dark mode brings those photos back in, blurred, for
+    // anyone curious to see more of the medical side of the story.
+    (function themeToggle() {
+      const btn = document.getElementById("theme-toggle");
+      if (!btn) return;
+
+      function sync() {
+        const theme = document.documentElement.getAttribute("data-theme") || "light";
+        btn.textContent = theme === "light" ? "Dark" : "Light";
+        btn.setAttribute(
+          "aria-label",
+          theme === "light" ? "Switch to dark mode" : "Switch to light mode"
+        );
+      }
+
+      sync();
+
+      btn.addEventListener("click", () => {
+        const next =
+          document.documentElement.getAttribute("data-theme") === "light" ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", next);
+        try {
+          localStorage.setItem("epilepsy-theme", next);
+        } catch (e) {}
+        sync();
+      });
+    })();
+
     // Keep the hero's top padding matched to the real (fixed) header height,
     // since the header's content (funds stats, race clock, donor ticker,
     // etc.) can wrap and grow across viewport sizes.
