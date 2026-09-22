@@ -1296,9 +1296,58 @@
 
     /* Surgery/scar photos: shown (softly blurred) in the darker theme,
        hidden entirely in light mode for a cleaner, more professional
-       read of the story. */
-    .chapter__photo--surgery img {
+       read of the story. Tapping/clicking reveals the unblurred photo. */
+    .chapter__photo-reveal {
+      display: block;
+      position: relative;
+      width: 100%;
+      padding: 0;
+      margin: 0;
+      border: 0;
+      background: none;
+      cursor: pointer;
+    }
+
+    .chapter__photo-reveal img {
       filter: blur(11px) saturate(0.85);
+      transition: filter 0.4s ease;
+    }
+
+    .chapter__photo-reveal.is-revealed img {
+      filter: none;
+    }
+
+    .chapter__photo-hint {
+      position: absolute;
+      left: 50%;
+      bottom: 0.7rem;
+      transform: translateX(-50%);
+      padding: 0.4rem 0.8rem;
+      border-radius: 999px;
+      background: rgba(20, 17, 15, 0.72);
+      color: #ebe4d8;
+      font-family: var(--font-body);
+      font-size: 0.72rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      opacity: 0.92;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .chapter__photo-reveal.is-revealed .chapter__photo-hint {
+      opacity: 0;
+    }
+
+    .chapter__photo-reveal:hover .chapter__photo-hint,
+    .chapter__photo-reveal:focus-visible .chapter__photo-hint {
+      opacity: 1;
+    }
+
+    .chapter__photo-reveal:focus-visible {
+      outline: 2px solid var(--epi);
+      outline-offset: 2px;
     }
 
     .chapter__photo-note {

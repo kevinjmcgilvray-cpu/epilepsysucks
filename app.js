@@ -35,6 +35,21 @@
       });
     })();
 
+    // Surgery/scar photos (dark mode only) start blurred; tapping one
+    // reveals the real photo, tapping again re-blurs it.
+    (function surgeryPhotoReveal() {
+      const buttons = document.querySelectorAll(".chapter__photo-reveal");
+      buttons.forEach((btn) => {
+        const hint = btn.querySelector(".chapter__photo-hint");
+        btn.addEventListener("click", () => {
+          const revealed = btn.classList.toggle("is-revealed");
+          btn.setAttribute("aria-pressed", revealed ? "true" : "false");
+          btn.setAttribute("aria-label", revealed ? "Blur this photo again" : "Show the unblurred photo");
+          if (hint) hint.textContent = revealed ? "Tap to blur" : "Tap to reveal";
+        });
+      });
+    })();
+
     // Keep the hero's top padding matched to the real (fixed) header height,
     // since the header's content (funds stats, race clock, donor ticker,
     // etc.) can wrap and grow across viewport sizes.
