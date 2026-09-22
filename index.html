@@ -6,6 +6,16 @@
   <title>Epilepsy Sucks — Kevin’s Story | LA Marathon 2027</title>
   <meta name="description" content="Kevin’s life with epilepsy — from cerebral hemiatrophy and seizures to resection, VNS, DBS — and running the LA Marathon for CURE Epilepsy on March 7, 2027." />
 
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem("epilepsy-theme");
+        if (saved === "dark" || saved === "light") {
+          document.documentElement.setAttribute("data-theme", saved);
+        }
+      } catch (e) {}
+    })();
+  </script>
   <link rel="icon" href="/favicon.ico" sizes="any" />
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
@@ -134,6 +144,7 @@
         <li><a class="nav__cta" href="#training">Training</a></li>
         <li><a class="nav__cta" href="#marathon">LA Marathon</a></li>
         <li><a class="nav__cta" href="#comments">Comments</a></li>
+        <li><button type="button" class="nav__cta" id="theme-toggle" aria-label="Switch to dark mode">Dark</button></li>
         <li><a class="nav__cta" href="https://haku.ly/9795a39b3b" target="_blank" rel="noopener noreferrer">Donate</a></li>
       </ul>
       <div class="race-clock-block">
@@ -262,10 +273,13 @@ timeline
           <p>Choosing UCLA felt like stepping toward light. I wasn’t running from epilepsy anymore — I was walking into a place built to understand it. Telemetry meant answers: mapping the storm so we could finally see where it started. It wasn’t only fear; it was hope with a plan. A team skilled enough to fight for my future. A path that said my life could be more than breakthroughs and recovery beds. For the first time in a long time, the next chapter had a destination — and I believed I might get there.</p>
         </article>
 
-        <article class="chapter chapter--with-photo reveal">
-          <figure class="chapter__photo">
-            <img src="epilepsy-sucks-images/IMG_0659.JPG" alt="After left anterior temporal lobectomy surgery in 2017, stapled incision on the left side of the head" width="1600" height="1200" loading="lazy" decoding="async" />
-            <figcaption>2017 — after the resection</figcaption>
+        <article class="chapter chapter--with-photo chapter--with-photo--surgery reveal">
+          <figure class="chapter__photo chapter__photo--surgery">
+            <button type="button" class="chapter__photo-reveal" aria-pressed="false" aria-label="Show the unblurred photo">
+              <img src="epilepsy-sucks-images/IMG_0659.JPG" alt="After left anterior temporal lobectomy surgery in 2017, stapled incision on the left side of the head" width="1600" height="1200" loading="lazy" decoding="async" />
+              <span class="chapter__photo-hint" aria-hidden="true">Tap to reveal</span>
+            </button>
+            <figcaption>2017 — after the resection <span class="chapter__photo-note">(blurred for comfort — tap to reveal)</span></figcaption>
           </figure>
           <div class="chapter__body">
             <p class="chapter__year">2017</p>
@@ -291,7 +305,7 @@ timeline
           <p><strong>DBS for epilepsy</strong> came later. Researchers targeted the <span class="key">anterior nucleus of the thalamus (ANT)</span> — a hub in the brain’s seizure-spreading circuitry — and Medtronic ran the pivotal <span class="key">SANTE trial</span> from 2003–2008 across 17 U.S. centers. The results held up: a 40% median seizure reduction at three months, improving further over years of follow-up. On <span class="key">April 27, 2018</span>, the FDA approved DBS as a treatment for drug-resistant epilepsy — just four years before my own leads went in.</p>
         </aside>
 
-        <article class="chapter chapter--with-photo chapter--with-photo--right reveal">
+        <article class="chapter chapter--with-photo chapter--with-photo--right chapter--with-photo--surgery reveal">
           <div class="chapter__body">
             <p class="chapter__year">2022</p>
             <h3>Deep brain stimulation</h3>
@@ -300,9 +314,12 @@ timeline
             <p>The reward, if it works, is the reason people still choose it: a chance to turn the volume down on seizures, to get days back, to feel like yourself again. For me the upside was worth the gamble — not because the risk disappeared, but because living without trying was already costing too much.</p>
             <p>Then came the long fight after the fight: nearly four years with my doctors and the team at Medtronic, refusing to quit until we found a <span class="key">golden setting</span>. On <span class="key">March 18, 2026</span>, they started testing <span class="key">low pulse stimulation 24/7</span>. It’s been about seven months since they added that setting — and it was the right choice. <span class="key">The DBS has changed my life.</span> My depression has evaporated. I stayed the course. And it held.</p>
           </div>
-          <figure class="chapter__photo">
-            <img src="epilepsy-sucks-images/IMG_3397.jpeg" alt="After deep brain stimulation surgery in 2022, two sutured incisions on the top of the head" width="1600" height="1200" loading="lazy" decoding="async" />
-            <figcaption>2022 — after DBS</figcaption>
+          <figure class="chapter__photo chapter__photo--surgery">
+            <button type="button" class="chapter__photo-reveal" aria-pressed="false" aria-label="Show the unblurred photo">
+              <img src="epilepsy-sucks-images/IMG_3397.jpeg" alt="After deep brain stimulation surgery in 2022, two sutured incisions on the top of the head" width="1600" height="1200" loading="lazy" decoding="async" />
+              <span class="chapter__photo-hint" aria-hidden="true">Tap to reveal</span>
+            </button>
+            <figcaption>2022 — after DBS <span class="chapter__photo-note">(blurred for comfort — tap to reveal)</span></figcaption>
           </figure>
         </article>
       </div>

@@ -6,6 +6,50 @@
       nav.classList.toggle("is-scrolled", window.scrollY > 24);
     }, { passive: true });
 
+    // Light mode = the clean, professional default (no surgery/scar
+    // photos). Dark mode brings those photos back in, blurred, for
+    // anyone curious to see more of the medical side of the story.
+    (function themeToggle() {
+      const btn = document.getElementById("theme-toggle");
+      if (!btn) return;
+
+      function sync() {
+        const theme = document.documentElement.getAttribute("data-theme") || "light";
+        btn.textContent = theme === "light" ? "Dark" : "Light";
+        btn.setAttribute(
+          "aria-label",
+          theme === "light" ? "Switch to dark mode" : "Switch to light mode"
+        );
+      }
+
+      sync();
+
+      btn.addEventListener("click", () => {
+        const next =
+          document.documentElement.getAttribute("data-theme") === "light" ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", next);
+        try {
+          localStorage.setItem("epilepsy-theme", next);
+        } catch (e) {}
+        sync();
+      });
+    })();
+
+    // Surgery/scar photos (dark mode only) start blurred; tapping one
+    // reveals the real photo, tapping again re-blurs it.
+    (function surgeryPhotoReveal() {
+      const buttons = document.querySelectorAll(".chapter__photo-reveal");
+      buttons.forEach((btn) => {
+        const hint = btn.querySelector(".chapter__photo-hint");
+        btn.addEventListener("click", () => {
+          const revealed = btn.classList.toggle("is-revealed");
+          btn.setAttribute("aria-pressed", revealed ? "true" : "false");
+          btn.setAttribute("aria-label", revealed ? "Blur this photo again" : "Show the unblurred photo");
+          if (hint) hint.textContent = revealed ? "Tap to blur" : "Tap to reveal";
+        });
+      });
+    })();
+
     // Keep the hero's top padding matched to the real (fixed) header height,
     // since the header's content (funds stats, race clock, donor ticker,
     // etc.) can wrap and grow across viewport sizes.
