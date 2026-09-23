@@ -32,7 +32,7 @@
           localStorage.setItem("epilepsy-theme", next);
         } catch (e) {}
         sync();
-        if (window.__fixMermaidTitleColor) window.__fixMermaidTitleColor();
+        if (window.__rerenderMermaidForTheme) window.__rerenderMermaidForTheme();
       });
     })();
 
@@ -2017,10 +2017,20 @@
     (function () {
       if (!window.mermaid) return;
 
-      // Mermaid's timeline diagram hardcodes its title text to a fixed
-      // dark gray regardless of theme — fine against a light background,
-      // but nearly invisible against our dark-mode background. Force it
-      // to match the current theme after each render.
+      // Keep each diagram's original source around so we can fully
+      // re-render it (with correct colors) whenever the theme toggle is
+      // clicked — mermaid doesn't re-theme already-rendered SVGs on its
+      // own.
+      const mermaidSources = new Map();
+      document.querySelectorAll(".mermaid").forEach((el) => {
+        mermaidSources.set(el, el.textContent);
+      });
+
+      // Mermaid's timeline diagram also hardcodes its title text to a
+      // fixed dark gray regardless of theme — fine against a light
+      // background, but nearly invisible against a dark one. Force it to
+      // match the current theme after every render, as a belt-and-braces
+      // fix on top of the full re-render below.
       function fixTimelineTitleColor(root) {
         const isLight = document.documentElement.getAttribute("data-theme") === "light";
         const color = isLight ? "#1c1915" : "#ebe4d8";
@@ -2034,9 +2044,39 @@
           }
         });
       }
-      // Exposed so the theme toggle can re-tint already-rendered diagrams
-      // without a full mermaid re-render.
-      window.__fixMermaidTitleColor = fixTimelineTitleColor;
+
+      // Mermaid's timeline section colors also aren't controllable via
+      // the documented theme variables in this version — it always
+      // generates its own saturated hue rotation. In dark mode that reads
+      // a bit harsh, so swap each "section-N" box to a very light, pale
+      // color (with dark text on top) directly on the rendered SVG.
+      const lightSectionPalette = [
+        "#d6e4ff",
+        "#fff3b0",
+        "#dcf7cf",
+        "#e8dbff",
+        "#ffd9ee",
+        "#ffd8d3",
+        "#ffe6c2",
+        "#cdf3f0"
+      ];
+      function applyDarkTimelinePalette(root) {
+        const isLight = document.documentElement.getAttribute("data-theme") === "light";
+        if (isLight) return;
+        (root || document).querySelectorAll('#mermaid-timeline g[class*="section-"]').forEach((g) => {
+          const m = /section-(-?\d+)\b/.exec(g.getAttribute("class") || "");
+          if (!m) return;
+          const idx = parseInt(m[1], 10);
+          if (isNaN(idx) || idx < 0) return;
+          const color = lightSectionPalette[idx % lightSectionPalette.length];
+          g.querySelectorAll("rect, path, circle").forEach((shape) => {
+            shape.style.fill = color;
+          });
+          g.querySelectorAll("text").forEach((t) => {
+            t.style.fill = "#1c1915";
+          });
+        });
+      }
 
       const details = document.getElementById("site-architecture-wrap");
 
@@ -2046,25 +2086,52 @@
       );
       if (publicDiagrams.length) {
         try {
-          Promise.resolve(window.mermaid.run({ nodes: publicDiagrams })).then(() =>
-            fixTimelineTitleColor()
-          );
+          Promise.resolve(window.mermaid.run({ nodes: publicDiagrams })).then(() => {
+            fixTimelineTitleColor();
+            applyDarkTimelinePalette();
+          });
         } catch (err) {
           /* ignore render errors, diagram just stays as plain text */
         }
       }
 
-      if (!details) return;
-      let rendered = false;
-      details.addEventListener("toggle", () => {
-        if (!details.open || rendered) return;
-        rendered = true;
+      let archRendered = false;
+      if (details) {
+        details.addEventListener("toggle", () => {
+          if (!details.open || archRendered) return;
+          archRendered = true;
+          try {
+            Promise.resolve(window.mermaid.run({ querySelector: "#arch-mermaid" })).then(() =>
+              fixTimelineTitleColor()
+            );
+          } catch (err) {
+            archRendered = false;
+          }
+        });
+      }
+
+      // Re-init mermaid's theme variables for the current data-theme, then
+      // fully re-render every diagram that's already been drawn (from its
+      // saved original source) so colors actually switch with the toggle,
+      // not just the title text.
+      window.__rerenderMermaidForTheme = function () {
+        if (window.applyMermaidTheme) window.applyMermaidTheme();
+        const toRerender = [];
+        mermaidSources.forEach((src, el) => {
+          if (el.querySelector("svg")) {
+            el.removeAttribute("data-processed");
+            el.textContent = src;
+            toRerender.push(el);
+          }
+        });
+        if (!toRerender.length) return;
         try {
-          Promise.resolve(window.mermaid.run({ querySelector: "#arch-mermaid" })).then(() =>
-            fixTimelineTitleColor()
-          );
+          Promise.resolve(window.mermaid.run({ nodes: toRerender })).then(() => {
+            fixTimelineTitleColor();
+            applyDarkTimelinePalette();
+          });
         } catch (err) {
-          rendered = false;
+          /* leave as-is if re-render fails */
         }
-      });
+      };
     })();
