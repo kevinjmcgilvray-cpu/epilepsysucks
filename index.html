@@ -783,7 +783,10 @@ flowchart TD
 
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
   <script>
-    if (window.mermaid) {
+    // Exposed so app.js can re-initialize + re-render diagrams when the
+    // light/dark toggle is clicked (mermaid doesn't auto-theme itself).
+    window.applyMermaidTheme = function () {
+      if (!window.mermaid) return;
       var isLightTheme = document.documentElement.getAttribute("data-theme") === "light";
       mermaid.initialize({
         startOnLoad: false,
@@ -814,7 +817,8 @@ flowchart TD
               fontSize: "18px"
             }
       });
-    }
+    };
+    window.applyMermaidTheme();
   </script>
   <script src="app.js"></script>
   <script defer src="/_vercel/insights/script.js"></script>
