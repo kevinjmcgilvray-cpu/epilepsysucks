@@ -1278,6 +1278,15 @@
       top: 5.5rem;
     }
 
+    /* A photo placed inline within the text column itself (chapter__body),
+       rather than in the sticky side photo slot — shouldn't stick or
+       stretch full width. */
+    .chapter--with-photo .chapter__photo--inline {
+      position: static;
+      margin: 1.25rem 0 0;
+      max-width: 28rem;
+    }
+
     .chapter--with-photo .chapter__body .chapter__year {
       margin-top: 0;
     }
