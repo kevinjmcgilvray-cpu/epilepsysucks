@@ -51,6 +51,18 @@
       });
     })();
 
+    (function seizureVideoReveal() {
+      const frame = document.querySelector(".seizure-video__frame");
+      if (!frame) return;
+      const btn = frame.querySelector(".seizure-video__reveal");
+      if (!btn) return;
+      btn.addEventListener("click", () => {
+        frame.classList.add("is-revealed");
+        btn.setAttribute("aria-pressed", "true");
+        btn.setAttribute("aria-label", "Video revealed");
+      });
+    })();
+
     // Keep the hero's top padding matched to the real (fixed) header height,
     // since the header's content (funds stats, race clock, donor ticker,
     // etc.) can wrap and grow across viewport sizes.
