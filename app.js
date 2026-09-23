@@ -9,22 +9,27 @@
     // Light mode = the clean, professional default (no surgery/scar
     // photos). Dark mode brings those photos back in, blurred, for
     // anyone curious to see more of the medical side of the story.
+    // Multiple buttons on the page (the nav pill, plus the hint in the
+    // "sting isn't there anymore" section) all toggle the same theme —
+    // each can carry its own label text via data-label-dark/-light.
     (function themeToggle() {
-      const btn = document.getElementById("theme-toggle");
-      if (!btn) return;
+      const buttons = Array.prototype.slice.call(document.querySelectorAll(".theme-toggle-btn"));
+      if (!buttons.length) return;
 
       function sync() {
         const theme = document.documentElement.getAttribute("data-theme") || "light";
-        btn.textContent = theme === "light" ? "Dark" : "Light";
-        btn.setAttribute(
-          "aria-label",
-          theme === "light" ? "Switch to dark mode" : "Switch to light mode"
-        );
+        buttons.forEach((btn) => {
+          const darkLabel = btn.getAttribute("data-label-dark") || "Dark";
+          const lightLabel = btn.getAttribute("data-label-light") || "Light";
+          btn.textContent = theme === "light" ? darkLabel : lightLabel;
+          btn.setAttribute(
+            "aria-label",
+            theme === "light" ? "Switch to dark mode" : "Switch to light mode"
+          );
+        });
       }
 
-      sync();
-
-      btn.addEventListener("click", () => {
+      function toggle() {
         const next =
           document.documentElement.getAttribute("data-theme") === "light" ? "dark" : "light";
         document.documentElement.setAttribute("data-theme", next);
@@ -33,7 +38,10 @@
         } catch (e) {}
         sync();
         if (window.__rerenderMermaidForTheme) window.__rerenderMermaidForTheme();
-      });
+      }
+
+      sync();
+      buttons.forEach((btn) => btn.addEventListener("click", toggle));
     })();
 
     // Surgery/scar photos (dark mode only) start blurred; tapping one
