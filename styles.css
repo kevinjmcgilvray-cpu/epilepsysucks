@@ -2181,6 +2181,68 @@
       margin-bottom: 0;
     }
 
+    .seizure-video {
+      margin: 1.6rem 0 0;
+      max-width: 26rem;
+    }
+
+    .seizure-video__frame {
+      position: relative;
+      overflow: hidden;
+      border-radius: 0.65rem;
+      background: #000;
+      line-height: 0;
+    }
+
+    .seizure-video__el {
+      display: block;
+      width: 100%;
+      height: auto;
+      filter: blur(16px) saturate(0.8);
+      transition: filter 0.4s ease;
+    }
+
+    .seizure-video__frame.is-revealed .seizure-video__el {
+      filter: none;
+    }
+
+    .seizure-video__frame:not(.is-revealed) .seizure-video__el {
+      pointer-events: none;
+    }
+
+    .seizure-video__reveal {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      margin: 0;
+      border: 0;
+      background: rgba(20, 17, 15, 0.15);
+      cursor: pointer;
+    }
+
+    .seizure-video__reveal .chapter__photo-hint {
+      position: static;
+      transform: none;
+      opacity: 0.92;
+    }
+
+    .seizure-video__reveal:hover .chapter__photo-hint,
+    .seizure-video__reveal:focus-visible .chapter__photo-hint {
+      opacity: 1;
+    }
+
+    .seizure-video__reveal:focus-visible {
+      outline: 2px solid var(--epi);
+      outline-offset: 2px;
+    }
+
+    .seizure-video__frame.is-revealed .seizure-video__reveal {
+      display: none;
+    }
+
     .history-note {
       margin: 2.5rem 0 1rem;
       max-width: 46rem;
