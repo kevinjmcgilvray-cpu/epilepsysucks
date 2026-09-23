@@ -32,6 +32,7 @@
           localStorage.setItem("epilepsy-theme", next);
         } catch (e) {}
         sync();
+        if (window.__fixMermaidTitleColor) window.__fixMermaidTitleColor();
       });
     })();
 
@@ -2016,6 +2017,27 @@
     (function () {
       if (!window.mermaid) return;
 
+      // Mermaid's timeline diagram hardcodes its title text to a fixed
+      // dark gray regardless of theme — fine against a light background,
+      // but nearly invisible against our dark-mode background. Force it
+      // to match the current theme after each render.
+      function fixTimelineTitleColor(root) {
+        const isLight = document.documentElement.getAttribute("data-theme") === "light";
+        const color = isLight ? "#1c1915" : "#ebe4d8";
+        (root || document).querySelectorAll(".mermaid svg text").forEach((t) => {
+          const isTitle =
+            t.getAttribute("font-weight") === "bold" &&
+            String(t.getAttribute("font-size") || "").indexOf("ex") !== -1;
+          if (isTitle) {
+            t.setAttribute("fill", color);
+            t.style.fill = color;
+          }
+        });
+      }
+      // Exposed so the theme toggle can re-tint already-rendered diagrams
+      // without a full mermaid re-render.
+      window.__fixMermaidTitleColor = fixTimelineTitleColor;
+
       const details = document.getElementById("site-architecture-wrap");
 
       const publicDiagrams = Array.prototype.filter.call(
@@ -2024,7 +2046,9 @@
       );
       if (publicDiagrams.length) {
         try {
-          window.mermaid.run({ nodes: publicDiagrams });
+          Promise.resolve(window.mermaid.run({ nodes: publicDiagrams })).then(() =>
+            fixTimelineTitleColor()
+          );
         } catch (err) {
           /* ignore render errors, diagram just stays as plain text */
         }
@@ -2036,7 +2060,9 @@
         if (!details.open || rendered) return;
         rendered = true;
         try {
-          window.mermaid.run({ querySelector: "#arch-mermaid" });
+          Promise.resolve(window.mermaid.run({ querySelector: "#arch-mermaid" })).then(() =>
+            fixTimelineTitleColor()
+          );
         } catch (err) {
           rendered = false;
         }
