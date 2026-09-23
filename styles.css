@@ -1357,6 +1357,21 @@
       margin-top: 0.15rem;
     }
 
+    /* Stack of several blurred/reveal photos inside one chapter photo
+       column (e.g. multiple 2017 surgery photos, dark mode only). */
+    .chapter__photo--stack {
+      border: none;
+      overflow: visible;
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+    }
+
+    .chapter__photo-item {
+      border: 1px solid var(--line);
+      overflow: hidden;
+    }
+
     html[data-theme="light"] .chapter--with-photo--surgery .chapter__photo--surgery {
       display: none;
     }
