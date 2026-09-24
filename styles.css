@@ -1733,6 +1733,70 @@
       animation: live-track-blink 0.55s steps(2, end) infinite;
     }
 
+    .course-profile {
+      margin-top: 1.75rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--line);
+      display: grid;
+      gap: clamp(1.25rem, 3vw, 2rem);
+      grid-template-columns: minmax(14rem, 0.9fr) minmax(0, 1.2fr);
+      align-items: start;
+    }
+
+    .course-profile__facts {
+      display: grid;
+      gap: 0.7rem;
+    }
+
+    .course-profile__facts div {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem 0.85rem;
+      font-size: 0.92rem;
+      color: var(--paper-dim);
+      line-height: 1.45;
+    }
+
+    .course-profile__facts strong {
+      font-weight: 600;
+      color: var(--paper);
+      min-width: 7.5rem;
+    }
+
+    .course-profile__body .eyebrow {
+      margin-top: 0;
+      margin-bottom: 0.55rem;
+    }
+
+    .course-profile__body p {
+      margin: 0 0 0.85rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--paper-dim);
+      max-width: 40rem;
+    }
+
+    .course-profile__body p:last-child {
+      margin-bottom: 0;
+    }
+
+    .course-profile__source {
+      font-size: 0.8rem !important;
+      color: var(--paper-faint) !important;
+    }
+
+    .course-profile__source a {
+      color: var(--epi);
+      text-decoration: underline;
+      text-underline-offset: 0.15em;
+    }
+
+    @media (max-width: 800px) {
+      .course-profile {
+        grid-template-columns: 1fr;
+      }
+    }
+
     .course-map .training-status {
       margin-top: 0;
     }
