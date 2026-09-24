@@ -2228,18 +2228,30 @@
     /* Raw, first-person account of what a seizure actually feels like —
        kept as dark-mode-only content, same spirit as the blurred surgery
        photos: available for anyone curious enough to switch themes, but
-       not forced on every light-mode reader by default. */
-    .seizure-note {
-      display: block;
+       not forced on every light-mode reader by default. Sits side by
+       side with the seizures video: story on the left, footage on the
+       right. */
+    .seizure-feature {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(14rem, 0.95fr);
+      gap: clamp(1.25rem, 3vw, 2rem);
+      align-items: start;
+      margin-top: 2.75rem;
     }
 
-    html[data-theme="light"] .seizure-note {
+    html[data-theme="light"] .seizure-feature {
       display: none;
     }
 
+    @media (max-width: 800px) {
+      .seizure-feature {
+        grid-template-columns: 1fr;
+      }
+    }
+
     .seizure-note {
-      margin: 0 0 2.5rem;
-      max-width: 46rem;
+      margin: 0;
+      max-width: none;
       border: 1px solid var(--line);
       border-radius: 0.75rem;
       padding: clamp(1.1rem, 3vw, 1.6rem) clamp(1.25rem, 4vw, 1.85rem);
@@ -2271,12 +2283,8 @@
 
     .seizure-video {
       display: block;
-      margin: clamp(4.5rem, 6vw, 6rem) 0 0;
-      max-width: 22rem;
-    }
-
-    html[data-theme="light"] .seizure-video {
-      display: none;
+      margin: 0;
+      max-width: none;
     }
 
     .seizure-video figcaption {
