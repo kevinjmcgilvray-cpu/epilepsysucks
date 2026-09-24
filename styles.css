@@ -1192,18 +1192,30 @@
     }
 
     /* Photos flank the text: before/journey shots on the left, after
-       shots on the right, text column in the middle. Give this section
-       a bit more room than the standard wide container so the photo
-       columns can push further out toward the edges. */
+       shots on the right, text column in the middle. This section drops
+       most of the standard side padding and its inner container's width
+       cap so the photo columns sit flush against the edges of the
+       screen. The photo columns are a fixed width so they stay the same
+       size regardless of how much extra room opens up — only the text
+       column grows to soak up the freed space. */
+    #weight {
+      padding-left: clamp(1rem, 3vw, 2.5rem);
+      padding-right: clamp(1rem, 3vw, 2.5rem);
+    }
+
     #weight .section__inner--wide {
-      max-width: 76rem;
+      max-width: none;
     }
 
     .weight-split {
       display: grid;
-      grid-template-columns: minmax(15rem, 1.2fr) minmax(0, 1.1fr) minmax(15rem, 1.2fr);
+      grid-template-columns: 23.3rem minmax(0, 1fr) 23.3rem;
       gap: clamp(2rem, 5vw, 4rem);
       align-items: start;
+    }
+
+    .weight-split__body {
+      max-width: 42rem;
     }
 
     .weight-split__photos {
