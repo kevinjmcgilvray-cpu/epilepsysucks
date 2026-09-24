@@ -2267,6 +2267,43 @@
       display: none;
     }
 
+    /* Nudge shown only in light mode (where surgery photos are hidden)
+       pointing people toward dark mode to see them. Not needed in dark
+       mode since those photos are already visible there. */
+    .theme-hint {
+      display: none;
+    }
+
+    html[data-theme="light"] .theme-hint {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.85rem 1.25rem;
+      margin: 2rem 0 0;
+      padding: 0.85rem 1.1rem;
+      max-width: 40rem;
+      border: 1px dashed var(--line);
+      border-radius: 0.65rem;
+      background: var(--surface-muted);
+    }
+
+    .theme-hint p {
+      flex: 1 1 16rem;
+      margin: 0;
+      font-size: 0.85rem;
+      line-height: 1.55;
+      color: var(--paper-dim);
+    }
+
+    .theme-hint strong {
+      color: var(--epi);
+    }
+
+    .theme-hint .theme-toggle-btn {
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
     .history-note {
       margin: 2.5rem 0 1rem;
       max-width: 46rem;
