@@ -2270,8 +2270,21 @@
     }
 
     .seizure-video {
-      margin: 1.6rem 0 0;
-      max-width: 26rem;
+      display: block;
+      margin: clamp(4.5rem, 6vw, 6rem) 0 0.35rem;
+      max-width: 22rem;
+    }
+
+    html[data-theme="light"] .seizure-video {
+      display: none;
+    }
+
+    .seizure-video figcaption {
+      margin-top: 0.55rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--paper-faint);
     }
 
     .seizure-video__frame {
