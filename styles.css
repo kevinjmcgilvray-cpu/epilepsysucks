@@ -2256,6 +2256,17 @@
       border-radius: 0.75rem;
       padding: clamp(1.1rem, 3vw, 1.6rem) clamp(1.25rem, 4vw, 1.85rem);
       background: var(--surface-muted);
+      /* The video column runs taller than the note. Stick the note near
+         the top while scrolling past it, so "Community college" lands
+         right under the note instead of leaving dead space beneath it. */
+      position: sticky;
+      top: 5.5rem;
+    }
+
+    @media (max-width: 800px) {
+      .seizure-note {
+        position: static;
+      }
     }
 
     .seizure-note .eyebrow {
