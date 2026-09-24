@@ -2009,7 +2009,7 @@
 
     (function initPhotoLiftOnScroll() {
       const photos = document.querySelectorAll(
-        ".chapter__photo, .weight-photos__main, .weight-photos__row figure, .split__image"
+        ".chapter__photo, .weight-split__photos figure, .split__image"
       );
       if (!photos.length || !("IntersectionObserver" in window)) return;
 
