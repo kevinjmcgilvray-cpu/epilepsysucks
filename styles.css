@@ -94,6 +94,30 @@
       -webkit-font-smoothing: antialiased;
     }
 
+    .skip-link {
+      position: absolute;
+      top: -4rem;
+      left: 1rem;
+      z-index: 100;
+      padding: 0.65rem 1.1rem;
+      border-radius: 0.5rem;
+      background: var(--epi);
+      color: #fff;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+      transition: top 0.2s ease;
+    }
+
+    .skip-link:focus {
+      top: 1rem;
+      outline: 2px solid #fff;
+      outline-offset: 2px;
+    }
+
     .bg-lightning {
       position: fixed;
       inset: 0;
@@ -409,7 +433,10 @@
       text-align: center;
       font-size: clamp(0.68rem, 1.6vw, 0.78rem);
       letter-spacing: 0.04em;
-      color: var(--paper-faint);
+      /* --paper-faint measured ~3:1 against this header's busy hero-image
+         backdrop (fails WCAG AA's 4.5:1 for normal-size text);
+         --paper-dim measures ~6-8:1 in the same spot. */
+      color: var(--paper-dim);
     }
 
     .race-clock__caption strong {
@@ -819,6 +846,70 @@
         0 0 0 1px rgba(180, 140, 255, 0.28),
         0 0 16px rgba(155, 107, 255, 0.38),
         inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    }
+
+    /* Re-ask CTA: nav collapses to a hamburger on mobile (burying the
+       Donate link), and long-scroll readers on desktop lose the hero's
+       Donate button once they're a few sections deep. This stays pinned
+       once someone scrolls past the hero, where the page already makes
+       its main ask. */
+    .sticky-donate {
+      position: fixed;
+      right: clamp(1rem, 3vw, 1.5rem);
+      bottom: clamp(1rem, 3vw, 1.5rem);
+      z-index: 15;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.75rem 1.15rem;
+      border-radius: 999px;
+      border: 1px solid #c4a4ff;
+      background: linear-gradient(135deg, #9b6bff 0%, #7a45e8 55%, #6b35d8 100%);
+      color: var(--btn-on-color);
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      text-decoration: none;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.22);
+      box-shadow:
+        0 0 0 1px rgba(180, 140, 255, 0.28),
+        0 8px 24px rgba(0, 0, 0, 0.35),
+        0 0 16px rgba(155, 107, 255, 0.4);
+      opacity: 0;
+      transform: translateY(0.6rem) scale(0.96);
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s ease, filter 0.18s ease;
+    }
+
+    .sticky-donate.is-visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .sticky-donate:hover {
+      filter: brightness(1.08);
+      transform: translateY(-2px) scale(1.03);
+    }
+
+    .sticky-donate__icon {
+      font-size: 0.9rem;
+      line-height: 1;
+    }
+
+    @media (max-width: 480px) {
+      .sticky-donate {
+        padding: 0.7rem 1rem;
+        font-size: 0.76rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .sticky-donate {
+        transition: opacity 0.2s ease;
+      }
     }
 
     .btn--purple:hover {
