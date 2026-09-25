@@ -137,49 +137,51 @@
         </div>
       </div>
       <button class="nav__toggle" id="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
-      <ul class="nav__links" id="nav-links">
-        <li><a class="nav__cta" href="#story">My story</a></li>
-        <li><a class="nav__cta" href="#freedom">Freedom</a></li>
-        <li><a class="nav__cta" href="#weight">Weight loss</a></li>
-        <li><a class="nav__cta" href="#training">Training</a></li>
-        <li><a class="nav__cta" href="#marathon">LA Marathon</a></li>
-        <li><a class="nav__cta" href="#comments">Comments</a></li>
-        <li><button type="button" class="nav__cta theme-toggle-btn" id="theme-toggle" data-label-dark="Dark" data-label-light="Light" aria-label="Switch to dark mode">Dark</button></li>
-        <li><a class="nav__cta" href="https://haku.ly/9795a39b3b" target="_blank" rel="noopener noreferrer">Donate</a></li>
-      </ul>
-      <div class="race-clock-block">
-        <div
-          class="race-clock"
-          id="race-clock"
-          role="timer"
-          aria-live="polite"
-          aria-label="Countdown to LA Marathon race morning, March 7, 2027"
-        >
-          <div class="race-clock__units">
-            <div class="race-clock__unit">
-              <span class="race-clock__digits" id="race-days" data-value="">000</span>
-              <span class="race-clock__label">Days</span>
+      <div class="nav__right">
+        <div class="race-clock-block">
+          <div
+            class="race-clock"
+            id="race-clock"
+            role="timer"
+            aria-live="polite"
+            aria-label="Countdown to LA Marathon race morning, March 7, 2027"
+          >
+            <div class="race-clock__units">
+              <div class="race-clock__unit">
+                <span class="race-clock__digits" id="race-days" data-value="">000</span>
+                <span class="race-clock__label">Days</span>
+              </div>
+              <span class="race-clock__sep" aria-hidden="true">:</span>
+              <div class="race-clock__unit">
+                <span class="race-clock__digits" id="race-hours" data-value="">00</span>
+                <span class="race-clock__label">Hours</span>
+              </div>
+              <span class="race-clock__sep" aria-hidden="true">:</span>
+              <div class="race-clock__unit">
+                <span class="race-clock__digits" id="race-mins" data-value="">00</span>
+                <span class="race-clock__label">Mins</span>
+              </div>
             </div>
-            <span class="race-clock__sep" aria-hidden="true">:</span>
-            <div class="race-clock__unit">
-              <span class="race-clock__digits" id="race-hours" data-value="">00</span>
-              <span class="race-clock__label">Hours</span>
-            </div>
-            <span class="race-clock__sep" aria-hidden="true">:</span>
-            <div class="race-clock__unit">
-              <span class="race-clock__digits" id="race-mins" data-value="">00</span>
-              <span class="race-clock__label">Mins</span>
-            </div>
+            <p class="race-clock__caption">Race morning until the LA Marathon!!</p>
           </div>
-          <p class="race-clock__caption">Race morning until the LA Marathon!!</p>
+          <!-- Kept outside the timer's aria-live region on purpose: this
+               cycles every ~2.6s and would otherwise cause the countdown's
+               live region to re-announce constantly for screen readers. -->
+          <div class="donor-ticker" id="donor-ticker">
+            <span class="donor-ticker__name" id="donor-ticker-name">Kevin McGilvray</span>
+            <span class="donor-ticker__label">thank you for your donation!</span>
+          </div>
         </div>
-        <!-- Kept outside the timer's aria-live region on purpose: this
-             cycles every ~2.6s and would otherwise cause the countdown's
-             live region to re-announce constantly for screen readers. -->
-        <div class="donor-ticker" id="donor-ticker">
-          <span class="donor-ticker__name" id="donor-ticker-name">Kevin McGilvray</span>
-          <span class="donor-ticker__label">thank you for your donation!</span>
-        </div>
+        <ul class="nav__links" id="nav-links">
+          <li><a class="nav__cta" href="#story">My story</a></li>
+          <li><a class="nav__cta" href="#freedom">Freedom</a></li>
+          <li><a class="nav__cta" href="#weight">Weight loss</a></li>
+          <li><a class="nav__cta" href="#training">Training</a></li>
+          <li><a class="nav__cta" href="#marathon">LA Marathon</a></li>
+          <li><a class="nav__cta" href="#comments">Comments</a></li>
+          <li><button type="button" class="nav__cta theme-toggle-btn" id="theme-toggle" data-label-dark="Dark" data-label-light="Light" aria-label="Switch to dark mode">Dark</button></li>
+          <li><a class="nav__cta" href="https://haku.ly/9795a39b3b" target="_blank" rel="noopener noreferrer">Donate</a></li>
+        </ul>
       </div>
     </div>
   </header>

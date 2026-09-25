@@ -155,7 +155,7 @@
 
     .nav__top {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
       align-items: start;
       column-gap: 1rem;
       row-gap: 0.2rem;
@@ -291,15 +291,29 @@
       letter-spacing: 0.01em;
     }
 
-    .race-clock-block {
-      grid-column: 1 / -1;
-      grid-row: 4;
-      justify-self: center;
+    /* nav__right groups the countdown/donor block with the nav links so
+       the countdown sits right next to the "My story" button on wide
+       screens; on narrow screens it becomes transparent (see the
+       max-width: 800px block) so both fall back into nav__top's own
+       stacked flow, with the countdown shown full-size and full-width. */
+    .nav__right {
+      grid-column: 2;
+      grid-row: 1;
+      min-width: 0;
       display: flex;
-      flex-direction: column;
+      flex-wrap: wrap;
       align-items: center;
-      gap: 0.3rem;
-      padding-top: 0.1rem;
+      justify-content: flex-end;
+      gap: 0.5rem 1rem;
+    }
+
+    .race-clock-block {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.5rem;
     }
 
     .race-clock {
@@ -309,7 +323,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.3rem;
+      gap: 0.15rem;
       margin: 0;
     }
 
@@ -332,10 +346,10 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: clamp(2.6rem, 9vw, 3.4rem);
-      padding: 0.35rem 0.45rem 0.28rem;
+      min-width: 2rem;
+      padding: 0.22rem 0.32rem 0.18rem;
       font-family: "Share Tech Mono", ui-monospace, monospace;
-      font-size: clamp(1.35rem, 4.5vw, 1.85rem);
+      font-size: 1.05rem;
       font-weight: 400;
       letter-spacing: 0.08em;
       line-height: 1;
@@ -380,8 +394,8 @@
 
     .race-clock__label {
       font-family: var(--font-body);
-      font-size: 0.62rem;
-      letter-spacing: 0.16em;
+      font-size: 0.5rem;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
       color: color-mix(in srgb, var(--neon) 72%, var(--paper-faint));
       text-shadow: 0 0 8px var(--neon-dim);
@@ -389,9 +403,9 @@
 
     .race-clock__sep {
       align-self: center;
-      padding-bottom: 1.05rem;
+      padding-bottom: 0.7rem;
       font-family: "Share Tech Mono", ui-monospace, monospace;
-      font-size: clamp(1.1rem, 3.5vw, 1.45rem);
+      font-size: 0.9rem;
       color: var(--neon);
       text-shadow: 0 0 10px var(--neon);
       opacity: 0.85;
@@ -405,10 +419,11 @@
 
     .race-clock__caption {
       margin: 0;
-      max-width: 16rem;
+      max-width: 10rem;
       text-align: center;
-      font-size: clamp(0.68rem, 1.6vw, 0.78rem);
-      letter-spacing: 0.04em;
+      font-size: 0.62rem;
+      line-height: 1.2;
+      letter-spacing: 0.02em;
       color: var(--paper-faint);
     }
 
@@ -429,8 +444,6 @@
     }
 
     .nav__links {
-      grid-column: 2;
-      grid-row: 1;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
@@ -638,24 +651,16 @@
     .donor-ticker {
       display: flex;
       align-items: baseline;
-      justify-content: center;
-      gap: 0.4rem;
-      max-width: min(88vw, 26rem);
+      justify-content: flex-start;
+      gap: 0.3rem;
+      max-width: 15rem;
       margin: 0;
-      padding: 0.35rem 0.9rem;
+      padding: 0.28rem 0.6rem;
       border-radius: 999px;
       border: 1px solid color-mix(in srgb, var(--epi) 35%, transparent);
       background: color-mix(in srgb, var(--epi) 12%, transparent);
-      font-size: 0.8rem;
+      font-size: 0.62rem;
       white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    @media (max-width: 640px) {
-      .donor-ticker {
-        font-size: 0.74rem;
-      }
     }
 
     .donor-ticker__label {
@@ -663,6 +668,11 @@
     }
 
     .donor-ticker__name {
+      display: inline-block;
+      max-width: 6.5rem;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
       color: var(--epi);
       font-weight: 700;
       transition: opacity 0.35s ease;
@@ -2659,9 +2669,20 @@
         font-size: 0.78rem;
       }
 
+      .nav__right {
+        display: contents;
+      }
+
       .race-clock-block {
         width: 100%;
+        flex-direction: column;
+        justify-content: center;
+        gap: 0.3rem;
         padding-top: 0.25rem;
+      }
+
+      .race-clock {
+        gap: 0.3rem;
       }
 
       .race-clock__units {
@@ -2669,12 +2690,38 @@
       }
 
       .race-clock__caption {
+        max-width: 16rem;
         text-align: center;
+        font-size: 0.75rem;
+      }
+
+      .race-clock__label {
+        font-size: 0.62rem;
+      }
+
+      .race-clock__sep {
+        padding-bottom: 1.05rem;
+        font-size: 1.25rem;
       }
 
       .race-clock__digits {
         min-width: 2.35rem;
         padding: 0.28rem 0.35rem 0.22rem;
+        font-size: 1.6rem;
+      }
+
+      .donor-ticker {
+        max-width: min(88vw, 26rem);
+        justify-content: center;
+        padding: 0.35rem 0.9rem;
+        font-size: 0.8rem;
+        gap: 0.4rem;
+      }
+
+      .donor-ticker__name {
+        max-width: none;
+        overflow: visible;
+        text-overflow: unset;
       }
 
       .nav__toggle {
