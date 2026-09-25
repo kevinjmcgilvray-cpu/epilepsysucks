@@ -100,7 +100,7 @@
       z-index: 0;
       pointer-events: none;
       background:
-        url("epilepsy-sucks-images/lightning-seizure.jpg") center center / cover no-repeat;
+        url("epilepsy-sucks-images/lightning-seizure.webp") center center / cover no-repeat;
       opacity: 0.42;
       mix-blend-mode: screen;
     }
@@ -581,7 +581,7 @@
       z-index: 1;
       pointer-events: none;
       background:
-        url("epilepsy-sucks-images/cerebral-hemiatrophy-mri.png") left center / cover no-repeat;
+        url("epilepsy-sucks-images/cerebral-hemiatrophy-mri.webp") left center / cover no-repeat;
       opacity: 0.42;
       -webkit-mask-image: linear-gradient(to right, #000 0%, #000 42%, transparent 100%);
       mask-image: linear-gradient(to right, #000 0%, #000 42%, transparent 100%);
