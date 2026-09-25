@@ -164,6 +164,13 @@
             </div>
             <p class="race-clock__caption">Race morning until the LA Marathon!!</p>
           </div>
+          <!-- Kept outside the timer's aria-live region on purpose: this
+               cycles every ~2.6s and would otherwise cause the countdown's
+               live region to re-announce constantly for screen readers. -->
+          <div class="donor-ticker" id="donor-ticker">
+            <span class="donor-ticker__name" id="donor-ticker-name">Kevin McGilvray</span>
+            <span class="donor-ticker__label">thank you for your donation!</span>
+          </div>
         </div>
         <ul class="nav__links" id="nav-links">
           <li><a class="nav__cta" href="#story">My story</a></li>
@@ -175,13 +182,6 @@
           <li><button type="button" class="nav__cta theme-toggle-btn" id="theme-toggle" data-label-dark="Dark" data-label-light="Light" aria-label="Switch to dark mode">Dark</button></li>
           <li><a class="nav__cta" href="https://haku.ly/9795a39b3b" target="_blank" rel="noopener noreferrer">Donate</a></li>
         </ul>
-        <!-- Kept outside the timer's aria-live region on purpose: this
-             cycles every ~2.6s and would otherwise cause the countdown's
-             live region to re-announce constantly for screen readers. -->
-        <div class="donor-ticker" id="donor-ticker">
-          <span class="donor-ticker__name" id="donor-ticker-name">Kevin McGilvray</span>
-          <span class="donor-ticker__label">thank you for your donation!</span>
-        </div>
       </div>
     </div>
   </header>
