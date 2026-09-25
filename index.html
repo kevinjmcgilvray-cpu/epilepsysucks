@@ -78,6 +78,8 @@
 </head>
 <body>
 
+  <a class="skip-link" href="#top">Skip to content</a>
+
   <div class="bg-lightning" aria-hidden="true"></div>
   <header class="nav" id="nav">
     <div class="nav__top">
@@ -867,13 +869,28 @@ flowchart TD
     </section>
   </main>
 
+  <a
+    class="sticky-donate"
+    id="sticky-donate"
+    href="https://haku.ly/9795a39b3b"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Donate to Kevin's LA Marathon fundraiser for CURE Epilepsy"
+  >
+    <span class="sticky-donate__icon" aria-hidden="true">♥</span>
+    Donate
+  </a>
+
   <footer class="footer">
     <p><strong>Epilepsy Sucks</strong> — Kevin’s story, said plainly.</p>
     <p>Not medical advice. Talk with a clinician for care decisions.</p>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
   <script>
+    // Mermaid.js itself (~900KB) is loaded lazily by app.js, only once the
+    // timeline diagram is about to scroll into view (or the site-architecture
+    // <details> is opened) — not on every single page load.
+    //
     // Exposed so app.js can re-initialize + re-render diagrams when the
     // light/dark toggle is clicked (mermaid doesn't auto-theme itself).
     window.applyMermaidTheme = function () {
@@ -909,7 +926,6 @@ flowchart TD
             }
       });
     };
-    window.applyMermaidTheme();
   </script>
   <script src="app.js"></script>
   <script defer src="/_vercel/insights/script.js"></script>

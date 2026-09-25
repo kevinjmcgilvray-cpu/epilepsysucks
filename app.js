@@ -6,6 +6,35 @@
       nav.classList.toggle("is-scrolled", window.scrollY > 24);
     }, { passive: true });
 
+    // Sticky re-ask Donate button: hidden while the hero (which has its
+    // own big Donate button) is in view, then pinned bottom-right for the
+    // rest of the scroll so it's reachable without hunting through the
+    // (collapsed-on-mobile) nav.
+    (function stickyDonate() {
+      const btn = document.getElementById("sticky-donate");
+      const hero = document.querySelector(".hero");
+      if (!btn || !hero) return;
+      if ("IntersectionObserver" in window) {
+        // Show the button once the hero has scrolled fully out of view
+        // (not just partially — its own Donate button is still visible
+        // and reachable up until then).
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            btn.classList.toggle("is-visible", !entry.isIntersecting);
+          });
+        });
+        observer.observe(hero);
+      } else {
+        window.addEventListener(
+          "scroll",
+          () => {
+            btn.classList.toggle("is-visible", window.scrollY > hero.offsetHeight);
+          },
+          { passive: true }
+        );
+      }
+    })();
+
     // Light mode = the clean, professional default (no surgery/scar
     // photos). Dark mode brings those photos back in, blurred, for
     // anyone curious to see more of the medical side of the story.
@@ -2035,16 +2064,46 @@
     })();
 
     (function () {
-      if (!window.mermaid) return;
+      const timeline = document.getElementById("mermaid-timeline");
+      const details = document.getElementById("site-architecture-wrap");
+      if (!timeline && !details) return;
 
       // Keep each diagram's original source around so we can fully
       // re-render it (with correct colors) whenever the theme toggle is
       // clicked — mermaid doesn't re-theme already-rendered SVGs on its
-      // own.
+      // own. Read before mermaid ever touches the page, so it works
+      // whether or not the library has loaded yet.
       const mermaidSources = new Map();
       document.querySelectorAll(".mermaid").forEach((el) => {
         mermaidSources.set(el, el.textContent);
       });
+
+      // Mermaid.js is a ~900KB third-party library used for exactly one
+      // visible diagram (plus a hidden dev-only one). Loading it on every
+      // page view — even for visitors who never scroll that far — wastes
+      // bandwidth and delays the page becoming interactive. Instead, fetch
+      // it lazily: shortly before the timeline diagram scrolls into view,
+      // or immediately if the site-architecture <details> is opened first.
+      const MERMAID_SRC = "https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js";
+      let mermaidPromise = null;
+      function ensureMermaid() {
+        if (mermaidPromise) return mermaidPromise;
+        mermaidPromise = new Promise((resolve, reject) => {
+          if (window.mermaid) {
+            resolve(window.mermaid);
+            return;
+          }
+          const script = document.createElement("script");
+          script.src = MERMAID_SRC;
+          script.onload = () => {
+            if (window.applyMermaidTheme) window.applyMermaidTheme();
+            resolve(window.mermaid);
+          };
+          script.onerror = () => reject(new Error("Failed to load mermaid"));
+          document.body.appendChild(script);
+        });
+        return mermaidPromise;
+      }
 
       // Mermaid's timeline diagram also hardcodes its title text to a
       // fixed dark gray regardless of theme — fine against a light
@@ -2098,13 +2157,12 @@
         });
       }
 
-      const details = document.getElementById("site-architecture-wrap");
-
-      const publicDiagrams = Array.prototype.filter.call(
-        document.querySelectorAll(".mermaid"),
-        (el) => !details || !details.contains(el)
-      );
-      if (publicDiagrams.length) {
+      function renderPublicDiagrams() {
+        const publicDiagrams = Array.prototype.filter.call(
+          document.querySelectorAll(".mermaid"),
+          (el) => !details || !details.contains(el)
+        );
+        if (!publicDiagrams.length) return;
         try {
           Promise.resolve(window.mermaid.run({ nodes: publicDiagrams })).then(() => {
             fixTimelineTitleColor();
@@ -2115,26 +2173,52 @@
         }
       }
 
+      // Kick off the library fetch a little before the timeline reaches
+      // the viewport, so the SVG is ready (or nearly) by the time it's
+      // actually visible instead of popping in after a visible delay.
+      if (timeline) {
+        if ("IntersectionObserver" in window) {
+          const observer = new IntersectionObserver(
+            (entries) => {
+              if (entries.some((entry) => entry.isIntersecting)) {
+                observer.disconnect();
+                ensureMermaid().then(renderPublicDiagrams).catch(() => {});
+              }
+            },
+            { rootMargin: "150px 0px" }
+          );
+          observer.observe(timeline);
+        } else {
+          // No IntersectionObserver support — fall back to loading it
+          // right away rather than never rendering the diagram at all.
+          ensureMermaid().then(renderPublicDiagrams).catch(() => {});
+        }
+      }
+
       let archRendered = false;
       if (details) {
         details.addEventListener("toggle", () => {
           if (!details.open || archRendered) return;
           archRendered = true;
-          try {
-            Promise.resolve(window.mermaid.run({ querySelector: "#arch-mermaid" })).then(() =>
-              fixTimelineTitleColor()
-            );
-          } catch (err) {
-            archRendered = false;
-          }
+          ensureMermaid()
+            .then(() =>
+              Promise.resolve(window.mermaid.run({ querySelector: "#arch-mermaid" })).then(() =>
+                fixTimelineTitleColor()
+              )
+            )
+            .catch(() => {
+              archRendered = false;
+            });
         });
       }
 
       // Re-init mermaid's theme variables for the current data-theme, then
       // fully re-render every diagram that's already been drawn (from its
       // saved original source) so colors actually switch with the toggle,
-      // not just the title text.
+      // not just the title text. If mermaid was never loaded (nobody
+      // scrolled to the diagram yet), there's nothing to re-theme.
       window.__rerenderMermaidForTheme = function () {
+        if (!window.mermaid) return;
         if (window.applyMermaidTheme) window.applyMermaidTheme();
         const toRerender = [];
         mermaidSources.forEach((src, el) => {
