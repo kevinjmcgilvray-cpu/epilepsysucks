@@ -2847,6 +2847,75 @@
       }
     }
 
+    /* Mobile landscape: the stacked header (brand + funds + cause + race
+       clock) can exceed the viewport height on short landscape screens,
+       pinning a fixed nav over the entire page and leaving nothing
+       scrollable. Compact it hard and let it scroll with the page
+       instead of staying pinned. */
+    @media screen and (orientation: landscape) and (max-height: 500px) {
+      .nav {
+        position: absolute;
+        gap: 0.2rem;
+        padding: calc(0.35rem + env(safe-area-inset-top, 0px)) clamp(0.85rem, 3vw, 1.5rem) 0.35rem;
+      }
+
+      .nav__brand {
+        font-size: 0.95rem;
+      }
+
+      .nav__funds {
+        font-size: 0.72rem;
+      }
+
+      .nav__funds strong {
+        font-size: 0.85rem;
+      }
+
+      .nav__funds-stat-label {
+        font-size: 0.55rem;
+      }
+
+      .nav__cause {
+        margin-top: 0.05rem;
+      }
+
+      .nav__cause-logo {
+        height: 1.05rem;
+      }
+
+      .nav__cause-text {
+        font-size: 0.7rem;
+      }
+
+      .race-clock-block {
+        padding-top: 0;
+      }
+
+      .race-clock__units {
+        gap: 0.3rem;
+      }
+
+      .race-clock__digits {
+        min-width: 1.7rem;
+        padding: 0.18rem 0.28rem 0.16rem;
+        font-size: 1rem;
+      }
+
+      .race-clock__caption {
+        font-size: 0.65rem;
+      }
+
+      .nav__toggle {
+        width: 2rem;
+        height: 2rem;
+      }
+
+      .nav__links {
+        max-height: 80vh;
+        overflow-y: auto;
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
 
