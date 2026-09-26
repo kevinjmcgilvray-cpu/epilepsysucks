@@ -115,6 +115,35 @@
       }
     })();
 
+    // Mobile landscape compact header: mirrors the
+    // `@media (orientation: landscape) and (max-height: 500px)` CSS rule
+    // via a class instead of relying purely on the media query. iOS
+    // Safari fires `orientationchange` (and sometimes `resize`) *before*
+    // it updates `window.innerHeight`/media-query values, so a pure CSS
+    // media query can briefly (or, on some versions, persistently) fail
+    // to match right after a rotation, even though the same query
+    // matches fine in Chrome. Re-checking actual pixel dimensions on a
+    // short delay works around that lag on both engines.
+    (function landscapeCompactHeader() {
+      const applyLandscapeClass = () => {
+        const isLandscape = window.innerWidth > window.innerHeight;
+        const isShort = window.innerHeight <= 500;
+        document.documentElement.classList.toggle("is-landscape-compact", isLandscape && isShort);
+      };
+      applyLandscapeClass();
+      window.addEventListener("resize", applyLandscapeClass, { passive: true });
+      window.addEventListener("orientationchange", () => {
+        // Safari underreports/overreports dimensions immediately after
+        // rotation; re-check a couple of times as it settles.
+        setTimeout(applyLandscapeClass, 50);
+        setTimeout(applyLandscapeClass, 300);
+        setTimeout(applyLandscapeClass, 600);
+      });
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", applyLandscapeClass, { passive: true });
+      }
+    })();
+
     toggle.addEventListener("click", () => {
       const open = links.classList.toggle("is-open");
       toggle.setAttribute("aria-expanded", String(open));
