@@ -172,9 +172,11 @@
     }
 
     .nav.is-scrolled {
-      background: var(--nav-solid);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--line);
+      /* Previously switched to a solid var(--nav-solid) bar + blur once
+         scrolled. Kept transparent/gradient-over-content on purpose now —
+         same look as the unscrolled top-of-page state. */
+      background: linear-gradient(to bottom, var(--nav-top), transparent);
+      backdrop-filter: blur(0px);
     }
 
     .nav__top {
