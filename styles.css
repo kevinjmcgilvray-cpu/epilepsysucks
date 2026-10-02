@@ -1310,9 +1310,9 @@
     }
 
     .seizure-chart {
-      margin-top: 2.75rem;
-      padding-top: 2rem;
-      border-top: 1px solid var(--line);
+      margin-bottom: 2.75rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--line);
       max-width: 42rem;
       margin-left: auto;
       margin-right: auto;
