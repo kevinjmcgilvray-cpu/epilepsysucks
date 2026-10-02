@@ -1309,6 +1309,119 @@
       color: var(--paper-faint);
     }
 
+    .seizure-chart {
+      margin-top: 2.75rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--line);
+      max-width: 42rem;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .seizure-chart__title {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--paper-dim);
+      margin-bottom: 1rem;
+    }
+
+    .seizure-chart__frame {
+      position: relative;
+      width: 100%;
+      overflow: visible;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, var(--chart-top), var(--chart-bottom));
+    }
+
+    .seizure-chart__frame svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .seizure-chart__grid {
+      stroke: var(--line);
+    }
+
+    .seizure-chart__axis {
+      stroke: var(--paper-faint);
+    }
+
+    .seizure-chart__label {
+      fill: var(--paper-faint);
+    }
+
+    .seizure-chart__callout {
+      fill: var(--paper);
+      text-anchor: middle;
+    }
+
+    .seizure-chart__bar {
+      fill: var(--epi);
+      cursor: pointer;
+      transition: fill 0.15s ease, opacity 0.15s ease;
+    }
+
+    .seizure-chart__bar--partial {
+      fill: color-mix(in srgb, var(--epi) 55%, transparent);
+      stroke: var(--epi);
+      stroke-width: 1.5;
+      stroke-dasharray: 3 3;
+    }
+
+    .seizure-chart__bar--milestone {
+      stroke: var(--accent);
+      stroke-width: 1.5;
+    }
+
+    .seizure-chart__bar.is-active,
+    .seizure-chart__bar:hover,
+    .seizure-chart__bar:focus-visible {
+      fill: var(--accent);
+      outline: none;
+    }
+
+    .seizure-chart__tooltip {
+      position: absolute;
+      z-index: 5;
+      min-width: 9rem;
+      padding: 0.55rem 0.75rem;
+      border: 1px solid var(--line);
+      background: var(--ink);
+      color: var(--paper);
+      font-size: 0.85rem;
+      line-height: 1.35;
+      pointer-events: none;
+      opacity: 0;
+      transform: translate(-50%, calc(-100% - 12px));
+      transition: opacity 0.15s ease;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    }
+
+    .seizure-chart__tooltip.is-on {
+      opacity: 1;
+    }
+
+    .seizure-chart__tooltip strong {
+      display: block;
+      color: var(--epi);
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .seizure-chart__tooltip span {
+      color: var(--paper-dim);
+      font-size: 0.8rem;
+    }
+
+    .seizure-chart__note {
+      margin-top: 0.85rem;
+      font-size: 0.9rem;
+      color: var(--paper-faint);
+    }
+
     /* Photos flank the text: before/journey shots on the left, after
        shots on the right, text column in the middle. This section drops
        most of the standard side padding and its inner container's width

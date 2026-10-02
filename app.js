@@ -1178,6 +1178,167 @@
         .catch(() => {});
     })();
 
+    // Seizure frequency by year, 2016–2026. Hand-tallied from Kevin's own
+    // seizure log (dates/times he's tracked since 2016) — not pulled from
+    // an API, since this is a fixed historical record rather than
+    // something logged live day-to-day like weigh-ins/training runs.
+    // 2026 is partial (through Sept 18) and flagged as such.
+    (function initSeizureChart() {
+      const SEIZURE_DATA = [
+        { year: 2016, count: 8 },
+        { year: 2017, count: 70, milestone: "Dec 8: left temporal lobectomy" },
+        { year: 2018, count: 17 },
+        { year: 2019, count: 9, milestone: "Sept 5: VNS implanted" },
+        { year: 2020, count: 7 },
+        { year: 2021, count: 36 },
+        { year: 2022, count: 49, milestone: "DBS implanted; turned on May 5" },
+        { year: 2023, count: 12 },
+        { year: 2024, count: 13 },
+        { year: 2025, count: 13 },
+        { year: 2026, count: 10, partial: true, milestone: "Mar 18: DBS golden setting found" },
+      ];
+
+      const frame = document.getElementById("seizure-chart-frame");
+      const barsGroup = document.getElementById("seizure-chart-bars");
+      const tooltip = document.getElementById("seizure-tooltip");
+      const gridEl = document.getElementById("seizure-chart-grid");
+      const yLabels = document.getElementById("seizure-y-labels");
+      const xLabels = document.getElementById("seizure-x-labels");
+      const callouts = document.getElementById("seizure-chart-callouts");
+      if (!frame || !barsGroup || !tooltip || !gridEl) return;
+
+      const tipStrong = tooltip.querySelector("strong");
+      const tipSpan = tooltip.querySelector("span");
+      const svg = frame.querySelector("svg");
+      const ns = "http://www.w3.org/2000/svg";
+      const X0 = 56, X1 = 776, Y0 = 24, Y1 = 272;
+
+      const maxVal = Math.max.apply(null, SEIZURE_DATA.map((d) => d.count));
+      const yMax = Math.ceil(maxVal / 10) * 10 + 10;
+      const slot = (X1 - X0) / SEIZURE_DATA.length;
+      const barWidth = Math.min(38, slot * 0.62);
+
+      function valueToY(v) {
+        return Y1 - (v / yMax) * (Y1 - Y0);
+      }
+
+      // Grid + y labels (5 lines, same convention as the weight chart).
+      gridEl.innerHTML = "";
+      yLabels.innerHTML = "";
+      for (let i = 0; i < 5; i++) {
+        const frac = i / 4;
+        const y = Y0 + frac * (Y1 - Y0);
+        const line = document.createElementNS(ns, "line");
+        line.setAttribute("x1", X0);
+        line.setAttribute("y1", y);
+        line.setAttribute("x2", X1);
+        line.setAttribute("y2", y);
+        gridEl.appendChild(line);
+
+        const val = Math.round(yMax * (1 - frac));
+        const text = document.createElementNS(ns, "text");
+        text.setAttribute("x", "48");
+        text.setAttribute("y", y + 4);
+        text.textContent = String(val);
+        yLabels.appendChild(text);
+      }
+
+      xLabels.innerHTML = "";
+      barsGroup.innerHTML = "";
+
+      function placeTooltip(cx, topY) {
+        const ctm = svg.getScreenCTM();
+        if (!ctm) return;
+        const pt = svg.createSVGPoint();
+        pt.x = cx;
+        pt.y = topY;
+        const screen = pt.matrixTransform(ctm);
+        const frameRect = frame.getBoundingClientRect();
+        let left = screen.x - frameRect.left;
+        const top = screen.y - frameRect.top;
+        const tipWidth = tooltip.offsetWidth || 140;
+        left = Math.max(tipWidth / 2 + 4, Math.min(left, frameRect.width - tipWidth / 2 - 4));
+        tooltip.style.left = left + "px";
+        tooltip.style.top = top + "px";
+      }
+
+      function showTip(d, rect, cx, topY) {
+        tipStrong.textContent = d.count + (d.count === 1 ? " seizure" : " seizures") + (d.partial ? " (YTD)" : "");
+        tipSpan.textContent = d.milestone ? d.year + " — " + d.milestone : String(d.year);
+        tooltip.hidden = false;
+        tooltip.classList.add("is-on");
+        barsGroup.querySelectorAll(".seizure-chart__bar").forEach((el) => {
+          el.classList.toggle("is-active", el === rect);
+        });
+        placeTooltip(cx, topY);
+      }
+
+      function hideTip() {
+        tooltip.classList.remove("is-on");
+        tooltip.hidden = true;
+        barsGroup.querySelectorAll(".seizure-chart__bar").forEach((el) => el.classList.remove("is-active"));
+      }
+
+      SEIZURE_DATA.forEach((d, index) => {
+        const cx = X0 + index * slot + slot / 2;
+        const barX = cx - barWidth / 2;
+        const barY = valueToY(d.count);
+        const barH = Y1 - barY;
+
+        const rect = document.createElementNS(ns, "rect");
+        rect.classList.add("seizure-chart__bar");
+        if (d.partial) rect.classList.add("seizure-chart__bar--partial");
+        if (d.milestone) rect.classList.add("seizure-chart__bar--milestone");
+        rect.setAttribute("x", barX.toFixed(1));
+        rect.setAttribute("y", barY.toFixed(1));
+        rect.setAttribute("width", barWidth.toFixed(1));
+        rect.setAttribute("height", Math.max(barH, 1).toFixed(1));
+        rect.setAttribute("rx", "3");
+        rect.setAttribute("tabindex", "0");
+        rect.setAttribute("role", "button");
+        rect.setAttribute(
+          "aria-label",
+          d.year + ": " + d.count + (d.count === 1 ? " seizure" : " seizures") + (d.partial ? ", year to date" : "") + (d.milestone ? ". " + d.milestone : "")
+        );
+        barsGroup.appendChild(rect);
+        rect.addEventListener("pointerenter", () => showTip(d, rect, cx, barY));
+        rect.addEventListener("pointerleave", hideTip);
+        rect.addEventListener("focus", () => showTip(d, rect, cx, barY));
+        rect.addEventListener("blur", hideTip);
+
+        const text = document.createElementNS(ns, "text");
+        text.setAttribute("x", cx);
+        text.setAttribute("y", "292");
+        text.textContent = d.partial ? d.year + "*" : String(d.year);
+        xLabels.appendChild(text);
+      });
+
+      if (callouts) {
+        callouts.innerHTML = "";
+        const peak = SEIZURE_DATA.reduce((max, d) => (d.count > max.count ? d : max), SEIZURE_DATA[0]);
+        const peakIndex = SEIZURE_DATA.indexOf(peak);
+        const peakCx = X0 + peakIndex * slot + slot / 2;
+        const peakY = valueToY(peak.count);
+        const peakText = document.createElementNS(ns, "text");
+        peakText.setAttribute("x", peakCx);
+        peakText.setAttribute("y", Math.max(16, peakY - 10));
+        peakText.setAttribute("text-anchor", "middle");
+        peakText.textContent = peak.count;
+        callouts.appendChild(peakText);
+
+        const latest = SEIZURE_DATA[SEIZURE_DATA.length - 1];
+        const latestIndex = SEIZURE_DATA.length - 1;
+        const latestCx = X0 + latestIndex * slot + slot / 2;
+        const latestY = valueToY(latest.count);
+        const latestText = document.createElementNS(ns, "text");
+        latestText.setAttribute("x", latestCx);
+        latestText.setAttribute("y", Math.max(16, latestY - 10));
+        latestText.setAttribute("text-anchor", "middle");
+        latestText.textContent = latest.count;
+        callouts.appendChild(latestText);
+      }
+    })();
+
     (function initTraining() {
       const chartFrame = document.getElementById("training-chart");
       const longestEl = document.getElementById("stat-longest");
