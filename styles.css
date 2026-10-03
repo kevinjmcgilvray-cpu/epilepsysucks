@@ -1,3 +1,40 @@
+    /* Fallback font-face overrides — this site is plain static HTML/CSS
+       (no Next.js), so next/font's automatic metric-matching isn't
+       available, but the same technique applies manually: size-adjust
+       + ascent/descent/line-gap overrides on a @font-face that points
+       at a local system font, scaled to approximate the real webfont's
+       metrics. This shrinks the layout shift between the instant
+       fallback render and the moment the Google Font finishes loading
+       (font-display: swap, below). Values computed from each font's
+       actual OS/2 and hhea tables against Capsize's published Arial /
+       Courier New metrics — not guessed. */
+    @font-face {
+      font-family: "DM Sans Fallback";
+      src: local("Arial"), local("Helvetica Neue"), local("Helvetica");
+      ascent-override: 79.97%;
+      descent-override: 24.99%;
+      line-gap-override: 0%;
+      size-adjust: 124.05%;
+    }
+
+    @font-face {
+      font-family: "Bebas Neue Fallback";
+      src: local("Arial"), local("Helvetica Neue"), local("Helvetica");
+      ascent-override: 103.67%;
+      descent-override: 34.56%;
+      line-gap-override: 0%;
+      size-adjust: 86.81%;
+    }
+
+    @font-face {
+      font-family: "Share Tech Mono Fallback";
+      src: local("Courier New"), local("Courier");
+      ascent-override: 97.63%;
+      descent-override: 26.7%;
+      line-gap-override: 0%;
+      size-adjust: 90.65%;
+    }
+
     :root {
       --ink: #14110f;
       --ink-2: #1c1916;
@@ -25,8 +62,8 @@
       --family-scrim-strong: rgba(20, 17, 15, 0.35);
       --visual-opacity: 0.28;
       --h1-glow: rgba(196, 59, 44, 0.32);
-      --font-display: "Bebas Neue", sans-serif;
-      --font-body: "DM Sans", sans-serif;
+      --font-display: "Bebas Neue", "Bebas Neue Fallback", sans-serif;
+      --font-body: "DM Sans", "DM Sans Fallback", sans-serif;
       color-scheme: dark;
     }
 
@@ -360,7 +397,7 @@
       justify-content: center;
       min-width: clamp(2.6rem, 9vw, 3.4rem);
       padding: 0.35rem 0.45rem 0.28rem;
-      font-family: "Share Tech Mono", ui-monospace, monospace;
+      font-family: "Share Tech Mono", "Share Tech Mono Fallback", ui-monospace, monospace;
       font-size: clamp(1.35rem, 4.5vw, 1.85rem);
       font-weight: 400;
       letter-spacing: 0.08em;
@@ -416,7 +453,7 @@
     .race-clock__sep {
       align-self: center;
       padding-bottom: 1.05rem;
-      font-family: "Share Tech Mono", ui-monospace, monospace;
+      font-family: "Share Tech Mono", "Share Tech Mono Fallback", ui-monospace, monospace;
       font-size: clamp(1.1rem, 3.5vw, 1.45rem);
       color: var(--neon);
       text-shadow: 0 0 10px var(--neon);
@@ -2109,7 +2146,7 @@
       border: 1px solid rgba(46, 247, 255, 0.5);
       background: rgba(4, 12, 18, 0.82);
       color: var(--lt-neon);
-      font-family: "Share Tech Mono", ui-monospace, monospace;
+      font-family: "Share Tech Mono", "Share Tech Mono Fallback", ui-monospace, monospace;
       font-size: 0.62rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
@@ -2141,7 +2178,7 @@
       border: 1px solid rgba(46, 247, 255, 0.28);
       background: rgba(4, 12, 18, 0.78);
       color: rgba(210, 245, 255, 0.88);
-      font-family: "Share Tech Mono", ui-monospace, monospace;
+      font-family: "Share Tech Mono", "Share Tech Mono Fallback", ui-monospace, monospace;
       font-size: 0.68rem;
       letter-spacing: 0.04em;
       line-height: 1.35;
