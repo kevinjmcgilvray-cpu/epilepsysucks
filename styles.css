@@ -506,7 +506,11 @@
       font-size: 0.9rem;
       letter-spacing: 0.02em;
       color: var(--paper-dim);
-      max-width: min(52rem, 72vw);
+      /* All 9 items (My story, Freedom, Weight loss, Training, LA
+         Marathon, Follow, Comments, Dark, Donate) need ~860px to stay
+         on one line at their natural size — 58rem leaves some margin
+         so Donate doesn't wrap to its own row. */
+      max-width: min(58rem, 72vw);
     }
 
     .nav__links .nav__cta {
