@@ -493,6 +493,187 @@
         .catch(() => {});
     })();
 
+    // Background storm effect: an occasional, hand-drawn jagged
+    // white/blue-white lightning bolt (randomized each strike — not a
+    // canned animation or stock photo) with a soft screen-flash and an
+    // optional thunder crack. Because this is an epilepsy awareness site,
+    // safety comes first: strikes are infrequent (one brief flash roughly
+    // every 20-40s, nowhere near the 3-flashes-per-second WCAG threshold),
+    // capped at low opacity rather than a hard white-out, and the whole
+    // effect — plus its sound toggle — is skipped entirely for visitors
+    // who've asked for reduced motion.
+    (function initStormEffect() {
+      const root = document.getElementById("bg-lightning");
+      const flashEl = document.getElementById("lightning-flash");
+      const mainPath = document.getElementById("lightning-bolt-main");
+      const branchPath = document.getElementById("lightning-bolt-branch");
+      const branchPath2 = document.getElementById("lightning-bolt-branch2");
+      const thunderAudio = document.getElementById("thunder-audio");
+      const soundToggle = document.getElementById("storm-sound-toggle");
+      if (!root || !flashEl || !mainPath || !branchPath || !branchPath2) return;
+
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        return;
+      }
+
+      let soundOn = false;
+      try {
+        soundOn = window.localStorage.getItem("stormSound") === "on";
+      } catch (e) {
+        /* localStorage unavailable (e.g. private mode) — default off */
+      }
+      let audioUnlocked = false;
+
+      function applyToggleUI() {
+        if (!soundToggle) return;
+        soundToggle.classList.toggle("is-on", soundOn);
+        soundToggle.setAttribute("aria-pressed", soundOn ? "true" : "false");
+        soundToggle.setAttribute(
+          "aria-label",
+          soundOn ? "Turn off thunder sound" : "Turn on thunder sound"
+        );
+      }
+      applyToggleUI();
+
+      if (soundToggle) {
+        soundToggle.addEventListener("click", () => {
+          soundOn = !soundOn;
+          applyToggleUI();
+          try {
+            window.localStorage.setItem("stormSound", soundOn ? "on" : "off");
+          } catch (e) {
+            /* ignore */
+          }
+          // Browsers only allow play() outside a direct user gesture once
+          // one has happened on the page. This click IS that gesture, so
+          // prime (silently play-then-reset) the audio element now, which
+          // unlocks later timer-triggered play() calls for real strikes.
+          if (soundOn && thunderAudio && !audioUnlocked) {
+            const prevVolume = thunderAudio.volume;
+            thunderAudio.volume = 0;
+            thunderAudio
+              .play()
+              .then(() => {
+                thunderAudio.pause();
+                thunderAudio.currentTime = 0;
+                thunderAudio.volume = prevVolume;
+                audioUnlocked = true;
+              })
+              .catch(() => {
+                thunderAudio.volume = prevVolume;
+              });
+          }
+        });
+      }
+
+      // Builds a jagged top-to-mid-screen bolt in a 0-100 x 0-100 space
+      // (the SVG viewBox is stretched to fill the viewport via
+      // preserveAspectRatio="none", so this is loose percent-of-screen
+      // coordinates, not real geometry — real lightning isn't geometric
+      // either). Mixes a few bigger "elbow" direction changes with lots of
+      // small high-frequency jitter, which is what makes a jagged line
+      // read as lightning rather than a clean zigzag.
+      function randomBoltPoints() {
+        let x = 15 + Math.random() * 70;
+        let y = 0;
+        const endY = 55 + Math.random() * 35;
+        const steps = 13 + Math.floor(Math.random() * 6);
+        const points = [[x, y]];
+        let drift = (Math.random() - 0.5) * 2.5; // slow overall lean left/right
+        for (let i = 1; i <= steps; i++) {
+          y = (endY / steps) * i;
+          drift += (Math.random() - 0.5) * 1.6;
+          const jitter = (Math.random() - 0.5) * 6.5;
+          x += drift + jitter;
+          points.push([x, y]);
+        }
+        return points;
+      }
+
+      function pointsToPath(points) {
+        return (
+          "M " + points.map((p) => p[0].toFixed(1) + "," + p[1].toFixed(1)).join(" L ")
+        );
+      }
+
+      // A short branch forking off a random point partway down the main
+      // bolt, like real lightning's secondary channels — angled away from
+      // the main channel's own direction so it doesn't just overlap it.
+      function randomBranchPath(mainPoints, minIndex, maxIndexExclusive) {
+        const forkIndex =
+          minIndex + Math.floor(Math.random() * Math.max(1, maxIndexExclusive - minIndex));
+        const fork = mainPoints[forkIndex];
+        const prev = mainPoints[Math.max(0, forkIndex - 1)];
+        const mainDx = fork[0] - prev[0];
+        const sideways = mainDx >= 0 ? -1 : 1; // branch away from the main lean
+        let x = fork[0];
+        let y = fork[1];
+        const steps = 2 + Math.floor(Math.random() * 3);
+        const points = [[x, y]];
+        for (let i = 1; i <= steps; i++) {
+          x += sideways * (4 + Math.random() * 7);
+          y += 4 + Math.random() * 6;
+          points.push([x, y]);
+        }
+        return pointsToPath(points);
+      }
+
+      let hideTimer = null;
+      let thunderTimer = null;
+      let scheduleTimer = null;
+
+      function strike() {
+        if (document.hidden) {
+          scheduleNext();
+          return;
+        }
+
+        const mainPoints = randomBoltPoints();
+        const mid = Math.floor(mainPoints.length / 2);
+        mainPath.setAttribute("d", pointsToPath(mainPoints));
+        branchPath.setAttribute(
+          "d",
+          Math.random() < 0.75 ? randomBranchPath(mainPoints, 2, mid) : ""
+        );
+        branchPath2.setAttribute(
+          "d",
+          Math.random() < 0.5
+            ? randomBranchPath(mainPoints, mid, mainPoints.length - 1)
+            : ""
+        );
+
+        root.classList.add("is-on");
+        const visibleMs = 220 + Math.random() * 160;
+        window.clearTimeout(hideTimer);
+        hideTimer = window.setTimeout(() => {
+          root.classList.remove("is-on");
+        }, visibleMs);
+
+        if (soundOn && thunderAudio) {
+          window.clearTimeout(thunderTimer);
+          const thunderDelay = 80 + Math.random() * 260;
+          thunderTimer = window.setTimeout(() => {
+            try {
+              thunderAudio.currentTime = 0;
+              thunderAudio.play().catch(() => {});
+            } catch (e) {
+              /* ignore */
+            }
+          }, thunderDelay);
+        }
+
+        scheduleNext();
+      }
+
+      function scheduleNext() {
+        window.clearTimeout(scheduleTimer);
+        const delay = 22000 + Math.random() * 18000; // 22-40s between strikes
+        scheduleTimer = window.setTimeout(strike, delay);
+      }
+
+      scheduleNext();
+    })();
+
     (function initRaceClock() {
       const root = document.getElementById("race-clock");
       const daysEl = document.getElementById("race-days");
