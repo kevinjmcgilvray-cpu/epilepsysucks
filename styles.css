@@ -135,6 +135,75 @@
       padding-bottom: var(--footer-clock-h, 0px);
     }
 
+    /* Custom lightning-bolt cursor — only enabled by app.js on devices
+       with a real mouse (pointer: fine); touch devices are untouched.
+       This class hides the native pointer everywhere so the custom one
+       (#custom-cursor, positioned via JS on mousemove) can stand in for
+       it instead. */
+    html.has-custom-cursor,
+    html.has-custom-cursor * {
+      cursor: none !important;
+    }
+
+    #custom-cursor {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 26px;
+      height: 26px;
+      pointer-events: none;
+      z-index: 2000;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+      filter: drop-shadow(0 0 4px rgba(155, 107, 255, 0.55)) drop-shadow(0 0 1px rgba(255, 255, 255, 0.8));
+      /* A slow (2.6s) glow breathe, not a flicker — this site is about
+         photosensitive epilepsy and already goes out of its way to
+         avoid rapid flashing elsewhere, so this stays a gentle, smooth
+         brightness change rather than anything strobe-like. */
+      animation: custom-cursor-glow 2.6s ease-in-out infinite;
+    }
+
+    #custom-cursor.is-active {
+      opacity: 1;
+    }
+
+    #custom-cursor svg {
+      display: block;
+    }
+
+    @keyframes custom-cursor-glow {
+      0%,
+      100% {
+        filter: drop-shadow(0 0 4px rgba(155, 107, 255, 0.5)) drop-shadow(0 0 1px rgba(255, 255, 255, 0.75));
+      }
+      50% {
+        filter: drop-shadow(0 0 10px rgba(155, 107, 255, 0.95)) drop-shadow(0 0 3px rgba(255, 255, 255, 1));
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #custom-cursor {
+        animation: none;
+        filter: drop-shadow(0 0 5px rgba(155, 107, 255, 0.65)) drop-shadow(0 0 1px rgba(255, 255, 255, 0.85));
+      }
+    }
+
+    /* Defense in depth: app.js already gates this behind a (pointer: fine)
+       check before adding has-custom-cursor at all, but a hybrid device
+       (e.g. a laptop with both touch and a mouse) could switch primary
+       input after load, so make sure a coarse/touch pointer always gets
+       the real cursor back and never hides it. */
+    @media (pointer: coarse) {
+      html.has-custom-cursor,
+      html.has-custom-cursor * {
+        cursor: auto !important;
+      }
+
+      #custom-cursor {
+        display: none !important;
+      }
+    }
+
     .skip-link {
       position: absolute;
       top: -4rem;
