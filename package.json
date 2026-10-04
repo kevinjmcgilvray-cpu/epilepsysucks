@@ -4,7 +4,8 @@
   "description": "Kevin’s story site for the LA Marathon / CURE Epilepsy — hosted at [epilepsysucks.org](https://epilepsysucks.org).",
   "main": "index.js",
   "scripts": {
-    "test": "node tests/run-all.js",
+    "build": "node scripts/build.js",
+    "test": "npm run build && node tests/run-all.js",
     "test:install": "playwright install --with-deps chromium"
   },
   "repository": {
@@ -24,6 +25,7 @@
     "@vercel/speed-insights": "^2.0.0"
   },
   "devDependencies": {
+    "esbuild": "^0.28.2",
     "playwright": "^1.63.0"
   }
 }

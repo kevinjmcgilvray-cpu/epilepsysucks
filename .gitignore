@@ -5,3 +5,5 @@
 node_modules/
 .agents/
 skills-lock.json
+dist/
+tests/_failure-artifacts/
