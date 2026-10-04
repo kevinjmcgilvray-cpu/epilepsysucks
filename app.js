@@ -35,6 +35,69 @@
       }
     })();
 
+    // Custom lightning-bolt cursor (desktop/mouse only — touch devices are
+    // left completely alone). Reuses the exact bolt glyph from the storm
+    // toggle icon for visual consistency with the rest of the site's
+    // lightning theme. Positioning is done via a single rAF-batched
+    // transform per frame rather than reacting to every mousemove event
+    // directly, so it stays smooth without flooding layout/paint work.
+    (function initCustomCursor() {
+      const supportsFinePointer =
+        window.matchMedia && window.matchMedia("(pointer: fine)").matches;
+      if (!supportsFinePointer) return;
+
+      const cursorEl = document.createElement("div");
+      cursorEl.id = "custom-cursor";
+      cursorEl.setAttribute("aria-hidden", "true");
+      cursorEl.innerHTML =
+        '<svg viewBox="0 0 24 24" width="26" height="26">' +
+        '<path fill="#ffffff" stroke="#9b6bff" stroke-width="1" ' +
+        'd="M13 2 4 14h6l-1 8 9-12h-6l1-8z" /></svg>';
+      document.body.appendChild(cursorEl);
+      document.documentElement.classList.add("has-custom-cursor");
+
+      let pendingX = 0;
+      let pendingY = 0;
+      let rafId = null;
+
+      function applyPosition() {
+        rafId = null;
+        // translate first (so the box's origin lands exactly on the real
+        // pointer position), then rotate the icon around that same
+        // point — keeps the bolt's tip glued to the actual cursor
+        // location regardless of the decorative rotation.
+        cursorEl.style.transform =
+          "translate(" + (pendingX - 2) + "px, " + (pendingY - 2) + "px) rotate(-12deg)";
+      }
+
+      function onMove(e) {
+        pendingX = e.clientX;
+        pendingY = e.clientY;
+        cursorEl.classList.add("is-active");
+        if (rafId === null) rafId = window.requestAnimationFrame(applyPosition);
+      }
+
+      window.addEventListener("mousemove", onMove, { passive: true });
+      document.addEventListener("mouseleave", () => {
+        cursorEl.classList.remove("is-active");
+      });
+
+      // If the device's primary input later switches to touch (hybrid
+      // laptops/tablets), bail out cleanly instead of leaving a stray
+      // invisible cursor div and a none-cursor class behind.
+      const coarseQuery = window.matchMedia("(pointer: coarse)");
+      const handleCoarseChange = (ev) => {
+        if (ev.matches) {
+          document.documentElement.classList.remove("has-custom-cursor");
+          cursorEl.remove();
+          window.removeEventListener("mousemove", onMove);
+        }
+      };
+      if (coarseQuery.addEventListener) {
+        coarseQuery.addEventListener("change", handleCoarseChange);
+      }
+    })();
+
     // Light mode = the clean, professional default (no surgery/scar
     // photos). Dark mode brings those photos back in, blurred, for
     // anyone curious to see more of the medical side of the story.
