@@ -488,6 +488,32 @@ timeline
             </div>
             <p class="mechanism-chart__note">A simplified, illustrative schematic of general seizure electrophysiology — not an actual EEG recording from my case.</p>
           </div>
+
+          <div class="mechanism-sim">
+            <p class="mechanism-sim__title">Try it: watch hypersynchronization spread through a small network</p>
+            <p class="mechanism-sim__intro">Each dot is a tiny patch of cortex, wired to its neighbors. Click any dot (or hit the button) to start a discharge, then drag the sliders — exactly like the surround-inhibition and connectivity described above — and watch whether it stays small or takes over the whole grid.</p>
+            <div class="mechanism-sim__frame">
+              <svg id="mechanism-sim-svg" viewBox="0 0 520 280" role="img" aria-label="Interactive grid simulation: click a node to trigger a spreading discharge">
+                <g id="sim-edges"></g>
+                <g id="sim-nodes"></g>
+              </svg>
+            </div>
+            <div class="mechanism-sim__controls">
+              <label class="mechanism-sim__slider">
+                <span>Inhibition <strong id="sim-inhibition-val">70%</strong></span>
+                <input type="range" id="sim-inhibition" min="0" max="100" value="70" aria-label="Inhibition strength" />
+              </label>
+              <label class="mechanism-sim__slider">
+                <span>Network coupling <strong id="sim-coupling-val">50%</strong></span>
+                <input type="range" id="sim-coupling" min="0" max="100" value="50" aria-label="Network connection strength" />
+              </label>
+              <div class="mechanism-sim__buttons">
+                <button type="button" class="btn btn--purple" id="sim-trigger">Trigger focal discharge</button>
+                <button type="button" class="btn btn--ghost" id="sim-reset">Reset</button>
+              </div>
+            </div>
+            <p class="mechanism-sim__readout" id="sim-readout" aria-live="polite">Click a dot, or hit “Trigger focal discharge,” to start.</p>
+          </div>
           </div>
         </details>
 
