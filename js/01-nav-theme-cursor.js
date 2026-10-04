@@ -67,10 +67,41 @@
       let rafId = null;
       // Don't hide the native pointer (html.has-custom-cursor) until the
       // replacement bolt icon has an actual position to show — otherwise
-      // there's a window right after load (e.g. while the entry flash
-      // warning is up) where the real cursor is gone and the custom one
-      // is still sitting at opacity: 0, leaving no visible cursor at all.
+      // there's a window right after load where the real cursor is gone
+      // and the custom one is still sitting at opacity: 0, leaving no
+      // visible cursor at all.
       let hasPositioned = false;
+
+      // Keep the plain, familiar native pointer for the entire time the
+      // entry flash-warning is up (visitors need to be able to see and
+      // click "I understand — continue" right away), and only start
+      // swapping over to the lightning-bolt cursor once that's been
+      // dismissed. If it was already acknowledged on an earlier visit
+      // (warning stays hidden), this is just inert and the bolt cursor
+      // can take over as soon as the mouse first moves, as before.
+      const entryWarningEl = document.getElementById("entry-warning");
+      let warningActive = !!(entryWarningEl && !entryWarningEl.hidden);
+
+      function enableCustomCursor() {
+        cursorEl.classList.add("is-active");
+        document.documentElement.classList.add("has-custom-cursor");
+      }
+
+      if (warningActive) {
+        const continueBtn = document.getElementById("entry-warning-continue");
+        if (continueBtn) {
+          continueBtn.addEventListener(
+            "click",
+            () => {
+              warningActive = false;
+              if (hasPositioned) enableCustomCursor();
+            },
+            { once: true }
+          );
+        } else {
+          warningActive = false;
+        }
+      }
 
       function applyPosition() {
         rafId = null;
@@ -85,11 +116,8 @@
       function onMove(e) {
         pendingX = e.clientX;
         pendingY = e.clientY;
-        cursorEl.classList.add("is-active");
-        if (!hasPositioned) {
-          hasPositioned = true;
-          document.documentElement.classList.add("has-custom-cursor");
-        }
+        hasPositioned = true;
+        if (!warningActive) enableCustomCursor();
         if (rafId === null) rafId = window.requestAnimationFrame(applyPosition);
       }
 
