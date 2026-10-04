@@ -38,10 +38,14 @@
     :root {
       --ink: #14110f;
       --ink-2: #1c1916;
-      --paper: #ebe4d8;
-      /* Brightened for legibility: plain white (no color tint) at a
-         higher opacity than the original rgba(235,228,216,0.7/0.46),
-         which read as dim/grey on the near-black background. */
+      /* Brightened to plain white (no color tint) to match --paper-dim/
+         --paper-faint below. --paper is the base heading/body text
+         color used throughout the dark theme (chapter titles, the
+         medical-history note titles, etc.) — leaving it at the old
+         cream tint (#ebe4d8) while only brightening -dim/-faint left
+         a lot of real text still looking visibly duller/"faded" next
+         to the pure-white text elsewhere on the page. */
+      --paper: #ffffff;
       --paper-dim: rgba(255, 255, 255, 0.9);
       --paper-faint: rgba(255, 255, 255, 0.68);
       --accent: #c43b2c;
