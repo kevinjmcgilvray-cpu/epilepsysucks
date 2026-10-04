@@ -26,6 +26,61 @@ export function checkOwnerPassword(payload) {
   return Boolean(expected) && given === expected;
 }
 
+const RATE_LIMIT_WINDOW_MINUTES = 15;
+const RATE_LIMIT_MAX_ATTEMPTS = 10;
+
+function getClientIp(req) {
+  const forwarded = req && req.headers && req.headers["x-forwarded-for"];
+  if (forwarded) return String(forwarded).split(",")[0].trim();
+  return (req && req.socket && req.socket.remoteAddress) || "unknown";
+}
+
+// Wraps checkOwnerPassword with a per-IP rate limit, backed by the
+// auth_attempts table (sql/auth-attempts.sql) — every owner-password
+// write endpoint shares the same single password, so without this,
+// anyone can brute-force it with unlimited unthrottled requests.
+//
+// Fails OPEN (falls back to a plain, non-rate-limited password check)
+// if the auth_attempts table isn't reachable, so a missing migration
+// or transient DB hiccup doesn't lock the owner out of their own site
+// — but the password check itself still applies either way.
+export async function authorizeOwner(sql, req, payload) {
+  const ip = getClientIp(req);
+
+  try {
+    await sql`
+      DELETE FROM auth_attempts
+      WHERE created_at < NOW() - make_interval(mins => ${RATE_LIMIT_WINDOW_MINUTES})
+    `;
+
+    const recent = await sql`
+      SELECT COUNT(*)::int AS count FROM auth_attempts
+      WHERE ip = ${ip}
+        AND created_at > NOW() - make_interval(mins => ${RATE_LIMIT_WINDOW_MINUTES})
+    `;
+    const count = (recent[0] && recent[0].count) || 0;
+
+    if (count >= RATE_LIMIT_MAX_ATTEMPTS) {
+      return {
+        allowed: false,
+        status: 429,
+        error: "Too many attempts. Please try again in a few minutes."
+      };
+    }
+
+    await sql`INSERT INTO auth_attempts (ip) VALUES (${ip})`;
+  } catch {
+    // auth_attempts table missing/unreachable — degrade to no rate
+    // limiting rather than block legitimate owner requests.
+  }
+
+  if (!checkOwnerPassword(payload)) {
+    return { allowed: false, status: 401, error: "Wrong password" };
+  }
+
+  return { allowed: true };
+}
+
 export function parseBody(req) {
   if (typeof req.body === "string") {
     try {

@@ -1,4 +1,4 @@
-import { cors, getSql, checkOwnerPassword } from "./_db.js";
+import { authorizeOwner, cors, getSql } from "./_db.js";
 
 function mapComment(row) {
   return {
@@ -30,8 +30,9 @@ export default async function handler(req, res) {
     if (req.method === "POST") {
       const payload = typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};
 
-      if (!checkOwnerPassword(payload)) {
-        res.status(401).json({ ok: false, error: "Wrong password" });
+      const auth = await authorizeOwner(sql, req, payload);
+      if (!auth.allowed) {
+        res.status(auth.status).json({ ok: false, error: auth.error });
         return;
       }
 
