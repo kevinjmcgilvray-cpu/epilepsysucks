@@ -183,7 +183,7 @@
     }
 
     .pace-calc__table tr.is-hard td {
-      color: var(--accent);
+      color: var(--accent-text);
     }
 
     .pace-calc__table tr.is-easy td {
@@ -553,7 +553,7 @@
     }
 
     .comment-form__error {
-      color: var(--accent);
+      color: var(--accent-text);
       font-size: 0.9rem;
     }
 

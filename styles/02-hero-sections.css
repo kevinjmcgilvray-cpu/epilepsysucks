@@ -665,7 +665,7 @@
       font-size: 0.8rem;
       letter-spacing: 0.16em;
       text-transform: uppercase;
-      color: var(--accent);
+      color: var(--accent-text);
       margin-bottom: 1rem;
     }
 
@@ -675,7 +675,7 @@
        (0-2-1) wins regardless of source order and keeps the color in
        sync with .eyebrow's own color above if it's ever changed. */
     .section p.eyebrow {
-      color: var(--accent);
+      color: var(--accent-text);
     }
 
     .social-feed {
@@ -691,7 +691,7 @@
       display: inline-flex;
       align-items: center;
       gap: 0.3rem;
-      color: var(--accent);
+      color: var(--accent-text);
       font-size: 0.9rem;
       font-weight: 600;
       text-decoration: underline;

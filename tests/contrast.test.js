@@ -29,27 +29,15 @@ function isKnownException(r) {
 }
 
 // Accepted baseline count of *other* low-contrast violations per theme,
-// beyond the exceptions above. This is NOT a target to leave alone
-// forever — it's here so CI can still catch *new* regressions without
-// re-blocking on a known, already-decided tradeoff: the dark theme
-// currently uses --accent directly as text color in several places
-// (eyebrows, figcaptions, table emphasis, the Instagram fallback link)
-// at ~3.3-3.6:1, below the 4.5:1 AA minimum. This was fixed once (PR
-// #51) and explicitly reverted at the user's request afterwards, so it
-// is a known, intentional-for-now state rather than an oversight — see
-// git history for #51/#53/#54 for the full back-and-forth. If this
-// number goes UP beyond what's explained below, something new
-// regressed and the test should fail.
-//
-// Bumped from 14 to 20 by PR #56 (".eyebrow" specificity fix): some
-// <p class="eyebrow"> elements were accidentally rendering in the
-// higher-contrast --paper-dim grey due to a separate, unrelated CSS
-// specificity bug (.section p beating .eyebrow). Fixing that bug
-// correctly makes them use --accent like every other eyebrow label —
-// which is the right visual fix — but that *also* means more elements
-// now hit the same pre-existing --accent-as-text contrast tradeoff
-// described above. Not a new issue, just more instances of the old one.
-const BASELINE_LOW_CONTRAST_COUNT = { dark: 20, light: 0 };
+// beyond the exceptions above. Back to 0/0: the dark-theme --accent-
+// as-text tradeoff this baseline used to track (PRs #51/#53/#54, then
+// bumped 14->20 by #56) is now fixed properly instead of just measured
+// — see --accent-text in styles/01-base-nav.css, a lightened variant
+// of --accent kept specifically for text (eyebrows, figcaptions, table
+// emphasis, the Instagram fallback link, etc.), while --accent itself
+// is untouched for backgrounds/fills/strokes/borders. If this number
+// goes above 0, something has newly regressed.
+const BASELINE_LOW_CONTRAST_COUNT = { dark: 0, light: 0 };
 
 async function scanTheme(browser, baseUrl, theme) {
   const page = await browser.newPage({ viewport: { width: 1280, height: 1000 } });
