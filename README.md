@@ -63,6 +63,7 @@ Notable client-only features (no backend, data/config lives in `app.js`/`index.h
    psql "$DATABASE_URL" -f sql/comments.sql
    psql "$DATABASE_URL" -f sql/live-track.sql
    psql "$DATABASE_URL" -f sql/marathon-route.sql
+   psql "$DATABASE_URL" -f sql/auth-attempts.sql             # rate limit for OWNER_UPDATE_PASSWORD (see api/_db.js)
    ```
 3. Copy `.env.local` (see below for the variables it expects) and set the same values in
    **Vercel → Project → Settings → Environment Variables**.

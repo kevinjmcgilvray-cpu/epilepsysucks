@@ -1,5 +1,5 @@
 import {
-  checkOwnerPassword,
+  authorizeOwner,
   cors,
   getSql,
   parseBody,
@@ -65,8 +65,9 @@ export default async function handler(req, res) {
 
     if (req.method === "POST") {
       const payload = parseBody(req);
-      if (!checkOwnerPassword(payload)) {
-        res.status(401).json({ ok: false, error: "Wrong password" });
+      const auth = await authorizeOwner(sql, req, payload);
+      if (!auth.allowed) {
+        res.status(auth.status).json({ ok: false, error: auth.error });
         return;
       }
 
