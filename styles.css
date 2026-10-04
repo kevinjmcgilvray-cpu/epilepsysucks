@@ -2726,26 +2726,13 @@
       }
     }
 
+    /* .pace-calc is now a <details class="pace-calc mechanism-note">, so
+       the card look (border/background/padding) comes from .mechanism-note
+       — this just adds breathing room above it and undoes mechanism-note's
+       46rem max-width so the chart/table can use the full wide-block width. */
     .pace-calc {
       margin-top: 1.75rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid var(--line);
-    }
-
-    .pace-calc h3 {
-      margin: 0.3rem 0 0.6rem;
-      font-family: var(--font-display);
-      font-size: clamp(1.1rem, 2.4vw, 1.35rem);
-      letter-spacing: 0.01em;
-      color: var(--paper);
-    }
-
-    .pace-calc > p {
-      margin: 0 0 1.1rem;
-      font-size: 0.92rem;
-      line-height: 1.55;
-      color: var(--paper-dim);
-      max-width: 46rem;
+      max-width: none;
     }
 
     .pace-calc__chart-frame {
