@@ -577,15 +577,41 @@
         });
       }
 
+      let fadeTimer = null;
+      const FADE_MS = 900; // smooth taper instead of an abrupt cut
+
       function silenceThunder() {
-        if (currentlyPlaying) {
+        window.clearInterval(fadeTimer);
+        const el = currentlyPlaying;
+        currentlyPlaying = null;
+        if (!el) return;
+
+        const startVolume = el.volume;
+        const startTime = Date.now();
+        if (startVolume <= 0) {
           try {
-            currentlyPlaying.pause();
+            el.pause();
           } catch (e) {
             /* ignore */
           }
-          currentlyPlaying = null;
+          return;
         }
+
+        fadeTimer = window.setInterval(() => {
+          const elapsed = Date.now() - startTime;
+          const progress = Math.min(1, elapsed / FADE_MS);
+          el.volume = startVolume * (1 - progress);
+          if (progress >= 1) {
+            window.clearInterval(fadeTimer);
+            try {
+              el.pause();
+              el.currentTime = 0;
+            } catch (e) {
+              /* ignore */
+            }
+            el.volume = startVolume; // restored so the *next* strike plays at full volume again
+          }
+        }, 40);
       }
 
       // Builds a jagged top-to-mid-screen bolt in a 0-100 x 0-100 space
@@ -680,9 +706,11 @@
         const thunderAudio = nextThunderAudio();
         if (thunderAudio) {
           window.clearTimeout(thunderTimer);
+          window.clearInterval(fadeTimer); // cancel any still-tapering previous clip
           const thunderDelay = 80 + Math.random() * 220; // real thunder lags the flash slightly
           thunderTimer = window.setTimeout(() => {
             try {
+              thunderAudio.volume = 1;
               thunderAudio.currentTime = 0;
               currentlyPlaying = thunderAudio;
               thunderAudio.play().catch(() => {});
