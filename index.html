@@ -778,6 +778,54 @@ timeline
               <p class="course-profile__source">Course data from <a href="https://findmymarathon.com/race-detail.php?zname=Los%20Angeles%20Marathon" target="_blank" rel="noopener noreferrer">Find My Marathon</a>.</p>
             </div>
           </div>
+
+          <div class="pace-calc reveal">
+            <p class="eyebrow">Plan your race</p>
+            <h3>Mile-by-mile elevation &amp; grade-adjusted pace calculator</h3>
+            <p>Pick a goal finish time and this redistributes it across all 26.2 miles using the actual energy-cost-of-running math (Minetti et al., 2002) — slower on the climbs, faster on the drops — instead of just dividing your goal by 26.2.</p>
+
+            <div class="pace-calc__chart-frame" id="pace-calc-chart-frame">
+              <svg viewBox="0 0 800 190" role="img" aria-label="Elevation profile of the LA Marathon course, mile by mile">
+                <g class="pace-calc__grid" id="pace-calc-grid"></g>
+                <path class="pace-calc__area" id="pace-calc-area" d=""></path>
+                <polyline class="pace-calc__line" id="pace-calc-line" points=""></polyline>
+                <g id="pace-calc-points"></g>
+              </svg>
+              <div class="pace-calc__tooltip" id="pace-calc-tooltip" hidden>
+                <strong></strong>
+                <span></span>
+              </div>
+            </div>
+            <p class="pace-calc__chart-note">Illustrative mile-by-mile elevation shaped to match the course's published profile (steep drop from Dodger Stadium, rollers through Echo Park, a long flat stretch through Hollywood, the San Vicente dip-and-climb late) — not a surveyed GPS trace. Hover any point for exact mile/elevation.</p>
+
+            <div class="pace-calc__goal">
+              <label>
+                Goal finish time
+                <input type="text" id="pace-calc-goal" value="4:00:00" inputmode="numeric" placeholder="H:MM:SS" aria-label="Goal finish time, hours:minutes:seconds" />
+              </label>
+              <div class="pace-calc__presets">
+                <button type="button" class="btn btn--ghost" data-goal="3:10:00">BQ · 3:10</button>
+                <button type="button" class="btn btn--ghost" data-goal="3:30:00">3:30</button>
+                <button type="button" class="btn btn--ghost" data-goal="4:00:00">4:00</button>
+                <button type="button" class="btn btn--ghost" data-goal="5:00:00">5:00</button>
+              </div>
+            </div>
+            <p class="pace-calc__summary" id="pace-calc-summary" aria-live="polite"></p>
+
+            <div class="pace-calc__table-wrap">
+              <table class="pace-calc__table" id="pace-calc-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Mile</th>
+                    <th scope="col">Grade</th>
+                    <th scope="col">Split pace</th>
+                    <th scope="col">Cumulative time</th>
+                  </tr>
+                </thead>
+                <tbody id="pace-calc-tbody"></tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
     </section>
