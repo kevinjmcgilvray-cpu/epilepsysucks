@@ -92,10 +92,11 @@
       <p class="entry-warning__icon" aria-hidden="true">⚡</p>
       <h2 class="entry-warning__title" id="entry-warning-title">Before you go in — a quick flash warning</h2>
       <p class="entry-warning__desc" id="entry-warning-desc">
-        This site has an optional <strong>Storm effects</strong> setting — brief, infrequent animated
-        lightning flashes with thunder. It's off by default, and this site automatically disables it
-        entirely if your device's "reduce motion" accessibility setting is on. If you have photosensitive
-        epilepsy, we'd recommend leaving it off.
+        This site has a <strong>Storm effects</strong> setting — brief lightning flashes with rotating
+        thunder sounds, cycling 10 seconds on / 10 seconds off. It's <strong>on by default</strong>, but
+        can be switched off anytime from the storm icon near the top of the page. This site also
+        automatically disables it entirely if your device's "reduce motion" accessibility setting is on.
+        If you have photosensitive epilepsy, we'd recommend turning it off.
       </p>
       <button type="button" class="btn btn--purple entry-warning__continue" id="entry-warning-continue">
         I understand — continue
@@ -131,6 +132,12 @@
         }
         warning.hidden = true;
         document.body.classList.remove("entry-locked");
+        // Deliberately not priming audio here too: this click already
+        // bubbles a "pointerdown" up to window, which app.js listens for
+        // as its own one-time audio-unlock gesture. Priming from both
+        // places at once raced and could permanently zero out a clip's
+        // volume (two concurrent play-then-restore cycles stepping on
+        // each other's "previous volume" snapshot).
       });
       continueBtn.focus();
     })();
@@ -147,8 +154,17 @@
       <path class="bg-lightning__bolt-path" id="lightning-bolt-branch2" d=""></path>
     </svg>
   </div>
-  <audio id="thunder-audio" preload="auto" aria-hidden="true">
+  <audio id="thunder-audio-0" class="thunder-audio" preload="auto" aria-hidden="true">
     <source src="epilepsy-sucks-audio/thunder-strike.mp3" type="audio/mpeg" />
+  </audio>
+  <audio id="thunder-audio-1" class="thunder-audio" preload="auto" aria-hidden="true">
+    <source src="epilepsy-sucks-audio/thunder-distant.mp3" type="audio/mpeg" />
+  </audio>
+  <audio id="thunder-audio-2" class="thunder-audio" preload="auto" aria-hidden="true">
+    <source src="epilepsy-sucks-audio/thunder-mid.mp3" type="audio/mpeg" />
+  </audio>
+  <audio id="thunder-audio-3" class="thunder-audio" preload="auto" aria-hidden="true">
+    <source src="epilepsy-sucks-audio/thunder-cinematic.mp3" type="audio/mpeg" />
   </audio>
   <header class="nav" id="nav">
     <div class="nav__top">

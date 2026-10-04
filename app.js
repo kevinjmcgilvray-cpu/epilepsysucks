@@ -510,7 +510,9 @@
       const mainPath = document.getElementById("lightning-bolt-main");
       const branchPath = document.getElementById("lightning-bolt-branch");
       const branchPath2 = document.getElementById("lightning-bolt-branch2");
-      const thunderAudio = document.getElementById("thunder-audio");
+      const thunderAudios = Array.prototype.slice.call(
+        document.querySelectorAll(".thunder-audio")
+      );
       const toggle = document.getElementById("storm-toggle");
       if (!root || !flashEl || !mainPath || !branchPath || !branchPath2) return;
 
@@ -518,13 +520,16 @@
         return;
       }
 
-      let stormOn = false;
+      // Storm effects defaults ON; a visitor's explicit choice (either way)
+      // is remembered from here on.
+      let stormOn = true;
       try {
-        stormOn = window.localStorage.getItem("stormEffectsOn") === "on";
+        stormOn = window.localStorage.getItem("stormEffectsOn") !== "off";
       } catch (e) {
-        /* localStorage unavailable (e.g. private mode) — default off */
+        /* localStorage unavailable (e.g. private mode) — default stays on */
       }
-      let audioUnlocked = false;
+      let thunderRotationIndex = 0;
+      let currentlyPlaying = null;
 
       function applyToggleUI() {
         if (!toggle) return;
@@ -537,33 +542,20 @@
       }
       applyToggleUI();
 
-      // Browsers only allow audio play() outside a direct user gesture
-      // once one has happened on the page. This toggle click IS that
-      // gesture, so prime (silently play-then-reset) the audio element
-      // now, which unlocks later timer-triggered play() calls for real
-      // strikes — then immediately show one real strike so turning the
-      // toggle on feels responsive instead of waiting up to 40s.
-      function primeAudioThenStrikeNow() {
-        if (!thunderAudio || audioUnlocked) {
-          strike();
-          return;
-        }
-        const prevVolume = thunderAudio.volume;
-        thunderAudio.volume = 0;
-        thunderAudio
-          .play()
-          .then(() => {
-            thunderAudio.pause();
-            thunderAudio.currentTime = 0;
-            thunderAudio.volume = prevVolume;
-            audioUnlocked = true;
-            strike();
-          })
-          .catch(() => {
-            thunderAudio.volume = prevVolume;
-            strike(); // still show the flash even if audio unlock failed
-          });
-      }
+      // Autoplay policies just require *some* real user gesture (click,
+      // tap, key) to have happened anywhere on the page before script-
+      // triggered audio can play — after that, the browser allows it for
+      // the rest of the page's lifetime, with no special per-element
+      // unlocking needed. So there's deliberately no play()-then-pause()
+      // "priming" step here: an earlier version tried that and it caused
+      // a real bug (two concurrent primes racing on the same elements'
+      // .volume, clipping a strike's thunder mid-playback). The entry
+      // warning's "continue" click (or the toggle click, or honestly any
+      // click/tap/key anywhere on the page) already satisfies the
+      // gesture requirement on its own — nothing extra to do here. A
+      // first-time strike attempted before any gesture has happened just
+      // silently fails to play sound (caught below) until one does; the
+      // visual flash is unaffected either way.
 
       if (toggle) {
         toggle.addEventListener("click", () => {
@@ -575,9 +567,25 @@
             /* ignore */
           }
           if (stormOn) {
-            primeAudioThenStrikeNow();
+            // Turning it on should feel immediate rather than waiting for
+            // the next 20s cycle boundary. The click itself is the user
+            // gesture that lets this strike's thunder actually play.
+            strike();
+          } else {
+            silenceThunder();
           }
         });
+      }
+
+      function silenceThunder() {
+        if (currentlyPlaying) {
+          try {
+            currentlyPlaying.pause();
+          } catch (e) {
+            /* ignore */
+          }
+          currentlyPlaying = null;
+        }
       }
 
       // Builds a jagged top-to-mid-screen bolt in a 0-100 x 0-100 space
@@ -634,7 +642,18 @@
 
       let hideTimer = null;
       let thunderTimer = null;
-      let scheduleTimer = null;
+      let silenceTimer = null;
+      let cycleTimer = null;
+
+      // Rotates sequentially through all 4 thunder clips (strong/close,
+      // distant, mid, cinematic) so the same crack doesn't repeat every
+      // cycle.
+      function nextThunderAudio() {
+        if (!thunderAudios.length) return null;
+        const el = thunderAudios[thunderRotationIndex % thunderAudios.length];
+        thunderRotationIndex++;
+        return el;
+      }
 
       function strike() {
         const mainPoints = randomBoltPoints();
@@ -658,12 +677,14 @@
           root.classList.remove("is-on");
         }, visibleMs);
 
+        const thunderAudio = nextThunderAudio();
         if (thunderAudio) {
           window.clearTimeout(thunderTimer);
-          const thunderDelay = 80 + Math.random() * 260;
+          const thunderDelay = 80 + Math.random() * 220; // real thunder lags the flash slightly
           thunderTimer = window.setTimeout(() => {
             try {
               thunderAudio.currentTime = 0;
+              currentlyPlaying = thunderAudio;
               thunderAudio.play().catch(() => {});
             } catch (e) {
               /* ignore */
@@ -672,24 +693,39 @@
         }
       }
 
-      function scheduleNext() {
-        window.clearTimeout(scheduleTimer);
-        const delay = 22000 + Math.random() * 18000; // 22-40s between strikes
-        scheduleTimer = window.setTimeout(tick, delay);
-      }
+      // Fixed 10s-on / 10s-off duty cycle: a strike (flash + rotating
+      // thunder clip) happens right at the start of each 10s "on" window;
+      // thunder is explicitly stopped at the 10s mark — regardless of how
+      // long the clip actually is — so the "off" half is reliably silent,
+      // then the next 20s cycle repeats.
+      const ON_MS = 10000;
+      const OFF_MS = 10000;
 
-      // The recurring timer tick: only actually strikes while the visitor
-      // has Storm effects turned on (and the tab is visible); otherwise it
-      // just quietly reschedules so flipping the toggle on later doesn't
-      // need a page reload.
-      function tick() {
+      function cycle() {
+        window.clearTimeout(silenceTimer);
         if (stormOn && !document.hidden) {
           strike();
+          silenceTimer = window.setTimeout(silenceThunder, ON_MS);
         }
-        scheduleNext();
+        cycleTimer = window.setTimeout(cycle, ON_MS + OFF_MS);
       }
 
-      scheduleNext();
+      cycleTimer = window.setTimeout(cycle, ON_MS + OFF_MS);
+      if (stormOn) {
+        // Don't make a first-time visitor wait out a full 20s cycle for
+        // their first strike — go right away instead. (If no user gesture
+        // has happened yet on this page load — e.g. a returning visitor
+        // who skipped this session's entry warning — the thunder audio
+        // will be silently blocked by the browser until their first
+        // click/key, per the fallback listener above, but the visual
+        // flash itself isn't gated by that and still shows immediately.)
+        window.setTimeout(() => {
+          if (stormOn && !document.hidden) {
+            window.clearTimeout(cycleTimer);
+            cycle();
+          }
+        }, 50);
+      }
     })();
 
     (function initRaceClock() {
