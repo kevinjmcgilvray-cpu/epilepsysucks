@@ -369,14 +369,20 @@
 
     .chapter__photo,
     .weight-split__photos figure,
-    .split__image {
+    .split__image,
+    .training-status__card,
+    .mechanism-chart__panel,
+    .chapter-split__media img {
       position: relative;
       transition: box-shadow 0.35s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
     .chapter__photo.is-lifted,
     .weight-split__photos figure.is-lifted,
-    .split__image.is-lifted {
+    .split__image.is-lifted,
+    .training-status__card.is-lifted,
+    .mechanism-chart__panel.is-lifted,
+    .chapter-split__media img.is-lifted {
       z-index: 6;
       transform: translateY(-4px);
       box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
@@ -389,7 +395,10 @@
     @media (hover: hover) and (pointer: fine) {
       .chapter__photo:hover,
       .weight-split__photos figure:hover,
-      .split__image:hover {
+      .split__image:hover,
+      .training-status__card:hover,
+      .mechanism-chart__panel:hover,
+      .chapter-split__media img:hover {
         z-index: 6;
         transform: translateY(-4px);
         box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
