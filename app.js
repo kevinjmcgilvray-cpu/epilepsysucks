@@ -1339,6 +1339,238 @@
       }
     })();
 
+    // Small interactive demo: a grid of "neurons" where a click starts a
+    // discharge that spreads to resting neighbors with a probability driven
+    // by two sliders (inhibition, coupling) — a simplified, hands-on
+    // illustration of the surround-inhibition/hypersynchronization concept
+    // described in the write-up above. Not a model of any real network;
+    // just enough mechanics (grid graph + probabilistic BFS spread +
+    // refractory period) to make the idea tangible.
+    (function initMechanismSim() {
+      const svg = document.getElementById("mechanism-sim-svg");
+      if (!svg) return;
+
+      const edgesGroup = document.getElementById("sim-edges");
+      const nodesGroup = document.getElementById("sim-nodes");
+      const inhibitionInput = document.getElementById("sim-inhibition");
+      const couplingInput = document.getElementById("sim-coupling");
+      const inhibitionVal = document.getElementById("sim-inhibition-val");
+      const couplingVal = document.getElementById("sim-coupling-val");
+      const triggerBtn = document.getElementById("sim-trigger");
+      const resetBtn = document.getElementById("sim-reset");
+      const readout = document.getElementById("sim-readout");
+
+      const COLS = 13;
+      const ROWS = 7;
+      const COUNT = COLS * ROWS;
+      const MARGIN_X = 26;
+      const MARGIN_Y = 24;
+      const VIEW_W = 520;
+      const VIEW_H = 280;
+      const dx = (VIEW_W - MARGIN_X * 2) / (COLS - 1);
+      const dy = (VIEW_H - MARGIN_Y * 2) / (ROWS - 1);
+      const REFRACTORY_TICKS = 2;
+      const TICK_MS = 170;
+
+      const ns = "http://www.w3.org/2000/svg";
+      const posX = (i) => MARGIN_X + (i % COLS) * dx;
+      const posY = (i) => MARGIN_Y + Math.floor(i / COLS) * dy;
+      function neighborsOf(i) {
+        const c = i % COLS;
+        const r = Math.floor(i / COLS);
+        const out = [];
+        if (c > 0) out.push(i - 1);
+        if (c < COLS - 1) out.push(i + 1);
+        if (r > 0) out.push(i - COLS);
+        if (r < ROWS - 1) out.push(i + COLS);
+        return out;
+      }
+
+      // Draw edges once (grid lines to right + down neighbor only, so each
+      // connection is drawn a single time).
+      const edgeFrag = document.createDocumentFragment();
+      for (let i = 0; i < COUNT; i++) {
+        const c = i % COLS;
+        const r = Math.floor(i / COLS);
+        if (c < COLS - 1) {
+          const line = document.createElementNS(ns, "line");
+          line.setAttribute("class", "sim-edge");
+          line.setAttribute("x1", posX(i));
+          line.setAttribute("y1", posY(i));
+          line.setAttribute("x2", posX(i + 1));
+          line.setAttribute("y2", posY(i + 1));
+          edgeFrag.appendChild(line);
+        }
+        if (r < ROWS - 1) {
+          const line = document.createElementNS(ns, "line");
+          line.setAttribute("class", "sim-edge");
+          line.setAttribute("x1", posX(i));
+          line.setAttribute("y1", posY(i));
+          line.setAttribute("x2", posX(i + COLS));
+          line.setAttribute("y2", posY(i + COLS));
+          edgeFrag.appendChild(line);
+        }
+      }
+      edgesGroup.appendChild(edgeFrag);
+
+      const nodeEls = new Array(COUNT);
+      const nodeFrag = document.createDocumentFragment();
+      for (let i = 0; i < COUNT; i++) {
+        const circle = document.createElementNS(ns, "circle");
+        circle.setAttribute("class", "sim-node");
+        circle.setAttribute("cx", posX(i));
+        circle.setAttribute("cy", posY(i));
+        circle.setAttribute("r", 4.5);
+        circle.setAttribute("tabindex", "-1");
+        circle.dataset.index = String(i);
+        nodeFrag.appendChild(circle);
+        nodeEls[i] = circle;
+      }
+      nodesGroup.appendChild(nodeFrag);
+
+      // state: 'resting' | 'firing' | 'refractory'
+      let state = new Array(COUNT).fill("resting");
+      let refractoryLeft = new Array(COUNT).fill(0);
+      let recruited = new Set();
+      let firing = new Set();
+      let timer = null;
+      let everTriggered = false;
+
+      function render() {
+        for (let i = 0; i < COUNT; i++) {
+          const el = nodeEls[i];
+          el.classList.remove("is-firing", "is-refractory", "is-recruited");
+          if (state[i] === "firing") {
+            el.classList.add("is-firing");
+          } else if (state[i] === "refractory") {
+            el.classList.add("is-refractory");
+          } else if (recruited.has(i)) {
+            el.classList.add("is-recruited");
+          }
+        }
+      }
+
+      function describeSpread(count) {
+        const pct = Math.round((count / COUNT) * 100);
+        let label;
+        if (count <= 1) label = "stayed exactly where it started";
+        else if (pct < 10) label = "stayed focal — barely spread";
+        else if (pct < 40) label = "spread regionally";
+        else if (pct < 80) label = "spread widely";
+        else label = "generalized across the whole network";
+        return pct + "% of the network fired (" + count + " of " + COUNT + ") — " + label + ".";
+      }
+
+      function updateReadout() {
+        if (!everTriggered) return;
+        if (firing.size > 0) {
+          readout.textContent =
+            Math.round((recruited.size / COUNT) * 100) + "% recruited so far, still spreading\u2026";
+        } else {
+          readout.textContent = describeSpread(recruited.size);
+        }
+      }
+
+      function stop() {
+        if (timer) {
+          clearInterval(timer);
+          timer = null;
+        }
+      }
+
+      function tick() {
+        const inhibition = Number(inhibitionInput.value) / 100;
+        const coupling = Number(couplingInput.value) / 100;
+        const p = coupling * (1 - inhibition);
+
+        const nextFiring = new Set();
+        firing.forEach((i) => {
+          neighborsOf(i).forEach((n) => {
+            if (state[n] !== "resting") return;
+            if (Math.random() < p) nextFiring.add(n);
+          });
+        });
+
+        firing.forEach((i) => {
+          state[i] = "refractory";
+          refractoryLeft[i] = REFRACTORY_TICKS;
+        });
+
+        for (let i = 0; i < COUNT; i++) {
+          if (state[i] === "refractory") {
+            refractoryLeft[i] -= 1;
+            if (refractoryLeft[i] <= 0) state[i] = "resting";
+          }
+        }
+
+        nextFiring.forEach((i) => {
+          state[i] = "firing";
+          recruited.add(i);
+        });
+        firing = nextFiring;
+
+        render();
+        updateReadout();
+
+        if (firing.size === 0) stop();
+      }
+
+      function reset() {
+        stop();
+        state = new Array(COUNT).fill("resting");
+        refractoryLeft = new Array(COUNT).fill(0);
+        recruited = new Set();
+        firing = new Set();
+        everTriggered = false;
+        render();
+        readout.textContent = 'Click a dot, or hit \u201cTrigger focal discharge,\u201d to start.';
+      }
+
+      function triggerFrom(index) {
+        reset();
+        everTriggered = true;
+        state[index] = "firing";
+        recruited.add(index);
+        firing = new Set([index]);
+        render();
+        readout.textContent = "Discharge started\u2026";
+        stop();
+        timer = setInterval(tick, TICK_MS);
+      }
+
+      nodesGroup.addEventListener("click", (e) => {
+        const target = e.target.closest(".sim-node");
+        if (!target) return;
+        const index = Number(target.dataset.index);
+        if (Number.isNaN(index)) return;
+        triggerFrom(index);
+      });
+
+      if (triggerBtn) {
+        triggerBtn.addEventListener("click", () => {
+          const start = Math.floor(COLS / 2) + Math.floor(ROWS / 2) * COLS;
+          triggerFrom(start);
+        });
+      }
+
+      if (resetBtn) {
+        resetBtn.addEventListener("click", reset);
+      }
+
+      if (inhibitionInput && inhibitionVal) {
+        inhibitionInput.addEventListener("input", () => {
+          inhibitionVal.textContent = inhibitionInput.value + "%";
+        });
+      }
+      if (couplingInput && couplingVal) {
+        couplingInput.addEventListener("input", () => {
+          couplingVal.textContent = couplingInput.value + "%";
+        });
+      }
+
+      render();
+    })();
+
     (function initTraining() {
       const chartFrame = document.getElementById("training-chart");
       const longestEl = document.getElementById("stat-longest");
