@@ -2898,30 +2898,99 @@
       max-width: 46rem;
       border: 1px solid var(--line);
       border-radius: 0.75rem;
-      padding: clamp(1.1rem, 3vw, 1.6rem) clamp(1.25rem, 4vw, 1.85rem);
       background: var(--surface-muted);
     }
 
-    .history-note .eyebrow {
-      margin-bottom: 0.5rem;
+    .history-note__summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      list-style: none;
+      cursor: pointer;
+      padding: clamp(1rem, 3vw, 1.3rem) clamp(1.25rem, 4vw, 1.85rem);
+      min-height: 2.75rem;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .history-note__summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .history-note__summary::marker {
+      content: "";
+    }
+
+    .history-note__summary-text {
+      display: block;
+    }
+
+    .history-note__summary .eyebrow {
+      margin-bottom: 0.35rem;
       font-size: 0.78rem;
     }
 
-    .history-note h4 {
-      margin: 0 0 0.85rem;
+    .history-note__summary-title {
+      display: block;
       font-family: var(--font-display);
-      font-size: clamp(1.1rem, 2.4vw, 1.35rem);
+      font-size: clamp(1.05rem, 2.3vw, 1.3rem);
       letter-spacing: 0.01em;
+      color: var(--paper);
     }
 
-    .history-note p {
+    .history-note__chevron {
+      flex-shrink: 0;
+      width: 1.6rem;
+      height: 1.6rem;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      position: relative;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .history-note__chevron::before,
+    .history-note__chevron::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      background: var(--paper-dim);
+    }
+
+    .history-note__chevron::before {
+      width: 0.6rem;
+      height: 1.5px;
+      transform: translate(-50%, -50%);
+    }
+
+    .history-note__chevron::after {
+      width: 1.5px;
+      height: 0.6rem;
+      transform: translate(-50%, -50%);
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .history-note[open] .history-note__chevron::after {
+      transform: translate(-50%, -50%) rotate(90deg);
+      opacity: 0;
+    }
+
+    .history-note__summary:hover .history-note__chevron {
+      background: var(--accent-soft);
+    }
+
+    .history-note__body {
+      padding: 0 clamp(1.25rem, 4vw, 1.85rem) clamp(1.1rem, 3vw, 1.6rem);
+    }
+
+    .history-note__body p {
       margin: 0 0 0.85rem;
       font-size: 0.95rem;
       line-height: 1.6;
       color: var(--paper-dim);
     }
 
-    .history-note p:last-child {
+    .history-note__body p:last-child {
       margin-bottom: 0;
     }
 
