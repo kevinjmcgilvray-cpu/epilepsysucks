@@ -2402,6 +2402,23 @@
         });
       }
 
+      // Same lazy-load approach for the public "Behind the code" diagram —
+      // it's a collapsed <details> too, so there's nothing to intersect
+      // until a visitor actually opens it.
+      const publicArchWrap = document.getElementById("public-architecture-wrap");
+      let publicArchRendered = false;
+      if (publicArchWrap) {
+        publicArchWrap.addEventListener("toggle", () => {
+          if (!publicArchWrap.open || publicArchRendered) return;
+          publicArchRendered = true;
+          ensureMermaid()
+            .then(renderPublicDiagrams)
+            .catch(() => {
+              publicArchRendered = false;
+            });
+        });
+      }
+
       // Re-init mermaid's theme variables for the current data-theme, then
       // fully re-render every diagram that's already been drawn (from its
       // saved original source) so colors actually switch with the toggle,

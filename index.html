@@ -729,6 +729,48 @@ timeline
       </div>
     </section>
 
+    <section class="section" id="behind-the-code">
+      <div class="section__inner reveal">
+        <p class="eyebrow">For the engineers</p>
+        <h2>Behind the code</h2>
+        <p>I'm a software engineer by day, so I built and still run this entire site myself — no agency, no template. It's a plain static page (no framework) backed by a handful of serverless functions and a Postgres database, and the source is public if you want to poke around.</p>
+
+        <details class="mechanism-note" id="public-architecture-wrap">
+          <summary class="mechanism-note__summary">
+            <span class="mechanism-note__summary-text">
+              <span class="eyebrow">The stack</span>
+              <span class="mechanism-note__summary-title">How this site is actually built</span>
+            </span>
+            <span class="mechanism-note__chevron" aria-hidden="true"></span>
+          </summary>
+          <div class="mechanism-note__body">
+          <div class="arch-diagram">
+            <pre class="mermaid" id="public-arch-mermaid">
+flowchart TD
+    Browser["Visitor's browser"]
+    Static["Vercel static hosting\nindex.html · styles.css · app.js"]
+    ThirdParty["Third-party embeds\nGoogle Maps/MapLibre · SociableKIT · Mermaid.js"]
+    API["Vercel serverless functions\napi/*.js"]
+    DB[("Neon Postgres\ntraining · weigh-ins · milestones · funds · comments · live track")]
+    GitHub["GitHub repo (public)"]
+    Deploy["Vercel auto-deploy"]
+
+    Browser -->|"GET /"| Static
+    Browser -->|"loads"| ThirdParty
+    Browser -->|"fetch('/api/...')"| API
+    API -->|"SQL over DATABASE_URL"| DB
+    GitHub -->|"git push to main"| Deploy --> Static
+            </pre>
+            <p class="arch-fallback-note">Diagram renders when you expand this panel.</p>
+          </div>
+          <p>The frontend is deliberately boring: hand-written HTML/CSS/JS, no build step, no bundler. Every chart on this page — the weigh-ins, the seizure-frequency bars — is plain SVG built and animated by <code>app.js</code>, with no charting library. The backend is a set of small <a href="https://vercel.com" target="_blank" rel="noopener noreferrer">Vercel</a> serverless functions in <code>api/</code>, each one reading or writing a <a href="https://neon.tech" target="_blank" rel="noopener noreferrer">Neon</a> Postgres database (training runs, weigh-ins, milestones, fundraising totals, comments, race-day GPS).</p>
+          <p>Every change ships the same way: a feature branch, a pull request with its own live Vercel preview URL, then a squash merge to <code>main</code> that Vercel auto-deploys straight to this domain — usually within a minute or two of merging.</p>
+          <p><a href="https://github.com/kevinjmcgilvray-cpu/epilepsysucks" target="_blank" rel="noopener noreferrer">View the source on GitHub →</a></p>
+          </div>
+        </details>
+      </div>
+    </section>
+
     <section class="section section--alt" id="comments">
       <div class="section__inner reveal">
         <p class="eyebrow">Community</p>

@@ -187,6 +187,14 @@
       text-decoration-thickness: 1.5px;
     }
 
+    code {
+      font-family: "Share Tech Mono", "Share Tech Mono Fallback", ui-monospace, monospace;
+      font-size: 0.88em;
+      background: var(--surface-muted);
+      padding: 0.1em 0.4em;
+      border-radius: 0.3em;
+    }
+
     img {
       display: block;
       max-width: 100%;
