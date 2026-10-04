@@ -50,6 +50,15 @@
       --paper-faint: rgba(235, 228, 216, 0.46);
       --accent: #c43b2c;
       --accent-soft: rgba(196, 59, 44, 0.16);
+      /* --accent itself fails WCAG AA (4.5:1) as normal-weight TEXT on
+         this theme's darker backgrounds (--ink/--ink-2) — it was tuned
+         for use as a background/border/graphic color, not as a text
+         color. --accent-text is a lightened variant (same hue) kept
+         specifically for anywhere --accent colors actual text glyphs
+         (eyebrow labels, links, table cells, etc.); fill/stroke/
+         background/decoration uses should keep using --accent as-is,
+         since graphics only need 3:1 and already have it. */
+      --accent-text: #d1665a;
       --epi: #9b6bff;
       --line: rgba(235, 228, 216, 0.12);
       --nav-top: rgba(20, 17, 15, 0.92);
@@ -82,6 +91,11 @@
       --paper-faint: rgba(28, 25, 21, 0.5);
       --accent: #b83327;
       --accent-soft: rgba(184, 51, 39, 0.12);
+      /* Light theme's --accent already passes AA as text against this
+         theme's backgrounds, so no separate lightened variant is
+         needed here — just alias it to --accent for the same selectors
+         that use --accent-text in dark mode. */
+      --accent-text: var(--accent);
       --epi: #6d3fe8;
       --line: rgba(28, 25, 21, 0.12);
       --nav-top: rgba(232, 227, 218, 0.94);

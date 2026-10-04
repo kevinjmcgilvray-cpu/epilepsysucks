@@ -279,7 +279,7 @@
     }
 
     .support-list a:hover {
-      color: var(--accent);
+      color: var(--accent-text);
     }
 
     .support-list span {
