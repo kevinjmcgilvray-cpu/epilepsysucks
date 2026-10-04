@@ -784,7 +784,10 @@
 
       .chapter__photo,
       .weight-split__photos figure,
-      .split__image {
+      .split__image,
+      .training-status__card,
+      .mechanism-chart__panel,
+      .chapter-split__media img {
         transition: none;
       }
 
@@ -793,7 +796,13 @@
       .split__image:hover,
       .chapter__photo.is-lifted,
       .weight-split__photos figure.is-lifted,
-      .split__image.is-lifted {
+      .split__image.is-lifted,
+      .training-status__card:hover,
+      .mechanism-chart__panel:hover,
+      .chapter-split__media img:hover,
+      .training-status__card.is-lifted,
+      .mechanism-chart__panel.is-lifted,
+      .chapter-split__media img.is-lifted {
         transform: none;
         box-shadow: none;
       }

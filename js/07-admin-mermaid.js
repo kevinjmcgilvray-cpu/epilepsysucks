@@ -385,7 +385,8 @@
 
     (function initPhotoLiftOnScroll() {
       const photos = document.querySelectorAll(
-        ".chapter__photo, .weight-split__photos figure, .split__image"
+        ".chapter__photo, .weight-split__photos figure, .split__image, " +
+          ".training-status__card, .mechanism-chart__panel, .chapter-split__media img"
       );
       if (!photos.length || !("IntersectionObserver" in window)) return;
 
