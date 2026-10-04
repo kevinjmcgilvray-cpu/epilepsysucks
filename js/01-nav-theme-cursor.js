@@ -61,11 +61,16 @@
         '<path fill="#ffffff" stroke="#9b6bff" stroke-width="1" ' +
         'd="M13 2 4 14h6l-1 8 9-12h-6l1-8z" /></svg>';
       document.body.appendChild(cursorEl);
-      document.documentElement.classList.add("has-custom-cursor");
 
       let pendingX = 0;
       let pendingY = 0;
       let rafId = null;
+      // Don't hide the native pointer (html.has-custom-cursor) until the
+      // replacement bolt icon has an actual position to show — otherwise
+      // there's a window right after load (e.g. while the entry flash
+      // warning is up) where the real cursor is gone and the custom one
+      // is still sitting at opacity: 0, leaving no visible cursor at all.
+      let hasPositioned = false;
 
       function applyPosition() {
         rafId = null;
@@ -81,6 +86,10 @@
         pendingX = e.clientX;
         pendingY = e.clientY;
         cursorEl.classList.add("is-active");
+        if (!hasPositioned) {
+          hasPositioned = true;
+          document.documentElement.classList.add("has-custom-cursor");
+        }
         if (rafId === null) rafId = window.requestAnimationFrame(applyPosition);
       }
 
