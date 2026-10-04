@@ -1592,6 +1592,260 @@
       render();
     })();
 
+    // Live Hodgkin-Huxley (1952) single-neuron simulation: four coupled
+    // nonlinear ODEs (membrane voltage + three gating variables) integrated
+    // in real time via 4th-order Runge-Kutta. Classic giant-squid-axon
+    // constants. Not a canned animation — every point on the trace comes
+    // from actually solving the equations each frame.
+    (function initNeuronSim() {
+      const svg = document.getElementById("neuron-sim-svg");
+      if (!svg) return;
+
+      const traceEl = document.getElementById("neuron-sim-trace");
+      const gridEl = document.getElementById("neuron-sim-grid");
+      const thresholdEl = document.getElementById("neuron-sim-threshold");
+      const currentInput = document.getElementById("neuron-current");
+      const inhibitionInput = document.getElementById("neuron-inhibition");
+      const currentVal = document.getElementById("neuron-current-val");
+      const inhibitionVal = document.getElementById("neuron-inhibition-val");
+      const playPauseBtn = document.getElementById("neuron-playpause");
+      const resetBtn = document.getElementById("neuron-reset");
+      const readout = document.getElementById("neuron-readout");
+
+      // --- Hodgkin-Huxley constants (mV, ms, µF/cm², mS/cm², µA/cm²) ---
+      const C_M = 1.0;
+      const G_NA = 120, E_NA = 50;
+      const G_K = 36, E_K = -77;
+      const G_L = 0.3, E_L = -54.387;
+      const E_INH = -80; // GABA-A-like reversal potential
+
+      function alphaN(V) {
+        const x = V + 55;
+        return Math.abs(x) < 1e-6 ? 0.1 : (0.01 * x) / (1 - Math.exp(-x / 10));
+      }
+      function betaN(V) {
+        return 0.125 * Math.exp(-(V + 65) / 80);
+      }
+      function alphaM(V) {
+        const x = V + 40;
+        return Math.abs(x) < 1e-6 ? 1 : (0.1 * x) / (1 - Math.exp(-x / 10));
+      }
+      function betaM(V) {
+        return 4 * Math.exp(-(V + 65) / 18);
+      }
+      function alphaH(V) {
+        return 0.07 * Math.exp(-(V + 65) / 20);
+      }
+      function betaH(V) {
+        return 1 / (1 + Math.exp(-(V + 35) / 10));
+      }
+
+      // state = [V, m, h, n]
+      function derivatives(state, iExt, gInh) {
+        const V = state[0], m = state[1], h = state[2], n = state[3];
+        const iNa = G_NA * m * m * m * h * (V - E_NA);
+        const iK = G_K * n * n * n * n * (V - E_K);
+        const iL = G_L * (V - E_L);
+        const iInh = gInh * (V - E_INH);
+        const dV = (iExt - iNa - iK - iL - iInh) / C_M;
+        const dm = alphaM(V) * (1 - m) - betaM(V) * m;
+        const dh = alphaH(V) * (1 - h) - betaH(V) * h;
+        const dn = alphaN(V) * (1 - n) - betaN(V) * n;
+        return [dV, dm, dh, dn];
+      }
+
+      function rk4Step(state, dt, iExt, gInh) {
+        const k1 = derivatives(state, iExt, gInh);
+        const s2 = state.map((v, i) => v + (dt / 2) * k1[i]);
+        const k2 = derivatives(s2, iExt, gInh);
+        const s3 = state.map((v, i) => v + (dt / 2) * k2[i]);
+        const k3 = derivatives(s3, iExt, gInh);
+        const s4 = state.map((v, i) => v + dt * k3[i]);
+        const k4 = derivatives(s4, iExt, gInh);
+        return state.map(
+          (v, i) => v + (dt / 6) * (k1[i] + 2 * k2[i] + 2 * k3[i] + k4[i])
+        );
+      }
+
+      // --- Simulation / rendering config ---
+      const DT = 0.01; // ms, simulated step size
+      const SIM_SPEED = 0.12; // simulated ms per real ms (slowed for visibility)
+      const WINDOW_MS = 160; // sliding window of simulated time shown on screen
+      const MAX_FRAME_MS = 60; // clamp real-time deltas (tab backgrounded, etc.)
+      const V0 = [-65, 0.05, 0.6, 0.32];
+      const VIEW_W = 520, VIEW_H = 190;
+      const PAD_L = 34, PAD_R = 8, PAD_T = 10, PAD_B = 10;
+      const V_MIN = -90, V_MAX = 50;
+
+      let state = V0.slice();
+      let samples = []; // { t, v } with t = simulated ms, oldest first
+      let simTime = 0;
+      let spikeTimes = [];
+      let wasAboveZero = false;
+      let playing = true;
+      let lastFrameAt = null;
+      let rafId = null;
+
+      function vToY(v) {
+        const clamped = Math.max(V_MIN, Math.min(V_MAX, v));
+        return PAD_T + (1 - (clamped - V_MIN) / (V_MAX - V_MIN)) * (VIEW_H - PAD_T - PAD_B);
+      }
+
+      // Static gridlines + axis labels, drawn once.
+      (function drawGrid() {
+        const ns = "http://www.w3.org/2000/svg";
+        const ticks = [40, 0, -40, -80];
+        const frag = document.createDocumentFragment();
+        ticks.forEach((v) => {
+          const y = vToY(v);
+          const line = document.createElementNS(ns, "line");
+          line.setAttribute("x1", PAD_L);
+          line.setAttribute("x2", VIEW_W - PAD_R);
+          line.setAttribute("y1", y);
+          line.setAttribute("y2", y);
+          frag.appendChild(line);
+          const text = document.createElementNS(ns, "text");
+          text.setAttribute("x", PAD_L - 4);
+          text.setAttribute("y", y + 2.5);
+          text.setAttribute("text-anchor", "end");
+          text.textContent = v + "mV";
+          frag.appendChild(text);
+        });
+        gridEl.appendChild(frag);
+        thresholdEl.setAttribute("y1", vToY(0));
+        thresholdEl.setAttribute("y2", vToY(0));
+      })();
+
+      function render() {
+        const t0 = samples.length ? samples[0].t : simTime;
+        const span = Math.max(1, WINDOW_MS);
+        const points = samples
+          .map((s) => {
+            const x = PAD_L + ((s.t - t0) / span) * (VIEW_W - PAD_L - PAD_R);
+            return x.toFixed(2) + "," + vToY(s.v).toFixed(2);
+          })
+          .join(" ");
+        traceEl.setAttribute("points", points);
+      }
+
+      function currentFiringRateHz() {
+        const recent = spikeTimes.filter((t) => simTime - t <= RATE_WINDOW_MS);
+        return recent.length / (RATE_WINDOW_MS / 1000);
+      }
+
+      const RATE_WINDOW_MS = 180; // simulated ms; kept close to WINDOW_MS so
+      // the readout tracks slider changes about as fast as the trace does,
+      // rather than lagging several real-world seconds behind.
+
+      function updateReadout(vNow) {
+        const rate = currentFiringRateHz();
+        const recentlySpiked =
+          spikeTimes.length && simTime - spikeTimes[spikeTimes.length - 1] <= RATE_WINDOW_MS;
+        let label;
+        if (!recentlySpiked && vNow < -55) {
+          label = "Resting — below firing threshold.";
+        } else if (!recentlySpiked && vNow >= -55) {
+          label = "Sustained depolarization — spiking has shut down.";
+        } else if (rate < 20) {
+          label = "Occasional spiking.";
+        } else if (rate < 100) {
+          label = "Regular spiking.";
+        } else {
+          label = "Rapid, near-continuous firing.";
+        }
+        readout.textContent =
+          vNow.toFixed(1) + " mV · " + Math.round(rate) + " Hz · " + label;
+      }
+
+      function stepSimulation(simMs) {
+        const iExt = Number(currentInput.value);
+        const gInh = (Number(inhibitionInput.value) / 100) * 2.5;
+        let steps = Math.max(1, Math.round(simMs / DT));
+        steps = Math.min(steps, 4000); // hard safety cap per frame
+        for (let i = 0; i < steps; i++) {
+          state = rk4Step(state, DT, iExt, gInh);
+          simTime += DT;
+          const v = state[0];
+          const above = v > 0;
+          if (above && !wasAboveZero) spikeTimes.push(simTime);
+          wasAboveZero = above;
+        }
+        samples.push({ t: simTime, v: state[0] });
+        const cutoff = simTime - WINDOW_MS;
+        while (samples.length > 1 && samples[0].t < cutoff) samples.shift();
+        spikeTimes = spikeTimes.filter((t) => simTime - t <= RATE_WINDOW_MS);
+      }
+
+      function frame(now) {
+        if (!playing) return;
+        if (lastFrameAt == null) lastFrameAt = now;
+        const realMs = Math.min(MAX_FRAME_MS, now - lastFrameAt);
+        lastFrameAt = now;
+        stepSimulation(Math.max(0.01, realMs * SIM_SPEED));
+        render();
+        updateReadout(state[0]);
+        rafId = requestAnimationFrame(frame);
+      }
+
+      function play() {
+        if (playing) return;
+        playing = true;
+        lastFrameAt = null;
+        if (playPauseBtn) playPauseBtn.textContent = "Pause";
+        rafId = requestAnimationFrame(frame);
+      }
+
+      function pause() {
+        playing = false;
+        if (playPauseBtn) playPauseBtn.textContent = "Resume";
+        if (rafId) cancelAnimationFrame(rafId);
+      }
+
+      function reset() {
+        state = V0.slice();
+        samples = [{ t: 0, v: V0[0] }];
+        simTime = 0;
+        spikeTimes = [];
+        wasAboveZero = false;
+        render();
+        updateReadout(state[0]);
+      }
+
+      reset();
+      rafId = requestAnimationFrame(frame);
+
+      if (currentInput && currentVal) {
+        currentInput.addEventListener("input", () => {
+          currentVal.textContent = Number(currentInput.value).toFixed(1) + " µA/cm²";
+        });
+      }
+      if (inhibitionInput && inhibitionVal) {
+        inhibitionInput.addEventListener("input", () => {
+          inhibitionVal.textContent = inhibitionInput.value + "%";
+        });
+      }
+      if (playPauseBtn) {
+        playPauseBtn.addEventListener("click", () => (playing ? pause() : play()));
+      }
+      if (resetBtn) {
+        resetBtn.addEventListener("click", reset);
+      }
+
+      // Pause the RK4 loop when the tab isn't visible (saves CPU, and
+      // avoids a huge elapsed-time jump on return), but remember whether
+      // it was actually running so we only auto-resume if the user hadn't
+      // already paused it manually themselves.
+      let wasPlayingBeforeHide = false;
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+          wasPlayingBeforeHide = playing;
+          if (playing) pause();
+        } else if (wasPlayingBeforeHide) {
+          play();
+        }
+      });
+    })();
+
     (function initTraining() {
       const chartFrame = document.getElementById("training-chart");
       const longestEl = document.getElementById("stat-longest");

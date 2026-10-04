@@ -1811,6 +1811,52 @@
       }
     }
 
+    .neuron-sim {
+      margin-top: 2.25rem;
+      padding-top: 1.75rem;
+      border-top: 1px solid var(--line);
+    }
+
+    .neuron-sim__frame {
+      border: 1px solid var(--line);
+      border-radius: 0.6rem;
+      background: linear-gradient(180deg, var(--chart-top), var(--chart-bottom));
+      overflow: hidden;
+    }
+
+    .neuron-sim__frame svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .neuron-sim__grid line {
+      stroke: var(--line);
+      stroke-width: 1;
+      stroke-dasharray: 2 3;
+    }
+
+    .neuron-sim__grid text {
+      font-family: "DM Sans", sans-serif;
+      font-size: 8px;
+      fill: var(--paper-faint);
+    }
+
+    .neuron-sim__threshold {
+      stroke: var(--paper-faint);
+      stroke-width: 1;
+      stroke-dasharray: 3 3;
+      opacity: 0.6;
+    }
+
+    .neuron-sim__trace {
+      fill: none;
+      stroke: var(--epi);
+      stroke-width: 1.75;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+    }
+
     /* Photos flank the text: before/journey shots on the left, after
        shots on the right, text column in the middle. This section drops
        most of the standard side padding and its inner container's width
