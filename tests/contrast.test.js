@@ -38,8 +38,18 @@ function isKnownException(r) {
 // #51) and explicitly reverted at the user's request afterwards, so it
 // is a known, intentional-for-now state rather than an oversight — see
 // git history for #51/#53/#54 for the full back-and-forth. If this
-// number goes UP, something new regressed and the test should fail.
-const BASELINE_LOW_CONTRAST_COUNT = { dark: 14, light: 0 };
+// number goes UP beyond what's explained below, something new
+// regressed and the test should fail.
+//
+// Bumped from 14 to 20 by PR #56 (".eyebrow" specificity fix): some
+// <p class="eyebrow"> elements were accidentally rendering in the
+// higher-contrast --paper-dim grey due to a separate, unrelated CSS
+// specificity bug (.section p beating .eyebrow). Fixing that bug
+// correctly makes them use --accent like every other eyebrow label —
+// which is the right visual fix — but that *also* means more elements
+// now hit the same pre-existing --accent-as-text contrast tradeoff
+// described above. Not a new issue, just more instances of the old one.
+const BASELINE_LOW_CONTRAST_COUNT = { dark: 20, light: 0 };
 
 async function scanTheme(browser, baseUrl, theme) {
   const page = await browser.newPage({ viewport: { width: 1280, height: 1000 } });
