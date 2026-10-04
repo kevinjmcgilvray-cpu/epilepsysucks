@@ -544,6 +544,27 @@
       }
     }
 
+    /* Lightning cursor toggle — same pill shape as .storm-toggle, but
+       its own "on" treatment (purple/white glow, matching #custom-
+       cursor's own drop-shadow colors below) rather than storm's
+       gold, so the two don't read as the same switch at a glance. */
+    .cursor-toggle.is-on {
+      opacity: 1;
+      background: linear-gradient(135deg, #9b6bff 0%, #6b46c1 100%);
+      border-color: rgba(224, 208, 255, 0.7);
+      box-shadow: 0 0 14px rgba(155, 107, 255, 0.6);
+    }
+
+    /* This toggle (and the cursor it controls) only ever does anything
+       on a real mouse — js/01-nav-theme-cursor.js already gates the
+       cursor itself behind (pointer: fine), this just keeps the button
+       from showing up as a dead control on touch devices. */
+    @media (pointer: coarse) {
+      .cursor-toggle {
+        display: none;
+      }
+    }
+
     /* Full-screen photosensitivity notice shown once per browser (via
        localStorage) before any page content is usable. Site content is
        made inert via visibility (not just visually covered) so it can't

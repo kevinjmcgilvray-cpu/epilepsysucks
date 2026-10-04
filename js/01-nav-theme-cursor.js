@@ -49,9 +49,13 @@
     // transform per frame rather than reacting to every mousemove event
     // directly, so it stays smooth without flooding layout/paint work.
     (function initCustomCursor() {
+      const toggle = document.getElementById("cursor-toggle");
       const supportsFinePointer =
         window.matchMedia && window.matchMedia("(pointer: fine)").matches;
-      if (!supportsFinePointer) return;
+      if (!supportsFinePointer) {
+        if (toggle) toggle.remove();
+        return;
+      }
 
       const cursorEl = document.createElement("div");
       cursorEl.id = "custom-cursor";
@@ -72,13 +76,22 @@
       // visible cursor at all.
       let hasPositioned = false;
 
+      // Off by default (the normal pointer is what visitors see unless
+      // they explicitly opt in via the toggle button) — the opposite
+      // default of the storm effects toggle, which starts on. A prior
+      // explicit choice (either way) is remembered the same way.
+      let cursorOn = false;
+      try {
+        cursorOn = window.localStorage.getItem("lightningCursorOn") === "on";
+      } catch (e) {
+        /* localStorage unavailable (e.g. private mode) — default stays off */
+      }
+
       // Keep the plain, familiar native pointer for the entire time the
       // entry flash-warning is up (visitors need to be able to see and
-      // click "I understand — continue" right away), and only start
-      // swapping over to the lightning-bolt cursor once that's been
-      // dismissed. If it was already acknowledged on an earlier visit
-      // (warning stays hidden), this is just inert and the bolt cursor
-      // can take over as soon as the mouse first moves, as before.
+      // click "I understand — continue" right away), and only let the
+      // lightning-bolt cursor take over (if already toggled on from a
+      // prior visit) once that's been dismissed.
       const entryWarningEl = document.getElementById("entry-warning");
       let warningActive = !!(entryWarningEl && !entryWarningEl.hidden);
 
@@ -86,6 +99,21 @@
         cursorEl.classList.add("is-active");
         document.documentElement.classList.add("has-custom-cursor");
       }
+      function disableCustomCursor() {
+        cursorEl.classList.remove("is-active");
+        document.documentElement.classList.remove("has-custom-cursor");
+      }
+
+      function applyToggleUI() {
+        if (!toggle) return;
+        toggle.classList.toggle("is-on", cursorOn);
+        toggle.setAttribute("aria-pressed", cursorOn ? "true" : "false");
+        toggle.setAttribute(
+          "aria-label",
+          cursorOn ? "Turn off lightning cursor" : "Turn on lightning cursor"
+        );
+      }
+      applyToggleUI();
 
       if (warningActive) {
         const continueBtn = document.getElementById("entry-warning-continue");
@@ -94,7 +122,7 @@
             "click",
             () => {
               warningActive = false;
-              if (hasPositioned) enableCustomCursor();
+              if (cursorOn && hasPositioned) enableCustomCursor();
             },
             { once: true }
           );
@@ -117,7 +145,7 @@
         pendingX = e.clientX;
         pendingY = e.clientY;
         hasPositioned = true;
-        if (!warningActive) enableCustomCursor();
+        if (cursorOn && !warningActive) enableCustomCursor();
         if (rafId === null) rafId = window.requestAnimationFrame(applyPosition);
       }
 
@@ -126,15 +154,39 @@
         cursorEl.classList.remove("is-active");
       });
 
+      if (toggle) {
+        toggle.addEventListener("click", (e) => {
+          cursorOn = !cursorOn;
+          applyToggleUI();
+          try {
+            window.localStorage.setItem("lightningCursorOn", cursorOn ? "on" : "off");
+          } catch (err) {
+            /* ignore (private mode etc.) — choice just won't persist */
+          }
+          if (cursorOn) {
+            // Use the click's own position so switching on feels
+            // immediate rather than waiting for the next mouse move.
+            pendingX = e.clientX;
+            pendingY = e.clientY;
+            hasPositioned = true;
+            applyPosition();
+            enableCustomCursor();
+          } else {
+            disableCustomCursor();
+          }
+        });
+      }
+
       // If the device's primary input later switches to touch (hybrid
       // laptops/tablets), bail out cleanly instead of leaving a stray
       // invisible cursor div and a none-cursor class behind.
       const coarseQuery = window.matchMedia("(pointer: coarse)");
       const handleCoarseChange = (ev) => {
         if (ev.matches) {
-          document.documentElement.classList.remove("has-custom-cursor");
+          disableCustomCursor();
           cursorEl.remove();
           window.removeEventListener("mousemove", onMove);
+          if (toggle) toggle.remove();
         }
       };
       if (coarseQuery.addEventListener) {
