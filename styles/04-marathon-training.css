@@ -1,0 +1,708 @@
+/* 04-marathon-training.css
+   More chapter-photo variants, course map/profile, funds bar, neuron sim, split layouts, training chart, weight-split
+   Part of the styles.css split — see index.html for load order (these
+   files must stay in this exact sequence; later files' rules can win
+   ties against earlier ones at equal specificity, same as when this
+   was one file). */
+
+    .mechanism-sim__readout {
+      margin: 0.9rem 0 0;
+      font-size: 0.85rem;
+      color: var(--paper-dim);
+      min-height: 1.2em;
+    }
+
+    @media (max-width: 560px) {
+      .mechanism-sim__buttons {
+        margin-left: 0;
+        width: 100%;
+      }
+
+      .mechanism-sim__buttons .btn {
+        flex: 1 1 auto;
+      }
+    }
+
+    .neuron-sim {
+      margin-top: 2.25rem;
+      padding-top: 1.75rem;
+      border-top: 1px solid var(--line);
+    }
+
+    .neuron-sim__frame {
+      border: 1px solid var(--line);
+      border-radius: 0.6rem;
+      background: linear-gradient(180deg, var(--chart-top), var(--chart-bottom));
+      overflow: hidden;
+    }
+
+    .neuron-sim__frame svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .neuron-sim__grid line {
+      stroke: var(--line);
+      stroke-width: 1;
+      stroke-dasharray: 2 3;
+    }
+
+    .neuron-sim__grid text {
+      font-family: "DM Sans", sans-serif;
+      font-size: 8px;
+      fill: var(--paper-faint);
+    }
+
+    .neuron-sim__threshold {
+      stroke: var(--paper-faint);
+      stroke-width: 1;
+      stroke-dasharray: 3 3;
+      opacity: 0.6;
+    }
+
+    .neuron-sim__trace {
+      fill: none;
+      stroke: var(--epi);
+      stroke-width: 1.75;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+    }
+
+    /* Photos flank the text: before/journey shots on the left, after
+       shots on the right, text column in the middle. This section drops
+       most of the standard side padding and its inner container's width
+       cap so the photo columns sit flush against the edges of the
+       screen. The photo columns are a fixed width so they stay the same
+       size regardless of how much extra room opens up — only the text
+       column grows to soak up the freed space. */
+    #weight {
+      padding-left: clamp(1rem, 3vw, 2.5rem);
+      padding-right: clamp(1rem, 3vw, 2.5rem);
+    }
+
+    #weight .section__inner--wide {
+      max-width: none;
+    }
+
+    .weight-split {
+      display: grid;
+      grid-template-columns: 23.3rem minmax(0, 1fr) 23.3rem;
+      gap: clamp(2rem, 5vw, 4rem);
+      align-items: start;
+    }
+
+    .weight-split__body {
+      max-width: 42rem;
+    }
+
+    .weight-split__photos {
+      display: grid;
+      gap: 1rem;
+      position: sticky;
+      top: 5.5rem;
+    }
+
+    .weight-split__photos figure {
+      margin: 0;
+      border: 1px solid var(--line);
+      overflow: hidden;
+      background: var(--ink-2);
+    }
+
+    .weight-split__photos img {
+      width: 100%;
+      height: auto;
+      min-height: 0;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      background: var(--ink-2);
+    }
+
+    .weight-split__photos figcaption {
+      padding: 0.6rem 0.75rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--paper-faint);
+      border-top: 1px solid var(--line);
+    }
+
+    .weight-split__body h2 {
+      margin-top: 0.35rem;
+    }
+
+    @media (max-width: 900px) {
+      .weight-split {
+        grid-template-columns: 1fr;
+      }
+
+      .weight-split__photos {
+        position: static;
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .weight-split__photos--left {
+        order: 1;
+      }
+
+      .weight-split__body {
+        order: 2;
+      }
+
+      .weight-split__photos--right {
+        order: 3;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .weight-chart__tooltip {
+        transition: none;
+      }
+    }
+
+    .chapter--with-photo {
+      display: grid;
+      grid-template-columns: minmax(10rem, 0.85fr) 1.15fr;
+      gap: clamp(1.25rem, 3vw, 2rem);
+      align-items: start;
+    }
+
+    .chapter--with-photo--right {
+      grid-template-columns: 1.15fr minmax(10rem, 0.85fr);
+    }
+
+    .chapter--with-photo .chapter__photo {
+      margin: 0;
+      max-width: none;
+      position: sticky;
+      top: 5.5rem;
+    }
+
+    /* A photo placed inline within the text column itself (chapter__body),
+       rather than in the sticky side photo slot — shouldn't stick or
+       stretch full width. */
+    .chapter--with-photo .chapter__photo--inline {
+      position: static;
+      margin: 1.25rem 0 0;
+      max-width: 28rem;
+    }
+
+    .chapter--with-photo .chapter__body .chapter__year {
+      margin-top: 0;
+    }
+
+    @media (max-width: 800px) {
+      .chapter--with-photo,
+      .chapter--with-photo--right {
+        grid-template-columns: 1fr;
+      }
+
+      .chapter--with-photo .chapter__photo {
+        position: static;
+        order: 2;
+      }
+    }
+
+    /* Surgery/scar photos: shown (softly blurred) in the darker theme,
+       hidden entirely in light mode for a cleaner, more professional
+       read of the story. Tapping/clicking reveals the unblurred photo. */
+    .chapter__photo-reveal {
+      display: block;
+      position: relative;
+      width: 100%;
+      padding: 0;
+      margin: 0;
+      border: 0;
+      background: none;
+      cursor: pointer;
+    }
+
+    .chapter__photo-reveal img {
+      filter: blur(11px) saturate(0.85);
+      transition: filter 0.4s ease;
+    }
+
+    .chapter__photo-reveal.is-revealed img {
+      filter: none;
+    }
+
+    .chapter__photo-hint {
+      position: absolute;
+      left: 50%;
+      bottom: 0.7rem;
+      transform: translateX(-50%);
+      padding: 0.4rem 0.8rem;
+      border-radius: 999px;
+      background: rgba(20, 17, 15, 0.72);
+      color: #ebe4d8;
+      font-family: var(--font-body);
+      font-size: 0.72rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      opacity: 0.92;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .chapter__photo-reveal.is-revealed .chapter__photo-hint {
+      opacity: 0;
+    }
+
+    .chapter__photo-reveal:hover .chapter__photo-hint,
+    .chapter__photo-reveal:focus-visible .chapter__photo-hint {
+      opacity: 1;
+    }
+
+    .chapter__photo-reveal:focus-visible {
+      outline: 2px solid var(--epi);
+      outline-offset: 2px;
+    }
+
+    .chapter__photo-note {
+      display: block;
+      font-size: 0.75rem;
+      opacity: 0.7;
+      margin-top: 0.15rem;
+    }
+
+    /* Stack of several blurred/reveal photos inside one chapter photo
+       column (e.g. multiple 2017 surgery photos, dark mode only). */
+    .chapter__photo--stack {
+      border: none;
+      overflow: visible;
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+    }
+
+    .chapter__photo-item {
+      border: 1px solid var(--line);
+      overflow: hidden;
+    }
+
+    html[data-theme="light"] .chapter--with-photo--surgery .chapter__photo--surgery {
+      display: none;
+    }
+
+    html[data-theme="light"] .chapter--with-photo--surgery {
+      grid-template-columns: 1fr;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: clamp(2rem, 6vw, 4.5rem);
+      align-items: center;
+    }
+
+    .split__image {
+      position: relative;
+      min-height: clamp(16rem, 40vw, 26rem);
+      background:
+        linear-gradient(160deg, var(--image-scrim), var(--image-scrim-strong)),
+        url("https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?auto=format&fit=crop&w=1200&q=80") center / cover no-repeat;
+      border: 1px solid var(--line);
+    }
+
+    .split__image--family {
+      background: var(--ink-2);
+      padding: 0;
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    .split__image--family::after {
+      display: none;
+    }
+
+    .split__image--family img {
+      width: 100%;
+      height: auto;
+      display: block;
+      min-height: clamp(16rem, 40vw, 26rem);
+      max-height: 34rem;
+      object-fit: cover;
+      object-position: center 35%;
+    }
+
+    .split__image--race {
+      background: var(--ink-2);
+      padding: 0;
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    .split__image--race::after {
+      display: none;
+    }
+
+    .split__image--race img {
+      width: 100%;
+      height: auto;
+      display: block;
+      min-height: clamp(16rem, 40vw, 26rem);
+      max-height: 34rem;
+      object-fit: cover;
+      object-position: center 15%;
+    }
+
+    .split__image::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 3px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .split__image.is-in::after {
+      transform: scaleX(1);
+    }
+
+    .chapter__photo,
+    .weight-split__photos figure,
+    .split__image {
+      position: relative;
+      transition: box-shadow 0.35s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .chapter__photo.is-lifted,
+    .weight-split__photos figure.is-lifted,
+    .split__image.is-lifted {
+      z-index: 6;
+      transform: translateY(-4px);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+    }
+
+    .chapter--with-photo .chapter__photo.is-lifted {
+      position: sticky;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .chapter__photo:hover,
+      .weight-split__photos figure:hover,
+      .split__image:hover {
+        z-index: 6;
+        transform: translateY(-4px);
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+      }
+
+      .chapter--with-photo .chapter__photo:hover {
+        position: sticky;
+      }
+    }
+
+    .marathon-meta {
+      margin-top: 1.75rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--line);
+      display: grid;
+      gap: 0.85rem;
+      max-width: 38rem;
+    }
+
+    .marathon-meta div {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1.25rem;
+      font-size: 0.95rem;
+      color: var(--paper-dim);
+    }
+
+    .marathon-meta strong {
+      font-weight: 600;
+      color: var(--paper);
+      min-width: 5.5rem;
+    }
+
+    .funds-bar {
+      margin-top: 0.35rem;
+      width: min(100%, 16rem);
+      height: 0.45rem;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--epi) 18%, transparent);
+      overflow: hidden;
+    }
+
+    .funds-bar__fill {
+      display: block;
+      height: 100%;
+      width: 0%;
+      background: var(--epi);
+      transition: width 0.6s ease;
+    }
+
+    .nav__funds-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.35rem;
+      max-width: 100%;
+    }
+
+    .training-status {
+      margin-top: 2rem;
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+    }
+
+    .training-status__card {
+      border: 1px solid var(--line);
+      padding: 1rem 1.1rem;
+      background: var(--surface-muted);
+    }
+
+    .training-status__label {
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--paper-faint);
+      margin-bottom: 0.4rem;
+    }
+
+    .training-status__value {
+      font-family: var(--font-display);
+      font-size: 1.65rem;
+      letter-spacing: 0.04em;
+      color: var(--paper);
+      line-height: 1.1;
+    }
+
+    .training-status__detail {
+      margin-top: 0.35rem;
+      font-size: 0.85rem;
+      color: var(--paper-dim);
+    }
+
+    .training-log {
+      margin-top: 2rem;
+    }
+
+    .training-log__title {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .training-chart {
+      position: relative;
+      border: 1px solid var(--line);
+      background: var(--ink-2);
+      padding: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .training-chart svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      overflow: visible;
+    }
+
+    .training-chart__line {
+      fill: none;
+      stroke: var(--epi);
+      stroke-width: 2.5;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      pointer-events: none;
+    }
+
+    .training-chart__trend-line {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 1.5;
+      stroke-dasharray: 5 4;
+      pointer-events: none;
+      opacity: 0.85;
+    }
+
+    .training-chart__area {
+      fill: color-mix(in srgb, var(--epi) 18%, transparent);
+      pointer-events: none;
+    }
+
+    .training-chart__dot {
+      fill: var(--epi);
+    }
+
+    .training-chart__hit {
+      fill: transparent;
+      cursor: pointer;
+    }
+
+    .training-chart__tooltip {
+      position: absolute;
+      z-index: 2;
+      transform: translate(-50%, calc(-100% - 10px));
+      padding: 0.4rem 0.65rem;
+      border: 1px solid var(--line);
+      background: var(--ink);
+      color: var(--paper);
+      font-size: 0.85rem;
+      line-height: 1.3;
+      pointer-events: none;
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .training-chart__tooltip.is-on {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .training-chart__tooltip strong {
+      display: block;
+      font-weight: 600;
+    }
+
+    .training-chart__tooltip span {
+      color: var(--paper-faint);
+      font-size: 0.8rem;
+    }
+
+    .training-chart__note {
+      margin: 0;
+      color: var(--paper-faint);
+      font-size: 0.9rem;
+    }
+
+    .course-map {
+      --neon-cyan: #2ef7ff;
+      --neon-cyan-soft: rgba(46, 247, 255, 0.35);
+      position: relative;
+      padding: 0;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(46, 247, 255, 0.08), transparent 55%),
+        var(--ink);
+    }
+
+    .course-map .section__inner {
+      position: relative;
+      z-index: 1;
+      padding-bottom: 1.25rem;
+    }
+
+    .course-map__frame {
+      position: relative;
+      width: 100%;
+      height: min(68vh, 560px);
+      min-height: 320px;
+      border: 1px solid color-mix(in srgb, var(--neon-cyan) 35%, var(--line));
+      box-shadow:
+        0 0 0 1px rgba(46, 247, 255, 0.08) inset,
+        0 0 40px rgba(46, 247, 255, 0.12);
+      overflow: hidden;
+      background: #0a0e14;
+    }
+
+    .course-map__canvas {
+      width: 100%;
+      height: 100%;
+    }
+
+    .course-map__legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem 1.25rem;
+      margin-top: 0.9rem;
+      font-size: 0.9rem;
+      color: var(--paper-dim);
+    }
+
+    .course-map__swatch {
+      display: inline-block;
+      width: 1.75rem;
+      height: 0.28rem;
+      margin-right: 0.45rem;
+      vertical-align: middle;
+      border-radius: 999px;
+      background: var(--neon-cyan);
+      box-shadow: 0 0 10px var(--neon-cyan-soft), 0 0 18px rgba(46, 247, 255, 0.45);
+    }
+
+    .course-map__swatch--live {
+      width: 0.55rem;
+      height: 0.55rem;
+      background: #ff4fd8;
+      box-shadow: 0 0 10px rgba(255, 79, 216, 0.7), 0 0 18px rgba(255, 79, 216, 0.45);
+      animation: live-track-blink 0.55s steps(2, end) infinite;
+    }
+
+    .course-profile {
+      margin-top: 1.75rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--line);
+      display: grid;
+      gap: clamp(1.25rem, 3vw, 2rem);
+      grid-template-columns: minmax(14rem, 0.9fr) minmax(0, 1.2fr);
+      align-items: start;
+    }
+
+    .course-profile__facts {
+      display: grid;
+      gap: 0.7rem;
+    }
+
+    .course-profile__facts div {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem 0.85rem;
+      font-size: 0.92rem;
+      color: var(--paper-dim);
+      line-height: 1.45;
+    }
+
+    .course-profile__facts strong {
+      font-weight: 600;
+      color: var(--paper);
+      min-width: 7.5rem;
+    }
+
+    .course-profile__body .eyebrow {
+      margin-top: 0;
+      margin-bottom: 0.55rem;
+    }
+
+    .course-profile__body p {
+      margin: 0 0 0.85rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--paper-dim);
+      max-width: 40rem;
+    }
+
+    .course-profile__body p:last-child {
+      margin-bottom: 0;
+    }
+
+    .course-profile__source {
+      font-size: 0.8rem !important;
+      color: var(--paper-faint) !important;
+    }
+
+    .course-profile__source a {
+      color: var(--epi);
+      text-decoration: underline;
+      text-underline-offset: 0.15em;
+    }
+
+    @media (max-width: 800px) {
+      .course-profile {
+        grid-template-columns: 1fr;
+      }
+    }
+

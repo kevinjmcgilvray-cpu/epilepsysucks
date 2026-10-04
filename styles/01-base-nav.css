@@ -1,0 +1,704 @@
+/* 01-base-nav.css
+   Base: fonts, CSS variables (both themes), background lightning effect, entry warning modal, nav, race clock
+   Part of the styles.css split — see index.html for load order (these
+   files must stay in this exact sequence; later files' rules can win
+   ties against earlier ones at equal specificity, same as when this
+   was one file). */
+
+    /* Fallback font-face overrides — this site is plain static HTML/CSS
+       (no Next.js), so next/font's automatic metric-matching isn't
+       available, but the same technique applies manually: size-adjust
+       + ascent/descent/line-gap overrides on a @font-face that points
+       at a local system font, scaled to approximate the real webfont's
+       metrics. This shrinks the layout shift between the instant
+       fallback render and the moment the Google Font finishes loading
+       (font-display: swap, below). Values computed from each font's
+       actual OS/2 and hhea tables against Capsize's published Arial /
+       Courier New metrics — not guessed. */
+    @font-face {
+      font-family: "DM Sans Fallback";
+      src: local("Arial"), local("Helvetica Neue"), local("Helvetica");
+      ascent-override: 79.97%;
+      descent-override: 24.99%;
+      line-gap-override: 0%;
+      size-adjust: 124.05%;
+    }
+
+    @font-face {
+      font-family: "Bebas Neue Fallback";
+      src: local("Arial"), local("Helvetica Neue"), local("Helvetica");
+      ascent-override: 103.67%;
+      descent-override: 34.56%;
+      line-gap-override: 0%;
+      size-adjust: 86.81%;
+    }
+
+    @font-face {
+      font-family: "Share Tech Mono Fallback";
+      src: local("Courier New"), local("Courier");
+      ascent-override: 97.63%;
+      descent-override: 26.7%;
+      line-gap-override: 0%;
+      size-adjust: 90.65%;
+    }
+
+    :root {
+      --ink: #14110f;
+      --ink-2: #1c1916;
+      --paper: #ebe4d8;
+      --paper-dim: rgba(235, 228, 216, 0.7);
+      --paper-faint: rgba(235, 228, 216, 0.46);
+      --accent: #c43b2c;
+      --accent-soft: rgba(196, 59, 44, 0.16);
+      --epi: #9b6bff;
+      --line: rgba(235, 228, 216, 0.12);
+      --nav-top: rgba(20, 17, 15, 0.92);
+      --nav-solid: rgba(20, 17, 15, 0.9);
+      --nav-menu: rgba(20, 17, 15, 0.97);
+      --hero-mid: #1a1613;
+      --hero-glow: rgba(42, 34, 28, 0.88);
+      --marathon-mid: #211714;
+      --surface-muted: rgba(28, 25, 22, 0.55);
+      --chart-top: rgba(32, 28, 24, 0.92);
+      --chart-bottom: rgba(20, 17, 15, 0.96);
+      --bg-word-stroke: rgba(235, 228, 216, 0.12);
+      --btn-on-color: #ebe4d8;
+      --image-scrim: rgba(20, 17, 15, 0.15);
+      --image-scrim-strong: rgba(20, 17, 15, 0.75);
+      --family-scrim: rgba(20, 17, 15, 0.08);
+      --family-scrim-strong: rgba(20, 17, 15, 0.35);
+      --visual-opacity: 0.28;
+      --h1-glow: rgba(196, 59, 44, 0.32);
+      --font-display: "Bebas Neue", "Bebas Neue Fallback", sans-serif;
+      --font-body: "DM Sans", "DM Sans Fallback", sans-serif;
+      color-scheme: dark;
+    }
+
+    html[data-theme="light"] {
+      --ink: #e8e3da;
+      --ink-2: #ddd6cb;
+      --paper: #1c1915;
+      --paper-dim: rgba(28, 25, 21, 0.74);
+      --paper-faint: rgba(28, 25, 21, 0.5);
+      --accent: #b83327;
+      --accent-soft: rgba(184, 51, 39, 0.12);
+      --epi: #6d3fe8;
+      --line: rgba(28, 25, 21, 0.12);
+      --nav-top: rgba(232, 227, 218, 0.94);
+      --nav-solid: rgba(232, 227, 218, 0.96);
+      --nav-menu: rgba(232, 227, 218, 0.99);
+      --hero-mid: #e2dbd0;
+      --hero-glow: rgba(236, 230, 220, 0.92);
+      --marathon-mid: #ddd2c8;
+      --surface-muted: rgba(250, 247, 241, 0.72);
+      --chart-top: #faf7f2;
+      --chart-bottom: #efeae2;
+      --bg-word-stroke: rgba(28, 25, 21, 0.1);
+      --btn-on-color: #f7f3ec;
+      --image-scrim: rgba(232, 227, 218, 0.12);
+      --image-scrim-strong: rgba(28, 25, 21, 0.28);
+      --family-scrim: rgba(232, 227, 218, 0.06);
+      --family-scrim-strong: rgba(28, 25, 21, 0.18);
+      --visual-opacity: 0.15;
+      --h1-glow: rgba(109, 63, 232, 0.2);
+      color-scheme: light;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Visually hidden but still readable by assistive tech — use to
+       give screen readers extra context without duplicating it on
+       screen (e.g. a label prefix before a block of dynamic numbers). */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    body {
+      position: relative;
+      font-family: var(--font-body);
+      color: var(--paper);
+      background: var(--ink);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      /* Reserves room for the fixed race-clock-block bar (height synced
+         into --footer-clock-h by app.js) so the footer never ends up
+         hidden underneath it when scrolled all the way down. */
+      padding-bottom: var(--footer-clock-h, 0px);
+    }
+
+    /* Custom lightning-bolt cursor — only enabled by app.js on devices
+       with a real mouse (pointer: fine); touch devices are untouched.
+       This class hides the native pointer everywhere so the custom one
+       (#custom-cursor, positioned via JS on mousemove) can stand in for
+       it instead. */
+    html.has-custom-cursor,
+    html.has-custom-cursor * {
+      cursor: none !important;
+    }
+
+    #custom-cursor {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 26px;
+      height: 26px;
+      pointer-events: none;
+      z-index: 2000;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+      filter: drop-shadow(0 0 4px rgba(155, 107, 255, 0.55)) drop-shadow(0 0 1px rgba(255, 255, 255, 0.8));
+      /* A slow (2.6s) glow breathe, not a flicker — this site is about
+         photosensitive epilepsy and already goes out of its way to
+         avoid rapid flashing elsewhere, so this stays a gentle, smooth
+         brightness change rather than anything strobe-like. */
+      animation: custom-cursor-glow 2.6s ease-in-out infinite;
+    }
+
+    #custom-cursor.is-active {
+      opacity: 1;
+    }
+
+    #custom-cursor svg {
+      display: block;
+    }
+
+    @keyframes custom-cursor-glow {
+      0%,
+      100% {
+        filter: drop-shadow(0 0 4px rgba(155, 107, 255, 0.5)) drop-shadow(0 0 1px rgba(255, 255, 255, 0.75));
+      }
+      50% {
+        filter: drop-shadow(0 0 10px rgba(155, 107, 255, 0.95)) drop-shadow(0 0 3px rgba(255, 255, 255, 1));
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #custom-cursor {
+        animation: none;
+        filter: drop-shadow(0 0 5px rgba(155, 107, 255, 0.65)) drop-shadow(0 0 1px rgba(255, 255, 255, 0.85));
+      }
+    }
+
+    /* Defense in depth: app.js already gates this behind a (pointer: fine)
+       check before adding has-custom-cursor at all, but a hybrid device
+       (e.g. a laptop with both touch and a mouse) could switch primary
+       input after load, so make sure a coarse/touch pointer always gets
+       the real cursor back and never hides it. */
+    @media (pointer: coarse) {
+      html.has-custom-cursor,
+      html.has-custom-cursor * {
+        cursor: auto !important;
+      }
+
+      #custom-cursor {
+        display: none !important;
+      }
+    }
+
+    .skip-link {
+      position: absolute;
+      top: -4rem;
+      left: 1rem;
+      z-index: 100;
+      padding: 0.65rem 1.1rem;
+      border-radius: 0.5rem;
+      background: var(--epi);
+      color: #fff;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+      transition: top 0.2s ease;
+    }
+
+    .skip-link:focus {
+      top: 1rem;
+      outline: 2px solid #fff;
+      outline-offset: 2px;
+    }
+
+    .bg-lightning {
+      position: fixed;
+      inset: 0;
+      /* Deliberately above regular page content (so a strike is actually
+         visible over text/photos, like real lightning lighting up a dark
+         room) but below the fixed header/footer bars (z-index: 20) so
+         navigation stays legible. The old static image sat at z-index: 0,
+         which — combined with .hero's isolated stacking context — made it
+         invisible on the live page; this corrects that. */
+      z-index: 15;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .bg-lightning__photo {
+      position: absolute;
+      inset: 0;
+      background:
+        url("/epilepsy-sucks-images/lightning-seizure.webp") center center / cover no-repeat;
+      /* Faded down from 0.42 — at that strength the screen blend mode
+         washed the whole page in a strong purple cast, more pronounced
+         than intended as a subtle background texture. */
+      opacity: 0.24;
+      mix-blend-mode: screen;
+    }
+
+    [data-theme="light"] .bg-lightning__photo {
+      /* Faded down from 0.22 to match the dark-theme reduction above. */
+      opacity: 0.13;
+      mix-blend-mode: multiply;
+    }
+
+    .bg-lightning__flash {
+      position: absolute;
+      inset: 0;
+      background: #eaf2ff;
+      opacity: 0;
+      mix-blend-mode: screen;
+      transition: opacity 0.5s ease-out;
+    }
+
+    .bg-lightning.is-on .bg-lightning__flash {
+      opacity: 0.16;
+      transition: opacity 0.05s ease-in;
+    }
+
+    [data-theme="light"] .bg-lightning.is-on .bg-lightning__flash {
+      opacity: 0.08;
+    }
+
+    .bg-lightning__bolt {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .bg-lightning__bolt-path {
+      fill: none;
+      stroke: #eef4ff;
+      stroke-width: 2.4;
+      stroke-linecap: round;
+      vector-effect: non-scaling-stroke;
+      opacity: 0;
+      filter:
+        drop-shadow(0 0 4px rgba(190, 215, 255, 0.9))
+        drop-shadow(0 0 14px rgba(140, 180, 255, 0.55));
+      transition: opacity 0.5s ease-out;
+    }
+
+    .bg-lightning.is-on .bg-lightning__bolt-path {
+      opacity: 0.85;
+      transition: opacity 0.05s ease-in;
+    }
+
+    [data-theme="light"] .bg-lightning__bolt-path {
+      /* A pale stroke is invisible against the light theme's cream
+         background, so light mode gets a deep indigo bolt instead — still
+         reads as "lightning," just contrasted for a bright sky. */
+      stroke: #46399e;
+      filter:
+        drop-shadow(0 0 3px rgba(70, 57, 158, 0.5))
+        drop-shadow(0 0 9px rgba(70, 57, 158, 0.3));
+    }
+
+    [data-theme="light"] .bg-lightning.is-on .bg-lightning__bolt-path {
+      opacity: 0.65;
+    }
+
+    /* Secondary channels forking off the main bolt — thinner, like real
+       lightning's branches. */
+    #lightning-bolt-branch {
+      stroke-width: 1.5;
+    }
+
+    #lightning-bolt-branch2 {
+      stroke-width: 1;
+    }
+
+    /* Photosensitivity safety: this is an epilepsy awareness site, so the
+       storm effect is a single soft, infrequent flash (never more than one
+       per 20+ seconds, well under the 3-flashes-per-second WCAG threshold)
+       and is fully disabled when the visitor has asked for reduced motion.
+       (The sound toggle's matching display:none lives further down, after
+       its own rules, so it isn't overridden by later source-order CSS.) */
+    @media (prefers-reduced-motion: reduce) {
+      .bg-lightning__flash,
+      .bg-lightning__bolt {
+        display: none;
+      }
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .hl-epi {
+      color: var(--epi);
+    }
+
+    .key {
+      text-decoration: underline;
+      text-decoration-color: var(--epi);
+      text-underline-offset: 0.22em;
+      text-decoration-thickness: 1.5px;
+    }
+
+    code {
+      font-family: "Share Tech Mono", "Share Tech Mono Fallback", ui-monospace, monospace;
+      font-size: 0.88em;
+      background: var(--surface-muted);
+      padding: 0.1em 0.4em;
+      border-radius: 0.3em;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.45rem;
+      padding: calc(0.85rem + env(safe-area-inset-top, 0px)) clamp(1.25rem, 4vw, 2.5rem) 0.85rem;
+      background: linear-gradient(to bottom, var(--nav-top), transparent);
+      backdrop-filter: blur(0px);
+      transition: background 0.35s ease, backdrop-filter 0.35s ease;
+    }
+
+    .nav.is-scrolled {
+      /* Previously switched to a solid var(--nav-solid) bar + blur once
+         scrolled. Kept transparent/gradient-over-content on purpose now —
+         same look as the unscrolled top-of-page state. */
+      background: linear-gradient(to bottom, var(--nav-top), transparent);
+      backdrop-filter: blur(0px);
+    }
+
+    .nav__top {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: start;
+      column-gap: 1rem;
+      row-gap: 0.2rem;
+      width: 100%;
+    }
+
+    .nav__brand-row {
+      grid-column: 1;
+      grid-row: 1;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem 0.75rem;
+    }
+
+    .nav__brand {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* nav__left keeps its brand/funds/cause markup grouped, but on
+       screens wide enough for the two-column header it becomes a
+       transparent wrapper so its children can be placed directly on
+       the nav__top grid (this is what lines the race clock up with
+       the funds stats on the same row). */
+    .nav__left {
+      display: contents;
+    }
+
+    .nav__funds-row {
+      grid-column: 1;
+      grid-row: 2;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.45rem 0.55rem;
+      max-width: 100%;
+    }
+
+    .nav__a11y {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2rem;
+      height: 2rem;
+      padding: 0;
+      border: 1px solid rgba(180, 140, 255, 0.55);
+      border-radius: 999px;
+      background: linear-gradient(135deg, #9b6bff 0%, #7a45e8 100%);
+      color: #f7f3ec;
+      cursor: pointer;
+      box-shadow: 0 0 12px rgba(155, 107, 255, 0.35);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+    }
+
+    .nav__a11y:hover {
+      transform: translateY(-1px) scale(1.05);
+      filter: brightness(1.08);
+      box-shadow: 0 0 18px rgba(180, 140, 255, 0.5);
+    }
+
+    .nav__a11y:focus-visible {
+      outline: 2px solid #e0d0ff;
+      outline-offset: 2px;
+    }
+
+    .nav__a11y svg {
+      width: 1.1rem;
+      height: 1.1rem;
+      display: block;
+    }
+
+    .storm-toggle {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2rem;
+      height: 2rem;
+      padding: 0;
+      border: 1px solid rgba(180, 140, 255, 0.55);
+      border-radius: 999px;
+      background: linear-gradient(135deg, #6b5a8e 0%, #4a3f66 100%);
+      color: #f7f3ec;
+      cursor: pointer;
+      opacity: 0.75;
+      box-shadow: 0 0 10px rgba(155, 107, 255, 0.25);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease,
+        opacity 0.18s ease, background 0.18s ease;
+    }
+
+    .storm-toggle:hover {
+      transform: translateY(-1px) scale(1.05);
+      filter: brightness(1.08);
+      box-shadow: 0 0 18px rgba(180, 140, 255, 0.5);
+    }
+
+    .storm-toggle:focus-visible {
+      outline: 2px solid #e0d0ff;
+      outline-offset: 2px;
+    }
+
+    .storm-toggle svg {
+      width: 1.1rem;
+      height: 1.1rem;
+      display: block;
+    }
+
+    /* "Off" (default): dim, desaturated — signals the flashing effect is
+       inactive. "On": bright purple-gold, matching the site's energetic
+       accent, to clearly signal it's live. */
+    .storm-toggle.is-on {
+      opacity: 1;
+      background: linear-gradient(135deg, #ffd36b 0%, #e8a53f 100%);
+      border-color: rgba(255, 211, 107, 0.6);
+      box-shadow: 0 0 14px rgba(255, 211, 107, 0.5);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .storm-toggle {
+        display: none;
+      }
+    }
+
+    /* Full-screen photosensitivity notice shown once per browser (via
+       localStorage) before any page content is usable. Site content is
+       made inert via visibility (not just visually covered) so it can't
+       be focused or interacted with underneath. */
+    .entry-warning {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      background: rgba(8, 6, 12, 0.92);
+      backdrop-filter: blur(6px);
+    }
+
+    .entry-warning[hidden] {
+      display: none;
+    }
+
+    body.entry-locked {
+      overflow: hidden;
+    }
+
+    body.entry-locked > *:not(.entry-warning) {
+      visibility: hidden;
+    }
+
+    .entry-warning__panel {
+      max-width: 30rem;
+      width: 100%;
+      padding: clamp(1.5rem, 4vw, 2.25rem);
+      border: 1px solid rgba(180, 140, 255, 0.4);
+      border-radius: 1rem;
+      background: var(--surface-muted, #1a1613);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      text-align: center;
+    }
+
+    .entry-warning__icon {
+      margin: 0 0 0.5rem;
+      font-size: 2.25rem;
+      line-height: 1;
+    }
+
+    .entry-warning__title {
+      margin: 0 0 0.75rem;
+      font-family: var(--font-display);
+      font-size: clamp(1.3rem, 3vw, 1.6rem);
+      color: var(--paper);
+    }
+
+    .entry-warning__desc {
+      margin: 0 0 1.5rem;
+      font-size: 0.95rem;
+      line-height: 1.55;
+      color: var(--paper);
+      opacity: 0.85;
+    }
+
+    .entry-warning__continue {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .nav__funds {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.2rem 0.4rem;
+      max-width: 100%;
+      font-size: 0.92rem;
+      letter-spacing: 0.02em;
+      color: var(--paper);
+      line-height: 1.25;
+      opacity: 1;
+    }
+
+    .nav__funds strong {
+      color: var(--epi);
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .nav__funds-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.2rem 1.1rem;
+    }
+
+    .nav__funds-stat {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.15;
+    }
+
+    .nav__funds-stat-label {
+      font-size: 0.66rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--paper-dim);
+    }
+
+    .nav__funds:hover {
+      color: var(--paper);
+    }
+
+    .nav__cause {
+      grid-column: 1;
+      grid-row: 3;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      max-width: 100%;
+      margin-top: 0.15rem;
+      color: var(--paper-dim);
+    }
+
+    .nav__cause-logo {
+      flex-shrink: 0;
+      width: auto;
+      height: 1.5rem;
+      display: block;
+    }
+
+    .nav__cause-text {
+      font-size: clamp(0.78rem, 1.7vw, 0.9rem);
+      line-height: 1.25;
+      letter-spacing: 0.01em;
+    }
+
+    /* Fixed bar pinned to the bottom of the viewport (not the header) so
+       the countdown stays visible the whole time someone's on the page,
+       not just at the very top. See the body/.footer padding-bottom and
+       .sticky-donate bottom-offset below, both driven by --footer-clock-h
+       (synced to this element's real height in app.js) so neither the
+       page footer nor the floating Donate button ever sit underneath it. */
+    .race-clock-block {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 20;
+      display: flex;
+      justify-content: center;
+      padding: 0.5rem clamp(1rem, 3vw, 1.5rem) calc(0.5rem + env(safe-area-inset-bottom, 0px));
+      background: var(--nav-solid);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid var(--line);
+    }
+
+    .race-clock {
+      --neon: #b48cff;
+      --neon-dim: rgba(180, 140, 255, 0.4);
+      --tube: #120e1a;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem 0.9rem;
+      margin: 0;
+    }
+
+    .race-clock__units {
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      gap: clamp(0.4rem, 1.6vw, 0.65rem);
+    }
+

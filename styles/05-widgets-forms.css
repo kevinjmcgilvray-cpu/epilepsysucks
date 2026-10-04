@@ -1,0 +1,702 @@
+/* 05-widgets-forms.css
+   Architecture diagram, comments, live-track, moderation, owner-update form, pace calculator, seizure note/video
+   Part of the styles.css split — see index.html for load order (these
+   files must stay in this exact sequence; later files' rules can win
+   ties against earlier ones at equal specificity, same as when this
+   was one file). */
+
+    /* .pace-calc is now a <details class="pace-calc mechanism-note">, so
+       the card look (border/background/padding) comes from .mechanism-note
+       — this just adds breathing room above it and undoes mechanism-note's
+       46rem max-width so the chart/table can use the full wide-block width. */
+    .pace-calc {
+      margin-top: 1.75rem;
+      max-width: none;
+    }
+
+    .pace-calc__chart-frame {
+      position: relative;
+      width: 100%;
+      overflow: visible;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, var(--chart-top), var(--chart-bottom));
+    }
+
+    .pace-calc__chart-frame svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      overflow: visible;
+    }
+
+    .pace-calc__grid {
+      stroke: var(--line);
+    }
+
+    .pace-calc__area {
+      fill: color-mix(in srgb, var(--epi) 16%, transparent);
+      pointer-events: none;
+    }
+
+    .pace-calc__line {
+      fill: none;
+      stroke: var(--epi);
+      stroke-width: 2;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      pointer-events: none;
+    }
+
+    .pace-calc__hit {
+      fill: transparent;
+      cursor: pointer;
+    }
+
+    .pace-calc__dot {
+      fill: var(--epi);
+      pointer-events: none;
+      transition: r 0.15s ease;
+    }
+
+    .pace-calc__point.is-active .pace-calc__dot {
+      fill: var(--accent);
+    }
+
+    .pace-calc__tooltip {
+      position: absolute;
+      z-index: 5;
+      min-width: 7.5rem;
+      padding: 0.5rem 0.7rem;
+      border: 1px solid var(--line);
+      background: var(--ink);
+      color: var(--paper);
+      font-size: 0.82rem;
+      line-height: 1.35;
+      pointer-events: none;
+      opacity: 0;
+      transform: translate(-50%, calc(-100% - 12px));
+      transition: opacity 0.15s ease;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    }
+
+    .pace-calc__tooltip.is-on {
+      opacity: 1;
+    }
+
+    .pace-calc__tooltip strong {
+      display: block;
+      color: var(--paper);
+    }
+
+    .pace-calc__tooltip span {
+      color: var(--paper-dim);
+    }
+
+    .pace-calc__chart-note {
+      margin: 0.6rem 0 1.5rem;
+      font-size: 0.8rem;
+      color: var(--paper-faint);
+      line-height: 1.5;
+    }
+
+    .pace-calc__goal {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .pace-calc__goal label {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      font-size: 0.82rem;
+      color: var(--paper-dim);
+    }
+
+    .pace-calc__goal input {
+      width: 8rem;
+      padding: 0.55rem 0.75rem;
+      border: 1px solid var(--line);
+      background: var(--surface-muted);
+      color: var(--paper);
+      font-family: "Share Tech Mono", "Share Tech Mono Fallback", ui-monospace, monospace;
+      font-size: 1rem;
+      letter-spacing: 0.03em;
+    }
+
+    .pace-calc__presets {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .pace-calc__presets .btn {
+      padding: 0.5rem 0.85rem;
+      font-size: 0.78rem;
+    }
+
+    .pace-calc__summary {
+      margin: 0 0 1.1rem;
+      font-size: 0.9rem;
+      line-height: 1.55;
+      color: var(--paper-dim);
+    }
+
+    .pace-calc__summary strong {
+      color: var(--paper);
+    }
+
+    .pace-calc__table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+    }
+
+    .pace-calc__table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      min-width: 28rem;
+    }
+
+    .pace-calc__table th,
+    .pace-calc__table td {
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+      white-space: nowrap;
+    }
+
+    .pace-calc__table th {
+      font-family: var(--font-body);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      color: var(--paper-faint);
+      background: var(--surface-muted);
+    }
+
+    .pace-calc__table td {
+      color: var(--paper-dim);
+    }
+
+    .pace-calc__table tr.is-hard td {
+      color: var(--accent);
+    }
+
+    .pace-calc__table tr.is-easy td {
+      color: var(--epi);
+    }
+
+    @media (max-width: 700px) {
+      .pace-calc__goal {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    .course-map .training-status {
+      margin-top: 0;
+    }
+
+    .course-map__block {
+      margin-top: 2.5rem;
+    }
+
+    .course-map__intro {
+      margin-bottom: 1.25rem;
+    }
+
+    .course-map__intro-copy .eyebrow {
+      margin-top: 0;
+    }
+
+    .course-map__intro-copy h2 {
+      margin-bottom: 0.45rem;
+    }
+
+    .live-track {
+      --lt-neon: #2ef7ff;
+      --lt-neon-soft: rgba(46, 247, 255, 0.35);
+      --lt-magenta: #ff4fd8;
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1;
+      border: 1px solid rgba(46, 247, 255, 0.45);
+      background:
+        radial-gradient(circle at center, rgba(46, 247, 255, 0.12), transparent 58%),
+        #070b10;
+      box-shadow:
+        0 0 0 1px rgba(46, 247, 255, 0.12) inset,
+        0 0 28px rgba(46, 247, 255, 0.22);
+      overflow: hidden;
+    }
+
+    .live-track__canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .live-track__badge {
+      position: absolute;
+      top: 0.55rem;
+      left: 0.55rem;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.2rem 0.45rem;
+      border: 1px solid rgba(46, 247, 255, 0.5);
+      background: rgba(4, 12, 18, 0.82);
+      color: var(--lt-neon);
+      font-family: "Share Tech Mono", "Share Tech Mono Fallback", ui-monospace, monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-shadow: 0 0 8px var(--lt-neon-soft);
+    }
+
+    .live-track__badge-dot {
+      width: 0.45rem;
+      height: 0.45rem;
+      border-radius: 50%;
+      background: var(--lt-neon);
+      box-shadow: 0 0 8px var(--lt-neon), 0 0 16px var(--lt-neon-soft);
+      animation: live-track-blink 1s steps(2, end) infinite;
+    }
+
+    .live-track.is-live .live-track__badge-dot {
+      background: var(--lt-magenta);
+      box-shadow: 0 0 8px var(--lt-magenta), 0 0 18px rgba(255, 79, 216, 0.55);
+      animation-duration: 0.55s;
+    }
+
+    .live-track__meta {
+      position: absolute;
+      right: 0.55rem;
+      bottom: 0.55rem;
+      left: 0.55rem;
+      z-index: 2;
+      padding: 0.35rem 0.45rem;
+      border: 1px solid rgba(46, 247, 255, 0.28);
+      background: rgba(4, 12, 18, 0.78);
+      color: rgba(210, 245, 255, 0.88);
+      font-family: "Share Tech Mono", "Share Tech Mono Fallback", ui-monospace, monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.04em;
+      line-height: 1.35;
+    }
+
+    .live-track__meta strong {
+      color: var(--lt-neon);
+      font-weight: 600;
+    }
+
+    @keyframes live-track-blink {
+      0%,
+      49% { opacity: 1; }
+      50%,
+      100% { opacity: 0.25; }
+    }
+
+    @media (max-width: 800px) {
+      .live-track {
+        width: min(14rem, 70vw);
+      }
+    }
+
+    .course-map__block .eyebrow {
+      margin-top: 0;
+    }
+
+    .marathon-progress {
+      margin-top: 1.25rem;
+      max-width: 38rem;
+    }
+
+    .marathon-progress__label {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.9rem;
+      color: var(--paper-dim);
+      margin-bottom: 0.45rem;
+    }
+
+    .marathon-progress .funds-bar {
+      width: 100%;
+      height: 0.65rem;
+    }
+
+    .comments-list {
+      list-style: none;
+      margin: 2rem 0 0;
+      display: grid;
+      gap: 1.25rem;
+    }
+
+    .comments-list__empty,
+    .comments-list__status {
+      color: var(--paper-dim);
+      font-size: 0.95rem;
+    }
+
+    .comment-item {
+      padding: 1rem 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .comment-item:first-child {
+      border-top: none;
+      padding-top: 0;
+    }
+
+    .comment-item__meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem 0.85rem;
+      align-items: baseline;
+      margin-bottom: 0.45rem;
+      font-size: 0.85rem;
+      color: var(--paper-faint);
+    }
+
+    .comment-item__name {
+      color: var(--epi);
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .comment-item__body {
+      color: var(--paper);
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      line-height: 1.55;
+    }
+
+    .owner-update {
+      margin: 1.75rem 0 0;
+      padding: 1.25rem 0 1.5rem;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .owner-update__label {
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--epi);
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+
+    .owner-update__meta {
+      font-size: 0.85rem;
+      color: var(--paper-faint);
+      margin-bottom: 0.75rem;
+    }
+
+    .owner-update__body {
+      color: var(--paper);
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      line-height: 1.55;
+      font-size: 1.05rem;
+    }
+
+    .owner-update-form {
+      margin-top: 2rem;
+      max-width: 36rem;
+      border-top: 1px solid var(--line);
+      padding-top: 1rem;
+    }
+
+    .owner-update-form summary {
+      cursor: pointer;
+      list-style: none;
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--paper-faint);
+      padding: 0.35rem 0;
+    }
+
+    .owner-update-form summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .owner-update-form[open] summary {
+      color: var(--paper-dim);
+      margin-bottom: 1rem;
+    }
+
+    .owner-update-form .comment-form {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: none;
+    }
+
+    .moderation-list {
+      list-style: none;
+      display: grid;
+      gap: 1rem;
+      margin: 1rem 0 0;
+      padding: 0;
+    }
+
+    .moderation-item {
+      border: 1px solid var(--line);
+      padding: 1rem;
+      background: var(--surface-muted);
+    }
+
+    .moderation-item__meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+      margin-bottom: 0.55rem;
+      font-size: 0.85rem;
+      color: var(--paper-faint);
+    }
+
+    .moderation-item__name {
+      color: var(--paper);
+      font-weight: 600;
+    }
+
+    .moderation-item__body {
+      margin: 0 0 0.85rem;
+      color: var(--paper-dim);
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+
+    .moderation-item__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .moderation-item__actions .btn {
+      padding: 0.55rem 0.9rem;
+      font-size: 0.78rem;
+    }
+
+    .moderation-status {
+      margin-top: 0.75rem;
+      font-size: 0.9rem;
+      color: var(--paper-dim);
+    }
+
+    .comment-form {
+      margin-top: 2.25rem;
+      padding-top: 1.75rem;
+      border-top: 1px solid var(--line);
+      display: grid;
+      gap: 1rem;
+      max-width: 36rem;
+    }
+
+    .comment-form label {
+      display: grid;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--paper-dim);
+    }
+
+    .comment-form input,
+    .comment-form textarea {
+      width: 100%;
+      padding: 0.75rem 0.85rem;
+      border: 1px solid var(--line);
+      background: var(--surface-muted);
+      color: var(--paper);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      line-height: 1.45;
+      border-radius: 0;
+    }
+
+    .comment-form input:focus,
+    .comment-form textarea:focus {
+      outline: 2px solid var(--epi);
+      outline-offset: 2px;
+    }
+
+    .comment-form textarea {
+      min-height: 7rem;
+      resize: vertical;
+    }
+
+    .comment-form__hp {
+      position: absolute;
+      left: -10000px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .comment-form__actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.85rem 1.25rem;
+    }
+
+    .comment-form__note {
+      font-size: 0.85rem;
+      color: var(--paper-faint);
+    }
+
+    .comment-form__error {
+      color: var(--accent);
+      font-size: 0.9rem;
+    }
+
+    .diagram-block {
+      margin: 2.25rem 0;
+      max-width: 100%;
+    }
+
+    .diagram-block .eyebrow {
+      margin-bottom: 0.65rem;
+      font-size: 0.95rem;
+    }
+
+    .arch-diagram {
+      max-width: 46rem;
+      border: 1px solid var(--line);
+      border-radius: 0.65rem;
+      padding: 1.1rem;
+      background: var(--surface-muted);
+      overflow-x: auto;
+    }
+
+    .arch-diagram pre.mermaid {
+      margin: 0;
+      font-family: var(--font-body);
+      white-space: normal;
+    }
+
+    .arch-diagram svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    /* Public story-arc diagrams get a lot more room and scale up to fill it,
+       since these are meant to be read at a glance, not squinted at. */
+    .diagram-block .arch-diagram {
+      max-width: 78rem;
+      margin: 0 auto;
+      padding: clamp(1.25rem, 3vw, 2.25rem);
+    }
+
+    .diagram-block .arch-diagram svg {
+      width: 100%;
+      max-width: none;
+      min-height: 260px;
+    }
+
+    @media (min-width: 900px) {
+      .diagram-block .arch-diagram svg {
+        min-height: 340px;
+      }
+    }
+
+    .arch-fallback-note {
+      margin: 0.75rem 0 0;
+      font-size: 0.78rem;
+      color: var(--paper-faint);
+      max-width: none;
+    }
+
+    /* Raw, first-person account of what a seizure actually feels like —
+       kept as dark-mode-only content, same spirit as the blurred surgery
+       photos: available for anyone curious enough to switch themes, but
+       not forced on every light-mode reader by default. Sits side by
+       side with the seizures video: story on the left, footage on the
+       right. */
+    .seizure-feature {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(14rem, 0.95fr);
+      gap: clamp(1.25rem, 3vw, 2rem);
+      align-items: start;
+      margin-top: 2.75rem;
+    }
+
+    html[data-theme="light"] .seizure-feature {
+      display: none;
+    }
+
+    @media (max-width: 800px) {
+      .seizure-feature {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .seizure-note {
+      margin: 0;
+      max-width: none;
+      border: 1px solid var(--line);
+      border-radius: 0.75rem;
+      padding: clamp(1.1rem, 3vw, 1.6rem) clamp(1.25rem, 4vw, 1.85rem);
+      background: var(--surface-muted);
+      /* The video column runs taller than the note. Stick the note near
+         the top while scrolling past it, so "Community college" lands
+         right under the note instead of leaving dead space beneath it. */
+      position: sticky;
+      top: 5.5rem;
+    }
+
+    @media (max-width: 800px) {
+      .seizure-note {
+        position: static;
+      }
+    }
+
+    .seizure-note .eyebrow {
+      margin-bottom: 0.5rem;
+      font-size: 0.78rem;
+    }
+
+    .seizure-note h4 {
+      margin: 0 0 0.85rem;
+      font-family: var(--font-display);
+      font-size: clamp(1.1rem, 2.4vw, 1.35rem);
+      letter-spacing: 0.01em;
+    }
+
+    .seizure-note p {
+      margin: 0 0 0.85rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--paper-dim);
+    }
+
+    .seizure-note p:last-child {
+      margin-bottom: 0;
+    }
+
+    .seizure-video {
+      display: block;
+      margin: 0;
+      max-width: 24rem;
+      justify-self: center;
+      width: 100%;
+    }
+
+    .seizure-video figcaption {
+      margin-top: 0.65rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--paper-faint);
+      text-align: center;
+    }
+
