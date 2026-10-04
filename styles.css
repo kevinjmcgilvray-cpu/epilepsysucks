@@ -1359,6 +1359,15 @@
       margin-bottom: 1rem;
     }
 
+    /* .section p (0-1-1 specificity) was beating .eyebrow (0-1-0) for any
+       <p class="eyebrow"> inside a .section, silently rendering some
+       eyebrow labels in --paper-dim instead of --accent. This rule
+       (0-2-1) wins regardless of source order and keeps the color in
+       sync with .eyebrow's own color above if it's ever changed. */
+    .section p.eyebrow {
+      color: var(--accent);
+    }
+
     .social-feed {
       margin: 1.75rem 0 1.25rem;
       border-radius: 1rem;
