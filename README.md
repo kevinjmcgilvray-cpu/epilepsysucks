@@ -23,6 +23,28 @@ python3 -m http.server 4200
 Anything that talks to `/api/*` (fundraising totals, weigh-ins, training runs, comments,
 live track) needs the API layer running too — see below.
 
+## Tests
+
+```bash
+npm install
+npx playwright install --with-deps chromium   # once per machine
+npm test
+```
+
+`tests/` is a small Playwright-based suite (no test framework, just plain scripts +
+`tests/_assert.js`) that spins up a static server for the frontend and checks:
+
+- `regression.test.js` — storm/lightning toggle on-by-default behavior, persistence,
+  `prefers-reduced-motion` override, entry-warning copy.
+- `smoke.test.js` — scrolls the full page in both themes, fails on any unexpected
+  console/page error.
+- `contrast.test.js` — WCAG AA contrast scan of every text node in both themes. Tracks a
+  known baseline count of pre-existing low-contrast elements (see the comment in that file)
+  so it fails on *new* regressions without re-blocking on already-decided tradeoffs.
+
+Runs automatically on every PR via `.github/workflows/tests.yml`. These tests only exercise
+the static frontend — they don't need `DATABASE_URL` or any other env var.
+
 ## Project layout
 
 ```
