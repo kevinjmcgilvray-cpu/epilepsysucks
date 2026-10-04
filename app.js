@@ -493,15 +493,17 @@
         .catch(() => {});
     })();
 
-    // Background storm effect: an occasional, hand-drawn jagged
-    // white/blue-white lightning bolt (randomized each strike — not a
-    // canned animation or stock photo) with a soft screen-flash and an
-    // optional thunder crack. Because this is an epilepsy awareness site,
-    // safety comes first: strikes are infrequent (one brief flash roughly
+    // Background storm effect: a static, dim purple-tinted lightning photo
+    // sits behind everything at all times (the original site background),
+    // and visitors can opt into "Storm effects" — occasional, hand-drawn
+    // jagged white/blue-white lightning bolts (randomized each strike, not
+    // a canned animation) with a soft screen-flash and a thunder crack.
+    // Because this is an epilepsy awareness site, the animated part is
+    // off by default, strikes are infrequent (one brief flash roughly
     // every 20-40s, nowhere near the 3-flashes-per-second WCAG threshold),
     // capped at low opacity rather than a hard white-out, and the whole
-    // effect — plus its sound toggle — is skipped entirely for visitors
-    // who've asked for reduced motion.
+    // effect — plus its toggle — is skipped entirely for visitors who've
+    // asked for reduced motion.
     (function initStormEffect() {
       const root = document.getElementById("bg-lightning");
       const flashEl = document.getElementById("lightning-flash");
@@ -509,59 +511,71 @@
       const branchPath = document.getElementById("lightning-bolt-branch");
       const branchPath2 = document.getElementById("lightning-bolt-branch2");
       const thunderAudio = document.getElementById("thunder-audio");
-      const soundToggle = document.getElementById("storm-sound-toggle");
+      const toggle = document.getElementById("storm-toggle");
       if (!root || !flashEl || !mainPath || !branchPath || !branchPath2) return;
 
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
         return;
       }
 
-      let soundOn = false;
+      let stormOn = false;
       try {
-        soundOn = window.localStorage.getItem("stormSound") === "on";
+        stormOn = window.localStorage.getItem("stormEffectsOn") === "on";
       } catch (e) {
         /* localStorage unavailable (e.g. private mode) — default off */
       }
       let audioUnlocked = false;
 
       function applyToggleUI() {
-        if (!soundToggle) return;
-        soundToggle.classList.toggle("is-on", soundOn);
-        soundToggle.setAttribute("aria-pressed", soundOn ? "true" : "false");
-        soundToggle.setAttribute(
+        if (!toggle) return;
+        toggle.classList.toggle("is-on", stormOn);
+        toggle.setAttribute("aria-pressed", stormOn ? "true" : "false");
+        toggle.setAttribute(
           "aria-label",
-          soundOn ? "Turn off thunder sound" : "Turn on thunder sound"
+          stormOn ? "Turn off storm effects" : "Turn on storm effects (animated lightning + thunder)"
         );
       }
       applyToggleUI();
 
-      if (soundToggle) {
-        soundToggle.addEventListener("click", () => {
-          soundOn = !soundOn;
+      // Browsers only allow audio play() outside a direct user gesture
+      // once one has happened on the page. This toggle click IS that
+      // gesture, so prime (silently play-then-reset) the audio element
+      // now, which unlocks later timer-triggered play() calls for real
+      // strikes — then immediately show one real strike so turning the
+      // toggle on feels responsive instead of waiting up to 40s.
+      function primeAudioThenStrikeNow() {
+        if (!thunderAudio || audioUnlocked) {
+          strike();
+          return;
+        }
+        const prevVolume = thunderAudio.volume;
+        thunderAudio.volume = 0;
+        thunderAudio
+          .play()
+          .then(() => {
+            thunderAudio.pause();
+            thunderAudio.currentTime = 0;
+            thunderAudio.volume = prevVolume;
+            audioUnlocked = true;
+            strike();
+          })
+          .catch(() => {
+            thunderAudio.volume = prevVolume;
+            strike(); // still show the flash even if audio unlock failed
+          });
+      }
+
+      if (toggle) {
+        toggle.addEventListener("click", () => {
+          stormOn = !stormOn;
           applyToggleUI();
           try {
-            window.localStorage.setItem("stormSound", soundOn ? "on" : "off");
+            window.localStorage.setItem("stormEffectsOn", stormOn ? "on" : "off");
           } catch (e) {
             /* ignore */
           }
-          // Browsers only allow play() outside a direct user gesture once
-          // one has happened on the page. This click IS that gesture, so
-          // prime (silently play-then-reset) the audio element now, which
-          // unlocks later timer-triggered play() calls for real strikes.
-          if (soundOn && thunderAudio && !audioUnlocked) {
-            const prevVolume = thunderAudio.volume;
-            thunderAudio.volume = 0;
-            thunderAudio
-              .play()
-              .then(() => {
-                thunderAudio.pause();
-                thunderAudio.currentTime = 0;
-                thunderAudio.volume = prevVolume;
-                audioUnlocked = true;
-              })
-              .catch(() => {
-                thunderAudio.volume = prevVolume;
-              });
+          if (stormOn) {
+            primeAudioThenStrikeNow();
           }
         });
       }
@@ -623,11 +637,6 @@
       let scheduleTimer = null;
 
       function strike() {
-        if (document.hidden) {
-          scheduleNext();
-          return;
-        }
-
         const mainPoints = randomBoltPoints();
         const mid = Math.floor(mainPoints.length / 2);
         mainPath.setAttribute("d", pointsToPath(mainPoints));
@@ -649,7 +658,7 @@
           root.classList.remove("is-on");
         }, visibleMs);
 
-        if (soundOn && thunderAudio) {
+        if (thunderAudio) {
           window.clearTimeout(thunderTimer);
           const thunderDelay = 80 + Math.random() * 260;
           thunderTimer = window.setTimeout(() => {
@@ -661,14 +670,23 @@
             }
           }, thunderDelay);
         }
-
-        scheduleNext();
       }
 
       function scheduleNext() {
         window.clearTimeout(scheduleTimer);
         const delay = 22000 + Math.random() * 18000; // 22-40s between strikes
-        scheduleTimer = window.setTimeout(strike, delay);
+        scheduleTimer = window.setTimeout(tick, delay);
+      }
+
+      // The recurring timer tick: only actually strikes while the visitor
+      // has Storm effects turned on (and the tab is visible); otherwise it
+      // just quietly reschedules so flipping the toggle on later doesn't
+      // need a page reload.
+      function tick() {
+        if (stormOn && !document.hidden) {
+          strike();
+        }
+        scheduleNext();
       }
 
       scheduleNext();
