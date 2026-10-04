@@ -129,6 +129,10 @@
       background: var(--ink);
       line-height: 1.55;
       -webkit-font-smoothing: antialiased;
+      /* Reserves room for the fixed race-clock-block bar (height synced
+         into --footer-clock-h by app.js) so the footer never ends up
+         hidden underneath it when scrolled all the way down. */
+      padding-bottom: var(--footer-clock-h, 0px);
     }
 
     .skip-link {
@@ -233,9 +237,16 @@
       width: 100%;
     }
 
-    .nav__brand {
+    .nav__brand-row {
       grid-column: 1;
       grid-row: 1;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem 0.75rem;
+    }
+
+    .nav__brand {
       font-family: var(--font-display);
       font-size: 1.35rem;
       letter-spacing: 0.08em;
@@ -362,15 +373,24 @@
       letter-spacing: 0.01em;
     }
 
+    /* Fixed bar pinned to the bottom of the viewport (not the header) so
+       the countdown stays visible the whole time someone's on the page,
+       not just at the very top. See the body/.footer padding-bottom and
+       .sticky-donate bottom-offset below, both driven by --footer-clock-h
+       (synced to this element's real height in app.js) so neither the
+       page footer nor the floating Donate button ever sit underneath it. */
     .race-clock-block {
-      grid-column: 1 / -1;
-      grid-row: 4;
-      justify-self: center;
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 20;
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.3rem;
-      padding-top: 0.1rem;
+      justify-content: center;
+      padding: 0.5rem clamp(1rem, 3vw, 1.5rem) calc(0.5rem + env(safe-area-inset-bottom, 0px));
+      background: var(--nav-solid);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid var(--line);
     }
 
     .race-clock {
@@ -378,9 +398,11 @@
       --neon-dim: rgba(180, 140, 255, 0.4);
       --tube: #120e1a;
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       align-items: center;
-      gap: 0.3rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem 0.9rem;
       margin: 0;
     }
 
@@ -475,6 +497,7 @@
     }
 
     .race-clock__caption {
+      order: -1;
       margin: 0;
       max-width: 16rem;
       text-align: center;
@@ -716,15 +739,15 @@
     .donor-ticker {
       display: flex;
       align-items: baseline;
-      justify-content: center;
+      justify-content: flex-start;
       gap: 0.4rem;
-      max-width: min(88vw, 26rem);
+      max-width: min(70vw, 18rem);
       margin: 0;
-      padding: 0.35rem 0.9rem;
+      padding: 0.3rem 0.75rem;
       border-radius: 999px;
       border: 1px solid color-mix(in srgb, var(--epi) 35%, transparent);
       background: color-mix(in srgb, var(--epi) 12%, transparent);
-      font-size: 0.8rem;
+      font-size: 0.74rem;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -732,7 +755,8 @@
 
     @media (max-width: 640px) {
       .donor-ticker {
-        font-size: 0.74rem;
+        font-size: 0.7rem;
+        max-width: min(80vw, 16rem);
       }
     }
 
@@ -907,7 +931,9 @@
     .sticky-donate {
       position: fixed;
       right: clamp(1rem, 3vw, 1.5rem);
-      bottom: clamp(1rem, 3vw, 1.5rem);
+      /* Sits above the fixed race-clock-block bar at the bottom of the
+         viewport; --footer-clock-h is synced to that bar's height. */
+      bottom: calc(var(--footer-clock-h, 0px) + clamp(1rem, 3vw, 1.5rem));
       z-index: 15;
       display: inline-flex;
       align-items: center;
@@ -3314,16 +3340,8 @@
       }
 
       .race-clock-block {
-        width: 100%;
-        padding-top: 0.25rem;
-      }
-
-      .race-clock__units {
-        justify-content: center;
-      }
-
-      .race-clock__caption {
-        text-align: center;
+        padding: 0.4rem clamp(0.75rem, 4vw, 1.25rem)
+          calc(0.4rem + env(safe-area-inset-bottom, 0px));
       }
 
       .race-clock__digits {
@@ -3410,8 +3428,8 @@
       }
     }
 
-    /* Mobile landscape: the stacked header (brand + funds + cause + race
-       clock) can exceed the viewport height on short landscape screens,
+    /* Mobile landscape: the stacked header (brand + funds + cause) can
+       exceed the viewport height on short landscape screens,
        pinning a fixed nav over the entire page and leaving nothing
        scrollable. Compact it hard and let it scroll with the page
        instead of staying pinned.
@@ -3660,7 +3678,8 @@
     }
 
     html.is-landscape-compact .race-clock-block {
-      padding-top: 0;
+      padding: 0.25rem clamp(0.75rem, 3vw, 1.25rem)
+        calc(0.25rem + env(safe-area-inset-bottom, 0px));
     }
 
     html.is-landscape-compact .race-clock__units {

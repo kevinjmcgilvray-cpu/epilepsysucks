@@ -101,8 +101,8 @@
     })();
 
     // Keep the hero's top padding matched to the real (fixed) header height,
-    // since the header's content (funds stats, race clock, donor ticker,
-    // etc.) can wrap and grow across viewport sizes.
+    // since the header's content (funds stats, donor ticker, etc.) can
+    // wrap and grow across viewport sizes.
     (function syncHeaderHeight() {
       const setVar = () => {
         document.documentElement.style.setProperty("--header-h", `${nav.getBoundingClientRect().height}px`);
@@ -110,6 +110,27 @@
       setVar();
       if ("ResizeObserver" in window) {
         new ResizeObserver(setVar).observe(nav);
+      } else {
+        window.addEventListener("resize", setVar);
+      }
+    })();
+
+    // Mirrors syncHeaderHeight() above, but for the fixed race-clock-block
+    // bar pinned to the bottom of the viewport: exposes its real height as
+    // --footer-clock-h so the body/.footer can reserve matching bottom
+    // padding and .sticky-donate can sit above it instead of underneath.
+    (function syncFooterClockHeight() {
+      const clockBlock = document.getElementById("race-clock-block");
+      if (!clockBlock) return;
+      const setVar = () => {
+        document.documentElement.style.setProperty(
+          "--footer-clock-h",
+          `${clockBlock.getBoundingClientRect().height}px`
+        );
+      };
+      setVar();
+      if ("ResizeObserver" in window) {
+        new ResizeObserver(setVar).observe(clockBlock);
       } else {
         window.addEventListener("resize", setVar);
       }
