@@ -247,12 +247,16 @@
       inset: 0;
       background:
         url("epilepsy-sucks-images/lightning-seizure.webp") center center / cover no-repeat;
-      opacity: 0.42;
+      /* Faded down from 0.42 — at that strength the screen blend mode
+         washed the whole page in a strong purple cast, more pronounced
+         than intended as a subtle background texture. */
+      opacity: 0.24;
       mix-blend-mode: screen;
     }
 
     [data-theme="light"] .bg-lightning__photo {
-      opacity: 0.22;
+      /* Faded down from 0.22 to match the dark-theme reduction above. */
+      opacity: 0.13;
       mix-blend-mode: multiply;
     }
 
