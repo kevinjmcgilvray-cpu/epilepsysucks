@@ -1,4 +1,4 @@
-import { cors, getSql } from "./_db.js";
+import { cors, getSql, reportError } from "./_db.js";
 
 const HAKU_URL = "https://fundraisers.hakuapp.com/Kevin-McGilvray";
 const STALE_MS = 10 * 60 * 1000; // re-scrape at most every 10 minutes
@@ -106,7 +106,8 @@ export default async function handler(req, res) {
       donors: row.names,
       updatedAt: row.updated_at
     });
-  } catch {
+  } catch (error) {
+    await reportError(error, { endpoint: "donors", method: req.method });
     res.status(500).json({ ok: false, error: "Donor list request failed" });
   }
 }

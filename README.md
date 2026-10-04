@@ -129,6 +129,7 @@ Notable client-only features (no backend, data/config lives in `app.js`/`index.h
 | `OWNER_UPDATE_PASSWORD` | Gate for all owner-only write endpoints |
 | `COMMENTS_GITHUB_TOKEN`, `COMMENTS_ISSUE_NUMBER`, `OWNER_UPDATE_ISSUE_NUMBER` | Optional GitHub-issue mirroring for comments/updates |
 | `GOOGLE_MAPS_API_KEY` | Optional — enables Google Maps for the route map (falls back to MapLibre if unset) |
+| `SENTRY_DSN` | Optional — enables error tracking for `api/*` serverless functions (see [`api/_db.js`](api/_db.js)'s `reportError`). Unset = no-op, nothing changes. Create a free project at [sentry.io](https://sentry.io), grab its DSN, and set it in Vercel to turn this on. |
 
 ## Deploy (GitHub → Vercel)
 

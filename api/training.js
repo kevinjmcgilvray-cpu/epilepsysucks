@@ -4,6 +4,7 @@ import {
   getSql,
   parseBody,
   paceLabel,
+  reportError,
   sanitizePlain
 } from "./_db.js";
 
@@ -101,6 +102,7 @@ export default async function handler(req, res) {
 
     res.status(405).json({ ok: false, error: "Method not allowed" });
   } catch (error) {
+    await reportError(error, { endpoint: "training", method: req.method });
     res.status(500).json({ ok: false, error: "Training request failed" });
   }
 }
