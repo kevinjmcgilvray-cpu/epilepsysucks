@@ -162,17 +162,109 @@
     .bg-lightning {
       position: fixed;
       inset: 0;
-      z-index: 0;
+      /* Deliberately above regular page content (so a strike is actually
+         visible over text/photos, like real lightning lighting up a dark
+         room) but below the fixed header/footer bars (z-index: 20) so
+         navigation stays legible. The old static image sat at z-index: 0,
+         which — combined with .hero's isolated stacking context — made it
+         invisible on the live page; this corrects that. */
+      z-index: 15;
       pointer-events: none;
+      overflow: hidden;
+    }
+
+    .bg-lightning__photo {
+      position: absolute;
+      inset: 0;
       background:
         url("epilepsy-sucks-images/lightning-seizure.webp") center center / cover no-repeat;
       opacity: 0.42;
       mix-blend-mode: screen;
     }
 
-    [data-theme="light"] .bg-lightning {
+    [data-theme="light"] .bg-lightning__photo {
       opacity: 0.22;
       mix-blend-mode: multiply;
+    }
+
+    .bg-lightning__flash {
+      position: absolute;
+      inset: 0;
+      background: #eaf2ff;
+      opacity: 0;
+      mix-blend-mode: screen;
+      transition: opacity 0.5s ease-out;
+    }
+
+    .bg-lightning.is-on .bg-lightning__flash {
+      opacity: 0.16;
+      transition: opacity 0.05s ease-in;
+    }
+
+    [data-theme="light"] .bg-lightning.is-on .bg-lightning__flash {
+      opacity: 0.08;
+    }
+
+    .bg-lightning__bolt {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .bg-lightning__bolt-path {
+      fill: none;
+      stroke: #eef4ff;
+      stroke-width: 2.4;
+      stroke-linecap: round;
+      vector-effect: non-scaling-stroke;
+      opacity: 0;
+      filter:
+        drop-shadow(0 0 4px rgba(190, 215, 255, 0.9))
+        drop-shadow(0 0 14px rgba(140, 180, 255, 0.55));
+      transition: opacity 0.5s ease-out;
+    }
+
+    .bg-lightning.is-on .bg-lightning__bolt-path {
+      opacity: 0.85;
+      transition: opacity 0.05s ease-in;
+    }
+
+    [data-theme="light"] .bg-lightning__bolt-path {
+      /* A pale stroke is invisible against the light theme's cream
+         background, so light mode gets a deep indigo bolt instead — still
+         reads as "lightning," just contrasted for a bright sky. */
+      stroke: #46399e;
+      filter:
+        drop-shadow(0 0 3px rgba(70, 57, 158, 0.5))
+        drop-shadow(0 0 9px rgba(70, 57, 158, 0.3));
+    }
+
+    [data-theme="light"] .bg-lightning.is-on .bg-lightning__bolt-path {
+      opacity: 0.65;
+    }
+
+    /* Secondary channels forking off the main bolt — thinner, like real
+       lightning's branches. */
+    #lightning-bolt-branch {
+      stroke-width: 1.5;
+    }
+
+    #lightning-bolt-branch2 {
+      stroke-width: 1;
+    }
+
+    /* Photosensitivity safety: this is an epilepsy awareness site, so the
+       storm effect is a single soft, infrequent flash (never more than one
+       per 20+ seconds, well under the 3-flashes-per-second WCAG threshold)
+       and is fully disabled when the visitor has asked for reduced motion.
+       (The sound toggle's matching display:none lives further down, after
+       its own rules, so it isn't overridden by later source-order CSS.) */
+    @media (prefers-reduced-motion: reduce) {
+      .bg-lightning__flash,
+      .bg-lightning__bolt {
+        display: none;
+      }
     }
 
     a {
@@ -304,6 +396,123 @@
       width: 1.1rem;
       height: 1.1rem;
       display: block;
+    }
+
+    .storm-toggle {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2rem;
+      height: 2rem;
+      padding: 0;
+      border: 1px solid rgba(180, 140, 255, 0.55);
+      border-radius: 999px;
+      background: linear-gradient(135deg, #6b5a8e 0%, #4a3f66 100%);
+      color: #f7f3ec;
+      cursor: pointer;
+      opacity: 0.75;
+      box-shadow: 0 0 10px rgba(155, 107, 255, 0.25);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease,
+        opacity 0.18s ease, background 0.18s ease;
+    }
+
+    .storm-toggle:hover {
+      transform: translateY(-1px) scale(1.05);
+      filter: brightness(1.08);
+      box-shadow: 0 0 18px rgba(180, 140, 255, 0.5);
+    }
+
+    .storm-toggle:focus-visible {
+      outline: 2px solid #e0d0ff;
+      outline-offset: 2px;
+    }
+
+    .storm-toggle svg {
+      width: 1.1rem;
+      height: 1.1rem;
+      display: block;
+    }
+
+    /* "Off" (default): dim, desaturated — signals the flashing effect is
+       inactive. "On": bright purple-gold, matching the site's energetic
+       accent, to clearly signal it's live. */
+    .storm-toggle.is-on {
+      opacity: 1;
+      background: linear-gradient(135deg, #ffd36b 0%, #e8a53f 100%);
+      border-color: rgba(255, 211, 107, 0.6);
+      box-shadow: 0 0 14px rgba(255, 211, 107, 0.5);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .storm-toggle {
+        display: none;
+      }
+    }
+
+    /* Full-screen photosensitivity notice shown once per browser (via
+       localStorage) before any page content is usable. Site content is
+       made inert via visibility (not just visually covered) so it can't
+       be focused or interacted with underneath. */
+    .entry-warning {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      background: rgba(8, 6, 12, 0.92);
+      backdrop-filter: blur(6px);
+    }
+
+    .entry-warning[hidden] {
+      display: none;
+    }
+
+    body.entry-locked {
+      overflow: hidden;
+    }
+
+    body.entry-locked > *:not(.entry-warning) {
+      visibility: hidden;
+    }
+
+    .entry-warning__panel {
+      max-width: 30rem;
+      width: 100%;
+      padding: clamp(1.5rem, 4vw, 2.25rem);
+      border: 1px solid rgba(180, 140, 255, 0.4);
+      border-radius: 1rem;
+      background: var(--surface-muted, #1a1613);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      text-align: center;
+    }
+
+    .entry-warning__icon {
+      margin: 0 0 0.5rem;
+      font-size: 2.25rem;
+      line-height: 1;
+    }
+
+    .entry-warning__title {
+      margin: 0 0 0.75rem;
+      font-family: var(--font-display);
+      font-size: clamp(1.3rem, 3vw, 1.6rem);
+      color: var(--paper);
+    }
+
+    .entry-warning__desc {
+      margin: 0 0 1.5rem;
+      font-size: 0.95rem;
+      line-height: 1.55;
+      color: var(--paper);
+      opacity: 0.85;
+    }
+
+    .entry-warning__continue {
+      width: 100%;
+      justify-content: center;
     }
 
     .nav__funds {
