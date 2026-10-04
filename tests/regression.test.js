@@ -90,6 +90,52 @@ async function run(baseUrl) {
     await context.close();
   }
 
+  // 6. Lightning cursor: off by default (opposite default of storm
+  // effects above), toggled on/off via its own button, persists.
+  {
+    const context = await browser.newContext();
+    const page = await freshPage(context, "cursor-toggle", errors);
+    await page.goto(`${baseUrl}/index.html`);
+    await page.click("#entry-warning-continue");
+    await page.mouse.move(400, 400);
+    await page.waitForTimeout(150);
+    const beforeToggle = await page.evaluate(() =>
+      document.documentElement.classList.contains("has-custom-cursor")
+    );
+    check("Lightning cursor off by default, even after a mouse move", beforeToggle === false, beforeToggle);
+
+    await page.click("#cursor-toggle");
+    await page.waitForTimeout(400);
+    const afterOn = await page.evaluate(() => ({
+      hasClass: document.documentElement.classList.contains("has-custom-cursor"),
+      pressed: document.getElementById("cursor-toggle").getAttribute("aria-pressed")
+    }));
+    check(
+      "Lightning cursor activates immediately on toggle click",
+      afterOn.hasClass === true && afterOn.pressed === "true",
+      JSON.stringify(afterOn)
+    );
+    const stored = await page.evaluate(() => window.localStorage.getItem("lightningCursorOn"));
+    check("Toggle-on choice persisted to localStorage", stored === "on", stored);
+
+    await page.click("#cursor-toggle");
+    await page.waitForTimeout(400);
+    const afterOff = await page.evaluate(() =>
+      document.documentElement.classList.contains("has-custom-cursor")
+    );
+    check("Lightning cursor deactivates on second toggle click", afterOff === false, afterOff);
+
+    await page.reload();
+    await page.waitForTimeout(200);
+    const pressedAfterReload = await page.getAttribute("#cursor-toggle", "aria-pressed");
+    check(
+      "Toggle-off preference persists across reload",
+      pressedAfterReload === "false",
+      pressedAfterReload
+    );
+    await context.close();
+  }
+
   const relevantErrors = errors.filter((e) => !e.includes("404"));
   check("No unexpected console/page errors", relevantErrors.length === 0, relevantErrors.join(" | "));
 

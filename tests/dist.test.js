@@ -49,17 +49,28 @@ async function run(baseUrl) {
 
   await page.click("#entry-warning-continue");
   await page.mouse.move(400, 400);
+  await page.waitForTimeout(200);
+  const beforeToggle = await page.evaluate(() => ({
+    hasClass: document.documentElement.classList.contains("has-custom-cursor")
+  }));
+  check(
+    "Lightning cursor stays off by default even after a move, post-minify",
+    beforeToggle.hasClass === false,
+    JSON.stringify(beforeToggle)
+  );
+
+  await page.click("#cursor-toggle");
   // #custom-cursor has a 0.15s opacity transition (see styles/01-base-nav.css)
   // — wait past it, not just as long as it, to avoid sampling mid-transition.
   await page.waitForTimeout(400);
-  const afterContinue = await page.evaluate(() => ({
+  const afterToggle = await page.evaluate(() => ({
     hasClass: document.documentElement.classList.contains("has-custom-cursor"),
     customOpacity: getComputedStyle(document.getElementById("custom-cursor")).opacity
   }));
   check(
-    "Custom cursor still activates after continue + move, post-minify",
-    afterContinue.hasClass === true && Number(afterContinue.customOpacity) > 0.9,
-    JSON.stringify(afterContinue)
+    "Custom cursor activates after clicking the toggle, post-minify",
+    afterToggle.hasClass === true && Number(afterToggle.customOpacity) > 0.9,
+    JSON.stringify(afterToggle)
   );
 
   // Scroll through the whole page to trigger lazy loads / charts / the
