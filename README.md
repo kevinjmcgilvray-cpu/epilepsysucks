@@ -7,6 +7,10 @@ Vercel serverless functions (`api/`) and a Neon Postgres database, powering the 
 fundraising bar, weigh-in chart, training log, milestones, comments, and the "Live Track"
 race-day radar.
 
+Also on the page: a seizure-frequency chart (2016–2026, static data in `app.js`), a live
+Instagram feed (via a SociableKIT embed), and a mobile/desktop nav that adapts for narrow
+screens, landscape phones, and wide-but-short viewports (e.g. iPhone Pro Max landscape).
+
 ## Local preview
 
 The frontend is static, so you can preview it without any build step:
@@ -38,6 +42,17 @@ sql/                              Schema for each table (site, comments, live-tr
 scripts/                          One-off Node scripts to seed/import data into Neon
 data/                             Static route data (LA Marathon course)
 ```
+
+Notable client-only features (no backend, data/config lives in `app.js`/`index.html`):
+- **Seizure chart** — SVG bar chart of yearly seizure counts (2016–2026) with milestone
+  callouts (surgery, VNS, DBS). Data is a static array in `app.js` — edit it directly to
+  update.
+- **Instagram feed** — embedded via [SociableKIT](https://sociablekit.com) (`data-embed-id`
+  in `index.html`). Feed content/connection is managed in the SociableKIT dashboard, not
+  in this repo.
+- **Responsive nav** — collapses to a hamburger below 800px wide, and separately switches
+  to a compact layout in landscape on short viewports (phones), including a JS-driven
+  fallback for iOS Safari's `orientationchange` timing quirks (see `app.js`).
 
 ## Backend setup (Neon + Vercel)
 
