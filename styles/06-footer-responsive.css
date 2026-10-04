@@ -1,0 +1,801 @@
+/* 06-footer-responsive.css
+   Footer, funds box, history-note, reveal animations, support list, theme hint, landscape-compact responsive overrides
+   Part of the styles.css split — see index.html for load order (these
+   files must stay in this exact sequence; later files' rules can win
+   ties against earlier ones at equal specificity, same as when this
+   was one file). */
+
+    .seizure-video__frame {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 0.75rem;
+      background: #000;
+      line-height: 0;
+      aspect-ratio: 3 / 4;
+    }
+
+    .seizure-video__el {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: blur(16px) saturate(0.8);
+      transition: filter 0.4s ease;
+    }
+
+    .seizure-video__frame.is-revealed .seizure-video__el {
+      filter: none;
+    }
+
+    .seizure-video__frame:not(.is-revealed) .seizure-video__el {
+      pointer-events: none;
+    }
+
+    .seizure-video__reveal {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      margin: 0;
+      border: 0;
+      background: rgba(20, 17, 15, 0.15);
+      cursor: pointer;
+    }
+
+    .seizure-video__reveal .chapter__photo-hint {
+      position: static;
+      transform: none;
+      opacity: 0.92;
+    }
+
+    .seizure-video__reveal:hover .chapter__photo-hint,
+    .seizure-video__reveal:focus-visible .chapter__photo-hint {
+      opacity: 1;
+    }
+
+    .seizure-video__reveal:focus-visible {
+      outline: 2px solid var(--epi);
+      outline-offset: 2px;
+    }
+
+    .seizure-video__frame.is-revealed .seizure-video__reveal {
+      display: none;
+    }
+
+    /* Nudge shown only in light mode (where surgery photos are hidden)
+       pointing people toward dark mode to see them. Not needed in dark
+       mode since those photos are already visible there. */
+    .theme-hint {
+      display: none;
+    }
+
+    html[data-theme="light"] .theme-hint {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.85rem 1.25rem;
+      margin: 2rem 0 0;
+      padding: 0.85rem 1.1rem;
+      max-width: 40rem;
+      border: 1px dashed var(--line);
+      border-radius: 0.65rem;
+      background: var(--surface-muted);
+    }
+
+    .theme-hint p {
+      flex: 1 1 16rem;
+      margin: 0;
+      font-size: 0.85rem;
+      line-height: 1.55;
+      color: var(--paper-dim);
+    }
+
+    .theme-hint strong {
+      color: var(--epi);
+    }
+
+    .theme-hint .theme-toggle-btn {
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    .history-note {
+      margin: 2.5rem 0 1rem;
+      max-width: 46rem;
+      border: 1px solid var(--line);
+      border-radius: 0.75rem;
+      background: var(--surface-muted);
+    }
+
+    .history-note__summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      list-style: none;
+      cursor: pointer;
+      padding: clamp(1rem, 3vw, 1.3rem) clamp(1.25rem, 4vw, 1.85rem);
+      min-height: 2.75rem;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .history-note__summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .history-note__summary::marker {
+      content: "";
+    }
+
+    .history-note__summary-text {
+      display: block;
+    }
+
+    .history-note__summary .eyebrow {
+      margin-bottom: 0.35rem;
+      font-size: 0.78rem;
+    }
+
+    .history-note__summary-title {
+      display: block;
+      font-family: var(--font-display);
+      font-size: clamp(1.05rem, 2.3vw, 1.3rem);
+      letter-spacing: 0.01em;
+      color: var(--paper);
+    }
+
+    .history-note__chevron {
+      flex-shrink: 0;
+      width: 1.6rem;
+      height: 1.6rem;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      position: relative;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .history-note__chevron::before,
+    .history-note__chevron::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      background: var(--paper-dim);
+    }
+
+    .history-note__chevron::before {
+      width: 0.6rem;
+      height: 1.5px;
+      transform: translate(-50%, -50%);
+    }
+
+    .history-note__chevron::after {
+      width: 1.5px;
+      height: 0.6rem;
+      transform: translate(-50%, -50%);
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .history-note[open] .history-note__chevron::after {
+      transform: translate(-50%, -50%) rotate(90deg);
+      opacity: 0;
+    }
+
+    .history-note__summary:hover .history-note__chevron {
+      background: var(--accent-soft);
+    }
+
+    .history-note__body {
+      padding: 0 clamp(1.25rem, 4vw, 1.85rem) clamp(1.1rem, 3vw, 1.6rem);
+    }
+
+    .history-note__body p {
+      margin: 0 0 0.85rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--paper-dim);
+    }
+
+    .history-note__body p:last-child {
+      margin-bottom: 0;
+    }
+
+    .funds-box {
+      margin: 1.75rem 0 2rem;
+      padding: 1.5rem 1.75rem;
+      border-radius: 1rem;
+      background: linear-gradient(135deg, #9b6bff 0%, #7a45e8 55%, #6b35d8 100%);
+      box-shadow: 0 18px 40px rgba(107, 53, 216, 0.35);
+    }
+
+    .funds-box__label {
+      margin: 0 0 1rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    /* The site-wide epilepsy/seizure word highlighter tints text purple,
+       which disappears against this box's purple gradient background. */
+    .funds-box .hl-epi {
+      color: inherit;
+    }
+
+    .funds-box__stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      text-align: center;
+    }
+
+    .funds-box__value {
+      display: block;
+      font-family: var(--font-display);
+      font-size: clamp(1.4rem, 4vw, 2.1rem);
+      letter-spacing: 0.02em;
+      color: #fff;
+    }
+
+    .funds-box__key {
+      display: block;
+      margin-top: 0.3rem;
+      font-size: 0.78rem;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    @media (max-width: 560px) {
+      .funds-box__stats {
+        grid-template-columns: 1fr;
+        gap: 0.85rem;
+      }
+    }
+
+    .support-list {
+      list-style: none;
+      margin-top: 2.5rem;
+      display: grid;
+      gap: 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .support-list li {
+      border-bottom: 1px solid var(--line);
+    }
+
+    .support-list a {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1.5rem;
+      padding: 1.35rem 0;
+      font-size: 1.1rem;
+      transition: color 0.2s ease;
+    }
+
+    .support-list a:hover {
+      color: var(--accent);
+    }
+
+    .support-list span {
+      font-size: 0.85rem;
+      color: var(--paper-faint);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+
+    .footer {
+      padding: 2.5rem clamp(1.25rem, 4vw, 2.5rem) 3rem;
+      border-top: 1px solid var(--line);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 1rem;
+      color: var(--paper-faint);
+      font-size: 0.9rem;
+    }
+
+    .footer strong {
+      font-family: var(--font-display);
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      color: var(--paper-dim);
+      text-transform: uppercase;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(1.25rem);
+      transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .reveal.is-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(1.25rem);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes drift {
+      from { transform: translateY(6%) scale(1.02); }
+      to { transform: translateY(12%) scale(1.08); }
+    }
+
+    @keyframes visual-in {
+      from { opacity: 0; transform: scale(1.04); }
+      to { opacity: var(--visual-opacity); transform: scale(1); }
+    }
+
+    @media (max-width: 800px) {
+      .nav {
+        align-items: stretch;
+        background: var(--nav-solid);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .nav__top {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        align-items: flex-start;
+      }
+
+      .nav__left {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+        width: 100%;
+      }
+
+      .nav__brand {
+        font-size: 1.15rem;
+        line-height: 1.1;
+      }
+
+      .nav__funds {
+        display: flex;
+        position: relative;
+        z-index: 1;
+        font-size: 0.82rem;
+        line-height: 1.2;
+        color: var(--paper);
+      }
+
+      .nav__funds strong {
+        font-size: 0.98rem;
+      }
+
+      .nav__funds-stats {
+        gap: 0.15rem 0.75rem;
+      }
+
+      .nav__funds-stat-label {
+        font-size: 0.6rem;
+      }
+
+      .nav__cause {
+        max-width: min(100%, 16rem);
+      }
+
+      .nav__cause-logo {
+        height: 1.3rem;
+      }
+
+      .nav__cause-text {
+        font-size: 0.78rem;
+      }
+
+      .race-clock-block {
+        padding: 0.4rem clamp(0.75rem, 4vw, 1.25rem)
+          calc(0.4rem + env(safe-area-inset-bottom, 0px));
+      }
+
+      .race-clock__digits {
+        min-width: 2.35rem;
+        padding: 0.28rem 0.35rem 0.22rem;
+      }
+
+      .nav__toggle {
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 6;
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+      }
+
+      .nav__links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        padding: 0.75rem 1.25rem 1.25rem;
+        background: var(--nav-menu);
+        border-bottom: 1px solid var(--line);
+        z-index: 5;
+      }
+
+      .nav__links.is-open {
+        display: flex;
+      }
+
+      .nav__links li {
+        border-top: 1px solid var(--line);
+      }
+
+      .nav__links a {
+        display: block;
+        padding: 0.9rem 0;
+      }
+
+      .nav__links a.nav__cta,
+      .nav__links button.nav__cta {
+        display: inline-flex;
+        justify-content: center;
+        width: 100%;
+        padding: 0.75rem 1rem;
+        margin: 0.35rem 0;
+        font-size: 0.85rem;
+        box-sizing: border-box;
+      }
+
+      .nav__cta {
+        justify-content: center;
+      }
+
+      .split {
+        grid-template-columns: 1fr;
+      }
+
+      .split__image {
+        order: -1;
+        min-height: 14rem;
+      }
+
+      .split__image--family,
+      .split__image--race {
+        min-height: 0;
+        max-height: none;
+      }
+
+      .split__image--family img,
+      .split__image--race img {
+        min-height: 0;
+        max-height: none;
+        height: auto;
+        width: 100%;
+        object-fit: contain;
+        object-position: center center;
+      }
+    }
+
+    /* Mobile landscape: the stacked header (brand + funds + cause) can
+       exceed the viewport height on short landscape screens,
+       pinning a fixed nav over the entire page and leaving nothing
+       scrollable. Compact it hard and let it scroll with the page
+       instead of staying pinned.
+
+       This ruleset is duplicated under `html.is-landscape-compact` (see
+       app.js `landscapeCompactHeader`) because iOS Safari can fail to
+       re-match `(orientation: landscape)`/`(max-height: 500px)` right
+       after a rotation — it fires `orientationchange` before updating
+       the values the media query reads, so the CSS-only version alone
+       can pass in Chrome but miss in Safari. Keep both in sync. */
+    @media screen and (orientation: landscape) and (max-height: 500px),
+      screen and (orientation: landscape) and (max-device-height: 500px) {
+      .nav {
+        position: absolute;
+        align-items: stretch;
+        gap: 0.2rem;
+        padding: calc(0.35rem + env(safe-area-inset-top, 0px)) clamp(0.85rem, 3vw, 1.5rem) 0.35rem;
+      }
+
+      /* Wide-but-short viewports (e.g. Pro Max/Plus phones in landscape,
+         ~930px wide — over the 800px width where the hamburger menu
+         normally kicks in) were still rendering the 8-item nav__links
+         list inline. At that width it wraps to a second line, adding a
+         full extra row of height the rest of this compacting never
+         accounted for. Force the same collapsed/hamburger treatment
+         here regardless of width so it can't happen. */
+      .nav__top {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        align-items: flex-start;
+      }
+
+      .nav__left {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.2rem;
+        width: 100%;
+      }
+
+      .nav__toggle {
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 6;
+        display: grid;
+        place-items: center;
+        width: 2rem;
+        height: 2rem;
+        flex-shrink: 0;
+      }
+
+      .nav__links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        max-height: 80vh;
+        overflow-y: auto;
+        padding: 0.6rem 1rem 1rem;
+        background: var(--nav-menu);
+        border-bottom: 1px solid var(--line);
+        z-index: 5;
+      }
+
+      .nav__links.is-open {
+        display: flex;
+      }
+
+      .nav__links li {
+        border-top: 1px solid var(--line);
+      }
+
+      .nav__links a {
+        display: block;
+        padding: 0.75rem 0;
+      }
+
+      .nav__links a.nav__cta,
+      .nav__links button.nav__cta {
+        display: inline-flex;
+        justify-content: center;
+        width: 100%;
+        padding: 0.65rem 1rem;
+        margin: 0.3rem 0;
+        font-size: 0.85rem;
+        box-sizing: border-box;
+      }
+
+      .nav__brand {
+        font-size: 0.95rem;
+      }
+
+      .nav__funds {
+        font-size: 0.72rem;
+      }
+
+      .nav__funds strong {
+        font-size: 0.85rem;
+      }
+
+      .nav__funds-stat-label {
+        font-size: 0.55rem;
+      }
+
+      .nav__cause {
+        margin-top: 0.05rem;
+      }
+
+      .nav__cause-logo {
+        height: 1.05rem;
+      }
+
+      .nav__cause-text {
+        font-size: 0.7rem;
+      }
+
+      .race-clock-block {
+        padding-top: 0;
+      }
+
+      .race-clock__units {
+        gap: 0.3rem;
+      }
+
+      .race-clock__digits {
+        min-width: 1.7rem;
+        padding: 0.18rem 0.28rem 0.16rem;
+        font-size: 1rem;
+      }
+
+      .race-clock__caption {
+        font-size: 0.65rem;
+      }
+
+    }
+
+    /* JS-driven fallback/duplicate of the media query above — see the
+       comment there for why this exists (Safari orientationchange lag). */
+    html.is-landscape-compact .nav {
+      position: absolute;
+      align-items: stretch;
+      gap: 0.2rem;
+      padding: calc(0.35rem + env(safe-area-inset-top, 0px)) clamp(0.85rem, 3vw, 1.5rem) 0.35rem;
+    }
+
+    html.is-landscape-compact .nav__top {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      align-items: flex-start;
+    }
+
+    html.is-landscape-compact .nav__left {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.2rem;
+      width: 100%;
+    }
+
+    html.is-landscape-compact .nav__toggle {
+      position: absolute;
+      top: 0;
+      right: 0;
+      z-index: 6;
+      display: grid;
+      place-items: center;
+      width: 2rem;
+      height: 2rem;
+      flex-shrink: 0;
+    }
+
+    html.is-landscape-compact .nav__links {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: 0.6rem 1rem 1rem;
+      background: var(--nav-menu);
+      border-bottom: 1px solid var(--line);
+      z-index: 5;
+    }
+
+    html.is-landscape-compact .nav__links.is-open {
+      display: flex;
+    }
+
+    html.is-landscape-compact .nav__links li {
+      border-top: 1px solid var(--line);
+    }
+
+    html.is-landscape-compact .nav__links a {
+      display: block;
+      padding: 0.75rem 0;
+    }
+
+    html.is-landscape-compact .nav__links a.nav__cta,
+    html.is-landscape-compact .nav__links button.nav__cta {
+      display: inline-flex;
+      justify-content: center;
+      width: 100%;
+      padding: 0.65rem 1rem;
+      margin: 0.3rem 0;
+      font-size: 0.85rem;
+      box-sizing: border-box;
+    }
+
+    html.is-landscape-compact .nav__brand {
+      font-size: 0.95rem;
+    }
+
+    html.is-landscape-compact .nav__funds {
+      font-size: 0.72rem;
+    }
+
+    html.is-landscape-compact .nav__funds strong {
+      font-size: 0.85rem;
+    }
+
+    html.is-landscape-compact .nav__funds-stat-label {
+      font-size: 0.55rem;
+    }
+
+    html.is-landscape-compact .nav__cause {
+      margin-top: 0.05rem;
+    }
+
+    html.is-landscape-compact .nav__cause-logo {
+      height: 1.05rem;
+    }
+
+    html.is-landscape-compact .nav__cause-text {
+      font-size: 0.7rem;
+    }
+
+    html.is-landscape-compact .race-clock-block {
+      padding: 0.25rem clamp(0.75rem, 3vw, 1.25rem)
+        calc(0.25rem + env(safe-area-inset-bottom, 0px));
+    }
+
+    html.is-landscape-compact .race-clock__units {
+      gap: 0.3rem;
+    }
+
+    html.is-landscape-compact .race-clock__digits {
+      min-width: 1.7rem;
+      padding: 0.18rem 0.28rem 0.16rem;
+      font-size: 1rem;
+    }
+
+    html.is-landscape-compact .race-clock__caption {
+      font-size: 0.65rem;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+
+      .bg-word span,
+      .hero__content h1,
+      .hero__content > p,
+      .hero__actions,
+      .hero__visual,
+      .hero__mri {
+        animation: none;
+      }
+
+      .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+
+      .split__image::after {
+        transform: scaleX(1);
+        transition: none;
+      }
+
+      .chapter__photo,
+      .weight-split__photos figure,
+      .split__image {
+        transition: none;
+      }
+
+      .chapter__photo:hover,
+      .weight-split__photos figure:hover,
+      .split__image:hover,
+      .chapter__photo.is-lifted,
+      .weight-split__photos figure.is-lifted,
+      .split__image.is-lifted {
+        transform: none;
+        box-shadow: none;
+      }
+    }
+

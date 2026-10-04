@@ -75,7 +75,16 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <!-- Split from one 4,300-line styles.css into ordered partials for
+       easier navigation. Load order matters: later files' rules can win
+       ties against earlier ones at equal specificity, exactly as before
+       the split — don't reorder these. -->
+  <link rel="stylesheet" href="styles/01-base-nav.css" />
+  <link rel="stylesheet" href="styles/02-hero-sections.css" />
+  <link rel="stylesheet" href="styles/03-story-charts.css" />
+  <link rel="stylesheet" href="styles/04-marathon-training.css" />
+  <link rel="stylesheet" href="styles/05-widgets-forms.css" />
+  <link rel="stylesheet" href="styles/06-footer-responsive.css" />
 </head>
 <body>
 
@@ -1000,7 +1009,7 @@ timeline
             <pre class="mermaid" id="public-arch-mermaid">
 flowchart TD
     Browser["Visitor's browser"]
-    Static["Vercel static hosting\nindex.html · styles.css · app.js"]
+    Static["Vercel static hosting\nindex.html · styles/*.css · js/*.js"]
     ThirdParty["Third-party embeds\nGoogle Maps/MapLibre · SociableKIT · Mermaid.js"]
     API["Vercel serverless functions\napi/*.js"]
     DB[("Neon Postgres\ntraining · weigh-ins · milestones · funds · comments · live track")]
@@ -1173,7 +1182,7 @@ flowchart TD
             <pre class="mermaid" id="arch-mermaid">
 flowchart TD
     Browser["Visitor's Browser"]
-    Static["Vercel Static Hosting\nindex.html · styles.css · app.js"]
+    Static["Vercel Static Hosting\nindex.html · styles/*.css · js/*.js"]
     ThirdParty["Third-party embeds\nGoogle Maps/MapLibre · UserWay · Google Fonts"]
     API["Vercel Serverless Functions\napi/*.js (shared api/_db.js)"]
     DB[("Neon Postgres\ntraining_runs · weigh_ins · milestones · funds · comments · live_track")]
@@ -1310,7 +1319,17 @@ flowchart TD
       });
     };
   </script>
-  <script src="app.js"></script>
+  <!-- Split from one 3,760-line app.js into ordered partials for easier
+       navigation. These are classic (non-module) scripts sharing one
+       global scope, exactly as before — load order still matters for
+       anything not scoped inside its own IIFE; don't reorder these. -->
+  <script src="js/01-nav-theme-cursor.js"></script>
+  <script src="js/02-storm-raceclock.js"></script>
+  <script src="js/03-coursemap-weightchart.js"></script>
+  <script src="js/04-charts-sims.js"></script>
+  <script src="js/05-pacecalc.js"></script>
+  <script src="js/06-training-comments.js"></script>
+  <script src="js/07-admin-mermaid.js"></script>
   <script src="https://widgets.sociablekit.com/instagram-feed/widget.js" defer></script>
   <script defer src="/_vercel/insights/script.js"></script>
   <script defer src="/_vercel/speed-insights/script.js"></script>

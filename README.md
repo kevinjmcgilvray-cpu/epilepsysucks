@@ -2,7 +2,7 @@
 
 Kevin's story site for the LA Marathon / CURE Epilepsy — hosted at [epilepsysucks.org](https://epilepsysucks.org).
 
-A single-page story site (`index.html` + `styles.css` + `app.js`) backed by a small set of
+A single-page story site (`index.html` + `styles/*.css` + `js/*.js`) backed by a small set of
 Vercel serverless functions (`api/`) and a Neon Postgres database, powering the live
 fundraising bar, weigh-in chart, training log, milestones, comments, and the "Live Track"
 race-day radar.
@@ -26,7 +26,13 @@ live track) needs the API layer running too — see below.
 ## Project layout
 
 ```
-index.html, styles.css, app.js   Frontend — the whole site is one page
+index.html                         Frontend — the whole site is one page
+styles/                           CSS, split into 6 ordered files (load order matters — see
+                                   the <link> tags in index.html); was one 4,300-line styles.css
+js/                                Frontend JS, split into 7 ordered files (load order matters —
+                                   see the <script> tags in index.html); was one 3,760-line app.js.
+                                   Classic (non-module) scripts sharing one global scope, same as
+                                   when this was a single file.
 api/                              Vercel serverless functions (Neon-backed)
   _db.js                         Shared helpers: SQL client, CORS, password check, sanitizing
   raised.js                      Fundraising totals (scrapes Haku, caches in Neon)
