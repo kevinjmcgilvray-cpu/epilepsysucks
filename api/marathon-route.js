@@ -1,4 +1,4 @@
-import { cors, getSql } from "./_db.js";
+import { cors, getSql, reportError } from "./_db.js";
 
 export default async function handler(req, res) {
   cors(res, "GET, OPTIONS", req);
@@ -54,6 +54,7 @@ export default async function handler(req, res) {
       }
     });
   } catch (error) {
+    await reportError(error, { endpoint: "marathon-route", method: req.method });
     res.status(500).json({ ok: false, error: "Marathon route request failed" });
   }
 }

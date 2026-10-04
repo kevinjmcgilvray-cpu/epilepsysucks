@@ -3,7 +3,8 @@ import {
   cors,
   formatMoney,
   getSql,
-  parseBody
+  parseBody,
+  reportError
 } from "./_db.js";
 
 async function scrapeHaku() {
@@ -139,6 +140,7 @@ export default async function handler(req, res) {
 
     res.status(405).json({ ok: false, error: "Method not allowed" });
   } catch (error) {
+    await reportError(error, { endpoint: "raised", method: req.method });
     res.status(500).json({ ok: false, error: "Fundraising request failed" });
   }
 }

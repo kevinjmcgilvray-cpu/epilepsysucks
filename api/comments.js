@@ -1,4 +1,4 @@
-import { cors, getSql, sanitizePlain } from "./_db.js";
+import { cors, getSql, reportError, sanitizePlain } from "./_db.js";
 
 const MAX_NAME = 40;
 const MAX_MESSAGE = 1000;
@@ -87,6 +87,7 @@ export default async function handler(req, res) {
 
     res.status(405).json({ ok: false, error: "Method not allowed" });
   } catch (error) {
+    await reportError(error, { endpoint: "comments", method: req.method });
     res.status(500).json({ ok: false, error: "Comments request failed" });
   }
 }

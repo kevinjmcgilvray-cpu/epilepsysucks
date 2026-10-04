@@ -1,4 +1,5 @@
 import { neon } from "@neondatabase/serverless";
+import * as Sentry from "@sentry/node";
 
 const ALLOWED_ORIGINS = new Set([
   "https://www.epilepsysucks.org",
@@ -18,6 +19,42 @@ export function getSql() {
   const url = process.env.DATABASE_URL;
   if (!url) return null;
   return neon(url);
+}
+
+// Error tracking is entirely opt-in via SENTRY_DSN. With it unset
+// (e.g. local dev, or until it's configured in Vercel), every call
+// below is a cheap no-op — nothing changes for anyone who hasn't set
+// it up yet.
+let sentryInitialized = false;
+
+function initSentry() {
+  if (sentryInitialized) return;
+  sentryInitialized = true;
+  const dsn = process.env.SENTRY_DSN;
+  if (!dsn) return;
+  Sentry.init({
+    dsn,
+    environment: process.env.VERCEL_ENV || "development",
+    tracesSampleRate: 0
+  });
+}
+
+// Reports an error to Sentry (if configured) and flushes before
+// returning, since a serverless function can be frozen/torn down
+// immediately after the response is sent — without the flush, a
+// captured event can simply never make it out over the network.
+// Telemetry failing is never allowed to break the actual error
+// response, so every path here is wrapped and swallows its own
+// errors.
+export async function reportError(error, context) {
+  try {
+    initSentry();
+    if (!process.env.SENTRY_DSN) return;
+    Sentry.captureException(error, context ? { extra: context } : undefined);
+    await Sentry.flush(2000);
+  } catch {
+    // Never let telemetry reporting itself break the error response.
+  }
 }
 
 export function checkOwnerPassword(payload) {

@@ -2,7 +2,8 @@ import {
   authorizeOwner,
   cors,
   getSql,
-  parseBody
+  parseBody,
+  reportError
 } from "./_db.js";
 
 function mapWeighIn(row) {
@@ -84,6 +85,7 @@ export default async function handler(req, res) {
 
     res.status(405).json({ ok: false, error: "Method not allowed" });
   } catch (error) {
+    await reportError(error, { endpoint: "weigh-ins", method: req.method });
     res.status(500).json({ ok: false, error: "Weigh-in request failed" });
   }
 }

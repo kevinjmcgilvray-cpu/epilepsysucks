@@ -1,4 +1,4 @@
-import { authorizeOwner, cors, getSql } from "./_db.js";
+import { authorizeOwner, cors, getSql, reportError } from "./_db.js";
 
 function mapComment(row) {
   return {
@@ -92,6 +92,7 @@ export default async function handler(req, res) {
 
     res.status(405).json({ ok: false, error: "Method not allowed" });
   } catch (error) {
+    await reportError(error, { endpoint: "moderate", method: req.method });
     res.status(500).json({ ok: false, error: "Moderation request failed" });
   }
 }

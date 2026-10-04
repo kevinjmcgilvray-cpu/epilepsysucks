@@ -3,6 +3,7 @@ import {
   cors,
   getSql,
   parseBody,
+  reportError,
   sanitizePlain
 } from "./_db.js";
 
@@ -155,6 +156,7 @@ export default async function handler(req, res) {
     res.status(405).json({ ok: false, error: "Method not allowed" });
   } catch (err) {
     console.error("live-track error", err);
+    await reportError(err, { endpoint: "live-track", method: req.method });
     res.status(500).json({ ok: false, error: "Live track failed" });
   }
 }
