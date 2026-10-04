@@ -1384,6 +1384,29 @@
       color: var(--paper-faint);
     }
 
+    .weight-chart__trend-line {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 1.5;
+      stroke-dasharray: 5 4;
+      pointer-events: none;
+      opacity: 0.85;
+    }
+
+    .trend-stat {
+      margin: 0.6rem 0 0;
+      padding: 0.65rem 0.9rem;
+      border-left: 2px solid var(--epi);
+      background: color-mix(in srgb, var(--epi) 8%, transparent);
+      font-size: 0.88rem;
+      line-height: 1.5;
+      color: var(--paper-dim);
+    }
+
+    .trend-stat strong {
+      color: var(--paper);
+    }
+
     .seizure-chart {
       margin-bottom: 2.75rem;
       padding-bottom: 2rem;
@@ -2305,6 +2328,15 @@
       stroke-linejoin: round;
       stroke-linecap: round;
       pointer-events: none;
+    }
+
+    .training-chart__trend-line {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 1.5;
+      stroke-dasharray: 5 4;
+      pointer-events: none;
+      opacity: 0.85;
     }
 
     .training-chart__area {

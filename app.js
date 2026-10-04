@@ -457,6 +457,38 @@
           if (boxRaisedEl) boxRaisedEl.textContent = data.raisedFormatted;
           if (boxGoalEl) boxGoalEl.textContent = data.goalFormatted;
           if (boxOverachieverEl) boxOverachieverEl.textContent = formatMoney(overachiever);
+
+          // Needed-pace calculator: how much per day, on average, still
+          // needs to come in to hit the goal by race morning. Doesn't
+          // require any donation history — just today's totals and the
+          // fixed race date — so it stays honest about what data actually
+          // exists (there's no stored day-by-day donation log to trend on).
+          const trendStatEl = document.getElementById("funds-trend-stat");
+          if (trendStatEl) {
+            const remaining = Number(data.goal) - Number(data.raised);
+            const raceMs = Date.UTC(2027, 2, 7);
+            const daysLeft = Math.max(1, Math.ceil((raceMs - Date.now()) / 86400000));
+            if (remaining <= 0) {
+              trendStatEl.hidden = false;
+              trendStatEl.innerHTML =
+                "<strong>Goal met!</strong> Every dollar past this point is overachiever territory — thank you.";
+            } else {
+              const perDay = remaining / daysLeft;
+              const perTypicalDonation = 25; // rough reference point, not a real average
+              const donorsNeeded = Math.max(1, Math.round(remaining / perTypicalDonation));
+              trendStatEl.hidden = false;
+              trendStatEl.innerHTML =
+                "<strong>Pace to goal:</strong> " +
+                formatMoney(remaining) +
+                " to go over " +
+                daysLeft +
+                " days until race morning — about <strong>" +
+                formatMoney(Math.max(1, Math.round(perDay * 100) / 100)) +
+                "/day</strong>, or roughly " +
+                donorsNeeded +
+                " more $25 donations between now and March 7, 2027.";
+            }
+          }
         })
         .catch(() => {});
     })();
@@ -1083,6 +1115,59 @@
           const y = Y0 + ((maxLb - w.weightLb) / lbSpan) * (Y1 - Y0);
           return { date: formatDateLabel(w.date), lb: w.weightLb, x: x, y: y };
         });
+
+        // Least-squares linear regression (days since first weigh-in vs.
+        // weight) to show a real trend line and project a race-day weight
+        // — not just connecting the dots, actually fitting them.
+        const trendEl = document.getElementById("weight-chart-trend");
+        const trendStatEl = document.getElementById("weight-trend-stat");
+        if (trendEl) trendEl.setAttribute("points", "");
+        if (weighIns.length >= 3) {
+          const DAY_MS = 86400000;
+          const xs = times.map((t) => (t - tMin) / DAY_MS);
+          const n = xs.length;
+          const xMean = xs.reduce((a, b) => a + b, 0) / n;
+          const yMean = lbs.reduce((a, b) => a + b, 0) / n;
+          let num = 0, den = 0;
+          for (let i = 0; i < n; i++) {
+            num += (xs[i] - xMean) * (lbs[i] - yMean);
+            den += (xs[i] - xMean) * (xs[i] - xMean);
+          }
+          const slope = den === 0 ? 0 : num / den; // lb per day
+          const intercept = yMean - slope * xMean;
+          const fitAt = (xDay) => intercept + slope * xDay;
+
+          if (trendEl) {
+            const xStart = 0;
+            const xEnd = (tMax - tMin) / DAY_MS;
+            const p1x = X0;
+            const p2x = X1;
+            const p1y = Y0 + ((maxLb - fitAt(xStart)) / lbSpan) * (Y1 - Y0);
+            const p2y = Y0 + ((maxLb - fitAt(xEnd)) / lbSpan) * (Y1 - Y0);
+            trendEl.setAttribute(
+              "points",
+              p1x.toFixed(1) + "," + p1y.toFixed(1) + " " + p2x.toFixed(1) + "," + p2y.toFixed(1)
+            );
+          }
+
+          if (trendStatEl) {
+            const raceMs = Date.UTC(2027, 2, 7);
+            const daysToRace = (raceMs - tMin) / DAY_MS;
+            const projected = fitAt(daysToRace);
+            const perWeek = slope * 7;
+            const direction = perWeek < -0.05 ? "losing" : perWeek > 0.05 ? "gaining" : "holding steady at";
+            trendStatEl.hidden = false;
+            trendStatEl.innerHTML =
+              "<strong>Trend:</strong> " +
+              direction +
+              (Math.abs(perWeek) > 0.05 ? " about " + Math.abs(perWeek).toFixed(1) + " lb/week" : "") +
+              " based on a least-squares fit of every weigh-in. At that rate, projected around <strong>" +
+              Math.round(projected) +
+              " lb</strong> by race day (March 7, 2027).";
+          }
+        } else if (trendStatEl) {
+          trendStatEl.hidden = true;
+        }
 
         if (gridEl) {
           gridEl.innerHTML = "";
@@ -1943,16 +2028,34 @@
       }
 
       function renderChart(runs) {
+        const trendEl = document.getElementById("training-chart-trend");
+        const trendStatEl = document.getElementById("training-trend-stat");
         if (!runs.length) {
           areaEl.setAttribute("d", "");
           lineEl.setAttribute("points", "");
+          if (trendEl) trendEl.setAttribute("points", "");
+          if (trendStatEl) trendStatEl.hidden = true;
           if (pointsGroup) pointsGroup.innerHTML = "";
           return;
         }
         const chronological = runs.slice().reverse();
         const X0 = 40, X1 = 760, Y0 = 20, Y1 = 180, BASE = 200;
+        const DAY_MS = 86400000;
+
+        // 7-day trailing mileage total as of each run's date — a real
+        // rolling volume trend, not just the raw per-run distances.
+        const dates = chronological.map((r) => new Date(dayKey(r.date) + "T12:00:00").getTime());
         const miles = chronological.map((r) => r.miles);
-        const maxM = Math.max.apply(null, miles) || 1;
+        const trailingSums = chronological.map((r, i) => {
+          const t = dates[i];
+          let sum = 0;
+          for (let j = 0; j <= i; j++) {
+            if (t - dates[j] <= 6 * DAY_MS) sum += miles[j];
+          }
+          return sum;
+        });
+
+        const maxM = Math.max(Math.max.apply(null, miles), Math.max.apply(null, trailingSums)) || 1;
         const points = chronological.map((r, i) => {
           const x = X0 + (i / Math.max(1, chronological.length - 1)) * (X1 - X0);
           const y = Y0 + (1 - r.miles / maxM) * (Y1 - Y0);
@@ -1967,6 +2070,60 @@
         const pts = points.map((p) => p.x.toFixed(1) + "," + p.y.toFixed(1)).join(" ");
         lineEl.setAttribute("points", pts);
         areaEl.setAttribute("d", "M" + pts + " L" + X1 + "," + BASE + " L" + X0 + "," + BASE + " Z");
+
+        if (trendEl) {
+          if (chronological.length >= 2) {
+            const trendPts = chronological
+              .map((r, i) => {
+                const x = X0 + (i / Math.max(1, chronological.length - 1)) * (X1 - X0);
+                const y = Y0 + (1 - trailingSums[i] / maxM) * (Y1 - Y0);
+                return x.toFixed(1) + "," + y.toFixed(1);
+              })
+              .join(" ");
+            trendEl.setAttribute("points", trendPts);
+          } else {
+            trendEl.setAttribute("points", "");
+          }
+        }
+
+        if (trendStatEl) {
+          if (chronological.length >= 3) {
+            const xs = dates.map((t) => (t - dates[0]) / DAY_MS);
+            const n = xs.length;
+            const xMean = xs.reduce((a, b) => a + b, 0) / n;
+            const yMean = trailingSums.reduce((a, b) => a + b, 0) / n;
+            let num = 0, den = 0;
+            for (let i = 0; i < n; i++) {
+              num += (xs[i] - xMean) * (trailingSums[i] - yMean);
+              den += (xs[i] - xMean) * (xs[i] - xMean);
+            }
+            const slope = den === 0 ? 0 : num / den; // trailing-sum miles per day
+            const perWeek = slope * 7;
+            const direction =
+              perWeek > 0.3 ? "ramping up" : perWeek < -0.3 ? "tapering down" : "holding steady";
+
+            const raceMs = Date.UTC(2027, 2, 7);
+            const weeksRemaining = Math.max(0, (raceMs - Date.now()) / (7 * DAY_MS));
+            const currentWeekly = trailingSums[trailingSums.length - 1];
+            const totalLogged = miles.reduce((a, b) => a + b, 0);
+            const projectedTotal = totalLogged + currentWeekly * weeksRemaining;
+
+            trendStatEl.hidden = false;
+            trendStatEl.innerHTML =
+              "<strong>Trend:</strong> weekly volume is " +
+              direction +
+              (Math.abs(perWeek) > 0.3
+                ? " (about " + Math.abs(perWeek).toFixed(1) + " mi/week " + (perWeek > 0 ? "gain" : "drop") + ")"
+                : "") +
+              ". At the current " +
+              currentWeekly.toFixed(1) +
+              " mi/week pace, that's roughly <strong>" +
+              Math.round(projectedTotal) +
+              " total training miles</strong> logged by race day (March 7, 2027).";
+          } else {
+            trendStatEl.hidden = true;
+          }
+        }
 
         if (!pointsGroup) return;
         pointsGroup.innerHTML = "";

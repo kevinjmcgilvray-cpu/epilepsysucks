@@ -661,6 +661,7 @@ timeline
               <g class="weight-chart__label" font-family="DM Sans, sans-serif" font-size="12" text-anchor="end" id="weight-y-labels"></g>
               <g class="weight-chart__label" font-family="DM Sans, sans-serif" font-size="12" text-anchor="middle" id="weight-x-labels"></g>
               <path class="weight-chart__area" id="weight-chart-area" d="" />
+              <polyline class="weight-chart__trend-line" id="weight-chart-trend" points="" />
               <polyline
                 class="weight-chart__line"
                 id="weight-chart-line"
@@ -679,6 +680,7 @@ timeline
             </div>
           </div>
           <p class="weight-chart__note" id="weight-chart-note">Hover any dot for the exact date and weight.</p>
+          <p class="trend-stat" id="weight-trend-stat" hidden></p>
         </div>
       </div>
     </section>
@@ -729,6 +731,7 @@ timeline
           <div class="training-chart" id="training-chart">
             <svg viewBox="0 0 800 220" role="img" aria-label="Training mileage chart. Hover or focus points for exact dates.">
               <path class="training-chart__area" id="training-chart-area" d=""></path>
+              <polyline class="training-chart__trend-line" id="training-chart-trend" points=""></polyline>
               <polyline class="training-chart__line" id="training-chart-line" points=""></polyline>
               <g id="training-chart-points"></g>
             </svg>
@@ -738,6 +741,7 @@ timeline
             </div>
           </div>
           <p class="training-chart__note" id="training-chart-note">Hover any dot for the exact date.</p>
+          <p class="trend-stat" id="training-trend-stat" hidden></p>
         </div>
 
         <div class="course-map__block" id="course">
@@ -800,6 +804,7 @@ timeline
               </div>
               <div class="funds-bar" aria-hidden="true"><span class="funds-bar__fill" id="funds-bar-fill-meta"></span></div>
             </div>
+            <p class="trend-stat" id="funds-trend-stat" hidden></p>
             <div class="hero__actions" style="justify-content: flex-start; margin-top: 2rem; animation: none;">
               <a class="btn btn--purple" href="https://haku.ly/9795a39b3b" target="_blank" rel="noopener noreferrer">Donate now</a>
               <a class="btn btn--ghost" href="https://www.cureepilepsy.org/" target="_blank" rel="noopener noreferrer">Learn about CURE</a>
