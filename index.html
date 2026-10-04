@@ -535,6 +535,47 @@ timeline
           </div>
         </details>
 
+        <details class="mechanism-note reveal">
+          <summary class="mechanism-note__summary">
+            <span class="mechanism-note__summary-text">
+              <span class="eyebrow">Zoom in further</span>
+              <span class="mechanism-note__summary-title">Simulating one real neuron, with the actual equations</span>
+            </span>
+            <span class="mechanism-note__chevron" aria-hidden="true"></span>
+          </summary>
+          <div class="mechanism-note__body">
+          <p>The grid above shows neurons as simple on/off dots. A real neuron isn't on/off — its voltage is governed by sodium, potassium, and leak channels opening and closing continuously. In 1952, Alan Hodgkin and Andrew Huxley measured exactly how, in squid giant axon, and wrote it as four coupled differential equations. It's still the equations every computational neuroscience model builds on, and it's what's actually running below — not a canned animation, a live numerical simulation integrated in your browser via 4th-order Runge-Kutta, 60 times a second.</p>
+          <p>Turn up <span class="key">injected current</span> and watch the membrane cross threshold and fire — a textbook action potential, over and over, exactly like the real thing. Then turn up <span class="key">inhibitory tone</span> — the same GABA-receptor conductance that VNS and DBS lean on — and watch it shut the same neuron down, even under heavy current. This is the one-neuron version of everything described above.</p>
+
+          <div class="neuron-sim">
+            <p class="mechanism-sim__title">Try it: fire a real Hodgkin-Huxley neuron</p>
+            <p class="mechanism-sim__intro">This is a live simulation, not a recording — the trace below is the actual membrane voltage of a numerically-integrated neuron, updating in real time as you move the sliders.</p>
+            <div class="neuron-sim__frame">
+              <svg id="neuron-sim-svg" viewBox="0 0 520 190" role="img" aria-label="Live oscilloscope-style trace of a simulated neuron's membrane voltage">
+                <g class="neuron-sim__grid" id="neuron-sim-grid"></g>
+                <line class="neuron-sim__threshold" id="neuron-sim-threshold" x1="0" x2="520" />
+                <polyline class="neuron-sim__trace" id="neuron-sim-trace" points="" />
+              </svg>
+            </div>
+            <div class="mechanism-sim__controls">
+              <label class="mechanism-sim__slider">
+                <span>Injected current <strong id="neuron-current-val">0 µA/cm²</strong></span>
+                <input type="range" id="neuron-current" min="0" max="30" step="0.5" value="0" aria-label="Injected current" />
+              </label>
+              <label class="mechanism-sim__slider">
+                <span>Inhibitory tone (GABA-like) <strong id="neuron-inhibition-val">0%</strong></span>
+                <input type="range" id="neuron-inhibition" min="0" max="100" step="1" value="0" aria-label="Inhibitory conductance" />
+              </label>
+              <div class="mechanism-sim__buttons">
+                <button type="button" class="btn btn--purple" id="neuron-playpause">Pause</button>
+                <button type="button" class="btn btn--ghost" id="neuron-reset">Reset</button>
+              </div>
+            </div>
+            <p class="mechanism-sim__readout" id="neuron-readout" aria-live="polite">Resting — below firing threshold.</p>
+          </div>
+          </div>
+        </details>
+
         <div class="split">
           <div class="reveal">
             <p class="eyebrow">Where I am now</p>
