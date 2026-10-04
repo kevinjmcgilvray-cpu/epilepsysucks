@@ -85,7 +85,16 @@
   <header class="nav" id="nav">
     <div class="nav__top">
       <div class="nav__left">
-        <a class="nav__brand" href="#top">Epilepsy Sucks</a>
+        <div class="nav__brand-row">
+          <a class="nav__brand" href="#top">Epilepsy Sucks</a>
+          <!-- Kept outside any aria-live region on purpose: this cycles
+               every ~2.6s and would otherwise cause constant screen-reader
+               re-announcements if it sat inside one. -->
+          <div class="donor-ticker" id="donor-ticker">
+            <span class="donor-ticker__name" id="donor-ticker-name">Kevin McGilvray</span>
+            <span class="donor-ticker__label">thank you for your donation!</span>
+          </div>
+        </div>
         <div class="nav__funds-row">
           <a
             class="nav__funds"
@@ -151,42 +160,36 @@
         <li><button type="button" class="nav__cta theme-toggle-btn" id="theme-toggle" data-label-dark="Dark" data-label-light="Light" aria-label="Switch to dark mode">Dark</button></li>
         <li><a class="nav__cta" href="https://haku.ly/9795a39b3b" target="_blank" rel="noopener noreferrer">Donate</a></li>
       </ul>
-      <div class="race-clock-block">
-        <div
-          class="race-clock"
-          id="race-clock"
-          role="timer"
-          aria-live="polite"
-          aria-label="Countdown to LA Marathon race morning, March 7, 2027"
-        >
-          <div class="race-clock__units">
-            <div class="race-clock__unit">
-              <span class="race-clock__digits" id="race-days" data-value="">000</span>
-              <span class="race-clock__label">Days</span>
-            </div>
-            <span class="race-clock__sep" aria-hidden="true">:</span>
-            <div class="race-clock__unit">
-              <span class="race-clock__digits" id="race-hours" data-value="">00</span>
-              <span class="race-clock__label">Hours</span>
-            </div>
-            <span class="race-clock__sep" aria-hidden="true">:</span>
-            <div class="race-clock__unit">
-              <span class="race-clock__digits" id="race-mins" data-value="">00</span>
-              <span class="race-clock__label">Mins</span>
-            </div>
-          </div>
-          <p class="race-clock__caption">Race morning until the LA Marathon!!</p>
-        </div>
-        <!-- Kept outside the timer's aria-live region on purpose: this
-             cycles every ~2.6s and would otherwise cause the countdown's
-             live region to re-announce constantly for screen readers. -->
-        <div class="donor-ticker" id="donor-ticker">
-          <span class="donor-ticker__name" id="donor-ticker-name">Kevin McGilvray</span>
-          <span class="donor-ticker__label">thank you for your donation!</span>
-        </div>
-      </div>
     </div>
   </header>
+
+  <div class="race-clock-block" id="race-clock-block">
+    <div
+      class="race-clock"
+      id="race-clock"
+      role="timer"
+      aria-live="polite"
+      aria-label="Countdown to LA Marathon race morning, March 7, 2027"
+    >
+      <div class="race-clock__units">
+        <div class="race-clock__unit">
+          <span class="race-clock__digits" id="race-days" data-value="">000</span>
+          <span class="race-clock__label">Days</span>
+        </div>
+        <span class="race-clock__sep" aria-hidden="true">:</span>
+        <div class="race-clock__unit">
+          <span class="race-clock__digits" id="race-hours" data-value="">00</span>
+          <span class="race-clock__label">Hours</span>
+        </div>
+        <span class="race-clock__sep" aria-hidden="true">:</span>
+        <div class="race-clock__unit">
+          <span class="race-clock__digits" id="race-mins" data-value="">00</span>
+          <span class="race-clock__label">Mins</span>
+        </div>
+      </div>
+      <p class="race-clock__caption">Race morning until the LA Marathon!!</p>
+    </div>
+  </div>
 
   <main id="top">
     <section class="hero" aria-label="Introduction">
