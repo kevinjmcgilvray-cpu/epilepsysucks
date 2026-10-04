@@ -39,10 +39,21 @@
       --ink: #14110f;
       --ink-2: #1c1916;
       --paper: #ebe4d8;
-      --paper-dim: rgba(235, 228, 216, 0.7);
-      --paper-faint: rgba(235, 228, 216, 0.46);
+      /* Brightened for legibility: plain white (no color tint) at a
+         higher opacity than the original rgba(235,228,216,0.7/0.46),
+         which read as dim/grey on the near-black background. */
+      --paper-dim: rgba(255, 255, 255, 0.9);
+      --paper-faint: rgba(255, 255, 255, 0.68);
       --accent: #c43b2c;
       --accent-soft: rgba(196, 59, 44, 0.16);
+      /* --accent itself is tuned to work as a button background / chart
+         stroke against this theme's light btn-on-color text and dark
+         page background — but at only ~3.3:1 it's too low-contrast to
+         use as plain text color on the near-black page background
+         (needs 4.5:1 for AA). --accent-fg is plain white — used
+         anywhere --accent was being used as a *text* color (eyebrows,
+         figcaptions, table emphasis, links) — so it stays legible. */
+      --accent-fg: #ffffff;
       --epi: #9b6bff;
       --line: rgba(235, 228, 216, 0.12);
       --nav-top: rgba(20, 17, 15, 0.92);
@@ -75,6 +86,11 @@
       --paper-faint: rgba(28, 25, 21, 0.5);
       --accent: #b83327;
       --accent-soft: rgba(184, 51, 39, 0.12);
+      /* This theme's --accent already has sufficient contrast as text
+         against the light page background, so --accent-fg is just an
+         alias (see the dark/default theme above for why this variable
+         exists). */
+      --accent-fg: var(--accent);
       --epi: #6d3fe8;
       --line: rgba(28, 25, 21, 0.12);
       --nav-top: rgba(232, 227, 218, 0.94);
@@ -1344,14 +1360,20 @@
     main,
     .footer {
       position: relative;
-      z-index: 1;
+      /* No explicit z-index here on purpose: a positioned element only
+         creates its own stacking context (trapping descendants' z-index
+         values inside it) when it has one. Leaving this at the default
+         "auto" lets .chapter's own z-index (below) escape to compete
+         directly with .bg-lightning's z-index: 15 at the document level,
+         while everything else in main without its own z-index keeps
+         painting below .bg-lightning exactly as before. */
     }
 
     .eyebrow {
       font-size: 0.8rem;
       letter-spacing: 0.16em;
       text-transform: uppercase;
-      color: var(--accent);
+      color: var(--accent-fg);
       margin-bottom: 1rem;
     }
 
@@ -1368,7 +1390,7 @@
       display: inline-flex;
       align-items: center;
       gap: 0.3rem;
-      color: var(--accent);
+      color: var(--accent-fg);
       font-size: 0.9rem;
       font-weight: 600;
       text-decoration: underline;
@@ -1377,7 +1399,7 @@
     }
 
     .social-feed__fallback:hover {
-      text-decoration-color: var(--accent);
+      text-decoration-color: var(--accent-fg);
     }
 
     .section h2 {
@@ -1399,11 +1421,31 @@
       margin-top: 1.1rem;
     }
 
+    /* In the default (dark) theme, story chapters sit directly on the
+       fixed lightning-photo background with nothing but a thin border,
+       which makes the text harder to read against a busy, high-contrast
+       photo. Give them a card background instead — the light theme
+       override below restores the original minimal left/right-border
+       look, since that theme's plain page background doesn't need it. */
     .chapter {
       position: relative;
-      padding-left: 1.5rem;
-      border-left: 1px solid var(--line);
+      /* .bg-lightning sits at z-index: 15 (deliberately above regular
+         content so a strike is visible over text/photos elsewhere on
+         the page) — without this, the card background below would be
+         painted *underneath* the lightning layer and invisible. */
+      z-index: 16;
+      padding: 1.5rem 1.75rem;
       margin-top: 2.75rem;
+      /* Noticeably more opaque than --surface-muted (used for the
+         smaller mechanism-note/history-note cards) — the fixed
+         lightning photo behind this content can be quite bright, and
+         a lighter overlay wasn't enough to keep text clearly readable
+         against it everywhere. */
+      background: rgba(16, 13, 11, 0.94);
+      backdrop-filter: blur(3px);
+      border: 1px solid rgba(235, 228, 216, 0.28);
+      border-radius: 0.75rem;
+      box-shadow: 0 1.5rem 3rem rgba(0, 0, 0, 0.4);
     }
 
     .chapter:first-of-type {
@@ -1414,11 +1456,24 @@
       margin-left: auto;
       margin-right: 0;
       max-width: min(38rem, 100%);
-      padding-left: 0;
-      padding-right: 1.5rem;
+      text-align: left;
+    }
+
+    html[data-theme="light"] .chapter {
+      z-index: auto;
+      padding: 0 0 0 1.5rem;
+      background: none;
+      backdrop-filter: none;
+      border: none;
+      border-left: 1px solid var(--line);
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    html[data-theme="light"] .chapter--right {
+      padding: 0 1.5rem 0 0;
       border-left: none;
       border-right: 1px solid var(--line);
-      text-align: left;
     }
 
     .chapter-split {
@@ -1455,7 +1510,7 @@
       font-size: 0.8rem;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--accent);
+      color: var(--accent-fg);
     }
 
     @media (min-width: 900px) {
@@ -1477,7 +1532,7 @@
       font-family: var(--font-display);
       font-size: 1.15rem;
       letter-spacing: 0.12em;
-      color: var(--accent);
+      color: var(--accent-fg);
       margin-bottom: 0.65rem;
       text-transform: uppercase;
     }
@@ -2973,7 +3028,7 @@
     }
 
     .pace-calc__table tr.is-hard td {
-      color: var(--accent);
+      color: var(--accent-fg);
     }
 
     .pace-calc__table tr.is-easy td {
@@ -3343,7 +3398,7 @@
     }
 
     .comment-form__error {
-      color: var(--accent);
+      color: var(--accent-fg);
       font-size: 0.9rem;
     }
 
@@ -3764,7 +3819,7 @@
     }
 
     .support-list a:hover {
-      color: var(--accent);
+      color: var(--accent-fg);
     }
 
     .support-list span {
