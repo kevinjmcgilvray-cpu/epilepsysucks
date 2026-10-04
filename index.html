@@ -408,9 +408,15 @@ timeline
           <p class="seizure-chart__note">2026 is year-to-date (through Sept 18). Hover or tap any bar for the exact count and milestones — left temporal lobectomy (2017), VNS implant (2019), DBS implant (2022), and the DBS setting that finally held (March 2026).</p>
         </div>
 
-        <div class="mechanism-note reveal">
-          <p class="eyebrow">The science</p>
-          <h4>What's actually happening in a seizure</h4>
+        <details class="mechanism-note reveal">
+          <summary class="mechanism-note__summary">
+            <span class="mechanism-note__summary-text">
+              <span class="eyebrow">The science</span>
+              <span class="mechanism-note__summary-title">What's actually happening in a seizure</span>
+            </span>
+            <span class="mechanism-note__chevron" aria-hidden="true"></span>
+          </summary>
+          <div class="mechanism-note__body">
           <p>In a healthy brain, neurons fire in a constantly shifting balance between excitation (mostly driven by the neurotransmitter glutamate) and inhibition (mostly driven by GABA). Voltage-gated sodium, potassium, and calcium channels decide exactly when a neuron fires and when it resets, and a layer of inhibitory interneurons acts like a crowd of circuit breakers, keeping nearby neurons from ever firing in lockstep. Zoomed out, that looks like noise on an EEG — because it is millions of independent conversations happening at once, not one shout.</p>
           <p>A seizure starts when a group of neurons becomes abnormally excitable — in my case, inside the left temporal lobe. Scar tissue, channel dysfunction, or a local drop in inhibition can trigger what's called a <span class="key">paroxysmal depolarization shift</span>: a surge of calcium and NMDA-receptor-driven depolarization that fires a neuron far harder and longer than normal, followed by a sharp after-hyperpolarization as potassium and GABA-B currents try to shut it back down. One neuron misfiring like that isn't a seizure yet. It becomes one the moment that shutdown fails and the surrounding tissue gets pulled into firing on the same beat instead of resisting it.</p>
           <p>That's the actual mechanism: <span class="key">hypersynchronization</span>. Instead of neurons firing independently, a whole region locks into one rhythm — like a crowd that starts clapping in unison instead of talking over each other. If the discharge stays contained to where it started, that's a focal seizure. If it spreads — through local cortical wiring, across the corpus callosum to the other hemisphere, or through the thalamus, which normally times rhythms across the entire cortex — it becomes a focal-to-bilateral seizure, and the clapping becomes the whole stadium.</p>
@@ -444,7 +450,8 @@ timeline
             </div>
             <p class="mechanism-chart__note">A simplified, illustrative schematic of general seizure electrophysiology — not an actual EEG recording from my case.</p>
           </div>
-        </div>
+          </div>
+        </details>
 
         <div class="split">
           <div class="reveal">
