@@ -5,7 +5,7 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 
-const ROOT = path.join(__dirname, "..");
+const REPO_ROOT = path.join(__dirname, "..");
 
 const MIME = {
   ".html": "text/html; charset=utf-8",
@@ -24,14 +24,18 @@ const MIME = {
   ".txt": "text/plain; charset=utf-8",
 };
 
-function startServer(port = 0) {
+// `root` defaults to the repo root (serving source files directly, as
+// the site is actually deployed today), but can be pointed at dist/
+// instead to smoke-test the built/minified production bundle — see
+// tests/dist.test.js.
+function startServer(port = 0, root = REPO_ROOT) {
   const server = http.createServer((req, res) => {
     let reqPath = decodeURIComponent(req.url.split("?")[0]);
     if (reqPath === "/") reqPath = "/index.html";
-    const filePath = path.join(ROOT, reqPath);
+    const filePath = path.join(root, reqPath);
 
-    // Don't allow escaping the repo root.
-    if (!filePath.startsWith(ROOT)) {
+    // Don't allow escaping the serving root.
+    if (!filePath.startsWith(root)) {
       res.writeHead(403);
       res.end("Forbidden");
       return;

@@ -20,8 +20,48 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Get Playwright version
+        id: playwright-version
+        run: |
+          echo "version=$(node -e "console.log(require('./node_modules/playwright/package.json').version)")" >> "$GITHUB_OUTPUT"
+
+      # Caches the downloaded Chromium binary (not the npm package
+      # itself, which setup-node's own cache already covers) — `npx
+      # playwright install` skips re-downloading when it finds a
+      # matching version already present, so a cache hit here saves the
+      # ~20-40s download on most runs. System deps (--with-deps) still
+      # get (re)installed via apt every run regardless of cache; that
+      # part is fast on its own.
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright-version.outputs.version }}
+
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 
       - name: Run test suite
         run: npm test
+
+      # npm test runs `npm run build` first (see package.json), so dist/
+      # always exists by the time this runs, pass or fail.
+      - name: Upload production build (dist/) for inspection
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-build
+          path: dist/
+          retention-days: 7
+
+      # Only exists if a test actually failed (see tests/_assert.js'
+      # captureFailureArtifact) — gives a visual without needing to
+      # reproduce the failure locally.
+      - name: Upload failure screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-failure-screenshots
+          path: tests/_failure-artifacts/
+          retention-days: 14
+          if-no-files-found: ignore

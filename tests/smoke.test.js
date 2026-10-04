@@ -4,7 +4,7 @@
 // script used throughout development.
 const { chromium } = require("playwright");
 const { startServer } = require("./_server");
-const { check, report } = require("./_assert");
+const { check, report, captureFailureArtifact } = require("./_assert");
 
 async function run(baseUrl) {
   const browser = await chromium.launch();
@@ -36,6 +36,7 @@ async function run(baseUrl) {
   );
   check("No unexpected console/page errors across full scroll", relevant.length === 0, relevant.join(" | "));
 
+  await captureFailureArtifact(page, "smoke");
   await browser.close();
 }
 

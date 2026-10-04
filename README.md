@@ -7,13 +7,14 @@ Vercel serverless functions (`api/`) and a Neon Postgres database, powering the 
 fundraising bar, weigh-in chart, training log, milestones, comments, and the "Live Track"
 race-day radar.
 
-Also on the page: a seizure-frequency chart (2016–2026, static data in `app.js`), a live
-Instagram feed (via a SociableKIT embed), and a mobile/desktop nav that adapts for narrow
-screens, landscape phones, and wide-but-short viewports (e.g. iPhone Pro Max landscape).
+Also on the page: a seizure-frequency chart (2016–2026, static data in `js/04-charts-sims.js`),
+a live Instagram feed (via a SociableKIT embed), and a mobile/desktop nav that adapts for
+narrow screens, landscape phones, and wide-but-short viewports (e.g. iPhone Pro Max landscape).
 
 ## Local preview
 
-The frontend is static, so you can preview it without any build step:
+The source files (`styles/*.css`, `js/*.js`) are plain, unbundled static files, so you can
+preview them directly without any build step:
 
 ```bash
 python3 -m http.server 4200
@@ -22,6 +23,21 @@ python3 -m http.server 4200
 
 Anything that talks to `/api/*` (fundraising totals, weigh-ins, training runs, comments,
 live track) needs the API layer running too — see below.
+
+## Production build
+
+Deployed production runs a build step (`npm run build`, configured as Vercel's
+`buildCommand` in `vercel.json`), not the raw source files. It concatenates + minifies
+`styles/*.css` into `dist/styles/app.min.css` and `js/*.js` into `dist/js/app.min.js`
+(preserving the exact load order `index.html`'s `<link>`/`<script>` tags already use — this
+is deliberately *not* a real module bundler, just fewer requests + a smaller payload), copies
+every other static file through unchanged, and rewrites `dist/index.html`'s tags to match.
+`api/` is untouched — Vercel deploys it as serverless functions regardless of
+`outputDirectory`. See `scripts/build.js` for the full logic.
+
+```bash
+npm run build   # outputs to dist/
+```
 
 ## Tests
 
@@ -38,9 +54,15 @@ npm test
   `prefers-reduced-motion` override, entry-warning copy.
 - `smoke.test.js` — scrolls the full page in both themes, fails on any unexpected
   console/page error.
-- `contrast.test.js` — WCAG AA contrast scan of every text node in both themes. Tracks a
-  known baseline count of pre-existing low-contrast elements (see the comment in that file)
-  so it fails on *new* regressions without re-blocking on already-decided tradeoffs.
+- `contrast.test.js` — WCAG AA contrast scan of every text node in both themes.
+- `dist.test.js` — smoke test against the actual built/minified production bundle (see
+  "Production build" above), not the source files the other tests check — catches anything
+  the build/minify step itself might break.
+
+`npm test` runs `npm run build` first, so `dist.test.js` always has something to test.
+On any test failure, a full-page screenshot is saved to `tests/_failure-artifacts/` and
+uploaded as a CI artifact (see `.github/workflows/tests.yml`) for debugging without needing
+to reproduce the failure locally.
 
 Runs automatically on every PR via `.github/workflows/tests.yml`. These tests only exercise
 the static frontend — they don't need `DATABASE_URL` or any other env var.
