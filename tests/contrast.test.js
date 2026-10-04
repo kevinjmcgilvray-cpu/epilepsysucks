@@ -104,7 +104,13 @@ async function scanTheme(browser, baseUrl, theme) {
       out.push({
         text: text.slice(0, 60),
         tag: el.tagName,
-        cls: el.className,
+        // el.className is a plain string on HTML elements but an
+        // SVGAnimatedString object on SVG elements (e.g. the
+        // lazy-loaded Mermaid diagrams' <text> nodes) — .getAttribute
+        // always returns a plain string (or null) on both, so use
+        // that instead to avoid a crash the moment an SVG text node
+        // with a class attribute enters the scan.
+        cls: el.getAttribute("class") || "",
         fg: [fg.r, fg.g, fg.b],
         bg,
         fontSize: parseFloat(cs.fontSize),
