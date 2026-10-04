@@ -2422,10 +2422,6 @@
     }
 
     .course-map__intro {
-      display: grid;
-      grid-template-columns: minmax(11rem, 14rem) minmax(0, 1fr);
-      gap: clamp(1rem, 3vw, 1.75rem);
-      align-items: center;
       margin-bottom: 1.25rem;
     }
 
@@ -2523,11 +2519,6 @@
     }
 
     @media (max-width: 800px) {
-      .course-map__intro {
-        grid-template-columns: 1fr;
-        justify-items: start;
-      }
-
       .live-track {
         width: min(14rem, 70vw);
       }
