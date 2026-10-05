@@ -50,8 +50,9 @@ npm test
 `tests/` is a small Playwright-based suite (no test framework, just plain scripts +
 `tests/_assert.js`) that spins up a static server for the frontend and checks:
 
-- `regression.test.js` — storm/lightning toggle on-by-default behavior, persistence,
-  `prefers-reduced-motion` override, entry-warning copy.
+- `regression.test.js` — storm effects (on by default) + lightning cursor (off by default)
+  toggle behavior, persistence across reload, `prefers-reduced-motion` override, entry-warning
+  copy, the 4 distinct thunder audio sources.
 - `smoke.test.js` — scrolls the full page in both themes, fails on any unexpected
   console/page error.
 - `contrast.test.js` — WCAG AA contrast scan of every text node in both themes.
@@ -93,16 +94,25 @@ scripts/                          One-off Node scripts to seed/import data into 
 data/                             Static route data (LA Marathon course)
 ```
 
-Notable client-only features (no backend, data/config lives in `app.js`/`index.html`):
+Notable client-only features (no backend, data/config lives in `js/*.js`/`index.html`):
 - **Seizure chart** — SVG bar chart of yearly seizure counts (2016–2026) with milestone
-  callouts (surgery, VNS, DBS). Data is a static array in `app.js` — edit it directly to
-  update.
+  callouts (surgery, VNS, DBS). Data is a static array in `js/04-charts-sims.js` — edit it
+  directly to update.
 - **Instagram feed** — embedded via [SociableKIT](https://sociablekit.com) (`data-embed-id`
   in `index.html`). Feed content/connection is managed in the SociableKIT dashboard, not
   in this repo.
 - **Responsive nav** — collapses to a hamburger below 800px wide, and separately switches
   to a compact layout in landscape on short viewports (phones), including a JS-driven
-  fallback for iOS Safari's `orientationchange` timing quirks (see `app.js`).
+  fallback for iOS Safari's `orientationchange` timing quirks (see `js/01-nav-theme-cursor.js`).
+- **Storm effects + lightning cursor** — ambient thunder/lightning visuals (on by default,
+  toggle button in the nav) and an optional lightning-shaped cursor replacement (off by
+  default, separate toggle button). Both persist via `localStorage`, both fully disable under
+  `prefers-reduced-motion`, and the cursor toggle is hidden entirely on touch/coarse-pointer
+  devices. See `js/01-nav-theme-cursor.js` and `js/02-storm-raceclock.js`.
+- **Hover/scroll-lift on card elements** — chapter photos, training stat cards, mechanism
+  diagram panels, and chapter photo frames lift slightly with a soft shadow on hover (desktop)
+  or scroll-into-view (touch), via a shared `.is-lifted` pattern — see
+  `initPhotoLiftOnScroll()` in `js/07-admin-mermaid.js`.
 
 ## Backend setup (Neon + Vercel)
 
