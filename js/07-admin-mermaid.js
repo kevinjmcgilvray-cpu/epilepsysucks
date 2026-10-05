@@ -413,8 +413,8 @@
 
     (function () {
       const timeline = document.getElementById("mermaid-timeline");
-      const details = document.getElementById("site-architecture-wrap");
-      if (!timeline && !details) return;
+      const publicArchWrap = document.getElementById("public-architecture-wrap");
+      if (!timeline && !publicArchWrap) return;
 
       // Keep each diagram's original source around so we can fully
       // re-render it (with correct colors) whenever the theme toggle is
@@ -426,12 +426,13 @@
         mermaidSources.set(el, el.textContent);
       });
 
-      // Mermaid.js is a ~900KB third-party library used for exactly one
-      // visible diagram (plus a hidden dev-only one). Loading it on every
-      // page view — even for visitors who never scroll that far — wastes
-      // bandwidth and delays the page becoming interactive. Instead, fetch
-      // it lazily: shortly before the timeline diagram scrolls into view,
-      // or immediately if the site-architecture <details> is opened first.
+      // Mermaid.js is a ~900KB third-party library used for exactly two
+      // diagrams (the treatment timeline, and the "Behind the code"
+      // architecture diagram), both of which most visitors never reach.
+      // Loading it on every page view regardless would waste bandwidth
+      // and delay the page becoming interactive. Instead, fetch it
+      // lazily: shortly before the timeline diagram scrolls into view,
+      // or immediately if the architecture <details> is opened first.
       const MERMAID_SRC = "https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js";
       let mermaidPromise = null;
       function ensureMermaid() {
@@ -506,10 +507,7 @@
       }
 
       function renderPublicDiagrams() {
-        const publicDiagrams = Array.prototype.filter.call(
-          document.querySelectorAll(".mermaid"),
-          (el) => !details || !details.contains(el)
-        );
+        const publicDiagrams = Array.from(document.querySelectorAll(".mermaid"));
         if (!publicDiagrams.length) return;
         try {
           Promise.resolve(window.mermaid.run({ nodes: publicDiagrams })).then(() => {
@@ -543,27 +541,9 @@
         }
       }
 
-      let archRendered = false;
-      if (details) {
-        details.addEventListener("toggle", () => {
-          if (!details.open || archRendered) return;
-          archRendered = true;
-          ensureMermaid()
-            .then(() =>
-              Promise.resolve(window.mermaid.run({ querySelector: "#arch-mermaid" })).then(() =>
-                fixTimelineTitleColor()
-              )
-            )
-            .catch(() => {
-              archRendered = false;
-            });
-        });
-      }
-
       // Same lazy-load approach for the public "Behind the code" diagram —
       // it's a collapsed <details> too, so there's nothing to intersect
       // until a visitor actually opens it.
-      const publicArchWrap = document.getElementById("public-architecture-wrap");
       let publicArchRendered = false;
       if (publicArchWrap) {
         publicArchWrap.addEventListener("toggle", () => {
