@@ -473,6 +473,25 @@
         });
       }
 
+      // Mermaid's flowchart edge labels (e.g. the "GET /" / "fetch(...)"
+      // text on the architecture diagram's arrows) hardcode a fixed gray-
+      // on-gray combo for its dark theme — #ccc text on a #585858
+      // background, a 4.43:1 contrast ratio against dark text's 4.5:1 AA
+      // requirement. Barely fails, and not controllable via the
+      // documented themeVariables, so fix it directly on the rendered
+      // label the same way as the timeline title above: force it to the
+      // diagram's own (already-passing) background/text combo in dark
+      // mode, and leave light mode untouched since mermaid's default
+      // there already passes.
+      function fixEdgeLabelContrast(root) {
+        const isLight = document.documentElement.getAttribute("data-theme") === "light";
+        if (isLight) return;
+        (root || document).querySelectorAll(".mermaid .edgeLabel").forEach((el) => {
+          el.style.backgroundColor = "#14110f";
+          el.style.color = "#ebe4d8";
+        });
+      }
+
       // Mermaid's timeline section colors also aren't controllable via
       // the documented theme variables in this version — it always
       // generates its own saturated hue rotation. In dark mode that reads
@@ -512,6 +531,7 @@
         try {
           Promise.resolve(window.mermaid.run({ nodes: publicDiagrams })).then(() => {
             fixTimelineTitleColor();
+            fixEdgeLabelContrast();
             applyDarkTimelinePalette();
           });
         } catch (err) {
@@ -577,6 +597,7 @@
         try {
           Promise.resolve(window.mermaid.run({ nodes: toRerender })).then(() => {
             fixTimelineTitleColor();
+            fixEdgeLabelContrast();
             applyDarkTimelinePalette();
           });
         } catch (err) {

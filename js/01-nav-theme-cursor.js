@@ -588,10 +588,7 @@
       const bar = document.getElementById("funds-bar-fill");
       const barMeta = document.getElementById("funds-bar-fill-meta");
       const percentEl = document.getElementById("funds-percent");
-      const boxRaisedEl = document.getElementById("funds-box-raised");
-      const boxGoalEl = document.getElementById("funds-box-goal");
-      const boxOverachieverEl = document.getElementById("funds-box-overachiever");
-      if (!raisedEl && !boxRaisedEl) return;
+      if (!raisedEl) return;
 
       const formatMoney = (n) => "$" + Number(n).toLocaleString("en-US", { maximumFractionDigits: 0 });
 
@@ -612,10 +609,6 @@
           // actually exceeded.
           const overachiever = Math.max(0, Number(data.raised) - Number(data.goal));
           if (overachieverEl) overachieverEl.textContent = formatMoney(overachiever);
-
-          if (boxRaisedEl) boxRaisedEl.textContent = data.raisedFormatted;
-          if (boxGoalEl) boxGoalEl.textContent = data.goalFormatted;
-          if (boxOverachieverEl) boxOverachieverEl.textContent = formatMoney(overachiever);
 
           // Needed-pace calculator: how much per day, on average, still
           // needs to come in to hit the goal by race morning. Doesn't

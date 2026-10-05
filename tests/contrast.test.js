@@ -51,6 +51,15 @@ async function scanTheme(browser, baseUrl, theme) {
     await page.waitForTimeout(200);
   }
   await page.$$eval("details", (els) => els.forEach((el) => (el.open = true)));
+  // Opening the architecture <details> kicks off a lazy CDN fetch of
+  // mermaid.js, then an async render — a flat timeout here raced that
+  // fetch and was the direct cause of this test's CI-only flakiness
+  // (whether the scan caught the rendered SVG, with its real colors,
+  // depended entirely on network speed). Wait for the actual render
+  // instead; still bounded, and non-fatal if mermaid fails to load at
+  // all (e.g. no network), matching this codebase's existing fail-open
+  // conventions rather than hanging the whole suite.
+  await page.waitForSelector("#public-arch-mermaid svg", { timeout: 5000 }).catch(() => {});
   await page.waitForTimeout(200);
 
   const results = await page.evaluate(() => {
