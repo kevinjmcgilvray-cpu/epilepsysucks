@@ -21,6 +21,24 @@ export function getSql() {
   return neon(url);
 }
 
+// "Today" per Postgres's CURRENT_DATE/NOW() is anchored to the DB
+// session's timezone (UTC on Neon), not the site owner's. For ~7
+// hours every evening (5pm-midnight Pacific, since UTC runs 7-8 hours
+// ahead), the UTC calendar date has already rolled over to "tomorrow"
+// while it's still "today" in Pacific time — silently shifting any
+// day-boundary-sensitive query (e.g. "last 7 days") by a full day
+// depending purely on what time of day it's queried. Any endpoint
+// computing a calendar-day window should anchor it to this instead of
+// a raw SQL CURRENT_DATE.
+export function pacificDateKey(date = new Date()) {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Los_Angeles",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  }).format(date);
+}
+
 // Error tracking is entirely opt-in via SENTRY_DSN. With it unset
 // (e.g. local dev, or until it's configured in Vercel), every call
 // below is a cheap no-op — nothing changes for anyone who hasn't set

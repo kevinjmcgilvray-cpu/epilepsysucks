@@ -2,6 +2,7 @@ import {
   authorizeOwner,
   cors,
   getSql,
+  pacificDateKey,
   parseBody,
   paceLabel,
   reportError,
@@ -47,17 +48,27 @@ export default async function handler(req, res) {
         (best, run) => (!best || run.miles > best.miles ? run : best),
         null
       );
-      const weekRows = await sql`
-        SELECT COALESCE(SUM(miles), 0)::float AS miles
-        FROM training_runs
-        WHERE run_date >= (CURRENT_DATE - INTERVAL '7 days')
-      `;
+      // "Last 7 days" needs to be anchored to the owner's actual
+      // calendar day (Pacific), not a second SQL query against
+      // Postgres's CURRENT_DATE (UTC) — see pacificDateKey() in
+      // _db.js for why that silently shifted this window by a full
+      // day for ~7 hours every evening (reported as "mobile says 16
+      // mi, desktop says 13 mi" depending purely on what time of day
+      // each device happened to load the page). Computed here instead
+      // from the same `rows` already fetched above — no second query
+      // needed, and no timezone ambiguity left to get wrong.
+      const [ty, tm, td] = pacificDateKey().split("-").map(Number);
+      const cutoffKey = new Date(Date.UTC(ty, tm - 1, td - 7)).toISOString().slice(0, 10);
+      const weeklyMiles = rows.reduce((sum, row) => {
+        const dateKey = new Date(row.run_date).toISOString().slice(0, 10);
+        return dateKey >= cutoffKey ? sum + Number(row.miles) : sum;
+      }, 0);
       res.status(200).json({
         ok: true,
         runs,
         stats: {
           longestRun: longest,
-          weeklyMiles: Number(weekRows[0].miles || 0),
+          weeklyMiles,
           totalRuns: runs.length
         }
       });

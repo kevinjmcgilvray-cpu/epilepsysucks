@@ -2,21 +2,13 @@ import {
   authorizeOwner,
   cors,
   getSql,
+  pacificDateKey,
   parseBody,
   reportError,
   sanitizePlain
 } from "./_db.js";
 
 const RACE_DAY = "2027-03-07";
-
-function pacificDateKey(date = new Date()) {
-  return new Intl.DateTimeFormat("en-CA", {
-    timeZone: "America/Los_Angeles",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit"
-  }).format(date);
-}
 
 function isRaceDay() {
   return pacificDateKey() === RACE_DAY;
