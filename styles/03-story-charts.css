@@ -416,6 +416,15 @@
       background: var(--surface-muted);
     }
 
+    /* When a dropdown panel is the last thing in a section, its own
+       bottom margin stacks on top of .section's bottom padding, making
+       the gap to the next section's heading much larger than every
+       other section-to-section transition. Drop it in that specific
+       case only — mid-section instances keep their normal spacing. */
+    .section__inner > .mechanism-note:last-child {
+      margin-bottom: 0;
+    }
+
     .mechanism-note__summary {
       display: flex;
       align-items: center;
