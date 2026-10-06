@@ -182,6 +182,8 @@
         return el;
       }
 
+      let strikeHideAt = 0;
+
       function strike() {
         const mainPoints = randomBoltPoints();
         const mid = Math.floor(mainPoints.length / 2);
@@ -199,6 +201,7 @@
 
         root.classList.add("is-on");
         const visibleMs = 220 + Math.random() * 160;
+        strikeHideAt = Date.now() + visibleMs;
         window.clearTimeout(hideTimer);
         hideTimer = window.setTimeout(() => {
           root.classList.remove("is-on");
@@ -221,6 +224,22 @@
           }, thunderDelay);
         }
       }
+
+      // Belt-and-suspenders: if the tab was backgrounded (or iOS froze
+      // the page) right in the middle of a strike's ~220-380ms "on"
+      // window, the hideTimer that was supposed to remove .is-on can
+      // get suspended along with everything else — leaving the bolt
+      // visibly stuck once the page is active again, over whatever
+      // content the visitor has since scrolled to. On resume, if we're
+      // now past that strike's own hide time, just force it off
+      // immediately instead of waiting on a timer that may never
+      // fire.
+      document.addEventListener("visibilitychange", () => {
+        if (!document.hidden && strikeHideAt && Date.now() >= strikeHideAt) {
+          window.clearTimeout(hideTimer);
+          root.classList.remove("is-on");
+        }
+      });
 
       // Fixed 10s-on / 10s-off duty cycle: a strike (flash + rotating
       // thunder clip) happens right at the start of each 10s "on" window;

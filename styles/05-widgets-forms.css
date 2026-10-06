@@ -152,6 +152,16 @@
     .pace-calc__table-wrap {
       overflow-x: auto;
       border: 1px solid var(--line);
+      /* The table is intentionally wider than mobile screens — swipe to
+         see the rest. Touch scrolling doesn't need a visible scrollbar
+         to be discoverable, and on some mobile browsers the thin bar
+         reads as a stray line crossing the page while swiping. Scroll
+         behavior itself is completely unaffected either way. */
+      scrollbar-width: none;
+    }
+
+    .pace-calc__table-wrap::-webkit-scrollbar {
+      display: none;
     }
 
     .pace-calc__table {
@@ -575,6 +585,13 @@
       padding: 1.1rem;
       background: var(--surface-muted);
       overflow-x: auto;
+      /* See .pace-calc__table-wrap above for why the scrollbar itself
+         is hidden — swipe-to-scroll still works identically. */
+      scrollbar-width: none;
+    }
+
+    .arch-diagram::-webkit-scrollbar {
+      display: none;
     }
 
     .arch-diagram pre.mermaid {
