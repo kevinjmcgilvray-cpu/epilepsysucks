@@ -11,6 +11,7 @@
        46rem max-width so the chart/table can use the full wide-block width. */
     .pace-calc {
       margin-top: 1.75rem;
+      margin-bottom: 0;
       max-width: none;
     }
 
