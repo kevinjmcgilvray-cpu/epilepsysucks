@@ -273,15 +273,46 @@
       </div>
       <button class="nav__toggle" id="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
       <ul class="nav__links" id="nav-links">
-        <li><a class="nav__cta" href="#story">My story</a></li>
-        <li><a class="nav__cta" href="#freedom">Freedom</a></li>
-        <li><a class="nav__cta" href="#weight">Weight loss</a></li>
-        <li><a class="nav__cta" href="#training">Training</a></li>
-        <li><a class="nav__cta" href="#marathon">LA Marathon</a></li>
-        <li><a class="nav__cta" href="#social">Follow</a></li>
-        <li><a class="nav__cta" href="#comments">Comments</a></li>
+        <li class="nav__dropdown">
+          <button type="button" class="nav__cta nav__dropdown-trigger" aria-expanded="false" aria-haspopup="true">
+            My Journey<span class="nav__caret" aria-hidden="true">▾</span>
+          </button>
+          <ul class="nav__dropdown-menu">
+            <li><a href="#story">Overview &amp; story timeline</a></li>
+            <li><a href="#surgical-era">The surgical era</a></li>
+            <li><a href="#golden-setting">The golden setting</a></li>
+            <li><a href="#simulations">Seizure &amp; neuron simulations</a></li>
+          </ul>
+        </li>
+        <li class="nav__dropdown">
+          <button type="button" class="nav__cta nav__dropdown-trigger" aria-expanded="false" aria-haspopup="true">
+            The Recovery<span class="nav__caret" aria-hidden="true">▾</span>
+          </button>
+          <ul class="nav__dropdown-menu">
+            <li><a href="#freedom">Mindset &amp; freedom</a></li>
+            <li><a href="#weight">154 lb weight loss</a></li>
+          </ul>
+        </li>
+        <li class="nav__dropdown">
+          <button type="button" class="nav__cta nav__dropdown-trigger" aria-expanded="false" aria-haspopup="true">
+            Marathon<span class="nav__caret" aria-hidden="true">▾</span>
+          </button>
+          <ul class="nav__dropdown-menu">
+            <li><a href="#marathon">Why I'm running</a></li>
+            <li><a href="#training">Training log &amp; milestones</a></li>
+          </ul>
+        </li>
+        <li class="nav__dropdown">
+          <button type="button" class="nav__cta nav__dropdown-trigger" aria-expanded="false" aria-haspopup="true">
+            Community<span class="nav__caret" aria-hidden="true">▾</span>
+          </button>
+          <ul class="nav__dropdown-menu">
+            <li><a href="#comments">Guestbook &amp; comments</a></li>
+            <li><a href="#social">Follow along</a></li>
+          </ul>
+        </li>
         <li><button type="button" class="nav__cta theme-toggle-btn" id="theme-toggle" data-label-dark="Dark" data-label-light="Light" aria-label="Switch to dark mode">Dark</button></li>
-        <li><a class="nav__cta" href="https://haku.ly/9795a39b3b" target="_blank" rel="noopener noreferrer">Donate</a></li>
+        <li><a class="nav__cta nav__cta--donate" href="https://haku.ly/9795a39b3b" target="_blank" rel="noopener noreferrer">💜 Donate</a></li>
       </ul>
     </div>
   </header>
@@ -470,7 +501,7 @@ timeline
           <p>Choosing UCLA felt like stepping toward light. I wasn’t running from epilepsy anymore — I was walking into a place built to understand it. Telemetry meant answers: mapping the storm so we could finally see where it started. It wasn’t only fear; it was hope with a plan. A team skilled enough to fight for my future. A path that said my life could be more than breakthroughs and recovery beds. For the first time in a long time, the next chapter had a destination — and I believed I might get there.</p>
         </article>
 
-        <article class="chapter chapter--with-photo chapter--with-photo--surgery reveal">
+        <article id="surgical-era" class="chapter chapter--with-photo chapter--with-photo--surgery reveal">
           <figure class="chapter__photo chapter__photo--surgery chapter__photo--stack">
             <div class="chapter__photo-item">
               <button type="button" class="chapter__photo-reveal" aria-pressed="false" aria-label="Show the unblurred photo">
@@ -555,7 +586,7 @@ timeline
           </div>
         </details>
 
-        <article class="chapter chapter--with-photo chapter--with-photo--right chapter--with-photo--surgery reveal">
+        <article id="golden-setting" class="chapter chapter--with-photo chapter--with-photo--right chapter--with-photo--surgery reveal">
           <div class="chapter__body">
             <p class="chapter__year">2022</p>
             <h3>Deep brain stimulation</h3>
@@ -633,7 +664,7 @@ timeline
           <p class="seizure-chart__note">2026 is year-to-date (through Sept 18). Hover or tap any bar for the exact count and milestones — left temporal lobectomy (2017), VNS implant (2019), DBS implant (2022), and the DBS setting that finally held (March 2026).</p>
         </div>
 
-        <details class="mechanism-note reveal">
+        <details id="simulations" class="mechanism-note reveal">
           <summary class="mechanism-note__summary">
             <span class="mechanism-note__summary-text">
               <span class="eyebrow">The science</span>
