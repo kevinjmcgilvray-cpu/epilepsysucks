@@ -48,17 +48,20 @@
       --paper: #ebe4d8;
       --paper-dim: rgba(235, 228, 216, 0.7);
       --paper-faint: rgba(235, 228, 216, 0.46);
-      --accent: #c43b2c;
-      --accent-soft: rgba(196, 59, 44, 0.16);
-      /* --accent itself fails WCAG AA (4.5:1) as normal-weight TEXT on
-         this theme's darker backgrounds (--ink/--ink-2) — it was tuned
-         for use as a background/border/graphic color, not as a text
-         color. --accent-text is a lightened variant (same hue) kept
-         specifically for anywhere --accent colors actual text glyphs
-         (eyebrow labels, links, table cells, etc.); fill/stroke/
-         background/decoration uses should keep using --accent as-is,
-         since graphics only need 3:1 and already have it. */
-      --accent-text: #d1665a;
+      /* Electric Purple rebrand: --accent is the brand's primary
+         purple (matches the blueprint's --primary-purple). It fails
+         WCAG AA (4.5:1) as normal-weight TEXT on this theme's darker
+         backgrounds (--ink/--ink-2) — it was tuned for use as a
+         background/border/graphic color, not as a text color.
+         --accent-text is a lighter variant (same hue, the blueprint's
+         --accent-purple-light) kept specifically for anywhere --accent
+         colors actual text glyphs (eyebrow labels, links, table cells,
+         etc.); fill/stroke/background/decoration uses should keep
+         using --accent as-is, since graphics only need 3:1 and already
+         have it. */
+      --accent: #9d4edd;
+      --accent-soft: rgba(157, 78, 221, 0.16);
+      --accent-text: #c77dff;
       --epi: #9b6bff;
       --line: rgba(235, 228, 216, 0.12);
       --nav-top: rgba(20, 17, 15, 0.92);
@@ -77,7 +80,7 @@
       --family-scrim: rgba(20, 17, 15, 0.08);
       --family-scrim-strong: rgba(20, 17, 15, 0.35);
       --visual-opacity: 0.28;
-      --h1-glow: rgba(196, 59, 44, 0.32);
+      --h1-glow: rgba(157, 78, 221, 0.32);
       --font-display: "Bebas Neue", "Bebas Neue Fallback", sans-serif;
       --font-body: "DM Sans", "DM Sans Fallback", sans-serif;
       color-scheme: dark;
@@ -89,12 +92,13 @@
       --paper: #1c1915;
       --paper-dim: rgba(28, 25, 21, 0.74);
       --paper-faint: rgba(28, 25, 21, 0.5);
-      --accent: #b83327;
-      --accent-soft: rgba(184, 51, 39, 0.12);
-      /* Light theme's --accent already passes AA as text against this
-         theme's backgrounds, so no separate lightened variant is
-         needed here — just alias it to --accent for the same selectors
-         that use --accent-text in dark mode. */
+      /* Electric Purple rebrand (light theme): the blueprint's darker
+         --primary-purple-hover shade already passes AA as text against
+         this theme's lighter backgrounds, so no separate lightened
+         variant is needed here — just alias it to --accent for the
+         same selectors that use --accent-text in dark mode. */
+      --accent: #7b2cbf;
+      --accent-soft: rgba(123, 44, 191, 0.12);
       --accent-text: var(--accent);
       --epi: #6d3fe8;
       --line: rgba(28, 25, 21, 0.12);
