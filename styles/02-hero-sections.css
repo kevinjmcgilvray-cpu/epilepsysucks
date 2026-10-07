@@ -129,11 +129,11 @@
       font-size: 0.9rem;
       letter-spacing: 0.02em;
       color: var(--paper-dim);
-      /* All 9 items (My story, Freedom, Weight loss, Training, LA
-         Marathon, Follow, Comments, Dark, Donate) need ~860px to stay
-         on one line at their natural size — 58rem leaves some margin
-         so Donate doesn't wrap to its own row. */
-      max-width: min(58rem, 72vw);
+      /* All 6 top-level items (My Journey, The Recovery, Marathon,
+         Community dropdown triggers, plus Dark and Donate) need
+         ~681px to stay on one line at their natural size — 45rem
+         leaves some margin so Donate doesn't wrap to its own row. */
+      max-width: min(45rem, 72vw);
     }
 
     .nav__links .nav__cta {
@@ -209,6 +209,82 @@
 
     .nav__links a.nav__cta:hover {
       color: var(--btn-on-color) !important;
+    }
+
+    /* Dropdown nav categories (My Journey / The Recovery / Marathon /
+       Community). Desktop: a floating panel anchored under the trigger
+       pill, shown on hover (fine pointers only — see the pointer:fine
+       media query below) or via the same click/keyboard toggle that
+       drives the mobile accordion, so every input method works. */
+    .nav__dropdown {
+      position: relative;
+    }
+
+    .nav__caret {
+      display: inline-block;
+      margin-left: 0.3rem;
+      font-size: 0.7em;
+      transition: transform 0.2s ease;
+    }
+
+    .nav__dropdown.is-open .nav__caret {
+      transform: rotate(180deg);
+    }
+
+    .nav__dropdown-menu {
+      position: absolute;
+      top: calc(100% + 0.5rem);
+      left: 50%;
+      transform: translate(-50%, -0.4rem);
+      z-index: 25;
+      min-width: 15rem;
+      margin: 0;
+      padding: 0.4rem;
+      list-style: none;
+      background: var(--nav-menu);
+      border: 1px solid var(--line);
+      border-radius: 0.65rem;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+    }
+
+    .nav__dropdown-menu a {
+      display: block;
+      padding: 0.6rem 0.75rem;
+      border-radius: 0.4rem;
+      color: var(--paper-dim);
+      font-size: 0.85rem;
+      letter-spacing: 0.01em;
+      text-transform: none;
+      white-space: nowrap;
+      text-decoration: none;
+    }
+
+    .nav__dropdown-menu a:hover,
+    .nav__dropdown-menu a:focus-visible {
+      background: var(--accent-soft);
+      color: var(--paper);
+      outline: none;
+    }
+
+    .nav__dropdown.is-open .nav__dropdown-menu {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translate(-50%, 0);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .nav__dropdown:hover .nav__dropdown-menu,
+      .nav__dropdown:focus-within .nav__dropdown-menu {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translate(-50%, 0);
+      }
     }
 
     .nav__toggle {

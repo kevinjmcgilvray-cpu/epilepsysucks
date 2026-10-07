@@ -324,10 +324,55 @@
       }
     })();
 
+    // Nav dropdown categories (My Journey / The Recovery / Marathon /
+    // Community). One shared toggle mechanism drives both desktop
+    // (where CSS also reveals the panel on hover for fine pointers,
+    // on top of this) and the mobile accordion (which has no real
+    // hover, so this click/keyboard path is the only way in).
+    (function navDropdowns() {
+      const dropdowns = Array.prototype.slice.call(document.querySelectorAll(".nav__dropdown"));
+      if (!dropdowns.length) return;
+
+      function closeDropdown(dd) {
+        dd.classList.remove("is-open");
+        const trigger = dd.querySelector(".nav__dropdown-trigger");
+        if (trigger) trigger.setAttribute("aria-expanded", "false");
+      }
+      function closeAllDropdowns(except) {
+        dropdowns.forEach((dd) => {
+          if (dd !== except) closeDropdown(dd);
+        });
+      }
+
+      dropdowns.forEach((dd) => {
+        const trigger = dd.querySelector(".nav__dropdown-trigger");
+        if (!trigger) return;
+        trigger.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const willOpen = !dd.classList.contains("is-open");
+          closeAllDropdowns(dd);
+          dd.classList.toggle("is-open", willOpen);
+          trigger.setAttribute("aria-expanded", String(willOpen));
+        });
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!e.target.closest(".nav__dropdown")) closeAllDropdowns();
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeAllDropdowns();
+      });
+
+      // Exposed so the hamburger toggle/link-click handlers below can
+      // reset dropdown state whenever the whole mobile menu closes.
+      links.__closeAllDropdowns = closeAllDropdowns;
+    })();
+
     toggle.addEventListener("click", () => {
       const open = links.classList.toggle("is-open");
       toggle.setAttribute("aria-expanded", String(open));
       toggle.textContent = open ? "✕" : "☰";
+      if (!open && links.__closeAllDropdowns) links.__closeAllDropdowns();
     });
 
     links.querySelectorAll("a").forEach((a) => {
@@ -335,6 +380,7 @@
         links.classList.remove("is-open");
         toggle.setAttribute("aria-expanded", "false");
         toggle.textContent = "☰";
+        if (links.__closeAllDropdowns) links.__closeAllDropdowns();
       });
     });
 

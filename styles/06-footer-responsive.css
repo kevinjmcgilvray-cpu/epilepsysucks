@@ -254,7 +254,15 @@
       to { opacity: var(--visual-opacity); transform: scale(1); }
     }
 
-    @media (max-width: 800px) {
+    /* Nav collapses to the hamburger/accordion menu starting at 960px,
+       not 800px — the 4 dropdown-category pills (My Journey / The
+       Recovery / Marathon / Community) plus Dark/Donate need ~681px
+       on their own, and between ~800-950px that leaves too little
+       room next to the donor ticker/funds-stats/cause lockup on the
+       left, causing an ugly mid-row wrap. Everything else in this
+       file keeps its own 800px breakpoint — only the nav needed a
+       wider one. */
+    @media (max-width: 960px) {
       .nav {
         align-items: stretch;
         background: var(--nav-solid);
@@ -378,6 +386,38 @@
         justify-content: center;
       }
 
+      /* Dropdown nav categories become inline accordions in the
+         collapsed mobile menu instead of floating panels — tapping a
+         trigger expands its sub-list in place (toggled via JS adding
+         .is-open to the parent .nav__dropdown), rather than relying on
+         :hover (which touch devices don't really have). */
+      .nav__dropdown-menu {
+        position: static;
+        display: none;
+        transform: none;
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        min-width: 0;
+        margin: 0.35rem 0 0.5rem;
+        padding: 0;
+        background: none;
+        border: none;
+        box-shadow: none;
+      }
+
+      .nav__dropdown.is-open .nav__dropdown-menu {
+        display: block;
+        transform: none;
+      }
+
+      .nav__dropdown-menu a {
+        padding: 0.75rem 1rem 0.75rem 1.75rem;
+        white-space: normal;
+      }
+    }
+
+    @media (max-width: 800px) {
       .split {
         grid-template-columns: 1fr;
       }
@@ -426,7 +466,7 @@
       }
 
       /* Wide-but-short viewports (e.g. Pro Max/Plus phones in landscape,
-         ~930px wide — over the 800px width where the hamburger menu
+         ~930px wide — close to the 960px width where the hamburger menu
          normally kicks in) were still rendering the 8-item nav__links
          list inline. At that width it wraps to a second line, adding a
          full extra row of height the rest of this compacting never
@@ -498,6 +538,31 @@
         margin: 0.3rem 0;
         font-size: 0.85rem;
         box-sizing: border-box;
+      }
+
+      .nav__dropdown-menu {
+        position: static;
+        display: none;
+        transform: none;
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        min-width: 0;
+        margin: 0.35rem 0 0.5rem;
+        padding: 0;
+        background: none;
+        border: none;
+        box-shadow: none;
+      }
+
+      .nav__dropdown.is-open .nav__dropdown-menu {
+        display: block;
+        transform: none;
+      }
+
+      .nav__dropdown-menu a {
+        padding: 0.75rem 1rem 0.75rem 1.75rem;
+        white-space: normal;
       }
 
       .nav__brand {
@@ -623,6 +688,31 @@
       margin: 0.3rem 0;
       font-size: 0.85rem;
       box-sizing: border-box;
+    }
+
+    html.is-landscape-compact .nav__dropdown-menu {
+      position: static;
+      display: none;
+      transform: none;
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      min-width: 0;
+      margin: 0.35rem 0 0.5rem;
+      padding: 0;
+      background: none;
+      border: none;
+      box-shadow: none;
+    }
+
+    html.is-landscape-compact .nav__dropdown.is-open .nav__dropdown-menu {
+      display: block;
+      transform: none;
+    }
+
+    html.is-landscape-compact .nav__dropdown-menu a {
+      padding: 0.75rem 1rem 0.75rem 1.75rem;
+      white-space: normal;
     }
 
     html.is-landscape-compact .nav__brand {
