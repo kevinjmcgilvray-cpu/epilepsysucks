@@ -85,6 +85,15 @@
       max-width: none;
     }
 
+    /* The weigh-ins chart below is centered (margin-left/right: auto)
+       inside this now-full-width section. Center the history-note
+       dropdown the same way instead of leaving it flush against the
+       left edge, so the two line up. */
+    #weight .history-note {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
     .weight-split {
       display: grid;
       grid-template-columns: 23.3rem minmax(0, 1fr) 23.3rem;
