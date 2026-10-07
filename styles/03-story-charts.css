@@ -76,6 +76,13 @@
 
       .chapter-split__media {
         max-width: 32rem;
+        /* The text column runs much taller than the photo. Stick the
+           photo near the top while scrolling past it (same fix as
+           .seizure-note and .weight-split__photos below), so the next
+           block lands right under the text instead of leaving a huge
+           gap under the short photo. */
+        position: sticky;
+        top: 5.5rem;
       }
 
       .chapter-split .chapter--right {
