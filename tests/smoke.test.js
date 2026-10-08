@@ -50,11 +50,21 @@ async function run(baseUrl) {
     await page.evaluate(() => document.documentElement.setAttribute("data-theme", "light"));
   }
 
-  // Third-party widgets (Instagram embed, Vercel insights) and missing
-  // /api/* routes (no backend running against the static test server)
-  // are expected noise here, not real page errors.
+  // Third-party widgets (Instagram embed, Facebook Page Plugin iframe,
+  // Vercel insights) and missing /api/* routes (no backend running
+  // against the static test server) are expected noise here, not real
+  // page errors. Facebook's plugin iframe logs its own internal
+  // "ErrorUtils caught an error" / "Could not find element" noise from
+  // its own bundle (console messages from cross-origin iframes still
+  // surface on the top-level Page object in Playwright) — not anything
+  // this repo's code can fix, same category as the other 3rd-party noise.
   const relevant = errors.filter(
-    (e) => !e.includes("404") && !e.includes("_vercel") && !e.includes("sociablekit")
+    (e) =>
+      !e.includes("404") &&
+      !e.includes("_vercel") &&
+      !e.includes("sociablekit") &&
+      !e.includes("fburl.com") &&
+      !e.includes("ErrorUtils caught an error")
   );
   check("No unexpected console/page errors across full scroll of all 5 pages", relevant.length === 0, relevant.join(" | "));
 

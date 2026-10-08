@@ -763,6 +763,22 @@
       min-height: 4rem;
     }
 
+    /* The Facebook Page Plugin ships as a fixed-width/height iframe
+       (width="500" height="600" in the markup, required by Facebook's
+       embed code) — constrain it so it doesn't overflow narrow mobile
+       viewports instead of just letting it clip inside .social-feed's
+       overflow:hidden. SociableKit's Instagram widget renders inline
+       divs, not an iframe, so this rule only ever affects Facebook. */
+    .social-feed iframe {
+      display: block;
+      max-width: 100%;
+    }
+
+    .social-feed--facebook {
+      display: flex;
+      justify-content: center;
+    }
+
     .social-feed__fallback {
       display: inline-flex;
       align-items: center;
