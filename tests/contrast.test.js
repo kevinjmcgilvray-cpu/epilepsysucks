@@ -85,9 +85,6 @@ async function scanTheme(browser, baseUrl, theme, route) {
   if (route === "community.html") {
     await page.waitForSelector("#public-arch-mermaid svg", { timeout: 5000 }).catch(() => {});
   }
-  if (route === "my-journey.html") {
-    await page.waitForSelector("#mermaid-timeline svg", { timeout: 5000 }).catch(() => {});
-  }
   await page.waitForTimeout(200);
 
   const results = await page.evaluate(() => {

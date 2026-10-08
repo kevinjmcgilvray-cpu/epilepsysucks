@@ -568,16 +568,6 @@
       font-size: 0.9rem;
     }
 
-    .diagram-block {
-      margin: 2.25rem 0;
-      max-width: 100%;
-    }
-
-    .diagram-block .eyebrow {
-      margin-bottom: 0.65rem;
-      font-size: 0.95rem;
-    }
-
     .arch-diagram {
       max-width: 46rem;
       border: 1px solid var(--line);
@@ -605,26 +595,6 @@
       height: auto;
       display: block;
       margin: 0 auto;
-    }
-
-    /* Public story-arc diagrams get a lot more room and scale up to fill it,
-       since these are meant to be read at a glance, not squinted at. */
-    .diagram-block .arch-diagram {
-      max-width: 78rem;
-      margin: 0 auto;
-      padding: clamp(1.25rem, 3vw, 2.25rem);
-    }
-
-    .diagram-block .arch-diagram svg {
-      width: 100%;
-      max-width: none;
-      min-height: 260px;
-    }
-
-    @media (min-width: 900px) {
-      .diagram-block .arch-diagram svg {
-        min-height: 340px;
-      }
     }
 
     .arch-fallback-note {
