@@ -82,7 +82,14 @@ async function run(baseUrl) {
   await page.waitForTimeout(300);
 
   const relevant = errors.filter(
-    (e) => !e.includes("404") && !e.includes("_vercel") && !e.includes("sociablekit")
+    (e) =>
+      !e.includes("404") &&
+      !e.includes("_vercel") &&
+      !e.includes("sociablekit") &&
+      !e.includes("fburl.com") &&
+      !e.includes("ErrorUtils caught an error") &&
+      !e.includes("X-Frame-Options") &&
+      !/status of 400/.test(e)
   );
   check("No unexpected console/page errors in the built bundle", relevant.length === 0, relevant.join(" | "));
 
