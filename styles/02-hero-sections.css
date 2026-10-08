@@ -300,6 +300,40 @@
       font-size: 1.1rem;
     }
 
+    /* Single, page-wide backdrop for the homepage (requested instead of
+       each section having its own distinct background): the hero's old
+       atmosphere — radial glow, ink gradient, grain texture — now lives
+       on <body> itself with background-attachment: fixed, so it never
+       scrolls and reads as one continuous background behind every
+       section instead of a patchwork of per-section treatments. The
+       grain texture's opacity used to be applied via a separate
+       .hero::before overlay (CSS opacity can't target one layer of a
+       multi-layer background); baked in here as 0.55 * 0.07 ≈ 0.0385
+       directly in the SVG so it can just be one more background layer.
+       Scoped to [data-page="home"] (set on index.html's <body>) so
+       other pages keep their existing body background/.section--alt
+       treatments untouched. */
+    body[data-page="home"] {
+      background-image:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.0385'/%3E%3C/svg%3E"),
+        radial-gradient(ellipse 80% 60% at 50% 35%, var(--accent-soft), transparent 55%),
+        radial-gradient(ellipse 100% 80% at 50% 100%, var(--hero-glow), transparent 50%),
+        linear-gradient(165deg, var(--hero-mid) 0%, var(--ink) 45%, var(--ink-2) 100%);
+      background-attachment: fixed, fixed, fixed, fixed;
+      background-size: auto, cover, cover, cover;
+      background-repeat: repeat, no-repeat, no-repeat, no-repeat;
+    }
+
+    /* Homepage-only: let every section show the fixed body backdrop
+       above instead of its own gradient, so scrolling the homepage
+       never shows a seam between sections. Other pages that use these
+       same classes (the-recovery #weight, community #comments,
+       marathon #marathon/#training) keep their original look. */
+    body[data-page="home"] .section--alt,
+    body[data-page="home"] .section--marathon {
+      background: none;
+    }
+
     .hero {
       position: relative;
       isolation: isolate;
@@ -313,20 +347,8 @@
       min-height: 60dvh;
       padding: calc(var(--header-h, 9.5rem) + 1rem) clamp(1.25rem, 4vw, 2.5rem) clamp(2rem, 5vh, 3.5rem);
       overflow: hidden;
-      background:
-        radial-gradient(ellipse 80% 60% at 50% 35%, var(--accent-soft), transparent 55%),
-        radial-gradient(ellipse 100% 80% at 50% 100%, var(--hero-glow), transparent 50%),
-        linear-gradient(165deg, var(--hero-mid) 0%, var(--ink) 45%, var(--ink-2) 100%);
-    }
-
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
-      opacity: 0.07;
-      pointer-events: none;
-      z-index: 0;
+      /* No background of its own anymore — shows the fixed body
+         backdrop above, same as every other section on the page. */
     }
 
     .hero__visual {
@@ -346,11 +368,19 @@
       opacity: 0.22;
     }
 
+    /* Fixed to the viewport (not just within .hero) so it stays in the
+       same place for the whole page, not just while the hero is in
+       view — it's nested inside .hero's isolated stacking context, so
+       every later section's own content still DOM-order-paints above
+       it wherever they visually overlap, same as the fixed nav/footer
+       bars already sit above everything via their own explicit
+       z-index. No JS needed: fixed positioning + .hero's isolation is
+       enough on its own. */
     .hero__mri {
-      position: absolute;
+      position: fixed;
       left: 0;
       top: 0;
-      bottom: 0;
+      height: 100dvh;
       width: min(48vw, 34rem);
       z-index: 1;
       pointer-events: none;
