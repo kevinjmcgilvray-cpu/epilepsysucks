@@ -75,7 +75,7 @@
       function showTip(point, group) {
         if (!tooltip || !tipStrong || !tipSpan) return;
         tipStrong.textContent = point.miles + " mi";
-        tipSpan.textContent = point.date;
+        tipSpan.textContent = point.date + (point.source === "strava" ? " · via Strava" : "");
         tooltip.hidden = false;
         tooltip.classList.add("is-on");
         if (pointsGroup) {
@@ -138,7 +138,8 @@
             y: y,
             miles: r.miles,
             date: formatDate(r.date),
-            pace: r.pace || ""
+            pace: r.pace || "",
+            source: r.source || "manual"
           };
         });
         const pts = points.map((p) => p.x.toFixed(1) + "," + p.y.toFixed(1)).join(" ");

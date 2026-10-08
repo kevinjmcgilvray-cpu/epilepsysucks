@@ -8,6 +8,7 @@ import {
   reportError,
   sanitizePlain
 } from "./_db.js";
+import { syncStravaIfStale } from "./_strava.js";
 
 function mapRun(row) {
   return {
@@ -17,6 +18,7 @@ function mapRun(row) {
     durationSeconds: Number(row.duration_seconds),
     notes: row.notes || "",
     pace: paceLabel(row.miles, row.duration_seconds),
+    source: row.source || "manual",
     createdAt: row.created_at
   };
 }
@@ -37,8 +39,9 @@ export default async function handler(req, res) {
   try {
     if (req.method === "GET") {
       res.setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate=120");
+      await syncStravaIfStale(sql);
       const rows = await sql`
-        SELECT id, run_date, miles, duration_seconds, notes, created_at
+        SELECT id, run_date, miles, duration_seconds, notes, source, created_at
         FROM training_runs
         ORDER BY run_date DESC, id DESC
         LIMIT 200
