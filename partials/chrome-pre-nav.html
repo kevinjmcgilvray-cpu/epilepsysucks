@@ -13,14 +13,42 @@
       <h2 class="entry-warning__title" id="entry-warning-title">Before you go in — a quick flash warning</h2>
       <p class="entry-warning__desc" id="entry-warning-desc">
         This site has a <strong>Storm effects</strong> setting — brief lightning flashes with rotating
-        thunder sounds, cycling 10 seconds on / 10 seconds off. It's <strong>on by default</strong>, but
-        can be switched off anytime from the storm icon near the top of the page. This site also
-        automatically disables it entirely if your device's "reduce motion" accessibility setting is on.
-        If you have photosensitive epilepsy, we'd recommend turning it off.
+        thunder sounds, cycling 10 seconds on / 10 seconds off. It's <strong>off by default</strong>;
+        turning it on from the storm icon near the top of the page shows a confirmation first. This site
+        also automatically disables it entirely if your device's "reduce motion" accessibility setting is
+        on. If you have photosensitive epilepsy, we'd recommend keeping it off.
       </p>
       <button type="button" class="btn btn--purple entry-warning__continue" id="entry-warning-continue">
         I understand — continue
       </button>
+    </div>
+  </div>
+
+  <!-- Shown instead of turning storm effects straight on when the
+       toggle is clicked from its off state (see initStormEffect() in
+       js/02-storm-raceclock.js) — reuses the exact same .entry-warning
+       component/classes as the page-load gate above for visual
+       consistency, just with two actions instead of one. -->
+  <div
+    class="entry-warning"
+    id="storm-confirm"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="storm-confirm-title"
+    aria-describedby="storm-confirm-desc"
+    hidden
+  >
+    <div class="entry-warning__panel">
+      <p class="entry-warning__icon" aria-hidden="true">⚡</p>
+      <h2 class="entry-warning__title" id="storm-confirm-title">Turn on storm effects?</h2>
+      <p class="entry-warning__desc" id="storm-confirm-desc">
+        This turns on brief lightning flashes with rotating thunder sounds, cycling 10 seconds on / 10
+        seconds off. If you have photosensitive epilepsy, we'd recommend keeping it off.
+      </p>
+      <div class="entry-warning__actions">
+        <button type="button" class="btn btn--ghost" id="storm-confirm-cancel">Keep it off</button>
+        <button type="button" class="btn btn--purple" id="storm-confirm-continue">Turn it on anyway</button>
+      </div>
     </div>
   </div>
   <script>
