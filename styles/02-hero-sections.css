@@ -26,18 +26,18 @@
       line-height: 1;
       color: var(--neon);
       background:
-        linear-gradient(180deg, rgba(180, 140, 255, 0.1), transparent 40%),
+        linear-gradient(180deg, rgba(199, 125, 255, 0.1), transparent 40%),
         var(--tube);
       border: 1px solid color-mix(in srgb, var(--neon) 45%, transparent);
       box-shadow:
         0 0 10px var(--neon-dim),
-        0 0 24px rgba(180, 140, 255, 0.22),
-        inset 0 0 12px rgba(180, 140, 255, 0.14),
+        0 0 24px rgba(199, 125, 255, 0.22),
+        inset 0 0 12px rgba(199, 125, 255, 0.14),
         inset 0 1px 0 rgba(255, 255, 255, 0.06);
       text-shadow:
         0 0 6px var(--neon),
         0 0 14px var(--neon-dim),
-        0 0 28px rgba(180, 140, 255, 0.5);
+        0 0 28px rgba(199, 125, 255, 0.5);
       overflow: hidden;
     }
 
@@ -49,7 +49,7 @@
       top: 50%;
       height: 1px;
       background: rgba(0, 0, 0, 0.55);
-      box-shadow: 0 1px 0 rgba(180, 140, 255, 0.1);
+      box-shadow: 0 1px 0 rgba(199, 125, 255, 0.1);
       pointer-events: none;
     }
 

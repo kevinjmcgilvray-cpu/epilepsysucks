@@ -732,8 +732,11 @@
     }
 
     .race-clock {
-      --neon: #b48cff;
-      --neon-dim: rgba(180, 140, 255, 0.4);
+      /* Tuned to the blueprint's --accent-purple-light (#C77DFF) so the
+         countdown's neon glow matches the rest of the Electric Purple
+         rebrand exactly, instead of the old one-off purple. */
+      --neon: #c77dff;
+      --neon-dim: rgba(199, 125, 255, 0.4);
       --tube: #120e1a;
       display: flex;
       flex-direction: row;
