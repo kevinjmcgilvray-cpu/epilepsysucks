@@ -305,8 +305,13 @@
       isolation: isolate;
       display: grid;
       place-items: center;
-      min-height: 100dvh;
-      padding: calc(var(--header-h, 9.5rem) + 1rem) clamp(1.25rem, 4vw, 2.5rem) clamp(3rem, 8vh, 5rem);
+      /* Pulled up to sit close under the nav's funds-row/"fundraising
+         for CURE Epilepsy" line instead of filling the whole screen —
+         min-height just keeps the content vertically centered within a
+         much shorter box now, rather than one that's a full viewport
+         tall. */
+      min-height: 60dvh;
+      padding: calc(var(--header-h, 9.5rem) + 1rem) clamp(1.25rem, 4vw, 2.5rem) clamp(2rem, 5vh, 3.5rem);
       overflow: hidden;
       background:
         radial-gradient(ellipse 80% 60% at 50% 35%, var(--accent-soft), transparent 55%),
