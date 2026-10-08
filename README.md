@@ -74,7 +74,7 @@ the static frontend — they don't need `DATABASE_URL` or any other env var.
 index.html                         Frontend — the whole site is one page
 styles/                           CSS, split into 6 ordered files (load order matters — see
                                    the <link> tags in index.html); was one 4,300-line styles.css
-js/                                Frontend JS, split into 7 ordered files (load order matters —
+js/                                Frontend JS, split into 8 ordered files (load order matters —
                                    see the <script> tags in index.html); was one 3,760-line app.js.
                                    Classic (non-module) scripts sharing one global scope, same as
                                    when this was a single file.

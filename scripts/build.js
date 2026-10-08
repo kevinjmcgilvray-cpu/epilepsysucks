@@ -25,6 +25,7 @@ const DIST = path.join(ROOT, "dist");
 
 const JS_ORDER = [
   "01-nav-theme-cursor.js",
+  "01b-donor-fundraising-widgets.js",
   "02-storm-raceclock.js",
   "03-coursemap-weightchart.js",
   "04-charts-sims.js",
@@ -176,7 +177,7 @@ async function build() {
       html,
       /<script src="js\/01-nav-theme-cursor\.js"><\/script>[\s\S]*?<script src="js\/07-admin-mermaid\.js"><\/script>/,
       '<script src="js/app.min.js"></script>',
-      "the 7 ordered js/*.js <script> tags",
+      "the 8 ordered js/*.js <script> tags",
       page
     );
 
