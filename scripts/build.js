@@ -42,6 +42,13 @@ const CSS_ORDER = [
   "06-footer-responsive.css"
 ];
 
+// Every real route, as a static .html file (Vercel's cleanUrls: true in
+// vercel.json maps /my-journey -> /my-journey.html automatically, so
+// nav links and old-anchor redirects can use the clean, extension-less
+// form). Each one shares the same partials/ chrome via <!-- INCLUDE -->
+// markers resolved below.
+const PAGES = ["index.html", "my-journey.html", "the-recovery.html", "marathon.html", "community.html"];
+
 // Top-level files/dirs that are dev/build-only (or, for api/, deployed
 // separately by Vercel as serverless functions regardless of
 // outputDirectory) and shouldn't ship inside the static dist/ output.
@@ -62,7 +69,8 @@ const EXCLUDE = new Set([
   "js",
   "styles",
   "api",
-  "index.html",
+  "partials",
+  ...PAGES,
   "package.json",
   "package-lock.json",
   "README.md",
@@ -88,14 +96,29 @@ function copyRecursive(src, dest) {
   }
 }
 
-function replaceOrThrow(html, pattern, replacement, label) {
+function replaceOrThrow(html, pattern, replacement, label, pageName) {
   if (!pattern.test(html)) {
     throw new Error(
-      `build.js: expected to find ${label} in index.html but didn't — ` +
-        `index.html's structure may have changed; update scripts/build.js to match.`
+      `build.js: expected to find ${label} in ${pageName} but didn't — ` +
+        `${pageName}'s structure may have changed; update scripts/build.js to match.`
     );
   }
   return html.replace(pattern, replacement);
+}
+
+// Resolves every "<!-- INCLUDE:partials/xxx.html -->" marker by
+// splicing in that partial's file content. One level deep only — none
+// of the current partials themselves contain INCLUDE markers, and
+// adding recursion would just be unused complexity until that changes.
+const INCLUDE_PATTERN = /^[ \t]*<!-- INCLUDE:(partials\/[\w.-]+) -->[ \t]*$/gm;
+function resolveIncludes(html, pageName) {
+  return html.replace(INCLUDE_PATTERN, (match, relPath) => {
+    const partialPath = path.join(ROOT, relPath);
+    if (!fs.existsSync(partialPath)) {
+      throw new Error(`build.js: ${pageName} references missing partial ${relPath}`);
+    }
+    return fs.readFileSync(partialPath, "utf8").replace(/\n$/, "");
+  });
 }
 
 async function build() {
@@ -133,27 +156,34 @@ async function build() {
   fs.mkdirSync(path.join(DIST, "styles"), { recursive: true });
   fs.writeFileSync(path.join(DIST, "styles", "app.min.css"), cssResult.code);
 
-  // 4. index.html: identical content, but with the 6 <link> + 7
-  // <script> tags collapsed down to one minified bundle each.
-  let html = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
+  // 4. Each page in PAGES: resolve its <!-- INCLUDE:partials/xxx.html
+  // --> markers (shared nav/footer/chrome), then collapse the 6
+  // <link> + 7 <script> tags (pulled in via the head-assets.html and
+  // chrome-bottom.html partials) down to one minified bundle each.
+  for (const page of PAGES) {
+    let html = fs.readFileSync(path.join(ROOT, page), "utf8");
+    html = resolveIncludes(html, page);
 
-  html = replaceOrThrow(
-    html,
-    /<link rel="stylesheet" href="styles\/01-base-nav\.css" \/>[\s\S]*?<link rel="stylesheet" href="styles\/06-footer-responsive\.css" \/>/,
-    '<link rel="stylesheet" href="styles/app.min.css" />',
-    "the 6 ordered styles/*.css <link> tags"
-  );
+    html = replaceOrThrow(
+      html,
+      /<link rel="stylesheet" href="styles\/01-base-nav\.css" \/>[\s\S]*?<link rel="stylesheet" href="styles\/06-footer-responsive\.css" \/>/,
+      '<link rel="stylesheet" href="styles/app.min.css" />',
+      "the 6 ordered styles/*.css <link> tags",
+      page
+    );
 
-  html = replaceOrThrow(
-    html,
-    /<script src="js\/01-nav-theme-cursor\.js"><\/script>[\s\S]*?<script src="js\/07-admin-mermaid\.js"><\/script>/,
-    '<script src="js/app.min.js"></script>',
-    "the 7 ordered js/*.js <script> tags"
-  );
+    html = replaceOrThrow(
+      html,
+      /<script src="js\/01-nav-theme-cursor\.js"><\/script>[\s\S]*?<script src="js\/07-admin-mermaid\.js"><\/script>/,
+      '<script src="js/app.min.js"></script>',
+      "the 7 ordered js/*.js <script> tags",
+      page
+    );
 
-  fs.writeFileSync(path.join(DIST, "index.html"), html);
+    fs.writeFileSync(path.join(DIST, page), html);
+  }
 
-  console.log("Build complete -> dist/");
+  console.log("Build complete -> dist/ (" + PAGES.length + " pages)");
 }
 
 build().catch((err) => {

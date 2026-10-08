@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LA Marathon 2027 — Epilepsy Sucks | Kevin’s Story</title>
+  <meta name="description" content="Kevin is running the ASICS LA Marathon on March 7, 2027 for CURE Epilepsy. Follow the training log and help him reach his fundraising goal." />
+  <meta name="google-site-verification" content="7OfTJh9W-WusjG9euOQumyX-KyWf6rn1aBwy0Ev4MA0" />
+
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem("epilepsy-theme");
+        if (saved === "dark" || saved === "light") {
+          document.documentElement.setAttribute("data-theme", saved);
+        }
+      } catch (e) {}
+    })();
+  </script>
+
+
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="canonical" href="https://www.epilepsysucks.org/marathon" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Epilepsy Sucks" />
+  <meta property="og:title" content="LA Marathon 2027 — Epilepsy Sucks" />
+  <meta property="og:description" content="Kevin is running the ASICS LA Marathon on March 7, 2027 for CURE Epilepsy. Follow the training log and help him reach his fundraising goal." />
+  <meta property="og:url" content="https://www.epilepsysucks.org/marathon" />
+  <meta property="og:image" content="https://www.epilepsysucks.org/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="LA Marathon 2027 — Epilepsy Sucks" />
+  <meta name="twitter:description" content="Kevin is running the ASICS LA Marathon on March 7, 2027 for CURE Epilepsy. Follow the training log and help him reach his fundraising goal." />
+  <meta name="twitter:image" content="https://www.epilepsysucks.org/og-image.jpg" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.epilepsysucks.org/#website",
+        "url": "https://www.epilepsysucks.org/",
+        "name": "Epilepsy Sucks",
+        "description": "Kevin\u2019s life with epilepsy \u2014 from cerebral hemiatrophy and seizures to resection, VNS, DBS \u2014 and running the LA Marathon for CURE Epilepsy on March 7, 2027.",
+        "publisher": { "@id": "https://www.epilepsysucks.org/#person" }
+      },
+      {
+        "@type": "Person",
+        "@id": "https://www.epilepsysucks.org/#person",
+        "name": "Kevin J Mcgilvray",
+        "description": "Living with epilepsy since childhood; running the 2027 LA Marathon to raise funds for CURE Epilepsy.",
+        "url": "https://www.epilepsysucks.org/"
+      }
+    ]
+  }
+  </script>
+
+<!-- INCLUDE:partials/head-assets.html -->
+</head>
+<body>
+<!-- INCLUDE:partials/chrome-pre-nav.html -->
+<!-- INCLUDE:partials/nav.html -->
+
+  <main id="top">
+    <section class="section section--marathon" id="marathon">
+      <div class="section__inner section__inner--wide">
+        <div class="split">
+          <div class="reveal">
+            <p class="eyebrow">March 7, 2027</p>
+            <h2>Running for CURE Epilepsy</h2>
+            <p>I’m running the ASICS Los Angeles Marathon with Team CURE Epilepsy — people with epilepsy, caregivers, researchers, and families who refuse to accept “this is as good as it gets.”</p>
+            <p>CURE Epilepsy funds patient-focused research toward a cure. My story is one of many. I’m raising $3,000 for Team CURE Epilepsy — if you’re able, please donate and help me get there.</p>
+            <div class="marathon-meta">
+              <div><strong>Event</strong> ASICS Los Angeles Marathon</div>
+              <div><strong>Date</strong> March 7, 2027</div>
+              <div><strong>Team</strong> Team CURE Epilepsy</div>
+              <div><strong>Raised</strong> <span id="funds-raised-meta">$1,851</span></div>
+              <div><strong>Goal</strong> <span id="funds-goal-meta">$3,000</span></div>
+            </div>
+            <div class="marathon-progress" id="fundraising-hub">
+              <div class="marathon-progress__label">
+                <span id="funds-progress-label">Fundraising progress</span>
+                <span id="funds-percent">0%</span>
+              </div>
+              <div class="funds-bar" aria-hidden="true"><span class="funds-bar__fill" id="funds-bar-fill-meta"></span></div>
+            </div>
+            <p class="trend-stat" id="funds-trend-stat" hidden></p>
+            <div class="hero__actions" style="justify-content: flex-start; margin-top: 2rem; animation: none;">
+              <a class="btn btn--purple" href="https://haku.ly/9795a39b3b" target="_blank" rel="noopener noreferrer">Donate now</a>
+              <a class="btn btn--ghost" href="https://www.cureepilepsy.org/" target="_blank" rel="noopener noreferrer">Learn about CURE</a>
+            </div>
+          </div>
+          <div class="split__image split__image--race reveal">
+            <img src="epilepsy-sucks-images/IMG_5739.webp" alt="Kevin after a race, thumbs up on the beach in bib 202" width="1200" height="1600" loading="lazy" decoding="async" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt course-map" id="training">
+      <div class="section__inner reveal">
+        <p class="eyebrow">Training log</p>
+        <h2>Where I am now</h2>
+        <p>Every run gets logged — distance, time, pace, and notes. This is the live picture of the road to March 7, 2027.</p>
+
+        <div class="training-status" id="training-status">
+          <div class="training-status__card">
+            <div class="training-status__label">Longest run</div>
+            <div class="training-status__value" id="stat-longest">—</div>
+            <div class="training-status__detail" id="stat-longest-detail">No runs logged yet</div>
+          </div>
+          <div class="training-status__card">
+            <div class="training-status__label">Last 7 days</div>
+            <div class="training-status__value" id="stat-weekly">—</div>
+            <div class="training-status__detail">Miles this week</div>
+          </div>
+          <div class="training-status__card">
+            <div class="training-status__label">Race day</div>
+            <div class="training-status__value" id="stat-race-days">—</div>
+            <div class="training-status__detail">Days until LA Marathon</div>
+          </div>
+          <div class="training-status__card">
+            <div class="training-status__label">Next milestone</div>
+            <div class="training-status__value" id="stat-milestone" style="font-size:1.15rem;">—</div>
+            <div class="training-status__detail" id="stat-milestone-detail">Loading…</div>
+          </div>
+        </div>
+
+        <div class="training-log">
+          <p class="training-log__title">Mileage over time</p>
+          <div class="training-chart" id="training-chart">
+            <svg viewBox="0 0 800 220" role="img" aria-label="Training mileage chart. Hover or focus points for exact dates.">
+              <path class="training-chart__area" id="training-chart-area" d=""></path>
+              <polyline class="training-chart__trend-line" id="training-chart-trend" points=""></polyline>
+              <polyline class="training-chart__line" id="training-chart-line" points=""></polyline>
+              <g id="training-chart-points"></g>
+            </svg>
+            <div class="training-chart__tooltip" id="training-tooltip" hidden>
+              <strong></strong>
+              <span></span>
+            </div>
+          </div>
+          <p class="training-chart__note" id="training-chart-note">Hover any dot for the exact date.</p>
+          <p class="trend-stat" id="training-trend-stat" hidden></p>
+        </div>
+
+        <div class="course-map__block" id="course">
+          <div class="course-map__intro">
+            <div class="course-map__intro-copy">
+              <p class="eyebrow">March 7, 2027 · ASICS Los Angeles Marathon</p>
+              <h2>Stadium to the Stars</h2>
+              <p>From Dodger Stadium to Avenue of the Stars in Century City — a USATF-certified Boston Qualifier, point-to-point through Chinatown, Hollywood, Beverly Hills, and Brentwood. On paper it’s a net downhill. In practice, it’s a rolling-hill race that punishes anyone who believes the brochure.</p>
+            </div>
+          </div>
+          <div class="course-map__frame">
+            <div class="course-map__canvas" id="marathon-map" role="img" aria-label="Map of the LA Marathon route from Dodger Stadium to Century City"></div>
+          </div>
+          <div class="course-map__legend">
+            <span><span class="course-map__swatch" aria-hidden="true"></span>LA Marathon route</span>
+            <span id="course-map-distance">26.2 miles</span>
+            <span>Start: Dodger Stadium</span>
+            <span>Finish: Avenue of the Stars</span>
+          </div>
+
+          <div class="course-profile reveal">
+            <div class="course-profile__facts">
+              <div><strong>Profile</strong> Rolling hills · point-to-point · road</div>
+              <div><strong>Elevation</strong> +943 ft gain / −1,169 ft loss</div>
+              <div><strong>Range</strong> 203–566 ft above sea level</div>
+              <div><strong>Boston Qualifier</strong> Yes</div>
+              <div><strong>Field</strong> ~22,000 finishers (2026)</div>
+              <div><strong>Typical weather</strong> ~61°F mean · high 70° / low 52°</div>
+            </div>
+            <div class="course-profile__body">
+              <p class="eyebrow">How the course actually runs</p>
+              <p><span class="key">Miles 1–3</span> dump you out of Dodger Stadium on a steep downhill — the trap that burns people who go out too hot. <span class="key">Miles 4–6</span> answer with short, sharp rollers through Echo Park and Silver Lake. <span class="key">Miles 10–18</span> roll through Hollywood and West Hollywood: mostly flat with a short climb around mile 12, then a cruise toward Beverly Hills.</p>
+              <p>The fight is late. <span class="key">Miles 20–24</span> — the San Vicente out-and-back — drop hard (nearly −5% in places), then climb back. That’s the quad-buster where most PR attempts are won or lost. Hold something for Brentwood, or Century City will feel like a different race.</p>
+              <p class="course-profile__source">Course data from <a href="https://findmymarathon.com/race-detail.php?zname=Los%20Angeles%20Marathon" target="_blank" rel="noopener noreferrer">Find My Marathon</a>.</p>
+            </div>
+          </div>
+
+          <details class="pace-calc mechanism-note reveal">
+            <summary class="mechanism-note__summary">
+              <span class="mechanism-note__summary-text">
+                <span class="eyebrow">Plan your race</span>
+                <span class="mechanism-note__summary-title">Mile-by-mile elevation &amp; grade-adjusted pace calculator</span>
+              </span>
+              <span class="mechanism-note__chevron" aria-hidden="true"></span>
+            </summary>
+            <div class="mechanism-note__body">
+            <p>Pick a goal finish time and this redistributes it across all 26.2 miles using the actual energy-cost-of-running math (Minetti et al., 2002) — slower on the climbs, faster on the drops — instead of just dividing your goal by 26.2.</p>
+
+            <div class="pace-calc__chart-frame" id="pace-calc-chart-frame">
+              <svg viewBox="0 0 800 190" role="img" aria-label="Elevation profile of the LA Marathon course, mile by mile">
+                <g class="pace-calc__grid" id="pace-calc-grid"></g>
+                <path class="pace-calc__area" id="pace-calc-area" d=""></path>
+                <polyline class="pace-calc__line" id="pace-calc-line" points=""></polyline>
+                <g id="pace-calc-points"></g>
+              </svg>
+              <div class="pace-calc__tooltip" id="pace-calc-tooltip" hidden>
+                <strong></strong>
+                <span></span>
+              </div>
+            </div>
+            <p class="pace-calc__chart-note">Illustrative mile-by-mile elevation shaped to match the course's published profile (steep drop from Dodger Stadium, rollers through Echo Park, a long flat stretch through Hollywood, the San Vicente dip-and-climb late) — not a surveyed GPS trace. Hover any point for exact mile/elevation.</p>
+
+            <div class="pace-calc__goal">
+              <label>
+                Goal finish time
+                <input type="text" id="pace-calc-goal" value="4:00:00" inputmode="numeric" placeholder="H:MM:SS" aria-label="Goal finish time, hours:minutes:seconds" />
+              </label>
+              <div class="pace-calc__presets">
+                <button type="button" class="btn btn--ghost" data-goal="3:10:00">BQ · 3:10</button>
+                <button type="button" class="btn btn--ghost" data-goal="3:30:00">3:30</button>
+                <button type="button" class="btn btn--ghost" data-goal="4:00:00">4:00</button>
+                <button type="button" class="btn btn--ghost" data-goal="5:00:00">5:00</button>
+              </div>
+            </div>
+            <p class="pace-calc__summary" id="pace-calc-summary" aria-live="polite"></p>
+
+            <div class="pace-calc__table-wrap">
+              <table class="pace-calc__table" id="pace-calc-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Mile</th>
+                    <th scope="col">Grade</th>
+                    <th scope="col">Split pace</th>
+                    <th scope="col">Cumulative time</th>
+                  </tr>
+                </thead>
+                <tbody id="pace-calc-tbody"></tbody>
+              </table>
+            </div>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+  </main>
+<!-- INCLUDE:partials/chrome-bottom.html -->

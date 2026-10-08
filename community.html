@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Community — Epilepsy Sucks | Kevin’s Story</title>
+  <meta name="description" content="Leave a note, get in touch, share Kevin’s story, or follow his LA Marathon training on Instagram." />
+  <meta name="google-site-verification" content="7OfTJh9W-WusjG9euOQumyX-KyWf6rn1aBwy0Ev4MA0" />
+
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem("epilepsy-theme");
+        if (saved === "dark" || saved === "light") {
+          document.documentElement.setAttribute("data-theme", saved);
+        }
+      } catch (e) {}
+    })();
+  </script>
+
+
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="canonical" href="https://www.epilepsysucks.org/community" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Epilepsy Sucks" />
+  <meta property="og:title" content="Community — Epilepsy Sucks" />
+  <meta property="og:description" content="Leave a note, get in touch, share Kevin’s story, or follow his LA Marathon training on Instagram." />
+  <meta property="og:url" content="https://www.epilepsysucks.org/community" />
+  <meta property="og:image" content="https://www.epilepsysucks.org/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Community — Epilepsy Sucks" />
+  <meta name="twitter:description" content="Leave a note, get in touch, share Kevin’s story, or follow his LA Marathon training on Instagram." />
+  <meta name="twitter:image" content="https://www.epilepsysucks.org/og-image.jpg" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.epilepsysucks.org/#website",
+        "url": "https://www.epilepsysucks.org/",
+        "name": "Epilepsy Sucks",
+        "description": "Kevin\u2019s life with epilepsy \u2014 from cerebral hemiatrophy and seizures to resection, VNS, DBS \u2014 and running the LA Marathon for CURE Epilepsy on March 7, 2027.",
+        "publisher": { "@id": "https://www.epilepsysucks.org/#person" }
+      },
+      {
+        "@type": "Person",
+        "@id": "https://www.epilepsysucks.org/#person",
+        "name": "Kevin J Mcgilvray",
+        "description": "Living with epilepsy since childhood; running the 2027 LA Marathon to raise funds for CURE Epilepsy.",
+        "url": "https://www.epilepsysucks.org/"
+      }
+    ]
+  }
+  </script>
+
+<!-- INCLUDE:partials/head-assets.html -->
+</head>
+<body>
+<!-- INCLUDE:partials/chrome-pre-nav.html -->
+<!-- INCLUDE:partials/nav.html -->
+
+  <main id="top">
+    <section class="section section--alt" id="comments">
+      <div class="section__inner reveal">
+        <p class="eyebrow">Community</p>
+        <h2>Comments</h2>
+        <p>If my story landed with you — leave a note. Comments are reviewed before they show publicly.</p>
+
+        <aside class="owner-update" id="owner-update" hidden>
+          <p class="owner-update__label">Latest update from Kevin</p>
+          <p class="owner-update__meta"><time id="owner-update-date"></time></p>
+          <p class="owner-update__body" id="owner-update-body"></p>
+        </aside>
+
+        <div id="comments-status" class="comments-list__status" aria-live="polite">Loading comments…</div>
+        <ul class="comments-list" id="comments-list" hidden></ul>
+
+        <form class="comment-form" id="comment-form" novalidate>
+          <p class="comment-form__hp" aria-hidden="true">
+            <label>
+              Website
+              <input type="text" name="website" tabindex="-1" autocomplete="off" />
+            </label>
+          </p>
+          <label>
+            Name
+            <input id="comment-name" name="name" type="text" maxlength="40" required autocomplete="name" placeholder="Your name" />
+          </label>
+          <label>
+            Message
+            <textarea id="comment-message" name="message" maxlength="1000" required placeholder="Share a thought about Kevin’s story"></textarea>
+          </label>
+          <div class="comment-form__actions">
+            <button class="btn btn--purple" type="submit" id="comment-submit">Post comment</button>
+            <span class="comment-form__note">Comments are reviewed before they appear.</span>
+          </div>
+          <p class="comment-form__error" id="comment-error" hidden></p>
+        </form>
+
+        <details class="owner-update-form" id="moderation-form-wrap">
+          <summary>Kevin — moderate comments</summary>
+          <form class="comment-form" id="moderation-form" novalidate>
+            <label>
+              Password
+              <input id="moderation-password" name="password" type="password" required autocomplete="current-password" placeholder="Your update password" />
+            </label>
+            <div class="comment-form__actions">
+              <button class="btn btn--purple" type="submit" id="moderation-load">Load pending</button>
+              <span class="comment-form__note">Approve to publish, or mark spam.</span>
+            </div>
+            <p class="comment-form__error" id="moderation-error" hidden></p>
+          </form>
+          <p class="moderation-status" id="moderation-status" hidden></p>
+          <ul class="moderation-list" id="moderation-list" hidden></ul>
+        </details>
+
+        <details class="owner-update-form" id="admin-log-wrap">
+          <summary>Kevin — log training, weigh-in, funds, milestone</summary>
+          <form class="comment-form" id="admin-run-form" novalidate>
+            <p class="comment-form__note" style="margin:0;">Add a training run</p>
+            <label>Password<input id="admin-run-password" name="password" type="password" required autocomplete="current-password" /></label>
+            <label>Date<input id="admin-run-date" name="date" type="date" required /></label>
+            <label>Miles<input id="admin-run-miles" name="miles" type="number" min="0.1" step="0.1" required /></label>
+            <label>Duration (minutes)<input id="admin-run-minutes" name="durationMinutes" type="number" min="1" step="0.1" required /></label>
+            <label>Notes<textarea id="admin-run-notes" name="notes" maxlength="500" placeholder="Optional notes"></textarea></label>
+            <div class="comment-form__actions">
+              <button class="btn btn--purple" type="submit">Save run</button>
+            </div>
+            <p class="comment-form__error" id="admin-run-error" hidden></p>
+          </form>
+
+          <form class="comment-form" id="admin-weigh-form" novalidate>
+            <p class="comment-form__note" style="margin:0;">Add a weigh-in</p>
+            <label>Password<input id="admin-weigh-password" name="password" type="password" required autocomplete="current-password" /></label>
+            <label>Date<input id="admin-weigh-date" name="date" type="date" required /></label>
+            <label>Weight (lb)<input id="admin-weigh-lb" name="weightLb" type="number" min="1" step="0.1" required /></label>
+            <div class="comment-form__actions">
+              <button class="btn btn--purple" type="submit">Save weigh-in</button>
+            </div>
+            <p class="comment-form__error" id="admin-weigh-error" hidden></p>
+          </form>
+
+          <form class="comment-form" id="admin-funds-form" novalidate>
+            <p class="comment-form__note" style="margin:0;">Set fundraising totals (manual override)</p>
+            <label>Password<input id="admin-funds-password" name="password" type="password" required autocomplete="current-password" /></label>
+            <label>Raised ($)<input id="admin-funds-raised" name="raised" type="number" min="0" step="1" required /></label>
+            <label>Goal ($)<input id="admin-funds-goal" name="goal" type="number" min="1" step="1" required /></label>
+            <div class="comment-form__actions">
+              <button class="btn btn--purple" type="submit">Save totals</button>
+            </div>
+            <p class="comment-form__error" id="admin-funds-error" hidden></p>
+          </form>
+
+          <form class="comment-form" id="admin-milestone-form" novalidate>
+            <p class="comment-form__note" style="margin:0;">Add a milestone</p>
+            <label>Password<input id="admin-milestone-password" name="password" type="password" required autocomplete="current-password" /></label>
+            <label>Title<input id="admin-milestone-title" name="title" type="text" maxlength="120" required /></label>
+            <label>Detail<textarea id="admin-milestone-detail" name="detail" maxlength="500"></textarea></label>
+            <label>Date (optional)<input id="admin-milestone-date" name="occurredOn" type="date" /></label>
+            <label>Kind
+              <select id="admin-milestone-kind" name="kind">
+                <option value="training">Training</option>
+                <option value="event">Event</option>
+                <option value="note">Note</option>
+              </select>
+            </label>
+            <div class="comment-form__actions">
+              <button class="btn btn--purple" type="submit">Save milestone</button>
+            </div>
+            <p class="comment-form__error" id="admin-milestone-error" hidden></p>
+          </form>
+
+          <form class="comment-form" id="admin-live-track-form" novalidate>
+            <p class="comment-form__note" style="margin:0;">Race-day Live Track GPS beacon</p>
+            <label>Password<input id="admin-live-password" name="password" type="password" required autocomplete="current-password" /></label>
+            <label>Latitude<input id="admin-live-lat" name="lat" type="number" step="any" placeholder="Optional if using Share my location" /></label>
+            <label>Longitude<input id="admin-live-lng" name="lng" type="number" step="any" placeholder="Optional if using Share my location" /></label>
+            <label>Mile (optional)<input id="admin-live-mile" name="mile" type="number" min="0" max="30" step="0.1" /></label>
+            <div class="comment-form__actions">
+              <button class="btn btn--purple" type="button" id="admin-live-share">Share my location</button>
+              <button class="btn btn--purple" type="submit">Push beacon</button>
+              <button class="btn btn--ghost" type="button" id="admin-live-clear">Clear beacon</button>
+            </div>
+            <p class="comment-form__error" id="admin-live-error" hidden></p>
+          </form>
+        </details>
+
+        <details class="owner-update-form" id="owner-update-form-wrap">
+          <summary>Kevin — post a latest update</summary>
+          <form class="comment-form" id="owner-update-form" novalidate>
+            <label>
+              Password
+              <input id="owner-update-password" name="password" type="password" required autocomplete="current-password" placeholder="Your update password" />
+            </label>
+            <label>
+              Your update to viewers
+              <textarea id="owner-update-message" name="message" maxlength="2000" required placeholder="Write the latest update you want everyone to see"></textarea>
+            </label>
+            <div class="comment-form__actions">
+              <button class="btn btn--purple" type="submit" id="owner-update-submit">Post update</button>
+              <span class="comment-form__note">Replaces the previous latest update.</span>
+            </div>
+            <p class="comment-form__error" id="owner-update-error" hidden></p>
+          </form>
+        </details>
+
+      </div>
+    </section>
+
+    <section class="section" id="contact">
+      <div class="section__inner reveal">
+        <p class="eyebrow">Community</p>
+        <h2>Contact &amp; media inquiries</h2>
+        <p>Press, speaking requests, partnership questions, or just want to reach me directly — email works best and I read every one.</p>
+        <a class="btn btn--purple" href="mailto:Kevinj.McGilvray@gmail.com">Email Kevin</a>
+      </div>
+    </section>
+
+    <section class="section" id="share">
+      <div class="section__inner reveal">
+        <p class="eyebrow">Community</p>
+        <h2>Share this story</h2>
+        <p>If Kevin’s story is worth 90 seconds of someone else’s time, sharing it is the easiest way to help.</p>
+<div class="share-menu">
+            <button
+              type="button"
+              class="btn btn--purple share-menu__trigger"
+              id="share-trigger"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              Share
+            </button>
+            <div class="share-menu__panel" id="share-panel" hidden>
+              <button type="button" class="share-menu__item" id="share-copy" data-share="copy">Copy link</button>
+              <a class="share-menu__item" id="share-x" data-share="x" target="_blank" rel="noopener noreferrer">Share on X</a>
+              <a class="share-menu__item" id="share-facebook" data-share="facebook" target="_blank" rel="noopener noreferrer">Share on Facebook</a>
+              <button type="button" class="share-menu__item" id="share-instagram" data-share="instagram">Share on Instagram</button>
+            </div>
+          </div>
+      </div>
+    </section>
+
+    <section class="section" id="social">
+      <div class="section__inner reveal">
+        <p class="eyebrow">Follow along</p>
+        <h2>Training updates on Instagram</h2>
+        <p>Behind-the-scenes miles, race-day countdowns, and everything in between — I post it all as I train toward March 7, 2027.</p>
+        <div class="social-feed">
+          <div class="sk-instagram-feed" data-embed-id="25717610"></div>
+        </div>
+        <a class="social-feed__fallback" href="https://www.instagram.com/kevinjmcgilvray/" target="_blank" rel="noopener noreferrer">Follow @kevinjmcgilvray on Instagram →</a>
+      </div>
+    </section>
+
+    <section class="section" id="behind-the-code">
+      <div class="section__inner reveal">
+        <p class="eyebrow">For the engineers</p>
+        <h2>Behind the code</h2>
+        <p><span class="key">Janitor in the daytime, software engineer by nighttime.</span> I built and still run this entire site myself — no agency, no template. It's a plain static page (no framework) backed by a handful of serverless functions and a Postgres database, and the source is public if you want to poke around.</p>
+
+        <details class="mechanism-note" id="public-architecture-wrap">
+          <summary class="mechanism-note__summary">
+            <span class="mechanism-note__summary-text">
+              <span class="eyebrow">The stack</span>
+              <span class="mechanism-note__summary-title">How this site is actually built</span>
+            </span>
+            <span class="mechanism-note__chevron" aria-hidden="true"></span>
+          </summary>
+          <div class="mechanism-note__body">
+          <div class="arch-diagram">
+            <pre class="mermaid" id="public-arch-mermaid">
+flowchart TD
+    Browser["Visitor's browser"]
+    Static["Vercel static hosting\nindex.html · styles/*.css · js/*.js"]
+    ThirdParty["Third-party embeds\nGoogle Maps/MapLibre · SociableKIT · Mermaid.js"]
+    API["Vercel serverless functions\napi/*.js"]
+    DB[("Neon Postgres\ntraining · weigh-ins · milestones · funds · comments · live track")]
+    GitHub["GitHub repo (public)"]
+    Deploy["Vercel auto-deploy"]
+
+    Browser -->|"GET /"| Static
+    Browser -->|"loads"| ThirdParty
+    Browser -->|"fetch('/api/...')"| API
+    API -->|"SQL over DATABASE_URL"| DB
+    GitHub -->|"git push to main"| Deploy --> Static
+            </pre>
+            <p class="arch-fallback-note">Diagram renders when you expand this panel.</p>
+          </div>
+          <p>The frontend is deliberately boring: hand-written HTML/CSS/JS, no build step, no bundler. Every chart on this page — the weigh-ins, the seizure-frequency bars — is plain SVG built and animated by <code>app.js</code>, with no charting library. The backend is a set of small <a href="https://vercel.com" target="_blank" rel="noopener noreferrer">Vercel</a> serverless functions in <code>api/</code>, each one reading or writing a <a href="https://neon.tech" target="_blank" rel="noopener noreferrer">Neon</a> Postgres database (training runs, weigh-ins, milestones, fundraising totals, comments, race-day GPS).</p>
+          <p>Every change ships the same way: a feature branch, a pull request with its own live Vercel preview URL, then a squash merge to <code>main</code> that Vercel auto-deploys straight to this domain — usually within a minute or two of merging.</p>
+          <p><a href="https://github.com/kevinjmcgilvray-cpu/epilepsysucks" target="_blank" rel="noopener noreferrer">View the source on GitHub →</a></p>
+          </div>
+        </details>
+      </div>
+    </section>
+
+  </main>
+  <script src="https://widgets.sociablekit.com/instagram-feed/widget.js" defer></script>
+<!-- INCLUDE:partials/chrome-bottom.html -->

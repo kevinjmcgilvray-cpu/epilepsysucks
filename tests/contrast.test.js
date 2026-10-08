@@ -1,7 +1,8 @@
-// WCAG 2.1 AA contrast scanner, run against both themes. Walks every
-// text node on the page, finds its "effective background" (nearest
-// non-transparent ancestor background), and flags anything under the
-// AA threshold (4.5:1 normal text, 3:1 for large/bold text).
+// WCAG 2.1 AA contrast scanner, run against both themes, across every
+// page of the site. Walks every text node on the page, finds its
+// "effective background" (nearest non-transparent ancestor background),
+// and flags anything under the AA threshold (4.5:1 normal text, 3:1 for
+// large/bold text).
 //
 // Ported from the ad-hoc scratch script developed while fixing the
 // original dark-mode contrast bugs, with two additions:
@@ -13,9 +14,20 @@
 //      not real contrast bugs (decorative aria-hidden text, the
 //      keyboard-only skip link, third-party widget content we don't
 //      control) so CI only fails on genuinely new regressions.
+//
+// Runs against dist/ (post-build) and loops over all 5 pages — the
+// rich content that used to all live on one index.html (and get
+// scanned there) now lives split across my-journey/the-recovery/
+// marathon/community, so scanning only index.html would silently stop
+// covering almost all of the site's actual text.
+const fs = require("fs");
+const path = require("path");
 const { chromium } = require("playwright");
 const { startServer } = require("./_server");
 const { check, report } = require("./_assert");
+
+const DIST = path.join(__dirname, "..", "dist");
+const PAGES = ["index.html", "my-journey.html", "the-recovery.html", "marathon.html", "community.html"];
 
 // [tag, class-substring, text-prefix] — matched loosely; see comment above.
 const KNOWN_EXCEPTIONS = [
@@ -28,22 +40,32 @@ function isKnownException(r) {
   return KNOWN_EXCEPTIONS.some((ex) => r.cls && r.cls.includes(ex.cls));
 }
 
-// Accepted baseline count of *other* low-contrast violations per theme,
-// beyond the exceptions above. Back to 0/0: the dark-theme --accent-
-// as-text tradeoff this baseline used to track (PRs #51/#53/#54, then
-// bumped 14->20 by #56) is now fixed properly instead of just measured
-// — see --accent-text in styles/01-base-nav.css, a lightened variant
-// of --accent kept specifically for text (eyebrows, figcaptions, table
-// emphasis, the Instagram fallback link, etc.), while --accent itself
-// is untouched for backgrounds/fills/strokes/borders. If this number
-// goes above 0, something has newly regressed.
-const BASELINE_LOW_CONTRAST_COUNT = { dark: 0, light: 0 };
+// Accepted baseline count of *other* low-contrast violations per
+// theme+page, beyond the exceptions above. Back to 0/0 everywhere: the
+// dark-theme --accent-as-text tradeoff this baseline used to track
+// (PRs #51/#53/#54, then bumped 14->20 by #56) is now fixed properly
+// instead of just measured — see --accent-text in styles/01-base-nav.css,
+// a lightened variant of --accent kept specifically for text (eyebrows,
+// figcaptions, table emphasis, the Instagram fallback link, etc.),
+// while --accent itself is untouched for backgrounds/fills/strokes/
+// borders. If any of these numbers go above 0, something has newly
+// regressed on that specific page.
+const BASELINE_LOW_CONTRAST_COUNT = {
+  "index.html": { dark: 0, light: 0 },
+  "my-journey.html": { dark: 0, light: 0 },
+  "the-recovery.html": { dark: 0, light: 0 },
+  "marathon.html": { dark: 0, light: 0 },
+  "community.html": { dark: 0, light: 0 }
+};
 
-async function scanTheme(browser, baseUrl, theme) {
+async function scanTheme(browser, baseUrl, theme, route) {
   const page = await browser.newPage({ viewport: { width: 1280, height: 1000 } });
-  await page.goto(`${baseUrl}/index.html`);
-  await page.click("#entry-warning-continue");
-  await page.waitForTimeout(200);
+  await page.goto(`${baseUrl}/${route}`);
+  const warningVisible = await page.evaluate(() => !document.getElementById("entry-warning").hidden);
+  if (warningVisible) {
+    await page.click("#entry-warning-continue");
+    await page.waitForTimeout(200);
+  }
 
   const current = await page.evaluate(() => document.documentElement.getAttribute("data-theme"));
   if (current !== theme) {
@@ -51,7 +73,8 @@ async function scanTheme(browser, baseUrl, theme) {
     await page.waitForTimeout(200);
   }
   await page.$$eval("details", (els) => els.forEach((el) => (el.open = true)));
-  // Opening the architecture <details> kicks off a lazy CDN fetch of
+  // Opening the architecture <details> (only present on community.html,
+  // where #behind-the-code now lives) kicks off a lazy CDN fetch of
   // mermaid.js, then an async render — a flat timeout here raced that
   // fetch and was the direct cause of this test's CI-only flakiness
   // (whether the scan caught the rendered SVG, with its real colors,
@@ -59,7 +82,12 @@ async function scanTheme(browser, baseUrl, theme) {
   // instead; still bounded, and non-fatal if mermaid fails to load at
   // all (e.g. no network), matching this codebase's existing fail-open
   // conventions rather than hanging the whole suite.
-  await page.waitForSelector("#public-arch-mermaid svg", { timeout: 5000 }).catch(() => {});
+  if (route === "community.html") {
+    await page.waitForSelector("#public-arch-mermaid svg", { timeout: 5000 }).catch(() => {});
+  }
+  if (route === "my-journey.html") {
+    await page.waitForSelector("#mermaid-timeline svg", { timeout: 5000 }).catch(() => {});
+  }
   await page.waitForTimeout(200);
 
   const results = await page.evaluate(() => {
@@ -138,36 +166,43 @@ function contrastRatio(rgb1, rgb2) {
 async function run(baseUrl) {
   const browser = await chromium.launch();
 
-  for (const theme of ["dark", "light"]) {
-    const results = await scanTheme(browser, baseUrl, theme);
-    const failures = [];
-    for (const r of results) {
-      if (isKnownException(r)) continue;
-      const ratio = contrastRatio(r.fg, r.bg);
-      const isLarge = r.fontSize >= 24 || (r.fontSize >= 18.66 && parseInt(r.fontWeight, 10) >= 700);
-      const threshold = isLarge ? 3 : 4.5;
-      if (ratio < threshold) {
-        failures.push(
-          `<${r.tag} class="${r.cls}"> fg=${r.fg} bg=${r.bg} ratio=${ratio.toFixed(2)} need=${threshold} "${r.text}"`
-        );
+  for (const route of PAGES) {
+    for (const theme of ["dark", "light"]) {
+      const results = await scanTheme(browser, baseUrl, theme, route);
+      const failures = [];
+      for (const r of results) {
+        if (isKnownException(r)) continue;
+        const ratio = contrastRatio(r.fg, r.bg);
+        const isLarge = r.fontSize >= 24 || (r.fontSize >= 18.66 && parseInt(r.fontWeight, 10) >= 700);
+        const threshold = isLarge ? 3 : 4.5;
+        if (ratio < threshold) {
+          failures.push(
+            `<${r.tag} class="${r.cls}"> fg=${r.fg} bg=${r.bg} ratio=${ratio.toFixed(2)} need=${threshold} "${r.text}"`
+          );
+        }
       }
+      const baseline = (BASELINE_LOW_CONTRAST_COUNT[route] || {})[theme] || 0;
+      if (failures.length) {
+        console.log(`  ${route} ${theme} theme low-contrast findings (${failures.length}, baseline ${baseline}):`);
+        failures.forEach((f) => console.log(`    ${f}`));
+      }
+      check(
+        `${route} ${theme} theme: low-contrast count at or below baseline (${failures.length}/${baseline}, scanned ${results.length} elements)`,
+        failures.length <= baseline
+      );
     }
-    const baseline = BASELINE_LOW_CONTRAST_COUNT[theme] || 0;
-    if (failures.length) {
-      console.log(`  ${theme} theme low-contrast findings (${failures.length}, baseline ${baseline}):`);
-      failures.forEach((f) => console.log(`    ${f}`));
-    }
-    check(
-      `${theme} theme: low-contrast count at or below baseline (${failures.length}/${baseline}, scanned ${results.length} elements)`,
-      failures.length <= baseline
-    );
   }
 
   await browser.close();
 }
 
 async function main() {
-  const { server, baseUrl } = await startServer();
+  if (!fs.existsSync(DIST)) {
+    check("dist/ exists (run `npm run build` first)", false, "dist/ not found");
+    report("contrast.test.js");
+    return;
+  }
+  const { server, baseUrl } = await startServer(0, DIST);
   try {
     await run(baseUrl);
   } finally {

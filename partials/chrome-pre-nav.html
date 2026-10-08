@@ -1,0 +1,88 @@
+
+  <div
+    class="entry-warning"
+    id="entry-warning"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="entry-warning-title"
+    aria-describedby="entry-warning-desc"
+    hidden
+  >
+    <div class="entry-warning__panel">
+      <p class="entry-warning__icon" aria-hidden="true">⚡</p>
+      <h2 class="entry-warning__title" id="entry-warning-title">Before you go in — a quick flash warning</h2>
+      <p class="entry-warning__desc" id="entry-warning-desc">
+        This site has a <strong>Storm effects</strong> setting — brief lightning flashes with rotating
+        thunder sounds, cycling 10 seconds on / 10 seconds off. It's <strong>on by default</strong>, but
+        can be switched off anytime from the storm icon near the top of the page. This site also
+        automatically disables it entirely if your device's "reduce motion" accessibility setting is on.
+        If you have photosensitive epilepsy, we'd recommend turning it off.
+      </p>
+      <button type="button" class="btn btn--purple entry-warning__continue" id="entry-warning-continue">
+        I understand — continue
+      </button>
+    </div>
+  </div>
+  <script>
+    // Runs synchronously, as early as possible, so the warning (if needed)
+    // is locked in before anything else paints or becomes interactive —
+    // same early-inline-script pattern as the dark/light theme flash
+    // prevention in <head>. Deliberately kept separate from app.js, which
+    // loads at the end of the page: a slow connection shouldn't leave the
+    // "I understand" button looking clickable while actually inert.
+    (function () {
+      var ACK_KEY = "epilepsySiteWarningAck";
+      var acknowledged;
+      try {
+        acknowledged = window.localStorage.getItem(ACK_KEY) === "yes";
+      } catch (e) {
+        acknowledged = false;
+      }
+      if (acknowledged) return;
+      var warning = document.getElementById("entry-warning");
+      var continueBtn = document.getElementById("entry-warning-continue");
+      if (!warning || !continueBtn) return;
+      warning.hidden = false;
+      document.body.classList.add("entry-locked");
+      continueBtn.addEventListener("click", function () {
+        try {
+          window.localStorage.setItem(ACK_KEY, "yes");
+        } catch (e) {
+          /* ignore (private mode etc.) — warning will just reappear next visit */
+        }
+        warning.hidden = true;
+        document.body.classList.remove("entry-locked");
+        // Deliberately not priming audio here too: this click already
+        // bubbles a "pointerdown" up to window, which app.js listens for
+        // as its own one-time audio-unlock gesture. Priming from both
+        // places at once raced and could permanently zero out a clip's
+        // volume (two concurrent play-then-restore cycles stepping on
+        // each other's "previous volume" snapshot).
+      });
+      continueBtn.focus();
+    })();
+  </script>
+
+  <a class="skip-link" href="#top">Skip to content</a>
+
+  <div class="bg-lightning" id="bg-lightning" aria-hidden="true">
+    <div class="bg-lightning__photo"></div>
+    <div class="bg-lightning__flash" id="lightning-flash"></div>
+    <svg class="bg-lightning__bolt" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+      <path class="bg-lightning__bolt-path" id="lightning-bolt-main" d=""></path>
+      <path class="bg-lightning__bolt-path" id="lightning-bolt-branch" d=""></path>
+      <path class="bg-lightning__bolt-path" id="lightning-bolt-branch2" d=""></path>
+    </svg>
+  </div>
+  <audio id="thunder-audio-0" class="thunder-audio" preload="auto" aria-hidden="true">
+    <source src="epilepsy-sucks-audio/thunder-strike.mp3" type="audio/mpeg" />
+  </audio>
+  <audio id="thunder-audio-1" class="thunder-audio" preload="auto" aria-hidden="true">
+    <source src="epilepsy-sucks-audio/thunder-distant.mp3" type="audio/mpeg" />
+  </audio>
+  <audio id="thunder-audio-2" class="thunder-audio" preload="auto" aria-hidden="true">
+    <source src="epilepsy-sucks-audio/thunder-mid.mp3" type="audio/mpeg" />
+  </audio>
+  <audio id="thunder-audio-3" class="thunder-audio" preload="auto" aria-hidden="true">
+    <source src="epilepsy-sucks-audio/thunder-cinematic.mp3" type="audio/mpeg" />
+  </audio>

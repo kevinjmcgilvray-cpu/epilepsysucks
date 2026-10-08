@@ -2,9 +2,19 @@
 // behavior, persistence, reduced-motion override, and the entry-warning
 // copy. Ported from the ad-hoc scratch script used throughout
 // development into a permanent, committed test.
+//
+// Runs against dist/ (post-build) since this chrome (entry-warning,
+// storm/cursor toggles) now only exists as resolved <!-- INCLUDE -->
+// partials in the real build output, same reasoning as smoke.test.js.
+// It's shared/identical across every page via partials/, so testing it
+// once against index.html is still fully representative.
+const fs = require("fs");
+const path = require("path");
 const { chromium } = require("playwright");
 const { startServer } = require("./_server");
 const { check, report } = require("./_assert");
+
+const DIST = path.join(__dirname, "..", "dist");
 
 async function freshPage(context, label, errors) {
   const page = await context.newPage();
@@ -143,7 +153,12 @@ async function run(baseUrl) {
 }
 
 async function main() {
-  const { server, baseUrl } = await startServer();
+  if (!fs.existsSync(DIST)) {
+    check("dist/ exists (run `npm run build` first)", false, "dist/ not found");
+    report("regression.test.js");
+    return;
+  }
+  const { server, baseUrl } = await startServer(0, DIST);
   try {
     await run(baseUrl);
   } finally {
