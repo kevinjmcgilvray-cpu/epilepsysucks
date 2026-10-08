@@ -42,7 +42,7 @@
       }
 
       function daysUntilRace() {
-        const end = Date.UTC(2027, 2, 7);
+        const end = window.RACE_DAY_UTC_MS;
         const parts = new Intl.DateTimeFormat("en-CA", {
           timeZone: "America/Los_Angeles",
           year: "numeric",
@@ -177,8 +177,7 @@
             const direction =
               perWeek > 0.3 ? "ramping up" : perWeek < -0.3 ? "tapering down" : "holding steady";
 
-            const raceMs = Date.UTC(2027, 2, 7);
-            const weeksRemaining = Math.max(0, (raceMs - Date.now()) / (7 * DAY_MS));
+            const weeksRemaining = Math.max(0, (window.RACE_DAY_UTC_MS - Date.now()) / (7 * DAY_MS));
             const currentWeekly = trailingSums[trailingSums.length - 1];
             const totalLogged = miles.reduce((a, b) => a + b, 0);
             const projectedTotal = totalLogged + currentWeekly * weeksRemaining;

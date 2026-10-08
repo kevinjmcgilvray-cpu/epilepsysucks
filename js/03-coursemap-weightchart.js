@@ -613,8 +613,7 @@
           }
 
           if (trendStatEl) {
-            const raceMs = Date.UTC(2027, 2, 7);
-            const daysToRace = (raceMs - tMin) / DAY_MS;
+            const daysToRace = (window.RACE_DAY_UTC_MS - tMin) / DAY_MS;
             const projected = fitAt(daysToRace);
             const perWeek = slope * 7;
             const direction = perWeek < -0.05 ? "losing" : perWeek > 0.05 ? "gaining" : "holding steady at";

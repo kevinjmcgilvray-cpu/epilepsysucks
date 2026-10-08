@@ -5,6 +5,17 @@
 // this was one file, so load order still matters for anything that
 // isn't scoped inside its own IIFE.
 
+    // Background storm effect: a static, dim purple-tinted lightning photo
+    // sits behind everything at all times (the original site background),
+    // and visitors can opt into "Storm effects" — occasional, hand-drawn
+    // jagged white/blue-white lightning bolts (randomized each strike, not
+    // a canned animation) with a soft screen-flash and a thunder crack.
+    // Because this is an epilepsy awareness site, the animated part is
+    // off by default, strikes are infrequent (one brief flash roughly
+    // every 20-40s, nowhere near the 3-flashes-per-second WCAG threshold),
+    // capped at low opacity rather than a hard white-out, and the whole
+    // effect — plus its toggle — is skipped entirely for visitors who've
+    // asked for reduced motion.
     (function initStormEffect() {
       const root = document.getElementById("bg-lightning");
       const flashEl = document.getElementById("lightning-flash");
@@ -283,9 +294,6 @@
       const minsEl = document.getElementById("race-mins");
       if (!root || !daysEl || !hoursEl || !minsEl) return;
 
-      // Race morning: ASICS LA Marathon start window — 7:00am Pacific, March 7, 2027.
-      const RACE_MS = Date.parse("2027-03-07T07:00:00-07:00");
-
       function pad(n, width) {
         return String(Math.max(0, n)).padStart(width, "0");
       }
@@ -301,7 +309,7 @@
       }
 
       function tick() {
-        const remaining = Math.max(0, RACE_MS - Date.now());
+        const remaining = Math.max(0, window.RACE_MS - Date.now());
         const totalMins = Math.floor(remaining / 60000);
         const days = Math.floor(totalMins / (60 * 24));
         const hours = Math.floor((totalMins % (60 * 24)) / 60);
