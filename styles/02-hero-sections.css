@@ -300,6 +300,40 @@
       font-size: 1.1rem;
     }
 
+    /* Single, page-wide backdrop for the homepage (requested instead of
+       each section having its own distinct background): the hero's old
+       atmosphere — radial glow, ink gradient, grain texture — now lives
+       on <body> itself with background-attachment: fixed, so it never
+       scrolls and reads as one continuous background behind every
+       section instead of a patchwork of per-section treatments. The
+       grain texture's opacity used to be applied via a separate
+       .hero::before overlay (CSS opacity can't target one layer of a
+       multi-layer background); baked in here as 0.55 * 0.07 ≈ 0.0385
+       directly in the SVG so it can just be one more background layer.
+       Scoped to [data-page="home"] (set on index.html's <body>) so
+       other pages keep their existing body background/.section--alt
+       treatments untouched. */
+    body[data-page="home"] {
+      background-image:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.0385'/%3E%3C/svg%3E"),
+        radial-gradient(ellipse 80% 60% at 50% 35%, var(--accent-soft), transparent 55%),
+        radial-gradient(ellipse 100% 80% at 50% 100%, var(--hero-glow), transparent 50%),
+        linear-gradient(165deg, var(--hero-mid) 0%, var(--ink) 45%, var(--ink-2) 100%);
+      background-attachment: fixed, fixed, fixed, fixed;
+      background-size: auto, cover, cover, cover;
+      background-repeat: repeat, no-repeat, no-repeat, no-repeat;
+    }
+
+    /* Homepage-only: let every section show the fixed body backdrop
+       above instead of its own gradient, so scrolling the homepage
+       never shows a seam between sections. Other pages that use these
+       same classes (the-recovery #weight, community #comments,
+       marathon #marathon/#training) keep their original look. */
+    body[data-page="home"] .section--alt,
+    body[data-page="home"] .section--marathon {
+      background: none;
+    }
+
     .hero {
       position: relative;
       isolation: isolate;
@@ -313,20 +347,8 @@
       min-height: 60dvh;
       padding: calc(var(--header-h, 9.5rem) + 1rem) clamp(1.25rem, 4vw, 2.5rem) clamp(2rem, 5vh, 3.5rem);
       overflow: hidden;
-      background:
-        radial-gradient(ellipse 80% 60% at 50% 35%, var(--accent-soft), transparent 55%),
-        radial-gradient(ellipse 100% 80% at 50% 100%, var(--hero-glow), transparent 50%),
-        linear-gradient(165deg, var(--hero-mid) 0%, var(--ink) 45%, var(--ink-2) 100%);
-    }
-
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
-      opacity: 0.07;
-      pointer-events: none;
-      z-index: 0;
+      /* No background of its own anymore — shows the fixed body
+         backdrop above, same as every other section on the page. */
     }
 
     .hero__visual {
@@ -360,6 +382,23 @@
       -webkit-mask-image: linear-gradient(to right, #000 0%, #000 42%, transparent 100%);
       mask-image: linear-gradient(to right, #000 0%, #000 42%, transparent 100%);
       animation: visual-in 1.8s ease both;
+    }
+
+    /* While the hero is anywhere in view, pin the MRI to the viewport
+       (js/01-nav-theme-cursor.js toggles this via an IntersectionObserver
+       on .hero, the same one that drives .sticky-donate) so it stays
+       put on screen as the headline/subhead scroll past it, instead of
+       scrolling away with the rest of the hero's short box. --hero-h is
+       kept in sync with .hero's real rendered height so the pinned box
+       always matches where it would otherwise be. The instant the hero
+       scrolls fully out of view, is-pinned drops off and it reverts to
+       position: absolute above — already out of frame by then, so it
+       just disappears, i.e. "scrolls away normally". */
+    .hero__mri.is-pinned {
+      position: fixed;
+      top: 0;
+      bottom: auto;
+      height: var(--hero-h, 60dvh);
     }
 
     html[data-theme="light"] .hero__mri {
