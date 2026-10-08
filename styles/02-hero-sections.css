@@ -831,6 +831,18 @@
       margin-top: 1.5rem;
     }
 
+    /* The big faint "Sucks" watermark (.bg-word, moved here from the
+       hero) is position: absolute + z-index: 1 within this section —
+       same positioning trick the hero already uses. Without an explicit
+       z-index of its own, #impact's real content (a static, non-
+       positioned div) would paint *underneath* a positioned sibling
+       with a z-index, same as it would in the hero if .hero__content
+       didn't have its own z-index: 2. */
+    #impact .section__inner {
+      position: relative;
+      z-index: 2;
+    }
+
     .hub-pillars {
       margin-top: 1.75rem;
       display: grid;
