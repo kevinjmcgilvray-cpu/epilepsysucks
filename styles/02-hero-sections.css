@@ -794,3 +794,112 @@
       max-width: 38rem;
     }
 
+    /* New hub-homepage-only building blocks (multi-page routing). Reuses
+       existing tokens (--line/--surface-muted/--accent/--epi) and the
+       .training-status__card look rather than inventing a new card
+       style, so the hub stays visually consistent with the rest of the
+       site. */
+    .hub-impact__grid {
+      margin-top: 1.5rem;
+    }
+
+    .hub-pillars {
+      margin-top: 1.75rem;
+      display: grid;
+      gap: 1.25rem;
+      grid-template-columns: repeat(auto-fit, minmax(15.5rem, 1fr));
+    }
+
+    .hub-pillar {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      padding: 1.5rem 1.6rem;
+      border: 1px solid var(--line);
+      background: var(--surface-muted);
+      text-decoration: none;
+      color: var(--paper);
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .hub-pillar:hover,
+    .hub-pillar:focus-visible {
+      transform: translateY(-3px);
+      border-color: var(--epi);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+    }
+
+    .hub-pillar__eyebrow {
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent-text);
+    }
+
+    .hub-pillar h3 {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      line-height: 1.15;
+      letter-spacing: 0.01em;
+      text-transform: none;
+      margin: 0;
+    }
+
+    .hub-pillar p {
+      font-size: 0.95rem;
+      color: var(--paper-dim);
+      max-width: none;
+      margin: 0;
+    }
+
+    .hub-pillar__link {
+      margin-top: auto;
+      padding-top: 0.4rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--epi);
+    }
+
+    .hub-timeline {
+      margin-top: 1.75rem;
+      display: grid;
+      gap: 0.9rem;
+      grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    }
+
+    .hub-timeline__stop {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      padding: 1rem 1.1rem;
+      border-left: 3px solid var(--epi);
+      background: var(--surface-muted);
+      text-decoration: none;
+      color: var(--paper);
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .hub-timeline__stop:hover,
+    .hub-timeline__stop:focus-visible {
+      border-left-color: var(--accent-text);
+      background: var(--accent-soft);
+    }
+
+    .hub-timeline__year {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      letter-spacing: 0.04em;
+      color: var(--accent-text);
+    }
+
+    .hub-timeline__label {
+      font-size: 0.88rem;
+      color: var(--paper-dim);
+    }
+
+    .hub-banner p {
+      max-width: 42rem;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
