@@ -72,46 +72,6 @@
       }
     })();
 
-    // Pin the hero's MRI backdrop to the viewport for as long as any
-    // part of .hero is still in view, so it stays in the same place on
-    // screen as the headline/subhead scroll past it, rather than
-    // scrolling away with the rest of the (now short) hero box. Reuses
-    // the same "hero fully out of view" signal as stickyDonate() above,
-    // so both effects flip at the same scroll position.
-    (function pinHeroMri() {
-      const hero = document.querySelector(".hero");
-      const mri = document.querySelector(".hero__mri");
-      if (!hero || !mri) return;
-      const setHeight = () => {
-        document.documentElement.style.setProperty(
-          "--hero-h",
-          `${hero.getBoundingClientRect().height}px`
-        );
-      };
-      setHeight();
-      if ("ResizeObserver" in window) {
-        new ResizeObserver(setHeight).observe(hero);
-      } else {
-        window.addEventListener("resize", setHeight);
-      }
-      if ("IntersectionObserver" in window) {
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach((entry) => {
-            mri.classList.toggle("is-pinned", entry.isIntersecting);
-          });
-        });
-        observer.observe(hero);
-      } else {
-        window.addEventListener(
-          "scroll",
-          () => {
-            mri.classList.toggle("is-pinned", window.scrollY < hero.offsetHeight);
-          },
-          { passive: true }
-        );
-      }
-    })();
-
     // Custom lightning-bolt cursor (desktop/mouse only — touch devices are
     // left completely alone). Reuses the exact bolt glyph from the storm
     // toggle icon for visual consistency with the rest of the site's

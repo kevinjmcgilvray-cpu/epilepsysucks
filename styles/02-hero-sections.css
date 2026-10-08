@@ -368,11 +368,19 @@
       opacity: 0.22;
     }
 
+    /* Fixed to the viewport (not just within .hero) so it stays in the
+       same place for the whole page, not just while the hero is in
+       view — it's nested inside .hero's isolated stacking context, so
+       every later section's own content still DOM-order-paints above
+       it wherever they visually overlap, same as the fixed nav/footer
+       bars already sit above everything via their own explicit
+       z-index. No JS needed: fixed positioning + .hero's isolation is
+       enough on its own. */
     .hero__mri {
-      position: absolute;
+      position: fixed;
       left: 0;
       top: 0;
-      bottom: 0;
+      height: 100dvh;
       width: min(48vw, 34rem);
       z-index: 1;
       pointer-events: none;
@@ -382,23 +390,6 @@
       -webkit-mask-image: linear-gradient(to right, #000 0%, #000 42%, transparent 100%);
       mask-image: linear-gradient(to right, #000 0%, #000 42%, transparent 100%);
       animation: visual-in 1.8s ease both;
-    }
-
-    /* While the hero is anywhere in view, pin the MRI to the viewport
-       (js/01-nav-theme-cursor.js toggles this via an IntersectionObserver
-       on .hero, the same one that drives .sticky-donate) so it stays
-       put on screen as the headline/subhead scroll past it, instead of
-       scrolling away with the rest of the hero's short box. --hero-h is
-       kept in sync with .hero's real rendered height so the pinned box
-       always matches where it would otherwise be. The instant the hero
-       scrolls fully out of view, is-pinned drops off and it reverts to
-       position: absolute above — already out of frame by then, so it
-       just disappears, i.e. "scrolls away normally". */
-    .hero__mri.is-pinned {
-      position: fixed;
-      top: 0;
-      bottom: auto;
-      height: var(--hero-h, 60dvh);
     }
 
     html[data-theme="light"] .hero__mri {
