@@ -644,6 +644,21 @@
       justify-content: center;
     }
 
+    /* Two-button row for #storm-confirm (the "turn storm effects on?"
+       prompt) — the page-load #entry-warning only ever has the one
+       .entry-warning__continue button above, so this is additive, not
+       a replacement for it. */
+    .entry-warning__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .entry-warning__actions .btn {
+      flex: 1 1 10rem;
+      justify-content: center;
+    }
+
     .nav__funds {
       display: flex;
       flex-wrap: wrap;

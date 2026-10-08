@@ -32,13 +32,15 @@
         return;
       }
 
-      // Storm effects defaults ON; a visitor's explicit choice (either way)
-      // is remembered from here on.
-      let stormOn = true;
+      // Storm effects default OFF; a visitor's explicit choice (either
+      // way) is remembered from here on. Turning it on (but not off)
+      // shows a confirmation first — see showStormConfirm() below —
+      // since this is an epilepsy awareness site.
+      let stormOn = false;
       try {
-        stormOn = window.localStorage.getItem("stormEffectsOn") !== "off";
+        stormOn = window.localStorage.getItem("stormEffectsOn") === "on";
       } catch (e) {
-        /* localStorage unavailable (e.g. private mode) — default stays on */
+        /* localStorage unavailable (e.g. private mode) — default stays off */
       }
       let thunderRotationIndex = 0;
       let currentlyPlaying = null;
@@ -69,23 +71,77 @@
       // silently fails to play sound (caught below) until one does; the
       // visual flash is unaffected either way.
 
+      function setStormOn(on) {
+        stormOn = on;
+        applyToggleUI();
+        try {
+          window.localStorage.setItem("stormEffectsOn", stormOn ? "on" : "off");
+        } catch (e) {
+          /* ignore */
+        }
+        if (stormOn) {
+          // Turning it on should feel immediate rather than waiting for
+          // the next 20s cycle boundary. The confirm button click (or
+          // the original toggle click, for turning off) is the user
+          // gesture that lets this strike's thunder actually play.
+          strike();
+        } else {
+          silenceThunder();
+        }
+      }
+
+      // Turning storm effects ON (but never off) shows a confirmation
+      // first, describing the flashing lights/thunder sound, instead of
+      // enabling it straight from the toggle click — see the "Turn on
+      // storm effects?" prompt in partials/chrome-pre-nav.html. Reuses
+      // the exact same .entry-locked body-visibility trick as the
+      // page-load entry warning.
+      const stormConfirm = document.getElementById("storm-confirm");
+      const stormConfirmYes = document.getElementById("storm-confirm-continue");
+      const stormConfirmNo = document.getElementById("storm-confirm-cancel");
+
+      function hideStormConfirm() {
+        if (!stormConfirm) return;
+        stormConfirm.hidden = true;
+        document.body.classList.remove("entry-locked");
+      }
+
+      function showStormConfirm() {
+        if (!stormConfirm) {
+          // No confirm UI on the page for some reason — fail open rather
+          // than leaving the toggle inert.
+          setStormOn(true);
+          return;
+        }
+        stormConfirm.hidden = false;
+        document.body.classList.add("entry-locked");
+        if (stormConfirmYes) stormConfirmYes.focus();
+      }
+
       if (toggle) {
         toggle.addEventListener("click", () => {
-          stormOn = !stormOn;
-          applyToggleUI();
-          try {
-            window.localStorage.setItem("stormEffectsOn", stormOn ? "on" : "off");
-          } catch (e) {
-            /* ignore */
-          }
           if (stormOn) {
-            // Turning it on should feel immediate rather than waiting for
-            // the next 20s cycle boundary. The click itself is the user
-            // gesture that lets this strike's thunder actually play.
-            strike();
+            setStormOn(false);
           } else {
-            silenceThunder();
+            showStormConfirm();
           }
+        });
+      }
+
+      if (stormConfirmYes) {
+        stormConfirmYes.addEventListener("click", () => {
+          hideStormConfirm();
+          setStormOn(true);
+        });
+      }
+
+      if (stormConfirmNo) {
+        stormConfirmNo.addEventListener("click", hideStormConfirm);
+      }
+
+      if (stormConfirm) {
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && !stormConfirm.hidden) hideStormConfirm();
         });
       }
 
