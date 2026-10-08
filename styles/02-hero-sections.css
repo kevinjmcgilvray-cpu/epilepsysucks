@@ -703,6 +703,18 @@
       padding: clamp(3rem, 7vw, 5rem) clamp(1.25rem, 4vw, 2.5rem);
     }
 
+    /* The fixed header's real rendered height varies a lot — the donor-
+       ticker pill's width, the nav wrapping to two rows at in-between
+       (tablet) widths, and the mobile hamburger row can all push it well
+       past the ~9.5rem default --header-h ever accounts for by default.
+       The homepage's .hero already clears it correctly via
+       calc(var(--header-h) + 1rem); every other page's opening section
+       needs the exact same treatment, or its heading renders partially
+       hidden underneath the header at those in-between widths. */
+    main#top > .section:first-child {
+      padding-top: calc(var(--header-h, 9.5rem) + 1rem);
+    }
+
     .section--alt {
       background:
         radial-gradient(ellipse 70% 50% at 80% 0%, var(--accent-soft), transparent 55%),
