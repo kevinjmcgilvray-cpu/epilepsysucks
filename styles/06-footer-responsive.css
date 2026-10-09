@@ -192,6 +192,65 @@
       padding: 0 clamp(1.25rem, 4vw, 1.85rem) clamp(1.1rem, 3vw, 1.6rem);
     }
 
+    /* /journey/timeline's expandable milestone list — deliberately
+       reuses .history-note/.history-note__summary/__chevron/__body
+       wholesale (same accordion look, already-tested keyboard/focus
+       behavior via native <details>) instead of a bespoke component.
+       Only new pieces: the connecting vertical line + per-item dot
+       marker, and the year badge inside each summary. */
+    .timeline-list {
+      position: relative;
+      list-style: none;
+      margin: 2rem 0 0;
+      padding: 0 0 0 1.85rem;
+    }
+
+    .timeline-list::before {
+      content: "";
+      position: absolute;
+      left: 0.3rem;
+      top: 0.6rem;
+      bottom: 0.6rem;
+      width: 2px;
+      background: var(--line);
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 1.25rem;
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -1.55rem;
+      top: 1.5rem;
+      width: 0.7rem;
+      height: 0.7rem;
+      border-radius: 50%;
+      background: var(--epi);
+      border: 2px solid var(--paper);
+    }
+
+    .timeline-item__year {
+      display: block;
+    }
+
+    .timeline-item__link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 48px;
+      margin-top: 0.25rem;
+      color: var(--accent-text);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .timeline-item__link:hover,
+    .timeline-item__link:focus-visible {
+      text-decoration: underline;
+    }
+
     .history-note__body p {
       margin: 0 0 0.85rem;
       font-size: 0.95rem;
