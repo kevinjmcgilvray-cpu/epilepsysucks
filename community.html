@@ -317,6 +317,47 @@ flowchart TD
           <p><a href="https://github.com/kevinjmcgilvray-cpu/epilepsysucks" target="_blank" rel="noopener noreferrer">View the source on GitHub →</a></p>
           </div>
         </details>
+
+        <details class="mechanism-note" id="page-split-wrap">
+          <summary class="mechanism-note__summary">
+            <span class="mechanism-note__summary-text">
+              <span class="eyebrow">The history</span>
+              <span class="mechanism-note__summary-title">From one page to five</span>
+            </span>
+            <span class="mechanism-note__chevron" aria-hidden="true"></span>
+          </summary>
+          <div class="mechanism-note__body">
+          <div class="arch-diagram">
+            <pre class="mermaid" id="page-split-mermaid">
+flowchart LR
+    subgraph Before["Before"]
+        Mono["index.html\n(one long page)\nhero · story · recovery ·\nmarathon · community"]
+    end
+    subgraph After["After — 5 real pages"]
+        Home["/"]
+        Journey["/my-journey"]
+        Recovery["/the-recovery"]
+        Marathon["/marathon"]
+        Community["/community"]
+    end
+    Partials["partials/*.html\nshared nav · footer ·\nrace clock · entry warning"]
+    Build["scripts/build.js\nsplices in shared partials"]
+
+    Mono -->|"sliced by exact\nline range"| Build
+    Partials --> Build
+    Build --> Home
+    Build --> Journey
+    Build --> Recovery
+    Build --> Marathon
+    Build --> Community
+            </pre>
+            <p class="arch-fallback-note">Diagram renders when you expand this panel.</p>
+          </div>
+          <p>This site used to be one really long <code>index.html</code> — hero, story, recovery, marathon, and community all on a single scroll, stitched together with <code>#anchor</code> links. It worked, but every new section made that one file (and one page load) heavier, and the nav's dropdown links were really just scrolling the same page rather than going anywhere.</p>
+          <p>So I split it into 5 real pages — <code>/</code>, <code>/my-journey</code>, <code>/the-recovery</code>, <code>/marathon</code>, <code>/community</code> — each its own static HTML file. The nav, footer, race-clock countdown, and entry warning still live in exactly one place each, in <code>partials/*.html</code>; a small build script (<code>scripts/build.js</code>) splices them into every page via <code>&lt;!-- INCLUDE:partials/xxx.html --&gt;</code> markers before anything deploys, so there's still only one copy of the header to update, not five. Every paragraph that moved pages was sliced out of the old file by its exact line range rather than retyped, so nothing changed by accident along the way.</p>
+          <p>Old bare <code>#anchor</code> links still work — hash fragments never reach the server, so that redirect runs client-side off the homepage instead, matching each old anchor to its new page.</p>
+          </div>
+        </details>
       </div>
     </section>
 

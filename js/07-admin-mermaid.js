@@ -414,7 +414,8 @@
     (function () {
       const timeline = document.getElementById("mermaid-timeline");
       const publicArchWrap = document.getElementById("public-architecture-wrap");
-      if (!timeline && !publicArchWrap) return;
+      const pageSplitWrap = document.getElementById("page-split-wrap");
+      if (!timeline && !publicArchWrap && !pageSplitWrap) return;
 
       // Keep each diagram's original source around so we can fully
       // re-render it (with correct colors) whenever the theme toggle is
@@ -561,9 +562,13 @@
         }
       }
 
-      // Same lazy-load approach for the public "Behind the code" diagram —
-      // it's a collapsed <details> too, so there's nothing to intersect
-      // until a visitor actually opens it.
+      // Same lazy-load approach for the public "Behind the code" diagrams —
+      // both are collapsed <details>, so there's nothing to intersect
+      // until a visitor actually opens one. renderPublicDiagrams() grabs
+      // every .mermaid node on the page regardless of which panel
+      // triggered it, so opening either one also renders the other if
+      // it's already open (harmless — mermaid.run() no-ops on nodes it's
+      // already processed).
       let publicArchRendered = false;
       if (publicArchWrap) {
         publicArchWrap.addEventListener("toggle", () => {
@@ -573,6 +578,18 @@
             .then(renderPublicDiagrams)
             .catch(() => {
               publicArchRendered = false;
+            });
+        });
+      }
+      let pageSplitRendered = false;
+      if (pageSplitWrap) {
+        pageSplitWrap.addEventListener("toggle", () => {
+          if (!pageSplitWrap.open || pageSplitRendered) return;
+          pageSplitRendered = true;
+          ensureMermaid()
+            .then(renderPublicDiagrams)
+            .catch(() => {
+              pageSplitRendered = false;
             });
         });
       }
