@@ -290,6 +290,25 @@
         line-height: 1.1;
       }
 
+      /* On its own row here (see relocateDonorTicker() in
+         01-nav-theme-cursor.js) there's no neighbor fighting it for
+         space, so let it use the full row width instead of the
+         desktop single-line/ellipsis treatment — some donor
+         dedications ("The Slack Family, friends of Dallas's family")
+         are long enough that nowrap+ellipsis clipped them mid-word
+         with no visible "…" (ellipsis doesn't reliably render across
+         a flex container's multiple child text nodes). Wrapping to a
+         second line keeps every name fully readable instead. */
+      .donor-ticker {
+        max-width: 100%;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+        border-radius: 0.9rem;
+      }
+
       .nav__funds {
         display: flex;
         position: relative;
@@ -349,6 +368,13 @@
         top: 100%;
         left: 0;
         right: 0;
+        /* The desktop rule above caps this at min(45rem, 72vw) so the
+           horizontal pill row doesn't crowd the brand/funds area — that
+           cap must not carry over here, or the collapsed menu panel
+           ends up narrower than nav__top, leaving the close ("✕")
+           button floating to the right of the panel instead of sitting
+           in its corner. */
+        max-width: none;
         flex-direction: column;
         align-items: stretch;
         gap: 0;
@@ -514,6 +540,19 @@
         width: 100%;
       }
 
+      /* Same reasoning as the 960px block above — the ticker now has
+         its own row, so let long donor names/dedications wrap to a
+         second line instead of being clipped mid-word. */
+      .donor-ticker {
+        max-width: 100%;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+        border-radius: 0.9rem;
+      }
+
       .nav__toggle {
         position: absolute;
         top: 0;
@@ -532,6 +571,9 @@
         top: 100%;
         left: 0;
         right: 0;
+        /* See the matching comment in the 960px block above — same
+           desktop max-width cap, same reason it needs clearing here. */
+        max-width: none;
         flex-direction: column;
         align-items: stretch;
         gap: 0;
@@ -686,6 +728,18 @@
       width: 100%;
     }
 
+    /* JS-driven fallback/duplicate of the media query above — see the
+       comment there for why this exists (Safari orientationchange lag). */
+    html.is-landscape-compact .donor-ticker {
+      max-width: 100%;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+      border-radius: 0.9rem;
+    }
+
     html.is-landscape-compact .nav__toggle {
       position: absolute;
       top: 0;
@@ -704,6 +758,10 @@
       top: 100%;
       left: 0;
       right: 0;
+      /* Same desktop max-width cap cleared here as in the two media
+         query blocks above (this is the JS-driven duplicate of the
+         landscape one, kept in sync per the comment up top). */
+      max-width: none;
       flex-direction: column;
       align-items: stretch;
       gap: 0;

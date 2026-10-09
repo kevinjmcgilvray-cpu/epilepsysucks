@@ -263,6 +263,106 @@ async function run(baseUrl) {
     await context.close();
   }
 
+  // 10. Mobile header: the donor-ticker notification pill keeps a clear
+  // gap from the hamburger icon, and the open menu panel spans the
+  // full header width so the close ("✕") button sits in its corner
+  // instead of floating to the right of a narrower panel.
+  {
+    const context = await browser.newContext({ viewport: { width: 320, height: 700 } });
+    const page = await freshPage(context, "mobile-header-spacing", errors);
+    await page.goto(`${baseUrl}/index.html`);
+    await page.click("#entry-warning-continue");
+    await page.waitForTimeout(100);
+
+    const tickerBox = await page.locator("#donor-ticker").boundingBox();
+    const toggleBox = await page.locator("#nav-toggle").boundingBox();
+    // The ticker now lives on its own row below the funds-stats row (see
+    // the donor-ticker-mobile-position test below), so it no longer
+    // shares a row with the hamburger at all — just assert they don't
+    // visually overlap, however they're laid out.
+    const overlaps =
+      tickerBox.x < toggleBox.x + toggleBox.width &&
+      tickerBox.x + tickerBox.width > toggleBox.x &&
+      tickerBox.y < toggleBox.y + toggleBox.height &&
+      tickerBox.y + tickerBox.height > toggleBox.y;
+    check("Donor-ticker never overlaps the hamburger icon", !overlaps, JSON.stringify({ tickerBox, toggleBox }));
+
+    await page.click("#nav-toggle");
+    await page.waitForTimeout(100);
+    const topBox = await page.locator(".nav__top").boundingBox();
+    const linksBox = await page.locator("#nav-links").boundingBox();
+    const toggleBoxOpen = await page.locator("#nav-toggle").boundingBox();
+    check(
+      "Open menu panel spans the full header width (no leftover desktop max-width)",
+      Math.abs(linksBox.width - topBox.width) < 1,
+      `panel=${linksBox.width} top=${topBox.width}`
+    );
+    check(
+      "Close button stays pinned to the panel's upper-right corner",
+      Math.abs(toggleBoxOpen.x + toggleBoxOpen.width - (linksBox.x + linksBox.width)) < 1,
+      `toggleRight=${toggleBoxOpen.x + toggleBoxOpen.width} panelRight=${linksBox.x + linksBox.width}`
+    );
+    await context.close();
+  }
+
+  // 11. Donor-ticker placement: inline next to the brand name on
+  // desktop, but relocated between the funds-stats row and the CURE
+  // Epilepsy cause line on the collapsed mobile header.
+  {
+    const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+    const page = await freshPage(context, "donor-ticker-mobile-position", errors);
+    await page.goto(`${baseUrl}/index.html`);
+    await page.click("#entry-warning-continue");
+    await page.waitForTimeout(150);
+    const order = await page.evaluate(() =>
+      Array.from(document.querySelector(".nav__left").children).map((c) => c.className)
+    );
+    check(
+      "Mobile: donor-ticker sits between funds-row and cause",
+      order.join(",") === "nav__brand-row,nav__funds-row,donor-ticker,nav__cause",
+      order.join(",")
+    );
+    await context.close();
+  }
+  {
+    const context = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+    const page = await freshPage(context, "donor-ticker-desktop-position", errors);
+    await page.goto(`${baseUrl}/index.html`);
+    await page.click("#entry-warning-continue");
+    await page.waitForTimeout(150);
+    const parentClass = await page.evaluate(
+      () => document.getElementById("donor-ticker").parentElement.className
+    );
+    check("Desktop: donor-ticker stays inline with the brand name", parentClass === "nav__brand-row", parentClass);
+    await context.close();
+  }
+
+  // 12. Donor-ticker on mobile wraps long donor names/dedications
+  // instead of clipping them mid-word (desktop keeps its single-line
+  // ellipsis treatment, since it has less room to work with there).
+  {
+    const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+    const page = await freshPage(context, "donor-ticker-long-name", errors);
+    await page.goto(`${baseUrl}/index.html`);
+    await page.click("#entry-warning-continue");
+    await page.waitForTimeout(100);
+    await page.evaluate(() => {
+      document.getElementById("donor-ticker-name").textContent =
+        "The Slack Family, friends of Dallas's family";
+    });
+    await page.waitForTimeout(100);
+    const sizes = await page.locator("#donor-ticker").evaluate((el) => ({
+      scrollWidth: el.scrollWidth,
+      clientWidth: el.clientWidth,
+    }));
+    check(
+      "Mobile: long donor dedication isn't clipped (wraps instead)",
+      sizes.scrollWidth <= sizes.clientWidth + 1,
+      JSON.stringify(sizes)
+    );
+    await context.close();
+  }
+
   const relevantErrors = errors.filter((e) => !e.includes("404"));
   check("No unexpected console/page errors", relevantErrors.length === 0, relevantErrors.join(" | "));
 

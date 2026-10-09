@@ -355,6 +355,54 @@
       }
     })();
 
+    // Donor-ticker ("thank you for your donation!") placement: inline
+    // next to the brand name on desktop/tablet, same as always, but
+    // moved to sit between the funds-stats row and the CURE Epilepsy
+    // cause line on the collapsed mobile header — there isn't room for
+    // it next to the brand text at that width without crowding the
+    // hamburger icon. A pure-CSS reorder can't do this: order/grid-area
+    // only reorder direct siblings, and the ticker's desktop position
+    // is nested one level deeper (inside .nav__brand-row) than where it
+    // needs to land on mobile (a direct child of .nav__left, alongside
+    // .nav__funds-row/.nav__cause) — so it has to actually move parents.
+    (function relocateDonorTicker() {
+      const ticker = document.getElementById("donor-ticker");
+      const brandRow = document.querySelector(".nav__brand-row");
+      const navLeft = document.querySelector(".nav__left");
+      const cause = document.querySelector(".nav__cause");
+      if (!ticker || !brandRow || !navLeft || !cause) return;
+
+      // Same width this header collapses to a hamburger at (see the
+      // @media (max-width: 960px) block in 06-footer-responsive.css).
+      const mobileQuery = window.matchMedia("(max-width: 960px)");
+
+      function placeTicker() {
+        // Width-based collapse, or the short-landscape collapse that
+        // can kick in regardless of width (see landscapeCompactHeader
+        // above) — either one means the hamburger/stacked layout is
+        // active, so the ticker belongs in its mobile position.
+        const collapsed =
+          mobileQuery.matches || document.documentElement.classList.contains("is-landscape-compact");
+        if (collapsed) {
+          navLeft.insertBefore(ticker, cause);
+        } else {
+          brandRow.appendChild(ticker);
+        }
+      }
+
+      placeTicker();
+      mobileQuery.addEventListener("change", placeTicker);
+      // Ride the same resize/orientationchange events landscapeCompactHeader
+      // uses (including its Safari-lag retries) so the ticker's parent
+      // never lags a frame behind the header's own collapsed state.
+      window.addEventListener("resize", placeTicker, { passive: true });
+      window.addEventListener("orientationchange", () => {
+        setTimeout(placeTicker, 50);
+        setTimeout(placeTicker, 300);
+        setTimeout(placeTicker, 600);
+      });
+    })();
+
     // Nav dropdown categories (My Journey / The Recovery / Marathon /
     // Community). One shared toggle mechanism drives both desktop
     // (where CSS also reveals the panel on hover for fine pointers,
