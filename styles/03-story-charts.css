@@ -718,5 +718,8 @@
     .mechanism-sim__buttons .btn {
       padding: 0.55rem 1rem;
       font-size: 0.85rem;
+      /* 48px floor for mobile touch targets (WCAG 2.5.8) — this
+         compact padding alone rendered at ~37px tall. */
+      min-height: 48px;
     }
 

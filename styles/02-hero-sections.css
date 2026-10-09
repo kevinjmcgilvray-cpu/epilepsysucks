@@ -345,8 +345,12 @@
       background: none;
       border: 1px solid var(--line);
       color: var(--paper);
-      width: 2.5rem;
-      height: 2.5rem;
+      /* 48px floor for mobile touch targets (WCAG 2.5.8) — was 2.5rem
+         (40px). The landscape + is-landscape-compact overrides in
+         06-footer-responsive.css redeclare this smaller (2rem); those
+         are bumped to match, see the comments there. */
+      width: 3rem;
+      height: 3rem;
       cursor: pointer;
       font-size: 1.1rem;
     }
@@ -691,7 +695,13 @@
       z-index: 15;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 0.4rem;
+      /* 48px floor for mobile touch targets (WCAG 2.5.8) — was ~41px
+         tall at the base padding, and the 480px block below shrinks
+         padding further; min-height carries through both since
+         neither redeclares it. */
+      min-height: 48px;
       padding: 0.75rem 1.15rem;
       border-radius: 999px;
       border: 1px solid #c4a4ff;
@@ -887,6 +897,11 @@
       text-decoration: underline;
       text-decoration-color: transparent;
       transition: text-decoration-color 0.2s ease;
+      /* 48px floor for mobile touch targets (WCAG 2.5.8) — this is our
+         own standalone CTA link (shown only if the Instagram/Facebook
+         widget fails to load), not inline text in running prose, so
+         it doesn't get the "inline link" exemption. */
+      min-height: 48px;
     }
 
     .social-feed__fallback:hover {

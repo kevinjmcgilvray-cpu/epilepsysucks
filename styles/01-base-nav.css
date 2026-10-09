@@ -447,10 +447,24 @@
     }
 
     .nav__brand {
+      display: inline-flex;
+      align-items: center;
       font-family: var(--font-display);
       font-size: 1.35rem;
       letter-spacing: 0.08em;
       text-transform: uppercase;
+      /* 48px floor for mobile touch targets (WCAG 2.5.8). We tried an
+         invisible ::after hit-slop overlay here first (to avoid
+         growing the row), but it silently failed: .nav__brand-row sits
+         directly above .nav__funds-row with only a few px of gap, so
+         the overlay's downward reach landed on top of
+         .nav__funds-stats and swallowed clicks meant for the brand
+         link instead of extending it. Real growth is the only
+         reliable fix — .nav__brand-row's align-items: center absorbs
+         it by vertically centering the row's other children (the
+         donor ticker) alongside the taller link instead of clipping
+         or shifting anything. */
+      min-height: 48px;
     }
 
     /* nav__left keeps its brand/funds/cause markup grouped, but on
@@ -477,8 +491,10 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 2rem;
-      height: 2rem;
+      /* 48px floor for mobile touch targets (WCAG 2.5.8) — same reason
+         .storm-toggle below grew from 2rem too. */
+      width: 3rem;
+      height: 3rem;
       padding: 0;
       border: 1px solid rgba(180, 140, 255, 0.55);
       border-radius: 999px;
@@ -511,8 +527,11 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 2rem;
-      height: 2rem;
+      /* 48px floor for mobile touch targets (WCAG 2.5.8) — was 2rem
+         (32px), too small to meet it. Also covers .cursor-toggle,
+         which only adds its own color/glow on top of this sizing. */
+      width: 3rem;
+      height: 3rem;
       padding: 0;
       border: 1px solid rgba(180, 140, 255, 0.55);
       border-radius: 999px;
@@ -737,6 +756,9 @@
       align-items: baseline;
       gap: 0.2rem 0.4rem;
       max-width: 100%;
+      /* 48px floor for mobile touch targets (WCAG 2.5.8) — was 1px
+         short at the default content height. */
+      min-height: 48px;
       font-size: 0.92rem;
       letter-spacing: 0.02em;
       color: var(--paper);

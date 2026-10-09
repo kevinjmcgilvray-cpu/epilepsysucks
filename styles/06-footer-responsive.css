@@ -406,6 +406,8 @@
         margin: 0.35rem 0;
         font-size: 0.85rem;
         box-sizing: border-box;
+        /* 48px floor for mobile touch targets (WCAG 2.5.8). */
+        min-height: 48px;
       }
 
       .nav__cta {
@@ -431,12 +433,18 @@
         flex: 1 1 auto;
         justify-content: center;
         padding: 0.75rem 0.5rem 0.75rem 1rem;
+        /* 48px floor for mobile touch targets (WCAG 2.5.8). */
+        min-height: 48px;
       }
 
       .nav__links .nav__dropdown-caret {
         flex: 0 0 auto;
         justify-content: center;
         padding: 0.75rem 1rem 0.75rem 0.5rem;
+        /* 48px floor for mobile touch targets (WCAG 2.5.8) — was
+           31x39, too small both ways. */
+        min-width: 48px;
+        min-height: 48px;
       }
 
       /* Dropdown nav categories become inline accordions in the
@@ -560,8 +568,10 @@
         z-index: 6;
         display: grid;
         place-items: center;
-        width: 2rem;
-        height: 2rem;
+        /* 48px floor for mobile touch targets (WCAG 2.5.8) — was 2rem
+           (32px), smaller than even the un-overridden 960px block. */
+        width: 3rem;
+        height: 3rem;
         flex-shrink: 0;
       }
 
@@ -607,6 +617,8 @@
         margin: 0.3rem 0;
         font-size: 0.85rem;
         box-sizing: border-box;
+        /* 48px floor for mobile touch targets (WCAG 2.5.8). */
+        min-height: 48px;
       }
 
       .nav__links .nav__dropdown-trigger {
@@ -623,12 +635,17 @@
         flex: 1 1 auto;
         justify-content: center;
         padding: 0.65rem 0.5rem 0.65rem 1rem;
+        /* 48px floor for mobile touch targets (WCAG 2.5.8). */
+        min-height: 48px;
       }
 
       .nav__links .nav__dropdown-caret {
         flex: 0 0 auto;
         justify-content: center;
         padding: 0.65rem 1rem 0.65rem 0.5rem;
+        /* 48px floor for mobile touch targets (WCAG 2.5.8). */
+        min-width: 48px;
+        min-height: 48px;
       }
 
       .nav__dropdown-menu {
@@ -747,8 +764,10 @@
       z-index: 6;
       display: grid;
       place-items: center;
-      width: 2rem;
-      height: 2rem;
+      /* 48px floor for mobile touch targets (WCAG 2.5.8) — see matching
+         comment in the landscape media-query block above. */
+      width: 3rem;
+      height: 3rem;
       flex-shrink: 0;
     }
 
@@ -795,6 +814,8 @@
       margin: 0.3rem 0;
       font-size: 0.85rem;
       box-sizing: border-box;
+      /* 48px floor for mobile touch targets (WCAG 2.5.8). */
+      min-height: 48px;
     }
 
     html.is-landscape-compact .nav__links .nav__dropdown-trigger {
@@ -811,12 +832,17 @@
       flex: 1 1 auto;
       justify-content: center;
       padding: 0.65rem 0.5rem 0.65rem 1rem;
+      /* 48px floor for mobile touch targets (WCAG 2.5.8). */
+      min-height: 48px;
     }
 
     html.is-landscape-compact .nav__links .nav__dropdown-caret {
       flex: 0 0 auto;
       justify-content: center;
       padding: 0.65rem 1rem 0.65rem 0.5rem;
+      /* 48px floor for mobile touch targets (WCAG 2.5.8). */
+      min-width: 48px;
+      min-height: 48px;
     }
 
     html.is-landscape-compact .nav__dropdown-menu {
