@@ -17,7 +17,7 @@
 //
 // Runs against dist/ (post-build) and loops over all 5 pages — the
 // rich content that used to all live on one index.html (and get
-// scanned there) now lives split across my-journey/the-recovery/
+// scanned there) now lives split across journey/recovery/
 // marathon/community, so scanning only index.html would silently stop
 // covering almost all of the site's actual text.
 const fs = require("fs");
@@ -27,7 +27,7 @@ const { startServer } = require("./_server");
 const { check, report } = require("./_assert");
 
 const DIST = path.join(__dirname, "..", "dist");
-const PAGES = ["index.html", "my-journey.html", "the-recovery.html", "marathon.html", "community.html"];
+const PAGES = ["index.html", "journey.html", "recovery.html", "marathon.html", "community.html"];
 
 // [tag, class-substring, text-prefix] — matched loosely; see comment above.
 const KNOWN_EXCEPTIONS = [
@@ -52,8 +52,8 @@ function isKnownException(r) {
 // regressed on that specific page.
 const BASELINE_LOW_CONTRAST_COUNT = {
   "index.html": { dark: 0, light: 0 },
-  "my-journey.html": { dark: 0, light: 0 },
-  "the-recovery.html": { dark: 0, light: 0 },
+  "journey.html": { dark: 0, light: 0 },
+  "recovery.html": { dark: 0, light: 0 },
   "marathon.html": { dark: 0, light: 0 },
   "community.html": { dark: 0, light: 0 }
 };

@@ -424,7 +424,7 @@
       }
 
       // Only the caret button toggles the submenu now — the trigger's
-      // link text (e.g. "My Journey") is a real <a href="/my-journey">
+      // link text (e.g. "My Journey") is a real <a href="/journey">
       // that navigates directly, same as any other link, with nothing
       // here intercepting its click. Desktop also gets the submenu via
       // :hover/:focus-within (see styles/02-hero-sections.css) with no
