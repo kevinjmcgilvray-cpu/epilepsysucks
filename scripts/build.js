@@ -48,7 +48,7 @@ const CSS_ORDER = [
 // links and old-anchor redirects can use the clean, extension-less
 // form). Each one shares the same partials/ chrome via <!-- INCLUDE -->
 // markers resolved below.
-const PAGES = ["index.html", "journey.html", "recovery.html", "marathon.html", "community.html"];
+const PAGES = ["index.html", "journey.html", "recovery.html", "marathon.html", "community.html", "resources.html"];
 
 // Top-level files/dirs that are dev/build-only (or, for api/, deployed
 // separately by Vercel as serverless functions regardless of
