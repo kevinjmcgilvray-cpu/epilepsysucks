@@ -337,6 +337,32 @@ async function run(baseUrl) {
     await context.close();
   }
 
+  // 12. Donor-ticker on mobile wraps long donor names/dedications
+  // instead of clipping them mid-word (desktop keeps its single-line
+  // ellipsis treatment, since it has less room to work with there).
+  {
+    const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+    const page = await freshPage(context, "donor-ticker-long-name", errors);
+    await page.goto(`${baseUrl}/index.html`);
+    await page.click("#entry-warning-continue");
+    await page.waitForTimeout(100);
+    await page.evaluate(() => {
+      document.getElementById("donor-ticker-name").textContent =
+        "The Slack Family, friends of Dallas's family";
+    });
+    await page.waitForTimeout(100);
+    const sizes = await page.locator("#donor-ticker").evaluate((el) => ({
+      scrollWidth: el.scrollWidth,
+      clientWidth: el.clientWidth,
+    }));
+    check(
+      "Mobile: long donor dedication isn't clipped (wraps instead)",
+      sizes.scrollWidth <= sizes.clientWidth + 1,
+      JSON.stringify(sizes)
+    );
+    await context.close();
+  }
+
   const relevantErrors = errors.filter((e) => !e.includes("404"));
   check("No unexpected console/page errors", relevantErrors.length === 0, relevantErrors.join(" | "));
 
