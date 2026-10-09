@@ -701,3 +701,62 @@
       text-align: center;
     }
 
+    /* Trust-signal fine print, anchored directly under a donate CTA
+       row (not just mentioned somewhere else on the page) — the
+       fundraising-optimization ask was specifically to put this *near*
+       the button, since that's the moment a donor is actually
+       deciding. Reuses the hero/mission/marathon sections' existing
+       --paper-faint/--paper-dim theme vars, so it looks right in both
+       the light hero and the dark .section--alt/.section--marathon
+       contexts without any extra overrides. */
+    .donate-trust {
+      margin-top: 0.75rem;
+      font-size: 0.82rem;
+      color: var(--paper-faint);
+    }
+
+    /* $/mile impact callouts — a few preset amounts tied to the real
+       26.2-mile race distance (not fabricated stats), each still
+       linking out to the real donation page so a visitor picks their
+       own exact amount there. Visually mirrors .hub-pillar/
+       .training-status__card's existing card-grid + hover-lift
+       pattern, as its own component since neither of those is a
+       <a>-friendly, hover-interactive style on its own. */
+    .impact-callouts {
+      margin-top: 1.5rem;
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+    }
+
+    .impact-callout {
+      display: block;
+      border: 1px solid var(--line);
+      padding: 1rem 1.1rem;
+      background: var(--surface-muted);
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .impact-callout:hover,
+    .impact-callout:focus-visible {
+      transform: translateY(-3px);
+      border-color: var(--epi);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+    }
+
+    .impact-callout__amount {
+      font-family: var(--font-display);
+      font-size: 1.65rem;
+      letter-spacing: 0.04em;
+      color: var(--accent-text);
+      line-height: 1.1;
+    }
+
+    .impact-callout__detail {
+      margin-top: 0.35rem;
+      font-size: 0.85rem;
+      color: var(--paper-dim);
+    }
+
