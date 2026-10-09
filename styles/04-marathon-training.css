@@ -5,6 +5,18 @@
    ties against earlier ones at equal specificity, same as when this
    was one file). */
 
+    .reasons-list {
+      list-style: none;
+      display: grid;
+      gap: 0.85rem;
+      margin: 1.1rem 0 0;
+    }
+
+    .reasons-list li {
+      padding-left: 1.1rem;
+      border-left: 2px solid var(--epi);
+    }
+
     .mechanism-sim__readout {
       margin: 0.9rem 0 0;
       font-size: 0.85rem;
