@@ -15,7 +15,7 @@
 //      keyboard-only skip link, third-party widget content we don't
 //      control) so CI only fails on genuinely new regressions.
 //
-// Runs against dist/ (post-build) and loops over all 5 pages — the
+// Runs against dist/ (post-build) and loops over every page — the
 // rich content that used to all live on one index.html (and get
 // scanned there) now lives split across journey/recovery/
 // marathon/community, so scanning only index.html would silently stop
@@ -27,7 +27,7 @@ const { startServer } = require("./_server");
 const { check, report } = require("./_assert");
 
 const DIST = path.join(__dirname, "..", "dist");
-const PAGES = ["index.html", "journey.html", "recovery.html", "marathon.html", "community.html"];
+const PAGES = ["index.html", "journey.html", "recovery.html", "marathon.html", "community.html", "resources.html"];
 
 // [tag, class-substring, text-prefix] — matched loosely; see comment above.
 const KNOWN_EXCEPTIONS = [
@@ -55,7 +55,8 @@ const BASELINE_LOW_CONTRAST_COUNT = {
   "journey.html": { dark: 0, light: 0 },
   "recovery.html": { dark: 0, light: 0 },
   "marathon.html": { dark: 0, light: 0 },
-  "community.html": { dark: 0, light: 0 }
+  "community.html": { dark: 0, light: 0 },
+  "resources.html": { dark: 0, light: 0 }
 };
 
 async function scanTheme(browser, baseUrl, theme, route) {

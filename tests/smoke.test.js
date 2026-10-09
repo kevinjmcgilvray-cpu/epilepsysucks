@@ -17,7 +17,7 @@ const { startServer } = require("./_server");
 const { check, report, captureFailureArtifact } = require("./_assert");
 
 const DIST = path.join(__dirname, "..", "dist");
-const PAGES = ["index.html", "journey.html", "recovery.html", "marathon.html", "community.html"];
+const PAGES = ["index.html", "journey.html", "recovery.html", "marathon.html", "community.html", "resources.html"];
 
 async function run(baseUrl) {
   const browser = await chromium.launch();
@@ -32,7 +32,7 @@ async function run(baseUrl) {
   for (const route of PAGES) {
     await page.goto(`${baseUrl}/${route}`);
     // The entry-warning ack is stored in localStorage (shared per
-    // origin across all 5 pages), so this only ever actually clicks on
+    // origin across all pages), so this only ever actually clicks on
     // the first page of the loop — later pages see hidden=true already.
     const warningVisible = await page.evaluate(() => !document.getElementById("entry-warning").hidden);
     if (warningVisible) {
@@ -76,7 +76,7 @@ async function run(baseUrl) {
       !e.includes("X-Frame-Options") &&
       !/status of 400/.test(e)
   );
-  check("No unexpected console/page errors across full scroll of all 5 pages", relevant.length === 0, relevant.join(" | "));
+  check(`No unexpected console/page errors across full scroll of all ${PAGES.length} pages`, relevant.length === 0, relevant.join(" | "));
 
   await captureFailureArtifact(page, "smoke");
   await browser.close();
