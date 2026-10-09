@@ -136,6 +136,9 @@
     .pace-calc__presets .btn {
       padding: 0.5rem 0.85rem;
       font-size: 0.78rem;
+      /* 48px floor for mobile touch targets (WCAG 2.5.8) — this
+         compact padding alone rendered at ~34px tall. */
+      min-height: 48px;
     }
 
     .pace-calc__summary {
@@ -426,6 +429,8 @@
     }
 
     .owner-update-form summary {
+      display: flex;
+      align-items: center;
       cursor: pointer;
       list-style: none;
       font-size: 0.85rem;
@@ -433,6 +438,9 @@
       text-transform: uppercase;
       color: var(--paper-faint);
       padding: 0.35rem 0;
+      /* 48px floor for mobile touch targets (WCAG 2.5.8) — these are
+         Kevin's own admin disclosure toggles, used from his phone too. */
+      min-height: 48px;
     }
 
     .owner-update-form summary::-webkit-details-marker {
@@ -521,6 +529,7 @@
     }
 
     .comment-form input,
+    .comment-form select,
     .comment-form textarea {
       width: 100%;
       padding: 0.75rem 0.85rem;
@@ -531,9 +540,13 @@
       font-size: 1rem;
       line-height: 1.45;
       border-radius: 0;
+      /* 48px floor for mobile touch targets (WCAG 2.5.8) — <select>
+         had no padding of its own before, rendering at ~19px tall. */
+      min-height: 48px;
     }
 
     .comment-form input:focus,
+    .comment-form select:focus,
     .comment-form textarea:focus {
       outline: 2px solid var(--epi);
       outline-offset: 2px;
