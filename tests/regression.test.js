@@ -195,6 +195,74 @@ async function run(baseUrl) {
     await context.close();
   }
 
+  // 8. Nav dropdowns: parent link navigates directly, the caret is the
+  // only click target that toggles the submenu, and desktop also
+  // reveals the submenu on hover with zero clicks.
+  {
+    const context = await browser.newContext();
+    const page = await freshPage(context, "nav-dropdown-desktop", errors);
+    await page.goto(`${baseUrl}/index.html`);
+    await page.click("#entry-warning-continue");
+    await page.waitForTimeout(100);
+
+    const trigger = page.locator(".nav__dropdown").first();
+    const menu = trigger.locator(".nav__dropdown-menu");
+
+    const closedBeforeHover = await menu.evaluate((el) => getComputedStyle(el).visibility);
+    check("Dropdown menu hidden before hover/click", closedBeforeHover === "hidden", closedBeforeHover);
+
+    await trigger.hover();
+    await page.waitForTimeout(150);
+    const visibleOnHover = await menu.evaluate((el) => getComputedStyle(el).visibility);
+    check("Dropdown menu reveals on hover with no click", visibleOnHover === "visible", visibleOnHover);
+
+    await page.mouse.move(5, 5);
+    await page.waitForTimeout(150);
+
+    const caret = trigger.locator(".nav__dropdown-caret");
+    const expandedBefore = await caret.getAttribute("aria-expanded");
+    check("Caret starts aria-expanded=false", expandedBefore === "false", expandedBefore);
+    await caret.click();
+    await page.waitForTimeout(100);
+    const expandedAfter = await caret.getAttribute("aria-expanded");
+    const urlAfterCaretClick = page.url();
+    check("Caret click toggles aria-expanded without navigating", expandedAfter === "true" && urlAfterCaretClick.endsWith("/index.html"), `${expandedAfter} ${urlAfterCaretClick}`);
+    const isOpen = await trigger.evaluate((el) => el.classList.contains("is-open"));
+    check("Caret click adds is-open class", isOpen === true, isOpen);
+
+    await page.locator(".nav__dropdown-link").first().click();
+    await page.waitForLoadState("domcontentloaded");
+    const urlAfterLinkClick = page.url();
+    check("Clicking the parent link navigates directly", urlAfterLinkClick.includes("/my-journey"), urlAfterLinkClick);
+    await context.close();
+  }
+
+  // 9. Nav dropdowns on mobile: the link still navigates directly, and
+  // the caret still drives the tap-to-expand accordion.
+  {
+    const context = await browser.newContext({ viewport: { width: 480, height: 850 } });
+    const page = await freshPage(context, "nav-dropdown-mobile", errors);
+    await page.goto(`${baseUrl}/index.html`);
+    await page.click("#entry-warning-continue");
+    await page.waitForTimeout(100);
+    await page.click("#nav-toggle");
+    await page.waitForTimeout(100);
+
+    const trigger = page.locator(".nav__dropdown").first();
+    const caret = trigger.locator(".nav__dropdown-caret");
+    await caret.click();
+    await page.waitForTimeout(100);
+    const isOpen = await trigger.evaluate((el) => el.classList.contains("is-open"));
+    check("Mobile: caret tap expands the accordion", isOpen === true, isOpen);
+    const stillOnIndex = page.url().endsWith("/index.html");
+    check("Mobile: caret tap does not navigate", stillOnIndex, page.url());
+
+    await page.locator(".nav__dropdown-link").first().click();
+    await page.waitForLoadState("domcontentloaded");
+    check("Mobile: link tap navigates directly", page.url().includes("/my-journey"), page.url());
+    await context.close();
+  }
+
   const relevantErrors = errors.filter((e) => !e.includes("404"));
   check("No unexpected console/page errors", relevantErrors.length === 0, relevantErrors.join(" | "));
 

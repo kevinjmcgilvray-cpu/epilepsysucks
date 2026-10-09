@@ -366,8 +366,8 @@
 
       function closeDropdown(dd) {
         dd.classList.remove("is-open");
-        const trigger = dd.querySelector(".nav__dropdown-trigger");
-        if (trigger) trigger.setAttribute("aria-expanded", "false");
+        const caret = dd.querySelector(".nav__dropdown-caret");
+        if (caret) caret.setAttribute("aria-expanded", "false");
       }
       function closeAllDropdowns(except) {
         dropdowns.forEach((dd) => {
@@ -375,15 +375,22 @@
         });
       }
 
+      // Only the caret button toggles the submenu now — the trigger's
+      // link text (e.g. "My Journey") is a real <a href="/my-journey">
+      // that navigates directly, same as any other link, with nothing
+      // here intercepting its click. Desktop also gets the submenu via
+      // :hover/:focus-within (see styles/02-hero-sections.css) with no
+      // JS involved; this click toggle is what touch/keyboard users
+      // without a hover state rely on.
       dropdowns.forEach((dd) => {
-        const trigger = dd.querySelector(".nav__dropdown-trigger");
-        if (!trigger) return;
-        trigger.addEventListener("click", (e) => {
+        const caret = dd.querySelector(".nav__dropdown-caret");
+        if (!caret) return;
+        caret.addEventListener("click", (e) => {
           e.stopPropagation();
           const willOpen = !dd.classList.contains("is-open");
           closeAllDropdowns(dd);
           dd.classList.toggle("is-open", willOpen);
-          trigger.setAttribute("aria-expanded", String(willOpen));
+          caret.setAttribute("aria-expanded", String(willOpen));
         });
       });
 

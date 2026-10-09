@@ -220,9 +220,60 @@
       position: relative;
     }
 
+    /* Split trigger: .nav__dropdown-trigger is a <span> that still
+       carries .nav__cta, so it keeps the shared pill chrome
+       (gradient/border/shadow/shimmer) as a non-interactive wrapper.
+       Inside it, .nav__dropdown-link is a real <a href="/..."> that
+       navigates straight to the category's page with no JS attached,
+       and .nav__dropdown-caret is the only click target that toggles
+       the submenu — kept small and separate so the two actions never
+       fight over the same tap target. */
+    .nav__cta.nav__dropdown-trigger {
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .nav__dropdown-link,
+    .nav__dropdown-caret {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      color: inherit;
+      font: inherit;
+      letter-spacing: inherit;
+      text-transform: inherit;
+      text-decoration: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .nav__dropdown-link {
+      padding: 0.55rem 0.3rem 0.55rem 1rem;
+    }
+
+    .nav__dropdown-caret {
+      padding: 0.55rem 1rem 0.55rem 0.3rem;
+    }
+
+    .nav__dropdown-caret:hover,
+    .nav__dropdown-caret:focus-visible {
+      background: rgba(255, 255, 255, 0.14);
+      outline: none;
+    }
+
+    .nav__links .nav__dropdown-link {
+      padding: 0.45rem 0.25rem 0.45rem 0.75rem;
+    }
+
+    .nav__links .nav__dropdown-caret {
+      padding: 0.45rem 0.75rem 0.45rem 0.25rem;
+    }
+
     .nav__caret {
       display: inline-block;
-      margin-left: 0.3rem;
+      margin-left: 0;
       font-size: 0.7em;
       transition: transform 0.2s ease;
     }
