@@ -335,8 +335,8 @@ flowchart LR
     end
     subgraph After["After — 5 real pages"]
         Home["/"]
-        Journey["/my-journey"]
-        Recovery["/the-recovery"]
+        Journey["/journey"]
+        Recovery["/recovery"]
         Marathon["/marathon"]
         Community["/community"]
     end
@@ -354,7 +354,7 @@ flowchart LR
             <p class="arch-fallback-note">Diagram renders when you expand this panel.</p>
           </div>
           <p>This site used to be one really long <code>index.html</code> — hero, story, recovery, marathon, and community all on a single scroll, stitched together with <code>#anchor</code> links. It worked, but every new section made that one file (and one page load) heavier, and the nav's dropdown links were really just scrolling the same page rather than going anywhere.</p>
-          <p>So I split it into 5 real pages — <code>/</code>, <code>/my-journey</code>, <code>/the-recovery</code>, <code>/marathon</code>, <code>/community</code> — each its own static HTML file. The nav, footer, race-clock countdown, and entry warning still live in exactly one place each, in <code>partials/*.html</code>; a small build script (<code>scripts/build.js</code>) splices them into every page via <code>&lt;!-- INCLUDE:partials/xxx.html --&gt;</code> markers before anything deploys, so there's still only one copy of the header to update, not five. Every paragraph that moved pages was sliced out of the old file by its exact line range rather than retyped, so nothing changed by accident along the way.</p>
+          <p>So I split it into 5 real pages — <code>/</code>, <code>/journey</code>, <code>/recovery</code>, <code>/marathon</code>, <code>/community</code> — each its own static HTML file. The nav, footer, race-clock countdown, and entry warning still live in exactly one place each, in <code>partials/*.html</code>; a small build script (<code>scripts/build.js</code>) splices them into every page via <code>&lt;!-- INCLUDE:partials/xxx.html --&gt;</code> markers before anything deploys, so there's still only one copy of the header to update, not five. Every paragraph that moved pages was sliced out of the old file by its exact line range rather than retyped, so nothing changed by accident along the way.</p>
           <p>Old bare <code>#anchor</code> links still work — hash fragments never reach the server, so that redirect runs client-side off the homepage instead, matching each old anchor to its new page.</p>
           </div>
         </details>

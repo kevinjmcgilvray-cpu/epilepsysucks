@@ -378,7 +378,7 @@
     /* Homepage-only: let every section show the fixed body backdrop
        above instead of its own gradient, so scrolling the homepage
        never shows a seam between sections. Other pages that use these
-       same classes (the-recovery #weight, community #comments,
+       same classes (recovery #weight, community #comments,
        marathon #marathon/#training) keep their original look. */
     body[data-page="home"] .section--alt,
     body[data-page="home"] .section--marathon {

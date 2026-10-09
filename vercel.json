@@ -3,6 +3,10 @@
   "outputDirectory": "dist",
   "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    { "source": "/my-journey", "destination": "/journey", "permanent": true },
+    { "source": "/the-recovery", "destination": "/recovery", "permanent": true }
+  ],
   "headers": [
     {
       "source": "/(.*)",

@@ -44,11 +44,11 @@ const CSS_ORDER = [
 ];
 
 // Every real route, as a static .html file (Vercel's cleanUrls: true in
-// vercel.json maps /my-journey -> /my-journey.html automatically, so
-// nav links and old-anchor redirects can use the clean, extension-less
+// vercel.json maps /journey -> /journey.html automatically, so nav
+// links and old-anchor redirects can use the clean, extension-less
 // form). Each one shares the same partials/ chrome via <!-- INCLUDE -->
 // markers resolved below.
-const PAGES = ["index.html", "my-journey.html", "the-recovery.html", "marathon.html", "community.html"];
+const PAGES = ["index.html", "journey.html", "recovery.html", "marathon.html", "community.html"];
 
 // Top-level files/dirs that are dev/build-only (or, for api/, deployed
 // separately by Vercel as serverless functions regardless of

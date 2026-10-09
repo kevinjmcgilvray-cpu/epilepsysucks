@@ -233,7 +233,7 @@ async function run(baseUrl) {
     await page.locator(".nav__dropdown-link").first().click();
     await page.waitForLoadState("domcontentloaded");
     const urlAfterLinkClick = page.url();
-    check("Clicking the parent link navigates directly", urlAfterLinkClick.includes("/my-journey"), urlAfterLinkClick);
+    check("Clicking the parent link navigates directly", urlAfterLinkClick.includes("/journey"), urlAfterLinkClick);
     await context.close();
   }
 
@@ -259,7 +259,7 @@ async function run(baseUrl) {
 
     await page.locator(".nav__dropdown-link").first().click();
     await page.waitForLoadState("domcontentloaded");
-    check("Mobile: link tap navigates directly", page.url().includes("/my-journey"), page.url());
+    check("Mobile: link tap navigates directly", page.url().includes("/journey"), page.url());
     await context.close();
   }
 
