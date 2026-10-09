@@ -263,6 +263,40 @@ async function run(baseUrl) {
     await context.close();
   }
 
+  // 10. Mobile header: the donor-ticker notification pill keeps a clear
+  // gap from the hamburger icon, and the open menu panel spans the
+  // full header width so the close ("✕") button sits in its corner
+  // instead of floating to the right of a narrower panel.
+  {
+    const context = await browser.newContext({ viewport: { width: 320, height: 700 } });
+    const page = await freshPage(context, "mobile-header-spacing", errors);
+    await page.goto(`${baseUrl}/index.html`);
+    await page.click("#entry-warning-continue");
+    await page.waitForTimeout(100);
+
+    const tickerBox = await page.locator("#donor-ticker").boundingBox();
+    const toggleBox = await page.locator("#nav-toggle").boundingBox();
+    const gap = toggleBox.x - (tickerBox.x + tickerBox.width);
+    check("Donor-ticker keeps a clear gap from the hamburger icon", gap >= 24, gap);
+
+    await page.click("#nav-toggle");
+    await page.waitForTimeout(100);
+    const topBox = await page.locator(".nav__top").boundingBox();
+    const linksBox = await page.locator("#nav-links").boundingBox();
+    const toggleBoxOpen = await page.locator("#nav-toggle").boundingBox();
+    check(
+      "Open menu panel spans the full header width (no leftover desktop max-width)",
+      Math.abs(linksBox.width - topBox.width) < 1,
+      `panel=${linksBox.width} top=${topBox.width}`
+    );
+    check(
+      "Close button stays pinned to the panel's upper-right corner",
+      Math.abs(toggleBoxOpen.x + toggleBoxOpen.width - (linksBox.x + linksBox.width)) < 1,
+      `toggleRight=${toggleBoxOpen.x + toggleBoxOpen.width} panelRight=${linksBox.x + linksBox.width}`
+    );
+    await context.close();
+  }
+
   const relevantErrors = errors.filter((e) => !e.includes("404"));
   check("No unexpected console/page errors", relevantErrors.length === 0, relevantErrors.join(" | "));
 

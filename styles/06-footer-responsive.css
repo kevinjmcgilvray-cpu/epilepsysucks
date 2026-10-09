@@ -290,6 +290,16 @@
         line-height: 1.1;
       }
 
+      /* .nav__toggle becomes position:absolute;top:0;right:0 below, so
+         it's taken out of flow and nothing in .nav__brand-row naturally
+         avoids it. Reserve its width (2.5rem) plus a clear gap so the
+         donor-ticker pill never crowds right up against the hamburger
+         icon, even with a longer donor name cycled in. */
+      .donor-ticker {
+        max-width: min(55vw, 11rem);
+        margin-right: 3.25rem;
+      }
+
       .nav__funds {
         display: flex;
         position: relative;
@@ -349,6 +359,13 @@
         top: 100%;
         left: 0;
         right: 0;
+        /* The desktop rule above caps this at min(45rem, 72vw) so the
+           horizontal pill row doesn't crowd the brand/funds area — that
+           cap must not carry over here, or the collapsed menu panel
+           ends up narrower than nav__top, leaving the close ("✕")
+           button floating to the right of the panel instead of sitting
+           in its corner. */
+        max-width: none;
         flex-direction: column;
         align-items: stretch;
         gap: 0;
@@ -514,6 +531,13 @@
         width: 100%;
       }
 
+      /* Same reservation as the 960px block above, sized for this
+         breakpoint's smaller (2rem) toggle button. */
+      .donor-ticker {
+        max-width: min(55vw, 10rem);
+        margin-right: 2.75rem;
+      }
+
       .nav__toggle {
         position: absolute;
         top: 0;
@@ -532,6 +556,9 @@
         top: 100%;
         left: 0;
         right: 0;
+        /* See the matching comment in the 960px block above — same
+           desktop max-width cap, same reason it needs clearing here. */
+        max-width: none;
         flex-direction: column;
         align-items: stretch;
         gap: 0;
@@ -686,6 +713,13 @@
       width: 100%;
     }
 
+    /* JS-driven fallback/duplicate of the media query above — see the
+       comment there for why this exists (Safari orientationchange lag). */
+    html.is-landscape-compact .donor-ticker {
+      max-width: min(55vw, 10rem);
+      margin-right: 2.75rem;
+    }
+
     html.is-landscape-compact .nav__toggle {
       position: absolute;
       top: 0;
@@ -704,6 +738,10 @@
       top: 100%;
       left: 0;
       right: 0;
+      /* Same desktop max-width cap cleared here as in the two media
+         query blocks above (this is the JS-driven duplicate of the
+         landscape one, kept in sync per the comment up top). */
+      max-width: none;
       flex-direction: column;
       align-items: stretch;
       gap: 0;
