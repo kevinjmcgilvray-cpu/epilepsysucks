@@ -386,6 +386,33 @@
         justify-content: center;
       }
 
+      /* The split trigger (.nav__dropdown-trigger) is a <span>, so it
+         doesn't match the a.nav__cta/button.nav__cta rule above —
+         restyle it the same way, then split its own padding across
+         the link (most of the width, flexes to fill) and the caret
+         (fixed-width tap target on the right) inside it. */
+      .nav__links .nav__dropdown-trigger {
+        display: inline-flex;
+        justify-content: center;
+        width: 100%;
+        padding: 0;
+        margin: 0.35rem 0;
+        font-size: 0.85rem;
+        box-sizing: border-box;
+      }
+
+      .nav__links .nav__dropdown-link {
+        flex: 1 1 auto;
+        justify-content: center;
+        padding: 0.75rem 0.5rem 0.75rem 1rem;
+      }
+
+      .nav__links .nav__dropdown-caret {
+        flex: 0 0 auto;
+        justify-content: center;
+        padding: 0.75rem 1rem 0.75rem 0.5rem;
+      }
+
       /* Dropdown nav categories become inline accordions in the
          collapsed mobile menu instead of floating panels — tapping a
          trigger expands its sub-list in place (toggled via JS adding
@@ -540,6 +567,28 @@
         box-sizing: border-box;
       }
 
+      .nav__links .nav__dropdown-trigger {
+        display: inline-flex;
+        justify-content: center;
+        width: 100%;
+        padding: 0;
+        margin: 0.3rem 0;
+        font-size: 0.85rem;
+        box-sizing: border-box;
+      }
+
+      .nav__links .nav__dropdown-link {
+        flex: 1 1 auto;
+        justify-content: center;
+        padding: 0.65rem 0.5rem 0.65rem 1rem;
+      }
+
+      .nav__links .nav__dropdown-caret {
+        flex: 0 0 auto;
+        justify-content: center;
+        padding: 0.65rem 1rem 0.65rem 0.5rem;
+      }
+
       .nav__dropdown-menu {
         position: static;
         display: none;
@@ -688,6 +737,28 @@
       margin: 0.3rem 0;
       font-size: 0.85rem;
       box-sizing: border-box;
+    }
+
+    html.is-landscape-compact .nav__links .nav__dropdown-trigger {
+      display: inline-flex;
+      justify-content: center;
+      width: 100%;
+      padding: 0;
+      margin: 0.3rem 0;
+      font-size: 0.85rem;
+      box-sizing: border-box;
+    }
+
+    html.is-landscape-compact .nav__links .nav__dropdown-link {
+      flex: 1 1 auto;
+      justify-content: center;
+      padding: 0.65rem 0.5rem 0.65rem 1rem;
+    }
+
+    html.is-landscape-compact .nav__links .nav__dropdown-caret {
+      flex: 0 0 auto;
+      justify-content: center;
+      padding: 0.65rem 1rem 0.65rem 0.5rem;
     }
 
     html.is-landscape-compact .nav__dropdown-menu {
