@@ -579,10 +579,13 @@
       }
     }
 
-    /* Full-screen photosensitivity notice shown once per browser (via
-       localStorage) before any page content is usable. Site content is
+    /* True full-screen modal — used ONLY by #storm-confirm now (the
+       "turn storm effects on?" active opt-in prompt). Site content is
        made inert via visibility (not just visually covered) so it can't
-       be focused or interacted with underneath. */
+       be focused or interacted with underneath, which is appropriate
+       here since this gates an action the visitor just deliberately
+       took. The page-load sensory notice is .sensory-banner below
+       instead — non-blocking, nothing to make inert. */
     .entry-warning {
       position: fixed;
       inset: 0;
@@ -639,15 +642,8 @@
       opacity: 0.85;
     }
 
-    .entry-warning__continue {
-      width: 100%;
-      justify-content: center;
-    }
-
     /* Two-button row for #storm-confirm (the "turn storm effects on?"
-       prompt) — the page-load #entry-warning only ever has the one
-       .entry-warning__continue button above, so this is additive, not
-       a replacement for it. */
+       prompt). */
     .entry-warning__actions {
       display: flex;
       flex-wrap: wrap;
@@ -657,6 +653,82 @@
     .entry-warning__actions .btn {
       flex: 1 1 10rem;
       justify-content: center;
+    }
+
+    /* Non-blocking sensory-effects notice (replaces the old full-screen
+       page-load gate). Floats as a small corner card above the page —
+       no inset:0, no backdrop, no scroll-lock, no visibility:hidden on
+       siblings. Deliberately no transition/animation on show/hide: a
+       banner about sensory sensitivity shouldn't itself introduce any
+       motion. */
+    .sensory-banner {
+      position: fixed;
+      z-index: 900;
+      left: 1rem;
+      right: 1rem;
+      bottom: 1rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .sensory-banner[hidden] {
+      display: none;
+    }
+
+    .sensory-banner__panel {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      max-width: 34rem;
+      width: 100%;
+      padding: 1.1rem 1.25rem;
+      border: 1px solid rgba(180, 140, 255, 0.4);
+      border-radius: 0.9rem;
+      background: var(--surface-muted, #1a1613);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
+    }
+
+    .sensory-banner__icon {
+      margin: 0.1rem 0 0;
+      font-size: 1.4rem;
+      line-height: 1;
+      flex: 0 0 auto;
+    }
+
+    .sensory-banner__text {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    .sensory-banner__title {
+      margin: 0 0 0.3rem;
+      font-family: var(--font-display);
+      font-size: 1rem;
+      color: var(--paper);
+    }
+
+    .sensory-banner__desc {
+      margin: 0;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: var(--paper);
+      opacity: 0.85;
+    }
+
+    .sensory-banner__continue {
+      flex: 0 0 auto;
+      align-self: center;
+    }
+
+    @media (max-width: 560px) {
+      .sensory-banner__panel {
+        flex-direction: column;
+      }
+
+      .sensory-banner__continue {
+        align-self: stretch;
+        justify-content: center;
+      }
     }
 
     .nav__funds {

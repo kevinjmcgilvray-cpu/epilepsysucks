@@ -1,34 +1,47 @@
 
+  <!-- Non-blocking sensory-effects notice: a small corner banner, not a
+       full-screen modal gate. The page is fully visible, scrollable,
+       and interactive underneath it from first paint — it only
+       discloses that the Storm effects feature exists and is off by
+       default, for the benefit of photosensitive visitors, without
+       forcing anyone to interact with anything before reading the
+       site. Deliberately not role="dialog"/aria-modal: it never traps
+       focus or blocks the rest of the page (contrast with #storm-confirm
+       below, which IS a true modal because it gates an active opt-in
+       action the visitor just took). -->
   <div
-    class="entry-warning"
+    class="sensory-banner"
     id="entry-warning"
-    role="dialog"
-    aria-modal="true"
+    role="group"
     aria-labelledby="entry-warning-title"
     aria-describedby="entry-warning-desc"
     hidden
   >
-    <div class="entry-warning__panel">
-      <p class="entry-warning__icon" aria-hidden="true">⚡</p>
-      <h2 class="entry-warning__title" id="entry-warning-title">Before you go in — a quick flash warning</h2>
-      <p class="entry-warning__desc" id="entry-warning-desc">
-        This site has a <strong>Storm effects</strong> setting — brief lightning flashes with rotating
-        thunder sounds, cycling 10 seconds on / 10 seconds off. It's <strong>off by default</strong>;
-        turning it on from the storm icon near the top of the page shows a confirmation first. This site
-        also automatically disables it entirely if your device's "reduce motion" accessibility setting is
-        on. If you have photosensitive epilepsy, we'd recommend keeping it off.
-      </p>
-      <button type="button" class="btn btn--purple entry-warning__continue" id="entry-warning-continue">
-        I understand — continue
+    <div class="sensory-banner__panel">
+      <p class="sensory-banner__icon" aria-hidden="true">⚡</p>
+      <div class="sensory-banner__text">
+        <h2 class="sensory-banner__title" id="entry-warning-title">A note on sensory effects</h2>
+        <p class="sensory-banner__desc" id="entry-warning-desc">
+          This site has a <strong>Storm effects</strong> setting — brief lightning flashes with rotating
+          thunder sounds, cycling 10 seconds on / 10 seconds off. It's <strong>off by default</strong>;
+          turning it on from the storm icon near the top of the page shows a confirmation first. This site
+          also automatically disables it entirely if your device's "reduce motion" accessibility setting is
+          on. If you have photosensitive epilepsy, we'd recommend keeping it off.
+        </p>
+      </div>
+      <button type="button" class="btn btn--ghost sensory-banner__continue" id="entry-warning-continue">
+        Got it
       </button>
     </div>
   </div>
 
   <!-- Shown instead of turning storm effects straight on when the
        toggle is clicked from its off state (see initStormEffect() in
-       js/02-storm-raceclock.js) — reuses the exact same .entry-warning
-       component/classes as the page-load gate above for visual
-       consistency, just with two actions instead of one. -->
+       js/02-storm-raceclock.js). Unlike the non-blocking banner above,
+       this one IS a true full-screen modal (role="dialog" aria-modal,
+       .entry-locked body scroll-lock) — intentionally, since it's
+       gating an active opt-in action the visitor just took, not an
+       unprompted landing splash. -->
   <div
     class="entry-warning"
     id="storm-confirm"
@@ -52,12 +65,17 @@
     </div>
   </div>
   <script>
-    // Runs synchronously, as early as possible, so the warning (if needed)
-    // is locked in before anything else paints or becomes interactive —
-    // same early-inline-script pattern as the dark/light theme flash
-    // prevention in <head>. Deliberately kept separate from app.js, which
-    // loads at the end of the page: a slow connection shouldn't leave the
-    // "I understand" button looking clickable while actually inert.
+    // Runs synchronously, as early as possible — same early-inline-script
+    // pattern as the dark/light theme flash prevention in <head>.
+    // Deliberately kept separate from app.js, which loads at the end of
+    // the page: a slow connection shouldn't leave the "Got it" button
+    // looking clickable while actually inert.
+    //
+    // Unlike the old full-screen gate this replaced, this never locks
+    // the body or steals focus — the banner is purely informational and
+    // the rest of the page is already fully visible/scrollable/
+    // interactive underneath it, so there's nothing to "unlock" on
+    // dismiss.
     (function () {
       var ACK_KEY = "epilepsySiteWarningAck";
       var acknowledged;
@@ -71,15 +89,13 @@
       var continueBtn = document.getElementById("entry-warning-continue");
       if (!warning || !continueBtn) return;
       warning.hidden = false;
-      document.body.classList.add("entry-locked");
       continueBtn.addEventListener("click", function () {
         try {
           window.localStorage.setItem(ACK_KEY, "yes");
         } catch (e) {
-          /* ignore (private mode etc.) — warning will just reappear next visit */
+          /* ignore (private mode etc.) — banner will just reappear next visit */
         }
         warning.hidden = true;
-        document.body.classList.remove("entry-locked");
         // Deliberately not priming audio here too: this click already
         // bubbles a "pointerdown" up to window, which app.js listens for
         // as its own one-time audio-unlock gesture. Priming from both
@@ -87,7 +103,6 @@
         // volume (two concurrent play-then-restore cycles stepping on
         // each other's "previous volume" snapshot).
       });
-      continueBtn.focus();
     })();
   </script>
 

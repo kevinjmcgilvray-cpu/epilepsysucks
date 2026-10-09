@@ -1,9 +1,10 @@
 // Regression suite for the storm/lightning toggle: off-by-default
 // behavior, the "turn it on?" confirmation, persistence, reduced-motion
-// override, and the entry-warning copy. Ported from the ad-hoc scratch
+// override, and the sensory-banner (formerly a full-screen entry-warning
+// gate) copy + non-blocking behavior. Ported from the ad-hoc scratch
 // script used throughout development into a permanent, committed test.
 //
-// Runs against dist/ (post-build) since this chrome (entry-warning,
+// Runs against dist/ (post-build) since this chrome (sensory banner,
 // storm/cursor toggles) now only exists as resolved <!-- INCLUDE -->
 // partials in the real build output, same reasoning as smoke.test.js.
 // It's shared/identical across every page via partials/, so testing it
@@ -124,6 +125,25 @@ async function run(baseUrl) {
     const desc = await page.$eval("#entry-warning-desc", (el) => el.textContent);
     check("Warning mentions 'off by default'", desc.includes("off by default"));
     check("Warning mentions '10 seconds'", desc.includes("10 seconds"));
+    await context.close();
+  }
+
+  // 4b. The sensory-effects notice is a non-blocking banner, not a
+  // full-screen modal gate: the rest of the page must stay visible,
+  // scrollable, and interactive while it's still up (unlike
+  // #storm-confirm, which deliberately IS a blocking modal).
+  {
+    const context = await browser.newContext();
+    const page = await freshPage(context, "sensory-banner-nonblocking", errors);
+    await page.goto(`${baseUrl}/index.html`);
+    const stillVisible = await page.evaluate(() => !document.getElementById("entry-warning").hidden);
+    check("Sensory banner is showing (not yet dismissed)", stillVisible, stillVisible);
+    const navVisibility = await page.$eval("#nav", (el) => getComputedStyle(el).visibility);
+    check("Nav stays visible while the sensory banner is up", navVisibility === "visible", navVisibility);
+    const bodyLocked = await page.evaluate(() => document.body.classList.contains("entry-locked"));
+    check("Body isn't scroll-locked by the sensory banner", !bodyLocked, bodyLocked);
+    const bodyOverflow = await page.$eval("body", (el) => getComputedStyle(el).overflow);
+    check("Body overflow isn't hidden while the sensory banner is up", bodyOverflow !== "hidden", bodyOverflow);
     await context.close();
   }
 
