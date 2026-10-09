@@ -57,6 +57,9 @@ const PAGES = [
   "journey/timeline.html",
   "journey/surgeries.html",
   "recovery.html",
+  "recovery/mindset.html",
+  "recovery/dbs-tuning.html",
+  "recovery/weight-loss.html",
   "marathon.html",
   "community.html",
   "resources.html"
@@ -83,11 +86,13 @@ const EXCLUDE = new Set([
   "styles",
   "api",
   "partials",
-  // "journey" is a top-level directory of nested sub-pages (see PAGES
-  // above) — each one needs the same INCLUDE/bundle-tag processing as
-  // every other page, so it's excluded here from the raw byte-for-byte
-  // copy and written explicitly in step 4 instead.
+  // "journey" and "recovery" are top-level directories of nested
+  // sub-pages (see PAGES above) — each one needs the same
+  // INCLUDE/bundle-tag processing as every other page, so they're
+  // excluded here from the raw byte-for-byte copy and written
+  // explicitly in step 4 instead.
   "journey",
+  "recovery",
   ...PAGES,
   "package.json",
   "package-lock.json",
