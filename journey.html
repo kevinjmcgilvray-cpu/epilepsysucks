@@ -57,6 +57,13 @@
         "name": "Kevin J Mcgilvray",
         "description": "Living with epilepsy since childhood; running the 2027 LA Marathon to raise funds for CURE Epilepsy.",
         "url": "https://www.epilepsysucks.org/"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.epilepsysucks.org/" },
+          { "@type": "ListItem", "position": 2, "name": "My Journey", "item": "https://www.epilepsysucks.org/journey" }
+        ]
       }
     ]
   }
@@ -69,6 +76,19 @@
 <!-- INCLUDE:partials/nav.html -->
 
   <main id="top">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <div class="breadcrumbs__inner">
+        <ol class="breadcrumbs__list">
+          <li class="breadcrumbs__item">
+            <a class="breadcrumbs__link" href="/">Home</a>
+            <span class="breadcrumbs__sep" aria-hidden="true">/</span>
+          </li>
+          <li class="breadcrumbs__item">
+            <span class="breadcrumbs__current" aria-current="page">My Journey</span>
+          </li>
+        </ol>
+      </div>
+    </nav>
     <section class="section" id="story">
       <div class="section__inner section__inner--wide">
         <article class="chapter reveal">

@@ -863,3 +863,72 @@
       gap: clamp(0.4rem, 1.6vw, 0.65rem);
     }
 
+    /* Breadcrumbs — shared trail component, sits right under the fixed
+       header at the top of every sub-page's <main> (not shown on the
+       homepage, which has no parent to show). Mirrors .section's own
+       horizontal padding/max-width convention directly instead of
+       reusing .section__inner (that class pairs with .reveal's
+       scroll-triggered fade-in, which would leave the crumb invisible
+       until the visitor scrolls — wrong for something meant to orient
+       them immediately on page load). */
+    .breadcrumbs {
+      padding: 1.35rem clamp(1.25rem, 4vw, 2.5rem) 0;
+    }
+
+    .breadcrumbs__inner {
+      max-width: 68rem;
+      margin: 0 auto;
+    }
+
+    .breadcrumbs__list {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: 0.82rem;
+    }
+
+    .breadcrumbs__item {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .breadcrumbs__sep {
+      color: var(--paper-faint);
+    }
+
+    /* Real growth to the 48px touch-target floor (not a hit-slop
+       overlay) — same lesson learned fixing .nav__brand in PR3: an
+       invisible expanded hit-area can silently overlap a sibling and
+       swallow clicks, so interactive crumbs just grow their own box
+       instead. The thin single-line trail becomes a slightly taller
+       but still compact bar. */
+    .breadcrumbs__link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 48px;
+      min-width: 48px;
+      justify-content: center;
+      padding: 0 0.5rem;
+      margin: 0 -0.5rem;
+      color: var(--paper-dim);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .breadcrumbs__link:hover,
+    .breadcrumbs__link:focus-visible {
+      color: var(--accent-text);
+      border-bottom-color: var(--accent-text);
+    }
+
+    .breadcrumbs__current {
+      color: var(--paper);
+      font-weight: 600;
+    }
+

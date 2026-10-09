@@ -807,7 +807,8 @@
        calc(var(--header-h) + 1rem); every other page's opening section
        needs the exact same treatment, or its heading renders partially
        hidden underneath the header at those in-between widths. */
-    main#top > .section:first-child {
+    main#top > .section:first-child,
+    main#top > .breadcrumbs:first-child {
       padding-top: calc(var(--header-h, 9.5rem) + 1rem);
     }
 
