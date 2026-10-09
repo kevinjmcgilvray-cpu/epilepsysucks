@@ -43,6 +43,47 @@
       margin-top: 0;
     }
 
+    /* Phase 2's cross-chapter "next"/"related" link, used at the end of
+       the new /journey/* sub-pages (e.g. diagnosis -> surgeries ->
+       timeline). Deliberately its own small component rather than
+       reusing .chapter (no left border/rail — it's a nav link, not a
+       story beat), with a real 48px-tall click target per the
+       touch-target floor established in PR 3. */
+    .chapter-next {
+      margin-top: 1rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--line);
+    }
+
+    .chapter-next__link {
+      display: block;
+      min-height: 48px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .chapter-next__eyebrow {
+      display: block;
+      font-size: 0.8rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent-text);
+      margin-bottom: 0.4rem;
+    }
+
+    .chapter-next__title {
+      display: block;
+      font-family: var(--font-display);
+      font-size: clamp(1.3rem, 3vw, 1.8rem);
+      letter-spacing: 0.01em;
+      transition: color 0.2s ease;
+    }
+
+    .chapter-next__link:hover .chapter-next__title,
+    .chapter-next__link:focus-visible .chapter-next__title {
+      color: var(--accent-text);
+    }
+
     .chapter-split__media {
       margin: 0;
       max-width: 28rem;

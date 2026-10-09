@@ -47,8 +47,20 @@ const CSS_ORDER = [
 // vercel.json maps /journey -> /journey.html automatically, so nav
 // links and old-anchor redirects can use the clean, extension-less
 // form). Each one shares the same partials/ chrome via <!-- INCLUDE -->
-// markers resolved below.
-const PAGES = ["index.html", "journey.html", "recovery.html", "marathon.html", "community.html", "resources.html"];
+// markers resolved below. Nested entries (e.g. "journey/diagnosis.html")
+// are Phase 2's real sub-pages — cleanUrls maps those to
+// /journey/diagnosis the same way.
+const PAGES = [
+  "index.html",
+  "journey.html",
+  "journey/diagnosis.html",
+  "journey/timeline.html",
+  "journey/surgeries.html",
+  "recovery.html",
+  "marathon.html",
+  "community.html",
+  "resources.html"
+];
 
 // Top-level files/dirs that are dev/build-only (or, for api/, deployed
 // separately by Vercel as serverless functions regardless of
@@ -71,6 +83,11 @@ const EXCLUDE = new Set([
   "styles",
   "api",
   "partials",
+  // "journey" is a top-level directory of nested sub-pages (see PAGES
+  // above) — each one needs the same INCLUDE/bundle-tag processing as
+  // every other page, so it's excluded here from the raw byte-for-byte
+  // copy and written explicitly in step 4 instead.
+  "journey",
   ...PAGES,
   "package.json",
   "package-lock.json",
@@ -167,21 +184,27 @@ async function build() {
 
     html = replaceOrThrow(
       html,
-      /<link rel="stylesheet" href="styles\/01-base-nav\.css" \/>[\s\S]*?<link rel="stylesheet" href="styles\/06-footer-responsive\.css" \/>/,
-      '<link rel="stylesheet" href="styles/app.min.css" />',
+      /<link rel="stylesheet" href="\/styles\/01-base-nav\.css" \/>[\s\S]*?<link rel="stylesheet" href="\/styles\/06-footer-responsive\.css" \/>/,
+      '<link rel="stylesheet" href="/styles/app.min.css" />',
       "the 6 ordered styles/*.css <link> tags",
       page
     );
 
     html = replaceOrThrow(
       html,
-      /<script src="js\/01-nav-theme-cursor\.js"><\/script>[\s\S]*?<script src="js\/07-admin-mermaid\.js"><\/script>/,
-      '<script src="js/app.min.js"></script>',
+      /<script src="\/js\/01-nav-theme-cursor\.js"><\/script>[\s\S]*?<script src="\/js\/07-admin-mermaid\.js"><\/script>/,
+      '<script src="/js/app.min.js"></script>',
       "the 8 ordered js/*.js <script> tags",
       page
     );
 
-    fs.writeFileSync(path.join(DIST, page), html);
+    // page can be nested (e.g. "journey/diagnosis.html" for the
+    // Phase 2 sub-pages) — make sure its parent directory exists under
+    // dist/ before writing, same as copyRecursive already does for the
+    // plain-copied assets above.
+    const outPath = path.join(DIST, page);
+    fs.mkdirSync(path.dirname(outPath), { recursive: true });
+    fs.writeFileSync(outPath, html);
   }
 
   console.log("Build complete -> dist/ (" + PAGES.length + " pages)");
