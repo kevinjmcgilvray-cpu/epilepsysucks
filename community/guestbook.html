@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Guestbook &amp; Comments — Community | Epilepsy Sucks</title>
+  <meta name="description" content="Leave a note if Kevin's story landed with you. Comments are reviewed before they show publicly." />
+  <meta name="google-site-verification" content="7OfTJh9W-WusjG9euOQumyX-KyWf6rn1aBwy0Ev4MA0" />
+
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem("epilepsy-theme");
+        if (saved === "dark" || saved === "light") {
+          document.documentElement.setAttribute("data-theme", saved);
+        }
+      } catch (e) {}
+    })();
+  </script>
+
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="canonical" href="https://www.epilepsysucks.org/community/guestbook" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Epilepsy Sucks" />
+  <meta property="og:title" content="Guestbook & Comments — Epilepsy Sucks" />
+  <meta property="og:description" content="Leave a note if Kevin's story landed with you. Comments are reviewed before they show publicly." />
+  <meta property="og:url" content="https://www.epilepsysucks.org/community/guestbook" />
+  <meta property="og:image" content="https://www.epilepsysucks.org/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Guestbook & Comments — Epilepsy Sucks" />
+  <meta name="twitter:description" content="Leave a note if Kevin's story landed with you. Comments are reviewed before they show publicly." />
+  <meta name="twitter:image" content="https://www.epilepsysucks.org/og-image.jpg" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.epilepsysucks.org/#website",
+        "url": "https://www.epilepsysucks.org/",
+        "name": "Epilepsy Sucks",
+        "description": "Kevin\u2019s life with epilepsy \u2014 from cerebral hemiatrophy and seizures to resection, VNS, DBS \u2014 and running the LA Marathon for CURE Epilepsy on March 7, 2027.",
+        "publisher": { "@id": "https://www.epilepsysucks.org/#person" }
+      },
+      {
+        "@type": "Person",
+        "@id": "https://www.epilepsysucks.org/#person",
+        "name": "Kevin J Mcgilvray",
+        "description": "Living with epilepsy since childhood; running the 2027 LA Marathon to raise funds for CURE Epilepsy.",
+        "url": "https://www.epilepsysucks.org/"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.epilepsysucks.org/" },
+          { "@type": "ListItem", "position": 2, "name": "Community", "item": "https://www.epilepsysucks.org/community" },
+          { "@type": "ListItem", "position": 3, "name": "Guestbook & Comments", "item": "https://www.epilepsysucks.org/community/guestbook" }
+        ]
+      }
+    ]
+  }
+  </script>
+
+<!-- INCLUDE:partials/head-assets.html -->
+</head>
+<body>
+<!-- INCLUDE:partials/chrome-pre-nav.html -->
+<!-- INCLUDE:partials/nav.html -->
+
+  <main id="top">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <div class="breadcrumbs__inner">
+        <ol class="breadcrumbs__list">
+          <li class="breadcrumbs__item">
+            <a class="breadcrumbs__link" href="/">Home</a>
+            <span class="breadcrumbs__sep" aria-hidden="true">/</span>
+          </li>
+          <li class="breadcrumbs__item">
+            <a class="breadcrumbs__link" href="/community">Community</a>
+            <span class="breadcrumbs__sep" aria-hidden="true">/</span>
+          </li>
+          <li class="breadcrumbs__item">
+            <span class="breadcrumbs__current" aria-current="page">Guestbook &amp; Comments</span>
+          </li>
+        </ol>
+      </div>
+    </nav>
+    <section class="section section--alt" id="comments">
+      <div class="section__inner reveal">
+        <p class="eyebrow">01 &middot; Community</p>
+        <p class="eyebrow">Community</p>
+        <h2>Comments</h2>
+        <p>If my story landed with you — leave a note. Comments are reviewed before they show publicly.</p>
+
+        <aside class="owner-update" id="owner-update" hidden>
+          <p class="owner-update__label">Latest update from Kevin</p>
+          <p class="owner-update__meta"><time id="owner-update-date"></time></p>
+          <p class="owner-update__body" id="owner-update-body"></p>
+        </aside>
+
+        <div id="comments-status" class="comments-list__status" aria-live="polite">Loading comments…</div>
+        <ul class="comments-list" id="comments-list" hidden></ul>
+
+        <form class="comment-form" id="comment-form" novalidate>
+          <p class="comment-form__hp" aria-hidden="true">
+            <label>
+              Website
+              <input type="text" name="website" tabindex="-1" autocomplete="off" />
+            </label>
+          </p>
+          <label>
+            Name
+            <input id="comment-name" name="name" type="text" maxlength="40" required autocomplete="name" placeholder="Your name" />
+          </label>
+          <label>
+            Message
+            <textarea id="comment-message" name="message" maxlength="1000" required placeholder="Share a thought about Kevin’s story"></textarea>
+          </label>
+          <div class="comment-form__actions">
+            <button class="btn btn--purple" type="submit" id="comment-submit">Post comment</button>
+            <span class="comment-form__note">Comments are reviewed before they appear.</span>
+          </div>
+          <p class="comment-form__error" id="comment-error" hidden></p>
+        </form>
+
+        <details class="owner-update-form" id="moderation-form-wrap">
+          <summary>Kevin — moderate comments</summary>
+          <form class="comment-form" id="moderation-form" novalidate>
+            <label>
+              Password
+              <input id="moderation-password" name="password" type="password" required autocomplete="current-password" placeholder="Your update password" />
+            </label>
+            <div class="comment-form__actions">
+              <button class="btn btn--purple" type="submit" id="moderation-load">Load pending</button>
+              <span class="comment-form__note">Approve to publish, or mark spam.</span>
+            </div>
+            <p class="comment-form__error" id="moderation-error" hidden></p>
+          </form>
+          <p class="moderation-status" id="moderation-status" hidden></p>
+          <ul class="moderation-list" id="moderation-list" hidden></ul>
+        </details>
+
+        <details class="owner-update-form" id="admin-log-wrap">
+          <summary>Kevin — log training, weigh-in, funds, milestone</summary>
+          <form class="comment-form" id="admin-run-form" novalidate>
+            <p class="comment-form__note" style="margin:0;">Add a training run</p>
+            <label>Password<input id="admin-run-password" name="password" type="password" required autocomplete="current-password" /></label>
+            <label>Date<input id="admin-run-date" name="date" type="date" required /></label>
+            <label>Miles<input id="admin-run-miles" name="miles" type="number" min="0.1" step="0.1" required /></label>
+            <label>Duration (minutes)<input id="admin-run-minutes" name="durationMinutes" type="number" min="1" step="0.1" required /></label>
+            <label>Notes<textarea id="admin-run-notes" name="notes" maxlength="500" placeholder="Optional notes"></textarea></label>
+            <div class="comment-form__actions">
+              <button class="btn btn--purple" type="submit">Save run</button>
+            </div>
+            <p class="comment-form__error" id="admin-run-error" hidden></p>
+          </form>
+
+          <form class="comment-form" id="admin-weigh-form" novalidate>
+            <p class="comment-form__note" style="margin:0;">Add a weigh-in</p>
+            <label>Password<input id="admin-weigh-password" name="password" type="password" required autocomplete="current-password" /></label>
+            <label>Date<input id="admin-weigh-date" name="date" type="date" required /></label>
+            <label>Weight (lb)<input id="admin-weigh-lb" name="weightLb" type="number" min="1" step="0.1" required /></label>
+            <div class="comment-form__actions">
+              <button class="btn btn--purple" type="submit">Save weigh-in</button>
+            </div>
+            <p class="comment-form__error" id="admin-weigh-error" hidden></p>
+          </form>
+
+          <form class="comment-form" id="admin-funds-form" novalidate>
+            <p class="comment-form__note" style="margin:0;">Set fundraising totals (manual override)</p>
+            <label>Password<input id="admin-funds-password" name="password" type="password" required autocomplete="current-password" /></label>
+            <label>Raised ($)<input id="admin-funds-raised" name="raised" type="number" min="0" step="1" required /></label>
+            <label>Goal ($)<input id="admin-funds-goal" name="goal" type="number" min="1" step="1" required /></label>
+            <div class="comment-form__actions">
+              <button class="btn btn--purple" type="submit">Save totals</button>
+            </div>
+            <p class="comment-form__error" id="admin-funds-error" hidden></p>
+          </form>
+
+          <form class="comment-form" id="admin-milestone-form" novalidate>
+            <p class="comment-form__note" style="margin:0;">Add a milestone</p>
+            <label>Password<input id="admin-milestone-password" name="password" type="password" required autocomplete="current-password" /></label>
+            <label>Title<input id="admin-milestone-title" name="title" type="text" maxlength="120" required /></label>
+            <label>Detail<textarea id="admin-milestone-detail" name="detail" maxlength="500"></textarea></label>
+            <label>Date (optional)<input id="admin-milestone-date" name="occurredOn" type="date" /></label>
+            <label>Kind
+              <select id="admin-milestone-kind" name="kind">
+                <option value="training">Training</option>
+                <option value="event">Event</option>
+                <option value="note">Note</option>
+              </select>
+            </label>
+            <div class="comment-form__actions">
+              <button class="btn btn--purple" type="submit">Save milestone</button>
+            </div>
+            <p class="comment-form__error" id="admin-milestone-error" hidden></p>
+          </form>
+
+          <form class="comment-form" id="admin-live-track-form" novalidate>
+            <p class="comment-form__note" style="margin:0;">Race-day Live Track GPS beacon</p>
+            <label>Password<input id="admin-live-password" name="password" type="password" required autocomplete="current-password" /></label>
+            <label>Latitude<input id="admin-live-lat" name="lat" type="number" step="any" placeholder="Optional if using Share my location" /></label>
+            <label>Longitude<input id="admin-live-lng" name="lng" type="number" step="any" placeholder="Optional if using Share my location" /></label>
+            <label>Mile (optional)<input id="admin-live-mile" name="mile" type="number" min="0" max="30" step="0.1" /></label>
+            <div class="comment-form__actions">
+              <button class="btn btn--purple" type="button" id="admin-live-share">Share my location</button>
+              <button class="btn btn--purple" type="submit">Push beacon</button>
+              <button class="btn btn--ghost" type="button" id="admin-live-clear">Clear beacon</button>
+            </div>
+            <p class="comment-form__error" id="admin-live-error" hidden></p>
+          </form>
+        </details>
+
+        <details class="owner-update-form" id="owner-update-form-wrap">
+          <summary>Kevin — post a latest update</summary>
+          <form class="comment-form" id="owner-update-form" novalidate>
+            <label>
+              Password
+              <input id="owner-update-password" name="password" type="password" required autocomplete="current-password" placeholder="Your update password" />
+            </label>
+            <label>
+              Your update to viewers
+              <textarea id="owner-update-message" name="message" maxlength="2000" required placeholder="Write the latest update you want everyone to see"></textarea>
+            </label>
+            <div class="comment-form__actions">
+              <button class="btn btn--purple" type="submit" id="owner-update-submit">Post update</button>
+              <span class="comment-form__note">Replaces the previous latest update.</span>
+            </div>
+            <p class="comment-form__error" id="owner-update-error" hidden></p>
+          </form>
+        </details>
+
+        <nav class="chapter-next reveal" aria-label="Next chapter">
+          <a class="chapter-next__link" href="/community/contact">
+            <span class="chapter-next__eyebrow">Next &middot; 02 &middot; Community</span>
+            <span class="chapter-next__title">Contact &amp; Media Inquiries &rarr;</span>
+          </a>
+        </nav>
+      </div>
+    </section>
+
+  </main>
+<!-- INCLUDE:partials/chrome-bottom.html -->
