@@ -67,7 +67,9 @@ const PAGES = [
   "community.html",
   "community/guestbook.html",
   "community/contact.html",
-  "resources.html"
+  "resources.html",
+  "about.html",
+  "privacy.html"
 ];
 
 // Top-level files/dirs that are dev/build-only (or, for api/, deployed
