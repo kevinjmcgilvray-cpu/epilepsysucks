@@ -43,10 +43,16 @@ export function pacificDateKey(date = new Date()) {
 // (e.g. local dev, or until it's configured in Vercel), every call
 // below is a cheap no-op — nothing changes for anyone who hasn't set
 // it up yet.
+//
+// Temporarily force-disabled by request, independent of whether
+// SENTRY_DSN is set in Vercel — flip this back to false (or delete
+// the two short-circuits below that check it) to re-enable.
+const SENTRY_DISABLED = true;
+
 let sentryInitialized = false;
 
 function initSentry() {
-  if (sentryInitialized) return;
+  if (sentryInitialized || SENTRY_DISABLED) return;
   sentryInitialized = true;
   const dsn = process.env.SENTRY_DSN;
   if (!dsn) return;
@@ -65,6 +71,7 @@ function initSentry() {
 // response, so every path here is wrapped and swallows its own
 // errors.
 export async function reportError(error, context) {
+  if (SENTRY_DISABLED) return;
   try {
     initSentry();
     if (!process.env.SENTRY_DSN) return;

@@ -415,7 +415,8 @@
       const timeline = document.getElementById("mermaid-timeline");
       const publicArchWrap = document.getElementById("public-architecture-wrap");
       const pageSplitWrap = document.getElementById("page-split-wrap");
-      if (!timeline && !publicArchWrap && !pageSplitWrap) return;
+      const projectHistoryWrap = document.getElementById("project-history-wrap");
+      if (!timeline && !publicArchWrap && !pageSplitWrap && !projectHistoryWrap) return;
 
       // Keep each diagram's original source around so we can fully
       // re-render it (with correct colors) whenever the theme toggle is
@@ -427,13 +428,13 @@
         mermaidSources.set(el, el.textContent);
       });
 
-      // Mermaid.js is a ~900KB third-party library used for exactly two
-      // diagrams (the treatment timeline, and the "Behind the code"
-      // architecture diagram), both of which most visitors never reach.
-      // Loading it on every page view regardless would waste bandwidth
-      // and delay the page becoming interactive. Instead, fetch it
-      // lazily: shortly before the timeline diagram scrolls into view,
-      // or immediately if the architecture <details> is opened first.
+      // Mermaid.js is a ~900KB third-party library used for a handful of
+      // diagrams (the treatment timeline, plus the 3 "Behind the code"
+      // diagrams), most of which most visitors never reach. Loading it on
+      // every page view regardless would waste bandwidth and delay the
+      // page becoming interactive. Instead, fetch it lazily: shortly
+      // before the timeline diagram scrolls into view, or immediately if
+      // any of the "Behind the code" <details> panels is opened first.
       const MERMAID_SRC = "https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js";
       let mermaidPromise = null;
       function ensureMermaid() {
@@ -590,6 +591,18 @@
             .then(renderPublicDiagrams)
             .catch(() => {
               pageSplitRendered = false;
+            });
+        });
+      }
+      let projectHistoryRendered = false;
+      if (projectHistoryWrap) {
+        projectHistoryWrap.addEventListener("toggle", () => {
+          if (!projectHistoryWrap.open || projectHistoryRendered) return;
+          projectHistoryRendered = true;
+          ensureMermaid()
+            .then(renderPublicDiagrams)
+            .catch(() => {
+              projectHistoryRendered = false;
             });
         });
       }

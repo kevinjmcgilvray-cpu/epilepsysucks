@@ -169,7 +169,7 @@
       <div class="section__inner reveal">
         <p class="eyebrow">For the engineers</p>
         <h2>Behind the code</h2>
-        <p><span class="key">Janitor in the daytime, junior software engineer by nighttime.</span> I built and still run this entire site myself — no agency, no template. It's a plain static page (no framework) backed by a handful of serverless functions and a Postgres database, and the source is public if you want to poke around.</p>
+        <p><span class="key">Janitor in the daytime, junior software engineer by nighttime.</span> I built and still run this entire site myself — no agency, no template. Powered by plain HTML/CSS/JS, a Neon Postgres database, serverless Vercel functions, and Cursor AI as my daily development partner, I’ve grown this project from a single long scroll into a structured, multi-page web app. The source is public if you want to poke around.</p>
 
         <details class="mechanism-note" id="public-architecture-wrap">
           <summary class="mechanism-note__summary">
@@ -243,6 +243,52 @@ flowchart LR
           <p>This site used to be one really long <code>index.html</code> — hero, story, recovery, marathon, and community all on a single scroll, stitched together with <code>#anchor</code> links. It worked, but every new section made that one file (and one page load) heavier, and the nav's dropdown links were really just scrolling the same page rather than going anywhere.</p>
           <p>So I split it into 5 real pages — <code>/</code>, <code>/journey</code>, <code>/recovery</code>, <code>/marathon</code>, <code>/community</code> — each its own static HTML file. The nav, footer, race-clock countdown, and entry warning still live in exactly one place each, in <code>partials/*.html</code>; a small build script (<code>scripts/build.js</code>) splices them into every page via <code>&lt;!-- INCLUDE:partials/xxx.html --&gt;</code> markers before anything deploys, so there's still only one copy of the header to update, not five. Every paragraph that moved pages was sliced out of the old file by its exact line range rather than retyped, so nothing changed by accident along the way.</p>
           <p>Old bare <code>#anchor</code> links still work — hash fragments never reach the server, so that redirect runs client-side off the homepage instead, matching each old anchor to its new page.</p>
+          </div>
+        </details>
+
+        <details class="mechanism-note" id="project-history-wrap">
+          <summary class="mechanism-note__summary">
+            <span class="mechanism-note__summary-text">
+              <span class="eyebrow">The roadmap</span>
+              <span class="mechanism-note__summary-title">Everything shipped so far</span>
+            </span>
+            <span class="mechanism-note__chevron" aria-hidden="true"></span>
+          </summary>
+          <div class="mechanism-note__body">
+          <div class="arch-diagram">
+            <pre class="mermaid" id="project-history-mermaid">
+flowchart TD
+    Early["PRs #63-99 - early iteration\nElectric Purple rebrand - live Strava-synced\ntraining data - one page split into five"]
+
+    subgraph Phase1["Phase 1 (PRs #100-106) - Cleanup &amp; conversion"]
+        P1a["Clean URLs: /journey - /recovery"]
+        P1b["Non-blocking sensory banner"]
+        P1c["48px touch targets everywhere"]
+        P1d["New /resources page"]
+        P1e["Homepage section reorder"]
+        P1f["501(c)(3) + $/mile donate CTAs"]
+    end
+
+    subgraph Phase2["Phase 2 (PRs #107-112) - Structure &amp; SEO"]
+        P2a["Shared breadcrumbs component"]
+        P2b["Journey/Recovery/Marathon/Community\nsplit into hub + sub-pages"]
+        P2c["Heading-hierarchy + meta description pass"]
+    end
+
+    subgraph Phase3["Phase 3 (PRs #113+) - Safety &amp; redesign, in progress"]
+        P3a["Flashing lightning removed,\nreduced-motion gaps closed"]
+        P3b["About / Privacy pages"]
+        P3c["Nav + hero rewrite - next"]
+        P3d["Global CSS baseline - next"]
+        P3e["Final consistency pass - next"]
+    end
+
+    Early --> Phase1 --> Phase2 --> Phase3
+            </pre>
+            <p class="arch-fallback-note">Diagram renders when you expand this panel.</p>
+          </div>
+          <p>Nothing above happened as one big rewrite — it’s been 50-plus small, reviewed pull requests, each one on its own branch with its own live Vercel preview before merging to <code>main</code> (see “The stack” above for exactly how). After an early stretch of fairly organic feature work — the Electric Purple rebrand, live Strava-synced training data, splitting one long page into five — work since has moved through three more deliberate passes: a cleanup pass (clean URLs, accessibility fixes, a new resources page), a structure-and-SEO pass (every section split into its own real sub-page, with breadcrumbs and a full heading-hierarchy audit), and the safety-and-redesign pass that’s in progress now.</p>
+          <p>As of this writing, Phase 3 is two pull requests in — removing the flashing-lightning effect and adding this very page’s About/Privacy footer links — with a nav rework, a global CSS baseline, and a final consistency pass still queued.</p>
           </div>
         </details>
       </div>
