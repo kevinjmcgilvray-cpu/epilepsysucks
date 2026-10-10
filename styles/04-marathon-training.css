@@ -28,6 +28,60 @@
       padding: 0.8rem 0;
     }
 
+    /* Reusable data-table look for anything that's a plain static
+       schedule/reference table — same visual treatment as
+       .pace-calc__table (05-widgets-forms.css), just under a generic
+       name since this isn't pace-calculator-specific. Used by the
+       training-plan weekly schedule tables on /marathon/training-log. */
+    .schedule-table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 0.5rem;
+      margin: 1rem 0;
+      scrollbar-width: none;
+    }
+
+    .schedule-table-wrap::-webkit-scrollbar {
+      display: none;
+    }
+
+    .schedule-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      min-width: 26rem;
+    }
+
+    .schedule-table th,
+    .schedule-table td {
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+      white-space: nowrap;
+    }
+
+    .schedule-table th {
+      font-family: var(--font-body);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      color: var(--paper-faint);
+    }
+
+    .schedule-table td {
+      color: var(--paper-dim);
+    }
+
+    .schedule-table tr.is-race td {
+      color: var(--accent-text);
+      font-weight: 600;
+    }
+
+    .schedule-table tr.is-cutback td {
+      color: var(--epi);
+    }
+
     .mechanism-sim__readout {
       margin: 0.9rem 0 0;
       font-size: 0.85rem;
