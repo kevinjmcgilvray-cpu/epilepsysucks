@@ -587,6 +587,26 @@
       color: var(--paper-dim);
     }
 
+    /* Off-day walking/biking box — deliberately its own section
+       below the running chart, not folded into .training-status
+       above, so the two never visually blur into one "running" stat
+       (see sql/cross-training.sql for the matching data-model split). */
+    .cross-training {
+      margin-top: 2rem;
+    }
+
+    .cross-training__via {
+      text-transform: none;
+      letter-spacing: normal;
+      font-size: 0.78rem;
+      font-weight: 400;
+      color: var(--paper-faint);
+    }
+
+    .training-status__card--cross {
+      border-left: 3px solid var(--accent);
+    }
+
     .training-log {
       margin-top: 2rem;
     }
