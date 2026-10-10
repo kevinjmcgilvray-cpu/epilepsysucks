@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Accessibility — Epilepsy Sucks | Kevin’s Story</title>
+  <meta name="description" content="This site's accessibility commitment, what's already been built and tested, and how to report a barrier." />
+  <meta name="google-site-verification" content="7OfTJh9W-WusjG9euOQumyX-KyWf6rn1aBwy0Ev4MA0" />
+
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem("epilepsy-theme");
+        if (saved === "dark" || saved === "light") {
+          document.documentElement.setAttribute("data-theme", saved);
+        }
+      } catch (e) {}
+    })();
+  </script>
+
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="canonical" href="https://www.epilepsysucks.org/accessibility" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Epilepsy Sucks" />
+  <meta property="og:title" content="Accessibility — Epilepsy Sucks" />
+  <meta property="og:description" content="This site's accessibility commitment, what's already been built and tested, and how to report a barrier." />
+  <meta property="og:url" content="https://www.epilepsysucks.org/accessibility" />
+  <meta property="og:image" content="https://www.epilepsysucks.org/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Accessibility — Epilepsy Sucks" />
+  <meta name="twitter:description" content="This site's accessibility commitment, what's already been built and tested, and how to report a barrier." />
+  <meta name="twitter:image" content="https://www.epilepsysucks.org/og-image.jpg" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.epilepsysucks.org/#website",
+        "url": "https://www.epilepsysucks.org/",
+        "name": "Epilepsy Sucks",
+        "description": "Kevin\u2019s life with epilepsy \u2014 from cerebral hemiatrophy and seizures to resection, VNS, DBS \u2014 and running the LA Marathon for CURE Epilepsy on March 7, 2027.",
+        "publisher": { "@id": "https://www.epilepsysucks.org/#person" }
+      },
+      {
+        "@type": "Person",
+        "@id": "https://www.epilepsysucks.org/#person",
+        "name": "Kevin J Mcgilvray",
+        "description": "Living with epilepsy since childhood; running the 2027 LA Marathon to raise funds for CURE Epilepsy.",
+        "url": "https://www.epilepsysucks.org/"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.epilepsysucks.org/" },
+          { "@type": "ListItem", "position": 2, "name": "Accessibility", "item": "https://www.epilepsysucks.org/accessibility" }
+        ]
+      }
+    ]
+  }
+  </script>
+
+<!-- INCLUDE:partials/head-assets.html -->
+</head>
+<body>
+<!-- INCLUDE:partials/chrome-pre-nav.html -->
+<!-- INCLUDE:partials/nav.html -->
+
+  <main id="top">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <div class="breadcrumbs__inner">
+        <ol class="breadcrumbs__list">
+          <li class="breadcrumbs__item">
+            <a class="breadcrumbs__link" href="/">Home</a>
+            <span class="breadcrumbs__sep" aria-hidden="true">/</span>
+          </li>
+          <li class="breadcrumbs__item">
+            <span class="breadcrumbs__current" aria-current="page">Accessibility</span>
+          </li>
+        </ol>
+      </div>
+    </nav>
+    <section class="section" id="accessibility">
+      <div class="section__inner reveal">
+        <p class="eyebrow">Accessibility</p>
+        <h1>Accessibility statement</h1>
+        <p>This is an epilepsy awareness site, so accessibility isn't an afterthought here — it's part of the point. The goal is to meet <span class="key">WCAG 2.2 Level AA</span>, and this page is an honest account of what's actually been built and tested toward that, not just a promise.</p>
+
+        <h2>What's already built in</h2>
+        <ul class="reasons-list">
+          <li><span class="key">Color contrast</span> is checked by an automated test across every page, in both light and dark themes, before anything ships.</li>
+          <li><span class="key">Touch targets</span> — every button, link, and control is checked against the 48&times;48px minimum tap-target size on mobile.</li>
+          <li><span class="key">Full keyboard access</span> — every menu, dropdown, toggle, and interactive control can be reached and operated without a mouse, with a visible focus outline at every step, plus a "skip to content" link for screen-reader and keyboard users.</li>
+          <li><span class="key">Motion sensitivity</span> — this site respects your operating system's <code>prefers-reduced-motion</code> setting, and the one optional ambient effect (ambient thunder sound) is off by default and only ever starts after an explicit click.</li>
+          <li><span class="key">Descriptive alt text</span> on every meaningful image, and a logical heading structure (one <code>&lt;h1&gt;</code> per page, nested <code>&lt;h2&gt;</code>/<code>&lt;h3&gt;</code> below it) so screen-reader users can navigate by heading.</li>
+          <li>A built-in <span class="key">accessibility toolbar</span> — click the person icon in the navigation bar on any page to adjust contrast, font size, spacing, and more, powered by UserWay.</li>
+        </ul>
+
+        <h2>Known limitations</h2>
+        <p>A few pieces of this site are embedded from third parties and outside direct control: the <span class="key">Instagram feed</span> and <span class="key">Facebook Page plugin</span> on the <a href="/community">Community</a> page render whatever markup those platforms serve. If either one gives you trouble, the fallback links right next to them (straight to the Instagram/Facebook profiles) always work.</p>
+
+        <h2>Something not working for you?</h2>
+        <p>If you hit a barrier anywhere on this site — a control you can't reach, text you can't read, anything — please <a href="/community/contact">tell Kevin directly</a>. Every message gets read, and accessibility bugs get treated as real bugs, not nice-to-haves.</p>
+        <p style="margin-top: 1rem; font-size: 0.85rem;" class="donate-trust">Last reviewed October 2026.</p>
+      </div>
+    </section>
+
+  </main>
+<!-- INCLUDE:partials/chrome-bottom.html -->

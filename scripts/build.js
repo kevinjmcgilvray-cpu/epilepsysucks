@@ -70,7 +70,10 @@ const PAGES = [
   "community/contact.html",
   "resources.html",
   "about.html",
-  "privacy.html"
+  "privacy.html",
+  "faq.html",
+  "accessibility.html",
+  "sitemap.html"
 ];
 
 // Top-level files/dirs that are dev/build-only (or, for api/, deployed

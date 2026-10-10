@@ -17,6 +17,17 @@
       border-left: 2px solid var(--epi);
     }
 
+    /* /sitemap is the one page where every .reasons-list item IS the
+       interactive control (a plain link, not supporting prose around
+       one) — give those <a> tags real block-level height so they
+       clear the 48px touch-target floor, same as everywhere else on
+       the site. */
+    #sitemap .reasons-list a {
+      display: block;
+      width: 100%;
+      padding: 0.8rem 0;
+    }
+
     .mechanism-sim__readout {
       margin: 0.9rem 0 0;
       font-size: 0.85rem;
