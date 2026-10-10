@@ -73,11 +73,6 @@ const BASELINE_LOW_CONTRAST_COUNT = {
 async function scanTheme(browser, baseUrl, theme, route) {
   const page = await browser.newPage({ viewport: { width: 1280, height: 1000 } });
   await page.goto(`${baseUrl}/${route}`);
-  const warningVisible = await page.evaluate(() => !document.getElementById("entry-warning").hidden);
-  if (warningVisible) {
-    await page.click("#entry-warning-continue");
-    await page.waitForTimeout(200);
-  }
 
   const current = await page.evaluate(() => document.documentElement.getAttribute("data-theme"));
   if (current !== theme) {

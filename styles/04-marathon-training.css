@@ -182,6 +182,11 @@
       .weight-chart__tooltip {
         transition: none;
       }
+
+      .course-map__swatch--live {
+        animation: none;
+        opacity: 1;
+      }
     }
 
     .chapter--with-photo {

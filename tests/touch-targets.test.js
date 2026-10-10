@@ -112,15 +112,6 @@ async function auditPage(browser, baseUrl, route) {
   await page.goto(`${baseUrl}/${route}`);
   await page.waitForTimeout(250);
 
-  const warning = await page.$("#entry-warning");
-  if (warning) {
-    const hidden = await page.evaluate((el) => el.hidden, warning);
-    if (!hidden) {
-      await page.click("#entry-warning-continue").catch(() => {});
-      await page.waitForTimeout(150);
-    }
-  }
-
   let all = await measure(page, "initial");
 
   const navToggle = await page.$("#nav-toggle");

@@ -316,6 +316,13 @@
       100% { opacity: 0.25; }
     }
 
+    @media (prefers-reduced-motion: reduce) {
+      .live-track__badge-dot {
+        animation: none;
+        opacity: 1;
+      }
+    }
+
     @media (max-width: 800px) {
       .live-track {
         width: min(14rem, 70vw);

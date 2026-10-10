@@ -54,25 +54,25 @@
           </button>
           <button
             type="button"
-            class="storm-toggle"
-            id="storm-toggle"
+            class="fx-toggle"
+            id="thunder-toggle"
             aria-pressed="false"
-            aria-label="Turn on storm effects (animated lightning + thunder)"
-            title="Storm effects"
+            aria-label="Turn on thunder sound effects"
+            title="Thunder sound"
           >
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
               <path fill="currentColor" d="M13 2 4 14h6l-1 8 9-12h-6l1-8z" />
             </svg>
           </button>
           <!-- Lightning cursor: off by default (the normal pointer is
-               used until a visitor explicitly opts in), unlike storm
-               effects above which defaults on. Only ever shown/relevant
-               on fine-pointer (mouse) devices — see
+               used until a visitor explicitly opts in) — same off-by-
+               default behavior as the thunder-sound toggle above. Only
+               ever shown/relevant on fine-pointer (mouse) devices — see
                js/01-nav-theme-cursor.js and the (pointer: coarse) rule
                in styles/01-base-nav.css. -->
           <button
             type="button"
-            class="storm-toggle cursor-toggle"
+            class="fx-toggle cursor-toggle"
             id="cursor-toggle"
             aria-pressed="false"
             aria-label="Turn on lightning cursor"

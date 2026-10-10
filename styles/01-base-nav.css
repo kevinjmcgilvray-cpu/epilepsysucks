@@ -275,6 +275,13 @@
       transform: translateZ(0);
     }
 
+    /* Static, non-flashing ambient background texture. This used to be
+       paired with an opt-in-gated flashing lightning bolt + screen-flash
+       (.bg-lightning__flash / .bg-lightning__bolt) — removed outright
+       (not just gated behind a warning) since an opt-in confirmation
+       isn't sufficient protection for photosensitive visitors on an
+       epilepsy awareness site. This photo layer never animates or
+       changes opacity on its own, so it needs no reduced-motion guard. */
     .bg-lightning__photo {
       position: absolute;
       inset: 0;
@@ -291,88 +298,6 @@
       /* Faded down from 0.22 to match the dark-theme reduction above. */
       opacity: 0.13;
       mix-blend-mode: multiply;
-    }
-
-    .bg-lightning__flash {
-      position: absolute;
-      inset: 0;
-      background: #eaf2ff;
-      opacity: 0;
-      mix-blend-mode: screen;
-      transition: opacity 0.5s ease-out;
-      will-change: opacity;
-    }
-
-    .bg-lightning.is-on .bg-lightning__flash {
-      opacity: 0.16;
-      transition: opacity 0.05s ease-in;
-    }
-
-    [data-theme="light"] .bg-lightning.is-on .bg-lightning__flash {
-      opacity: 0.08;
-    }
-
-    .bg-lightning__bolt {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-    }
-
-    .bg-lightning__bolt-path {
-      fill: none;
-      stroke: #eef4ff;
-      stroke-width: 2.4;
-      stroke-linecap: round;
-      vector-effect: non-scaling-stroke;
-      opacity: 0;
-      filter:
-        drop-shadow(0 0 4px rgba(190, 215, 255, 0.9))
-        drop-shadow(0 0 14px rgba(140, 180, 255, 0.55));
-      transition: opacity 0.5s ease-out;
-      will-change: opacity;
-    }
-
-    .bg-lightning.is-on .bg-lightning__bolt-path {
-      opacity: 0.85;
-      transition: opacity 0.05s ease-in;
-    }
-
-    [data-theme="light"] .bg-lightning__bolt-path {
-      /* A pale stroke is invisible against the light theme's cream
-         background, so light mode gets a deep indigo bolt instead — still
-         reads as "lightning," just contrasted for a bright sky. */
-      stroke: #46399e;
-      filter:
-        drop-shadow(0 0 3px rgba(70, 57, 158, 0.5))
-        drop-shadow(0 0 9px rgba(70, 57, 158, 0.3));
-    }
-
-    [data-theme="light"] .bg-lightning.is-on .bg-lightning__bolt-path {
-      opacity: 0.65;
-    }
-
-    /* Secondary channels forking off the main bolt — thinner, like real
-       lightning's branches. */
-    #lightning-bolt-branch {
-      stroke-width: 1.5;
-    }
-
-    #lightning-bolt-branch2 {
-      stroke-width: 1;
-    }
-
-    /* Photosensitivity safety: this is an epilepsy awareness site, so the
-       storm effect is a single soft, infrequent flash (never more than one
-       per 20+ seconds, well under the 3-flashes-per-second WCAG threshold)
-       and is fully disabled when the visitor has asked for reduced motion.
-       (The sound toggle's matching display:none lives further down, after
-       its own rules, so it isn't overridden by later source-order CSS.) */
-    @media (prefers-reduced-motion: reduce) {
-      .bg-lightning__flash,
-      .bg-lightning__bolt {
-        display: none;
-      }
     }
 
     a {
@@ -399,9 +324,22 @@
       border-radius: 0.3em;
     }
 
-    img {
+    img,
+    video {
       display: block;
       max-width: 100%;
+      height: auto;
+    }
+
+    /* Generic reusable layout-width utility — not yet applied anywhere
+       (every page currently uses .section__inner/.section__inner--wide
+       for width-constraining, which already does the same job), but
+       added so future sections/pages have a plain, framework-agnostic
+       option that doesn't depend on the .section/.section__inner
+       pairing. */
+    .container {
+      width: min(100% - 2rem, 1200px);
+      margin-inline: auto;
     }
 
     .nav {
@@ -492,7 +430,7 @@
       align-items: center;
       justify-content: center;
       /* 48px floor for mobile touch targets (WCAG 2.5.8) — same reason
-         .storm-toggle below grew from 2rem too. */
+         .fx-toggle below grew from 2rem too. */
       width: 3rem;
       height: 3rem;
       padding: 0;
@@ -522,7 +460,11 @@
       display: block;
     }
 
-    .storm-toggle {
+    /* Shared pill-button style for the small icon toggles in the nav
+       (currently: the thunder-sound toggle and the lightning-cursor
+       toggle). Named generically since it no longer has anything to do
+       with the old flashing "storm" effect. */
+    .fx-toggle {
       flex-shrink: 0;
       display: inline-flex;
       align-items: center;
@@ -544,48 +486,56 @@
         opacity 0.18s ease, background 0.18s ease;
     }
 
-    .storm-toggle:hover {
+    .fx-toggle:hover {
       transform: translateY(-1px) scale(1.05);
       filter: brightness(1.08);
       box-shadow: 0 0 18px rgba(180, 140, 255, 0.5);
     }
 
-    .storm-toggle:focus-visible {
+    .fx-toggle:focus-visible {
       outline: 2px solid #e0d0ff;
       outline-offset: 2px;
     }
 
-    .storm-toggle svg {
+    .fx-toggle svg {
       width: 1.1rem;
       height: 1.1rem;
       display: block;
     }
 
-    /* "Off" (default): dim, desaturated — signals the flashing effect is
+    /* "Off" (default): dim, desaturated — signals the effect is
        inactive. "On": bright purple-gold, matching the site's energetic
        accent, to clearly signal it's live. */
-    .storm-toggle.is-on {
+    .fx-toggle.is-on {
       opacity: 1;
       background: linear-gradient(135deg, #ffd36b 0%, #e8a53f 100%);
       border-color: rgba(255, 211, 107, 0.6);
       box-shadow: 0 0 14px rgba(255, 211, 107, 0.5);
     }
 
-    @media (prefers-reduced-motion: reduce) {
-      .storm-toggle {
-        display: none;
-      }
-    }
-
-    /* Lightning cursor toggle — same pill shape as .storm-toggle, but
+    /* Lightning cursor toggle — same pill shape as .fx-toggle, but
        its own "on" treatment (purple/white glow, matching #custom-
-       cursor's own drop-shadow colors below) rather than storm's
-       gold, so the two don't read as the same switch at a glance. */
+       cursor's own drop-shadow colors below) rather than the thunder
+       toggle's gold, so the two don't read as the same switch at a
+       glance. */
     .cursor-toggle.is-on {
       opacity: 1;
       background: linear-gradient(135deg, #9b6bff 0%, #6b46c1 100%);
       border-color: rgba(224, 208, 255, 0.7);
       box-shadow: 0 0 14px rgba(155, 107, 255, 0.6);
+    }
+
+    /* The lightning cursor is a genuinely motion-based effect (it
+       animates following the pointer, plus its own glow keyframe), so
+       it stays gated behind reduced-motion — but the thunder-sound
+       toggle is audio, not motion, so it's deliberately NOT included
+       here anymore (a previous version hid both toggles under this
+       query, which incorrectly treated an audio preference as a motion
+       one). */
+    @media (prefers-reduced-motion: reduce) {
+      .cursor-toggle {
+        display: none;
+      }
     }
 
     /* This toggle (and the cursor it controls) only ever does anything
@@ -595,158 +545,6 @@
     @media (pointer: coarse) {
       .cursor-toggle {
         display: none;
-      }
-    }
-
-    /* True full-screen modal — used ONLY by #storm-confirm now (the
-       "turn storm effects on?" active opt-in prompt). Site content is
-       made inert via visibility (not just visually covered) so it can't
-       be focused or interacted with underneath, which is appropriate
-       here since this gates an action the visitor just deliberately
-       took. The page-load sensory notice is .sensory-banner below
-       instead — non-blocking, nothing to make inert. */
-    .entry-warning {
-      position: fixed;
-      inset: 0;
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1.5rem;
-      background: rgba(8, 6, 12, 0.92);
-      backdrop-filter: blur(6px);
-    }
-
-    .entry-warning[hidden] {
-      display: none;
-    }
-
-    body.entry-locked {
-      overflow: hidden;
-    }
-
-    body.entry-locked > *:not(.entry-warning) {
-      visibility: hidden;
-    }
-
-    .entry-warning__panel {
-      max-width: 30rem;
-      width: 100%;
-      padding: clamp(1.5rem, 4vw, 2.25rem);
-      border: 1px solid rgba(180, 140, 255, 0.4);
-      border-radius: 1rem;
-      background: var(--surface-muted, #1a1613);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-      text-align: center;
-    }
-
-    .entry-warning__icon {
-      margin: 0 0 0.5rem;
-      font-size: 2.25rem;
-      line-height: 1;
-    }
-
-    .entry-warning__title {
-      margin: 0 0 0.75rem;
-      font-family: var(--font-display);
-      font-size: clamp(1.3rem, 3vw, 1.6rem);
-      color: var(--paper);
-    }
-
-    .entry-warning__desc {
-      margin: 0 0 1.5rem;
-      font-size: 0.95rem;
-      line-height: 1.55;
-      color: var(--paper);
-      opacity: 0.85;
-    }
-
-    /* Two-button row for #storm-confirm (the "turn storm effects on?"
-       prompt). */
-    .entry-warning__actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-    }
-
-    .entry-warning__actions .btn {
-      flex: 1 1 10rem;
-      justify-content: center;
-    }
-
-    /* Non-blocking sensory-effects notice (replaces the old full-screen
-       page-load gate). Floats as a small corner card above the page —
-       no inset:0, no backdrop, no scroll-lock, no visibility:hidden on
-       siblings. Deliberately no transition/animation on show/hide: a
-       banner about sensory sensitivity shouldn't itself introduce any
-       motion. */
-    .sensory-banner {
-      position: fixed;
-      z-index: 900;
-      left: 1rem;
-      right: 1rem;
-      bottom: 1rem;
-      display: flex;
-      justify-content: center;
-    }
-
-    .sensory-banner[hidden] {
-      display: none;
-    }
-
-    .sensory-banner__panel {
-      display: flex;
-      align-items: flex-start;
-      gap: 1rem;
-      max-width: 34rem;
-      width: 100%;
-      padding: 1.1rem 1.25rem;
-      border: 1px solid rgba(180, 140, 255, 0.4);
-      border-radius: 0.9rem;
-      background: var(--surface-muted, #1a1613);
-      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
-    }
-
-    .sensory-banner__icon {
-      margin: 0.1rem 0 0;
-      font-size: 1.4rem;
-      line-height: 1;
-      flex: 0 0 auto;
-    }
-
-    .sensory-banner__text {
-      flex: 1 1 auto;
-      min-width: 0;
-    }
-
-    .sensory-banner__title {
-      margin: 0 0 0.3rem;
-      font-family: var(--font-display);
-      font-size: 1rem;
-      color: var(--paper);
-    }
-
-    .sensory-banner__desc {
-      margin: 0;
-      font-size: 0.85rem;
-      line-height: 1.5;
-      color: var(--paper);
-      opacity: 0.85;
-    }
-
-    .sensory-banner__continue {
-      flex: 0 0 auto;
-      align-self: center;
-    }
-
-    @media (max-width: 560px) {
-      .sensory-banner__panel {
-        flex-direction: column;
-      }
-
-      .sensory-banner__continue {
-        align-self: stretch;
-        justify-content: center;
       }
     }
 
