@@ -527,6 +527,28 @@
         });
       }
 
+      // Mermaid gives its SVGs a percentage width (e.g. width="100%")
+      // plus a `style="max-width: <natural-px>px"` cap — which, for a
+      // genuinely wide diagram (like the roadmap chart's ~1850px
+      // natural width) squeezed into a much narrower text column,
+      // means the percentage resolves against that narrow column and
+      // crushes the text down to a few illegible pixels. CSS alone
+      // can't override this (the percentage keeps resolving against
+      // the container no matter what `width`/`max-width` says), so
+      // force it to its own real pixel size directly from the
+      // rendered SVG's viewBox instead — letting .arch-diagram's
+      // existing overflow-x:auto handle anything wider than the
+      // column via horizontal scroll, same as this site's wide tables.
+      function sizeLargeDiagramsToNaturalWidth(root) {
+        (root || document).querySelectorAll(".arch-diagram--large svg").forEach((svg) => {
+          const vb = svg.viewBox && svg.viewBox.baseVal;
+          if (!vb || !vb.width) return;
+          svg.style.width = vb.width + "px";
+          svg.style.maxWidth = "none";
+          svg.style.height = "auto";
+        });
+      }
+
       function renderPublicDiagrams() {
         const publicDiagrams = Array.from(document.querySelectorAll(".mermaid"));
         if (!publicDiagrams.length) return;
@@ -535,6 +557,7 @@
             fixTimelineTitleColor();
             fixEdgeLabelContrast();
             applyDarkTimelinePalette();
+            sizeLargeDiagramsToNaturalWidth();
           });
         } catch (err) {
           /* ignore render errors, diagram just stays as plain text */
@@ -629,6 +652,7 @@
             fixTimelineTitleColor();
             fixEdgeLabelContrast();
             applyDarkTimelinePalette();
+            sizeLargeDiagramsToNaturalWidth();
           });
         } catch (err) {
           /* leave as-is if re-render fails */
