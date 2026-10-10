@@ -233,117 +233,13 @@
           </div>
         </details>
 
-        <details id="simulations" class="mechanism-note reveal">
-          <summary class="mechanism-note__summary">
-            <span class="mechanism-note__summary-text">
-              <span class="eyebrow">The science</span>
-              <span class="mechanism-note__summary-title">What's actually happening in a seizure</span>
-            </span>
-            <span class="mechanism-note__chevron" aria-hidden="true"></span>
-          </summary>
-          <div class="mechanism-note__body">
-          <p>In a healthy brain, neurons fire in a constantly shifting balance between excitation (mostly driven by the neurotransmitter glutamate) and inhibition (mostly driven by GABA). Voltage-gated sodium, potassium, and calcium channels decide exactly when a neuron fires and when it resets, and a layer of inhibitory interneurons acts like a crowd of circuit breakers, keeping nearby neurons from ever firing in lockstep. Zoomed out, that looks like noise on an EEG — because it is millions of independent conversations happening at once, not one shout.</p>
-          <p>A seizure starts when a group of neurons becomes abnormally excitable — in my case, inside the left temporal lobe. Scar tissue, channel dysfunction, or a local drop in inhibition can trigger what's called a <span class="key">paroxysmal depolarization shift</span>: a surge of calcium and NMDA-receptor-driven depolarization that fires a neuron far harder and longer than normal, followed by a sharp after-hyperpolarization as potassium and GABA-B currents try to shut it back down. One neuron misfiring like that isn't a seizure yet. It becomes one the moment that shutdown fails and the surrounding tissue gets pulled into firing on the same beat instead of resisting it.</p>
-          <p>That's the actual mechanism: <span class="key">hypersynchronization</span>. Instead of neurons firing independently, a whole region locks into one rhythm — like a crowd that starts clapping in unison instead of talking over each other. If the discharge stays contained to where it started, that's a focal seizure. If it spreads — through local cortical wiring, across the corpus callosum to the other hemisphere, or through the thalamus, which normally times rhythms across the entire cortex — it becomes a focal-to-bilateral seizure, and the clapping becomes the whole stadium.</p>
-          <p>A seizure doesn't just run out of fuel. It gets actively shut down by the same inhibitory systems that failed to stop it from starting — GABA-B receptors, potassium channels, and a flood of adenosine that acts like an emergency brake on the whole network. That's the actual mechanism behind the postictal state: the brain swings hard from hyperactive to suppressed, and the confusion, exhaustion, and memory gaps afterward are what that reset looks like from the inside.</p>
-          <p>Every major treatment I've had goes after a different point in that same chain. The 2017 lobectomy removed the actual tissue where the paroxysmal shift kept starting — cutting out the spark. The VNS, implanted in 2019, doesn't touch brain tissue directly; it stimulates the vagus nerve, which signals into the brainstem and raises inhibitory tone broadly across the cortex, making the next spark harder to catch. The DBS leads sit deep in the thalamus — the hub epilepsy devices typically target — interrupting the relay a focal discharge needs to recruit the rest of the brain into its rhythm. Three different treatments. Three different points on the exact same circuit.</p>
-
-          <div class="mechanism-chart">
-            <p class="mechanism-chart__title">A simplified look at cortical electrical activity — before, during, and after</p>
-            <div class="mechanism-chart__row">
-              <figure class="mechanism-chart__panel">
-                <svg viewBox="0 0 240 100" role="img" aria-label="Illustrative waveform of baseline, asynchronous neuron firing">
-                  <line class="mechanism-chart__baseline" x1="0" y1="50" x2="240" y2="50" />
-                  <path class="mechanism-chart__wave mechanism-chart__wave--base" d="M0.0,51.9 L1.5,55.0 L3.0,53.3 L4.5,54.8 L6.0,47.4 L7.5,44.3 L9.0,46.8 L10.5,47.5 L12.0,54.1 L13.5,56.4 L15.0,50.1 L16.5,49.7 L18.0,46.7 L19.5,44.5 L21.0,51.8 L22.5,52.0 L24.0,53.9 L25.5,53.7 L27.0,45.0 L28.5,46.6 L30.0,48.3 L31.5,49.0 L33.0,55.4 L34.5,54.2 L36.0,50.3 L37.5,48.7 L39.0,43.0 L40.5,45.8 L42.0,53.5 L43.5,52.6 L45.0,56.0 L46.5,53.0 L48.0,45.3 L49.5,46.5 L51.0,44.3 L52.5,49.2 L54.0,56.8 L55.5,53.5 L57.0,52.3 L58.5,49.5 L60.0,43.7 L61.5,46.9 L63.0,50.0 L64.5,51.6 L66.0,56.9 L67.5,50.9 L69.0,46.4 L70.5,48.5 L72.0,45.3 L73.5,51.1 L75.0,54.6 L76.5,52.0 L78.0,53.0 L79.5,46.5 L81.0,43.5 L82.5,49.3 L84.0,50.9 L85.5,53.9 L87.0,56.3 L88.5,49.4 L90.0,47.3 L91.5,45.3 L93.0,43.5 L94.5,53.4 L96.0,54.9 L97.5,53.7 L99.0,54.0 L100.5,45.8 L102.0,44.9 L103.5,46.9 L105.0,48.0 L106.5,55.5 L108.0,55.8 L109.5,49.8 L111.0,49.4 L112.5,45.6 L114.0,45.5 L115.5,52.4 L117.0,51.5 L118.5,54.5 L120.0,52.9 L121.5,44.4 L123.0,47.3 L124.5,48.0 L126.0,50.1 L127.5,55.9 L129.0,52.8 L130.5,50.2 L132.0,48.2 L133.5,42.7 L135.0,47.3 L136.5,53.8 L138.0,53.0 L139.5,56.2 L141.0,51.0 L142.5,44.9 L144.0,46.7 L145.5,44.2 L147.0,50.8 L148.5,57.1 L150.0,53.2 L151.5,52.3 L153.0,47.9 L154.5,43.6 L156.0,47.9 L157.5,49.8 L159.0,52.5 L160.5,57.0 L162.0,49.8 L163.5,46.7 L165.0,47.8 L166.5,45.4 L168.0,52.6 L169.5,53.9 L171.0,51.8 L172.5,52.9 L174.0,45.4 L175.5,44.3 L177.0,49.9 L178.5,51.0 L180.0,54.9 L181.5,55.2 L183.0,48.2 L184.5,47.5 L186.0,44.7 L187.5,44.6 L189.0,54.6 L190.5,54.6 L192.0,54.1 L193.5,52.7 L195.0,44.4 L196.5,45.7 L198.0,47.0 L199.5,48.8 L201.0,56.5 L202.5,55.0 L204.0,49.7 L205.5,48.8 L207.0,44.5 L208.5,46.8 L210.0,52.7 L211.5,51.3 L213.0,55.1 L214.5,51.7 L216.0,44.3 L217.5,47.8 L219.0,47.6 L220.5,51.3 L222.0,56.1 L223.5,51.6 L225.0,50.2 L226.5,47.5 L228.0,42.8 L229.5,48.8 L231.0,53.7 L232.5,53.6 L234.0,56.1 L235.5,49.0 L237.0,44.9 L238.5,46.9 L240.0,44.4" />
-                </svg>
-                <figcaption><strong>Interictal</strong><span>baseline, asynchronous firing</span></figcaption>
-              </figure>
-              <figure class="mechanism-chart__panel mechanism-chart__panel--ictal">
-                <svg viewBox="0 0 240 100" role="img" aria-label="Illustrative waveform of hypersynchronous spike-and-wave activity during a seizure">
-                  <line class="mechanism-chart__baseline" x1="0" y1="50" x2="240" y2="50" />
-                  <path class="mechanism-chart__wave mechanism-chart__wave--ictal" d="M0.0,49.9 L1.5,44.8 L3.0,41.0 L4.5,36.0 L6.0,40.5 L7.5,47.6 L9.0,55.3 L10.5,58.5 L12.0,60.2 L13.5,62.4 L15.0,63.2 L16.5,63.5 L18.0,61.7 L19.5,59.9 L21.0,58.0 L22.5,55.5 L24.0,55.1 L25.5,54.1 L27.0,54.3 L28.5,53.2 L30.0,52.2 L31.5,52.2 L33.0,52.3 L34.5,52.5 L36.0,51.4 L37.5,51.4 L39.0,50.9 L40.5,47.5 L42.0,39.1 L43.5,30.9 L45.0,26.5 L46.5,37.9 L48.0,50.4 L49.5,59.7 L51.0,65.0 L52.5,68.7 L54.0,70.3 L55.5,71.8 L57.0,70.9 L58.5,68.7 L60.0,64.3 L61.5,60.0 L63.0,58.5 L64.5,57.3 L66.0,56.4 L67.5,55.3 L69.0,55.1 L70.5,53.8 L72.0,53.0 L73.5,53.2 L75.0,53.0 L76.5,52.5 L78.0,50.9 L79.5,50.7 L81.0,42.8 L82.5,31.1 L84.0,19.5 L85.5,21.4 L87.0,39.5 L88.5,56.3 L90.0,65.8 L91.5,72.3 L93.0,77.4 L94.5,79.3 L96.0,78.7 L97.5,77.3 L99.0,72.8 L100.5,67.1 L102.0,60.0 L103.5,59.9 L105.0,59.3 L106.5,57.3 L108.0,56.3 L109.5,55.2 L111.0,54.9 L112.5,53.5 L114.0,53.1 L115.5,53.2 L117.0,52.4 L118.5,51.3 L120.0,49.6 L121.5,38.3 L123.0,25.9 L124.5,13.6 L126.0,25.9 L127.5,44.5 L129.0,61.9 L130.5,68.0 L132.0,74.2 L133.5,78.3 L135.0,79.9 L136.5,78.6 L138.0,75.3 L139.5,71.4 L141.0,64.8 L142.5,60.1 L144.0,59.2 L145.5,58.8 L147.0,57.6 L148.5,55.6 L150.0,55.0 L151.5,54.2 L153.0,54.0 L154.5,52.8 L156.0,52.6 L157.5,52.4 L159.0,50.9 L160.5,46.0 L162.0,33.5 L163.5,22.3 L165.0,13.8 L166.5,31.8 L168.0,50.6 L169.5,64.0 L171.0,70.9 L172.5,75.2 L174.0,79.1 L175.5,79.9 L177.0,78.1 L178.5,74.0 L180.0,68.7 L181.5,63.1 L183.0,59.7 L184.5,59.0 L186.0,58.0 L187.5,57.3 L189.0,55.8 L190.5,54.2 L192.0,54.2 L193.5,53.5 L195.0,53.2 L196.5,52.0 L198.0,51.8 L199.5,51.1 L201.0,41.8 L202.5,29.7 L204.0,17.6 L205.5,20.4 L207.0,38.0 L208.5,56.3 L210.0,66.4 L211.5,72.7 L213.0,77.3 L214.5,78.9 L216.0,79.7 L217.5,77.2 L219.0,72.5 L220.5,66.6 L222.0,60.2 L223.5,60.3 L225.0,58.5 L226.5,57.7 L228.0,56.7 L229.5,55.7 L231.0,54.3 L232.5,53.2 L234.0,53.6 L235.5,52.8 L237.0,52.2 L238.5,51.0 L240.0,50.6" />
-                </svg>
-                <figcaption><strong>Ictal onset</strong><span>hypersynchronous spike-and-wave</span></figcaption>
-              </figure>
-              <figure class="mechanism-chart__panel">
-                <svg viewBox="0 0 240 100" role="img" aria-label="Illustrative waveform of suppressed postictal brain activity, slowly recovering toward baseline">
-                  <line class="mechanism-chart__baseline" x1="0" y1="50" x2="240" y2="50" />
-                  <path class="mechanism-chart__wave mechanism-chart__wave--post" d="M0.0,50.0 L1.5,50.4 L3.0,51.6 L4.5,52.8 L6.0,53.7 L7.5,54.3 L9.0,54.4 L10.5,55.2 L12.0,55.1 L13.5,55.1 L15.0,55.1 L16.5,55.6 L18.0,55.8 L19.5,55.2 L21.0,55.1 L22.5,54.5 L24.0,53.9 L25.5,52.5 L27.0,51.6 L28.5,51.5 L30.0,50.6 L31.5,50.1 L33.0,49.3 L34.5,49.2 L36.0,48.1 L37.5,46.7 L39.0,46.2 L40.5,45.6 L42.0,45.6 L43.5,44.8 L45.0,45.5 L46.5,45.9 L48.0,45.8 L49.5,45.5 L51.0,45.2 L52.5,46.1 L54.0,45.7 L55.5,46.3 L57.0,47.2 L58.5,48.7 L60.0,49.5 L61.5,49.4 L63.0,50.5 L64.5,50.7 L66.0,51.1 L67.5,50.9 L69.0,51.9 L70.5,53.4 L72.0,53.5 L73.5,54.2 L75.0,54.2 L76.5,54.9 L78.0,53.8 L79.5,52.9 L81.0,53.3 L82.5,53.3 L84.0,53.5 L85.5,52.7 L87.0,53.5 L88.5,53.1 L90.0,51.7 L91.5,50.5 L93.0,49.6 L94.5,49.9 L96.0,48.4 L97.5,48.6 L99.0,48.9 L100.5,49.1 L102.0,48.3 L103.5,46.8 L105.0,47.3 L106.5,46.3 L108.0,46.0 L109.5,45.6 L111.0,47.0 L112.5,48.1 L114.0,47.4 L115.5,48.0 L117.0,47.9 L118.5,48.4 L120.0,47.2 L121.5,47.4 L123.0,49.2 L124.5,49.8 L126.0,50.8 L127.5,50.7 L129.0,52.3 L130.5,51.9 L132.0,50.8 L133.5,50.8 L135.0,51.2 L136.5,52.5 L138.0,51.7 L139.5,53.1 L141.0,53.8 L142.5,53.6 L144.0,52.3 L145.5,51.0 L147.0,51.9 L148.5,50.7 L150.0,50.7 L151.5,50.8 L153.0,52.1 L154.5,52.2 L156.0,50.1 L157.5,50.2 L159.0,49.3 L160.5,48.9 L162.0,47.3 L163.5,48.0 L165.0,49.7 L166.5,49.2 L168.0,49.4 L169.5,48.5 L171.0,49.5 L172.5,47.8 L174.0,46.5 L175.5,47.4 L177.0,48.3 L178.5,49.6 L180.0,48.7 L181.5,50.5 L183.0,50.7 L184.5,49.6 L186.0,48.5 L187.5,48.2 L189.0,50.2 L190.5,49.3 L192.0,50.3 L193.5,51.4 L195.0,52.7 L196.5,51.9 L198.0,49.7 L199.5,50.7 L201.0,49.9 L202.5,50.0 L204.0,49.4 L205.5,51.3 L207.0,53.0 L208.5,51.4 L210.0,51.3 L211.5,50.2 L213.0,50.8 L214.5,48.6 L216.0,48.2 L217.5,50.2 L219.0,50.9 L220.5,51.5 L222.0,50.0 L223.5,51.5 L225.0,50.4 L226.5,48.4 L228.0,47.9 L229.5,48.5 L231.0,50.7 L232.5,49.4 L234.0,50.8 L235.5,51.6 L237.0,51.5 L238.5,49.6 L240.0,47.7" />
-                </svg>
-                <figcaption><strong>Postictal</strong><span>suppressed, slowly recovering</span></figcaption>
-              </figure>
-            </div>
-            <p class="mechanism-chart__note">A simplified, illustrative schematic of general seizure electrophysiology — not an actual EEG recording from my case.</p>
+        <div class="mechanism-note reveal">
+          <div class="mechanism-note__body" style="padding-top: clamp(1.25rem, 4vw, 1.6rem);">
+          <p class="eyebrow">The science</p>
+          <p>Curious exactly what's happening in the brain during a seizure — and what the VNS and DBS above are each actually interrupting? I pulled the full explanation and two live, interactive simulations (a small cortical network you can push into a spreading seizure, and a real Hodgkin-Huxley neuron you can fire yourself) out onto their own page, so this chapter doesn't turn into a neuroscience textbook.</p>
+          <p style="margin-top: 1rem;"><a href="/journey/simulations">Try the seizure &amp; neuron simulations &rarr;</a></p>
           </div>
-
-          <div class="mechanism-sim">
-            <p class="mechanism-sim__title">Try it: watch hypersynchronization spread through a small network</p>
-            <p class="mechanism-sim__intro">Each dot is a tiny patch of cortex, wired to its neighbors. Click any dot (or hit the button) to start a discharge, then drag the sliders — exactly like the surround-inhibition and connectivity described above — and watch whether it stays small or takes over the whole grid.</p>
-            <div class="mechanism-sim__frame">
-              <svg id="mechanism-sim-svg" viewBox="0 0 520 280" role="img" aria-label="Interactive grid simulation: click a node to trigger a spreading discharge">
-                <g id="sim-edges"></g>
-                <g id="sim-nodes"></g>
-              </svg>
-            </div>
-            <div class="mechanism-sim__controls">
-              <label class="mechanism-sim__slider">
-                <span>Inhibition <strong id="sim-inhibition-val">70%</strong></span>
-                <input type="range" id="sim-inhibition" min="0" max="100" value="70" aria-label="Inhibition strength" />
-              </label>
-              <label class="mechanism-sim__slider">
-                <span>Network coupling <strong id="sim-coupling-val">50%</strong></span>
-                <input type="range" id="sim-coupling" min="0" max="100" value="50" aria-label="Network connection strength" />
-              </label>
-              <div class="mechanism-sim__buttons">
-                <button type="button" class="btn btn--purple" id="sim-trigger">Trigger focal discharge</button>
-                <button type="button" class="btn btn--ghost" id="sim-reset">Reset</button>
-              </div>
-            </div>
-            <p class="mechanism-sim__readout" id="sim-readout" aria-live="polite">Click a dot, or hit “Trigger focal discharge,” to start.</p>
-          </div>
-          </div>
-        </details>
-
-        <details class="mechanism-note reveal">
-          <summary class="mechanism-note__summary">
-            <span class="mechanism-note__summary-text">
-              <span class="eyebrow">Zoom in further</span>
-              <span class="mechanism-note__summary-title">Simulating one real neuron, with the actual equations</span>
-            </span>
-            <span class="mechanism-note__chevron" aria-hidden="true"></span>
-          </summary>
-          <div class="mechanism-note__body">
-          <p>The grid above shows neurons as simple on/off dots. A real neuron isn't on/off — its voltage is governed by sodium, potassium, and leak channels opening and closing continuously. In 1952, Alan Hodgkin and Andrew Huxley measured exactly how, in squid giant axon, and wrote it as four coupled differential equations. It's still the equations every computational neuroscience model builds on, and it's what's actually running below — not a canned animation, a live numerical simulation integrated in your browser via 4th-order Runge-Kutta, 60 times a second.</p>
-          <p>Turn up <span class="key">injected current</span> and watch the membrane cross threshold and fire — a textbook action potential, over and over, exactly like the real thing. Then turn up <span class="key">inhibitory tone</span> — the same GABA-receptor conductance that VNS and DBS lean on — and watch it shut the same neuron down, even under heavy current. This is the one-neuron version of everything described above.</p>
-
-          <div class="neuron-sim">
-            <p class="mechanism-sim__title">Try it: fire a real Hodgkin-Huxley neuron</p>
-            <p class="mechanism-sim__intro">This is a live simulation, not a recording — the trace below is the actual membrane voltage of a numerically-integrated neuron, updating in real time as you move the sliders.</p>
-            <div class="neuron-sim__frame">
-              <svg id="neuron-sim-svg" viewBox="0 0 520 190" role="img" aria-label="Live oscilloscope-style trace of a simulated neuron's membrane voltage">
-                <g class="neuron-sim__grid" id="neuron-sim-grid"></g>
-                <line class="neuron-sim__threshold" id="neuron-sim-threshold" x1="0" x2="520" />
-                <polyline class="neuron-sim__trace" id="neuron-sim-trace" points="" />
-              </svg>
-            </div>
-            <div class="mechanism-sim__controls">
-              <label class="mechanism-sim__slider">
-                <span>Injected current <strong id="neuron-current-val">0 µA/cm²</strong></span>
-                <input type="range" id="neuron-current" min="0" max="30" step="0.5" value="0" aria-label="Injected current" />
-              </label>
-              <label class="mechanism-sim__slider">
-                <span>Inhibitory tone (GABA-like) <strong id="neuron-inhibition-val">0%</strong></span>
-                <input type="range" id="neuron-inhibition" min="0" max="100" step="1" value="0" aria-label="Inhibitory conductance" />
-              </label>
-              <div class="mechanism-sim__buttons">
-                <button type="button" class="btn btn--purple" id="neuron-playpause">Pause</button>
-                <button type="button" class="btn btn--ghost" id="neuron-reset">Reset</button>
-              </div>
-            </div>
-            <p class="mechanism-sim__readout" id="neuron-readout" aria-live="polite">Resting — below firing threshold.</p>
-          </div>
-          </div>
-        </details>
+        </div>
       </div>
     </section>
 

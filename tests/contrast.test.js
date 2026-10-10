@@ -27,7 +27,7 @@ const { startServer } = require("./_server");
 const { check, report } = require("./_assert");
 
 const DIST = path.join(__dirname, "..", "dist");
-const PAGES = ["index.html", "journey.html", "journey/diagnosis.html", "journey/timeline.html", "journey/surgeries.html", "recovery.html", "recovery/mindset.html", "recovery/dbs-tuning.html", "recovery/weight-loss.html", "marathon.html", "marathon/mission.html", "marathon/training-log.html", "marathon/fundraising.html", "community.html", "community/guestbook.html", "community/contact.html", "resources.html", "about.html", "privacy.html"];
+const PAGES = ["index.html", "journey.html", "journey/diagnosis.html", "journey/timeline.html", "journey/surgeries.html", "journey/simulations.html", "recovery.html", "recovery/mindset.html", "recovery/dbs-tuning.html", "recovery/weight-loss.html", "marathon.html", "marathon/mission.html", "marathon/training-log.html", "marathon/fundraising.html", "community.html", "community/guestbook.html", "community/contact.html", "resources.html", "about.html", "privacy.html"];
 
 // [tag, class-substring, text-prefix] — matched loosely; see comment above.
 const KNOWN_EXCEPTIONS = [
@@ -56,6 +56,7 @@ const BASELINE_LOW_CONTRAST_COUNT = {
   "journey/diagnosis.html": { dark: 0, light: 0 },
   "journey/timeline.html": { dark: 0, light: 0 },
   "journey/surgeries.html": { dark: 0, light: 0 },
+  "journey/simulations.html": { dark: 0, light: 0 },
   "recovery.html": { dark: 0, light: 0 },
   "recovery/mindset.html": { dark: 0, light: 0 },
   "recovery/dbs-tuning.html": { dark: 0, light: 0 },

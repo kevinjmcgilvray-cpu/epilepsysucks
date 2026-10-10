@@ -129,11 +129,23 @@
       font-size: 0.9rem;
       letter-spacing: 0.02em;
       color: var(--paper-dim);
-      /* All 6 top-level items (My Journey, The Recovery, Marathon,
-         Community dropdown triggers, plus Dark and Donate) need
-         ~681px to stay on one line at their natural size — 45rem
-         leaves some margin so Donate doesn't wrap to its own row. */
-      max-width: min(45rem, 72vw);
+      /* All 7 top-level items (the My Journey, Recovery & Life Today,
+         LA Marathon 2027, Community, and Epilepsy Resources dropdown
+         triggers, plus Dark and Donate) no longer fit on one line at
+         any desktop width once the longer Phase 3 labels replaced the
+         old one-word ones — flex-wrap above lets them settle into two
+         right-aligned rows instead (5 dropdowns, then Dark + Donate)
+         rather than fighting for a single cramped row. Capping the
+         width here (instead of letting it grow with the viewport) is
+         what keeps that wrap happening consistently at every desktop
+         width, not just right at the 960px breakpoint — a wider cap
+         briefly fits one line on very wide monitors, but then starts
+         crowding .nav__left (brand/ticker/cause text) in the vast
+         middle of the desktop range (literally tested 1024-1920px),
+         since .nav__links and .nav__left share the same .nav__top
+         grid row. Two tidy rows at every width beats one row that only
+         works above ~1400px. */
+      max-width: min(50rem, 75vw);
     }
 
     .nav__links .nav__cta {
@@ -211,8 +223,9 @@
       color: var(--btn-on-color) !important;
     }
 
-    /* Dropdown nav categories (My Journey / The Recovery / Marathon /
-       Community). Desktop: a floating panel anchored under the trigger
+    /* Dropdown nav categories (My Journey / Recovery & Life Today /
+       LA Marathon 2027 / Community / Epilepsy Resources). Desktop: a
+       floating panel anchored under the trigger
        pill, shown on hover (fine pointers only — see the pointer:fine
        media query below) or via the same click/keyboard toggle that
        drives the mobile accordion, so every input method works. */
@@ -237,6 +250,7 @@
     .nav__dropdown-caret {
       position: relative;
       z-index: 1;
+      flex-shrink: 0;
       display: inline-flex;
       align-items: center;
       color: inherit;

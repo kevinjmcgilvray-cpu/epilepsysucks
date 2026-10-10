@@ -56,6 +56,7 @@ const PAGES = [
   "journey/diagnosis.html",
   "journey/timeline.html",
   "journey/surgeries.html",
+  "journey/simulations.html",
   "recovery.html",
   "recovery/mindset.html",
   "recovery/dbs-tuning.html",
