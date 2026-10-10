@@ -17,7 +17,7 @@ const { startServer } = require("./_server");
 const { check, report, captureFailureArtifact } = require("./_assert");
 
 const DIST = path.join(__dirname, "..", "dist");
-const PAGES = ["index.html", "journey.html", "journey/diagnosis.html", "journey/timeline.html", "journey/surgeries.html", "recovery.html", "recovery/mindset.html", "recovery/dbs-tuning.html", "recovery/weight-loss.html", "marathon.html", "community.html", "resources.html"];
+const PAGES = ["index.html", "journey.html", "journey/diagnosis.html", "journey/timeline.html", "journey/surgeries.html", "recovery.html", "recovery/mindset.html", "recovery/dbs-tuning.html", "recovery/weight-loss.html", "marathon.html", "marathon/mission.html", "marathon/training-log.html", "marathon/fundraising.html", "community.html", "resources.html"];
 
 async function run(baseUrl) {
   const browser = await chromium.launch();
