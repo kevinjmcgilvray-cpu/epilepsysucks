@@ -281,6 +281,23 @@
       text-transform: uppercase;
     }
 
+    /* The base `a { text-decoration: none }` reset (styles/01-base-nav.css)
+       makes inline links invisible as links unless a component
+       explicitly restyles them, same as every other inline-prose link
+       on the site — restyled here since the footer's About/Privacy
+       links are a primary way to reach those pages, not just an aside
+       mention. */
+    .footer a {
+      text-decoration: underline;
+      text-decoration-color: currentColor;
+      text-underline-offset: 0.18em;
+    }
+
+    .footer a:hover,
+    .footer a:focus-visible {
+      color: var(--accent-text);
+    }
+
     .reveal {
       opacity: 0;
       transform: translateY(1.25rem);
