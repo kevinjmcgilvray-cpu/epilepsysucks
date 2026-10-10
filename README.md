@@ -2,14 +2,14 @@
 
 Kevin's story site for the LA Marathon / CURE Epilepsy — hosted at [epilepsysucks.org](https://epilepsysucks.org).
 
-A multi-page static site (19 real pages, listed below) backed by a small set of Vercel
+A multi-page static site (23 real pages, listed below) backed by a small set of Vercel
 serverless functions (`api/`) and a Neon Postgres database, powering the live fundraising
 bar, weigh-in chart, training log (manually logged + auto-synced from Strava), milestones,
 comments, and the "Live Track" race-day radar.
 
 Every page shares the same nav/footer/race-clock chrome via `<!-- INCLUDE:partials/xxx.html -->`
 markers, resolved by `scripts/build.js` before anything deploys — there's still exactly one
-copy of each shared piece to edit, not 19. See "Project layout" below for the current page
+copy of each shared piece to edit, not 23. See "Project layout" below for the current page
 list and `partials/` contents.
 
 Also on the site: a seizure-frequency chart (2016–2026, static data in `js/04-charts-sims.js`),
@@ -46,7 +46,7 @@ every other static file through unchanged, and rewrites each page's bundle tags 
 See `scripts/build.js` for the full logic.
 
 ```bash
-npm run build   # outputs to dist/ (19 pages)
+npm run build   # outputs to dist/ (23 pages)
 ```
 
 ## Tests
@@ -65,11 +65,14 @@ npm test
   `prefers-reduced-motion` correctly gating the motion-based cursor toggle but *not* the
   audio-only thunder toggle, the 4 distinct thunder audio sources, nav dropdown behavior
   (direct link navigation + hover/tap-to-expand caret), and mobile header layout.
-- `smoke.test.js` — scrolls every page (all 19 routes) in both themes, fails on any
+- `smoke.test.js` — scrolls every page (all 23 routes) in both themes, fails on any
   unexpected console/page error.
 - `contrast.test.js` — WCAG AA contrast scan of every text node, every page, both themes.
 - `touch-targets.test.js` — WCAG 2.5.8 scan ensuring every real interactive element has a
   48×48 CSS-pixel (or larger) tap target at mobile widths, across every page.
+- `responsive.test.js` — global responsive-layout safety net: every page, both themes, at
+  a 390px mobile viewport, asserting no horizontal overflow (no sideways scrollbar) after a
+  full scroll pass.
 - `dist.test.js` — smoke test against the actual built/minified production bundle (see
   "Production build" above), not the unminified per-file sources — catches anything the
   build/bundle/minify step itself might break.
@@ -87,16 +90,20 @@ the static frontend — they don't need `DATABASE_URL` or any other env var.
 ```
 index.html, journey.html, recovery.html,  Top-level hub pages, each with its own set of
   marathon.html, community.html,          nested sub-pages (see below) — see
-  resources.html, about.html, privacy.html  scripts/build.js's PAGES list for the full,
-                                           authoritative list of all 19 built routes.
-journey/                                  diagnosis.html, timeline.html, surgeries.html
+  resources.html, about.html, privacy.html, scripts/build.js's PAGES list for the full,
+  faq.html, accessibility.html,           authoritative list of all 23 built routes.
+  sitemap.html
+journey/                                  diagnosis.html, timeline.html, surgeries.html,
+                                           simulations.html
 recovery/                                 mindset.html, dbs-tuning.html, weight-loss.html
 marathon/                                 mission.html, training-log.html, fundraising.html
 community/                                guestbook.html, contact.html
 partials/                                 Shared chrome, spliced into every page by
                                            scripts/build.js: head-assets.html, chrome-pre-
                                            nav.html, nav.html, chrome-bottom.html
-sitemap.xml                               Lists every one of the 19 routes above
+sitemap.xml                               Lists every one of the 23 routes above
+sitemap.html (/sitemap)                   Human-readable linked list of the same routes,
+                                           footer-linked alongside /faq and /accessibility
 styles/                                   CSS, split into 6 ordered files (load order
                                            matters — see partials/head-assets.html)
 js/                                        Frontend JS, split into 8 ordered files (load
