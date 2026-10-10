@@ -1,14 +1,19 @@
-// Regression suite for the storm/lightning toggle: off-by-default
-// behavior, the "turn it on?" confirmation, persistence, reduced-motion
-// override, and the sensory-banner (formerly a full-screen entry-warning
-// gate) copy + non-blocking behavior. Ported from the ad-hoc scratch
-// script used throughout development into a permanent, committed test.
+// Regression suite for the thunder-sound + lightning-cursor toggles:
+// off-by-default behavior, persistence, and reduced-motion override
+// (the cursor toggle is motion-based and stays reduced-motion-gated;
+// the thunder-sound toggle is audio-only and isn't). The old animated
+// flashing-lightning effect + its opt-in confirmation dialog + the
+// page-load sensory-effects banner have all been removed outright (not
+// just better-warned-about) — an opt-in warning isn't sufficient
+// protection for photosensitive visitors on an epilepsy awareness site.
+// Ported from the ad-hoc scratch script used throughout development
+// into a permanent, committed test.
 //
-// Runs against dist/ (post-build) since this chrome (sensory banner,
-// storm/cursor toggles) now only exists as resolved <!-- INCLUDE -->
-// partials in the real build output, same reasoning as smoke.test.js.
-// It's shared/identical across every page via partials/, so testing it
-// once against index.html is still fully representative.
+// Runs against dist/ (post-build) since this chrome (nav/toggles) now
+// only exists as resolved <!-- INCLUDE --> partials in the real build
+// output, same reasoning as smoke.test.js. It's shared/identical across
+// every page via partials/, so testing it once against index.html is
+// still fully representative.
 const fs = require("fs");
 const path = require("path");
 const { chromium } = require("playwright");
@@ -30,136 +35,72 @@ async function run(baseUrl) {
   const browser = await chromium.launch();
   const errors = [];
 
-  // 1. Storm effects are off by default once the entry warning is dismissed.
+  // 1. Thunder sound is off by default, with no confirmation step
+  // needed to turn it on (there's no flashing-light risk left to warn
+  // about — see js/02-storm-raceclock.js).
   {
     const context = await browser.newContext();
     const page = await freshPage(context, "default-off", errors);
     await page.goto(`${baseUrl}/index.html`);
-    await page.click("#entry-warning-continue");
-    await page.waitForTimeout(200);
-    const pressed = await page.getAttribute("#storm-toggle", "aria-pressed");
-    check("Storm toggle default aria-pressed=false", pressed === "false", pressed);
+    await page.waitForTimeout(100);
+    const pressed = await page.getAttribute("#thunder-toggle", "aria-pressed");
+    check("Thunder toggle default aria-pressed=false", pressed === "false", pressed);
     const isOnClass = await page.evaluate(() =>
-      document.getElementById("storm-toggle").classList.contains("is-on")
+      document.getElementById("thunder-toggle").classList.contains("is-on")
     );
     check("Toggle lacks is-on class by default", !isOnClass);
-    const stored = await page.evaluate(() => window.localStorage.getItem("stormEffectsOn"));
+    const stored = await page.evaluate(() => window.localStorage.getItem("thunderSoundOn"));
     check("No localStorage override yet (using default)", stored === null, stored);
-    const confirmHidden = await page.getAttribute("#storm-confirm", "hidden");
-    check("Storm confirm prompt starts hidden", confirmHidden !== null, confirmHidden);
     await context.close();
   }
 
-  // 2. Clicking the toggle from off shows a confirm prompt instead of
-  // turning storm effects straight on; "Keep it off" dismisses it with
-  // no state change.
+  // 2. Clicking the toggle turns thunder sound on immediately (no
+  // confirmation dialog), persists across reload, and turning it back
+  // off is just as immediate.
   {
     const context = await browser.newContext();
-    const page = await freshPage(context, "confirm-cancel", errors);
+    const page = await freshPage(context, "toggle-on-off-persist", errors);
     await page.goto(`${baseUrl}/index.html`);
-    await page.click("#entry-warning-continue");
+    await page.click("#thunder-toggle");
     await page.waitForTimeout(100);
-    await page.click("#storm-toggle");
-    await page.waitForTimeout(100);
-    const confirmShown = await page.getAttribute("#storm-confirm", "hidden");
-    check("Storm confirm prompt shown after clicking toggle while off", confirmShown === null, confirmShown);
-    const pressedWhileConfirming = await page.getAttribute("#storm-toggle", "aria-pressed");
-    check(
-      "Toggle still shows off while confirm prompt is up",
-      pressedWhileConfirming === "false",
-      pressedWhileConfirming
-    );
-    await page.click("#storm-confirm-cancel");
-    await page.waitForTimeout(100);
-    const confirmHiddenAfterCancel = await page.getAttribute("#storm-confirm", "hidden");
-    check(
-      "Storm confirm prompt hides after \"Keep it off\"",
-      confirmHiddenAfterCancel !== null,
-      confirmHiddenAfterCancel
-    );
-    const pressedAfterCancel = await page.getAttribute("#storm-toggle", "aria-pressed");
-    check("Toggle still off after cancelling the confirm prompt", pressedAfterCancel === "false", pressedAfterCancel);
-    const stored = await page.evaluate(() => window.localStorage.getItem("stormEffectsOn"));
-    check("No localStorage write from cancelling", stored === null, stored);
-    await context.close();
-  }
-
-  // 3. Confirming ("Turn it on anyway") actually turns it on and persists
-  // across reload; toggling back off needs no confirmation.
-  {
-    const context = await browser.newContext();
-    const page = await freshPage(context, "confirm-accept", errors);
-    await page.goto(`${baseUrl}/index.html`);
-    await page.click("#entry-warning-continue");
-    await page.waitForTimeout(100);
-    await page.click("#storm-toggle");
-    await page.waitForTimeout(100);
-    await page.click("#storm-confirm-continue");
-    await page.waitForTimeout(100);
-    const pressed = await page.getAttribute("#storm-toggle", "aria-pressed");
-    check("Toggle on after confirming", pressed === "true", pressed);
-    const stored = await page.evaluate(() => window.localStorage.getItem("stormEffectsOn"));
+    const pressed = await page.getAttribute("#thunder-toggle", "aria-pressed");
+    check("Toggle on immediately after one click", pressed === "true", pressed);
+    const stored = await page.evaluate(() => window.localStorage.getItem("thunderSoundOn"));
     check("localStorage stores explicit on", stored === "on", stored);
     await page.reload();
     await page.waitForTimeout(200);
-    const pressedAfterReload = await page.getAttribute("#storm-toggle", "aria-pressed");
+    const pressedAfterReload = await page.getAttribute("#thunder-toggle", "aria-pressed");
     check("On preference persists across reload", pressedAfterReload === "true", pressedAfterReload);
 
-    // Toggling back off from an already-on state is immediate, no prompt.
-    await page.click("#storm-toggle");
+    await page.click("#thunder-toggle");
     await page.waitForTimeout(100);
-    const pressedAfterOff = await page.getAttribute("#storm-toggle", "aria-pressed");
-    check("Toggle off after click, no confirm needed", pressedAfterOff === "false", pressedAfterOff);
-    const confirmStillHidden = await page.getAttribute("#storm-confirm", "hidden");
-    check("Confirm prompt not shown when turning off", confirmStillHidden !== null, confirmStillHidden);
-    const storedAfterOff = await page.evaluate(() => window.localStorage.getItem("stormEffectsOn"));
+    const pressedAfterOff = await page.getAttribute("#thunder-toggle", "aria-pressed");
+    check("Toggle off after a second click", pressedAfterOff === "false", pressedAfterOff);
+    const storedAfterOff = await page.evaluate(() => window.localStorage.getItem("thunderSoundOn"));
     check("localStorage stores explicit off", storedAfterOff === "off", storedAfterOff);
     await context.close();
   }
 
-  // 4. Entry warning copy mentions off-by-default + the 10s cycle.
-  {
-    const context = await browser.newContext();
-    const page = await freshPage(context, "warning-copy", errors);
-    await page.goto(`${baseUrl}/index.html`);
-    const desc = await page.$eval("#entry-warning-desc", (el) => el.textContent);
-    check("Warning mentions 'off by default'", desc.includes("off by default"));
-    check("Warning mentions '10 seconds'", desc.includes("10 seconds"));
-    await context.close();
-  }
-
-  // 4b. The sensory-effects notice is a non-blocking banner, not a
-  // full-screen modal gate: the rest of the page must stay visible,
-  // scrollable, and interactive while it's still up (unlike
-  // #storm-confirm, which deliberately IS a blocking modal).
-  {
-    const context = await browser.newContext();
-    const page = await freshPage(context, "sensory-banner-nonblocking", errors);
-    await page.goto(`${baseUrl}/index.html`);
-    const stillVisible = await page.evaluate(() => !document.getElementById("entry-warning").hidden);
-    check("Sensory banner is showing (not yet dismissed)", stillVisible, stillVisible);
-    const navVisibility = await page.$eval("#nav", (el) => getComputedStyle(el).visibility);
-    check("Nav stays visible while the sensory banner is up", navVisibility === "visible", navVisibility);
-    const bodyLocked = await page.evaluate(() => document.body.classList.contains("entry-locked"));
-    check("Body isn't scroll-locked by the sensory banner", !bodyLocked, bodyLocked);
-    const bodyOverflow = await page.$eval("body", (el) => getComputedStyle(el).overflow);
-    check("Body overflow isn't hidden while the sensory banner is up", bodyOverflow !== "hidden", bodyOverflow);
-    await context.close();
-  }
-
-  // 5. prefers-reduced-motion hard-disables the storm toggle UI.
+  // 3. prefers-reduced-motion hard-disables the lightning-cursor toggle
+  // (a genuinely motion-based effect), but NOT the thunder-sound toggle
+  // (audio isn't gated by a motion preference).
   {
     const context = await browser.newContext({ reducedMotion: "reduce" });
     const page = await freshPage(context, "reduced-motion", errors);
     await page.goto(`${baseUrl}/index.html`);
-    await page.click("#entry-warning-continue");
-    await page.waitForTimeout(200);
-    const toggleDisplay = await page.$eval("#storm-toggle", (el) => getComputedStyle(el).display);
-    check("Reduced motion: toggle display:none", toggleDisplay === "none", toggleDisplay);
+    await page.waitForTimeout(100);
+    const cursorToggleDisplay = await page.$eval("#cursor-toggle", (el) => getComputedStyle(el).display);
+    check("Reduced motion: cursor toggle display:none", cursorToggleDisplay === "none", cursorToggleDisplay);
+    const thunderToggleDisplay = await page.$eval("#thunder-toggle", (el) => getComputedStyle(el).display);
+    check(
+      "Reduced motion: thunder-sound toggle stays visible (audio, not motion)",
+      thunderToggleDisplay !== "none",
+      thunderToggleDisplay
+    );
     await context.close();
   }
 
-  // 6. The 4 thunder audio elements have distinct sources.
+  // 4. The 4 thunder audio elements have distinct sources.
   {
     const context = await browser.newContext();
     const page = await freshPage(context, "audio-elements", errors);
@@ -169,13 +110,11 @@ async function run(baseUrl) {
     await context.close();
   }
 
-  // 7. Lightning cursor: off by default (same default as storm effects
-  // above now, but toggled directly with no confirm step), persists.
+  // 5. Lightning cursor: off by default, toggled directly, persists.
   {
     const context = await browser.newContext();
     const page = await freshPage(context, "cursor-toggle", errors);
     await page.goto(`${baseUrl}/index.html`);
-    await page.click("#entry-warning-continue");
     await page.mouse.move(400, 400);
     await page.waitForTimeout(150);
     const beforeToggle = await page.evaluate(() =>
@@ -215,14 +154,13 @@ async function run(baseUrl) {
     await context.close();
   }
 
-  // 8. Nav dropdowns: parent link navigates directly, the caret is the
+  // 6. Nav dropdowns: parent link navigates directly, the caret is the
   // only click target that toggles the submenu, and desktop also
   // reveals the submenu on hover with zero clicks.
   {
     const context = await browser.newContext();
     const page = await freshPage(context, "nav-dropdown-desktop", errors);
     await page.goto(`${baseUrl}/index.html`);
-    await page.click("#entry-warning-continue");
     await page.waitForTimeout(100);
 
     const trigger = page.locator(".nav__dropdown").first();
@@ -257,13 +195,12 @@ async function run(baseUrl) {
     await context.close();
   }
 
-  // 9. Nav dropdowns on mobile: the link still navigates directly, and
+  // 7. Nav dropdowns on mobile: the link still navigates directly, and
   // the caret still drives the tap-to-expand accordion.
   {
     const context = await browser.newContext({ viewport: { width: 480, height: 850 } });
     const page = await freshPage(context, "nav-dropdown-mobile", errors);
     await page.goto(`${baseUrl}/index.html`);
-    await page.click("#entry-warning-continue");
     await page.waitForTimeout(100);
     await page.click("#nav-toggle");
     await page.waitForTimeout(100);
@@ -283,7 +220,7 @@ async function run(baseUrl) {
     await context.close();
   }
 
-  // 10. Mobile header: the donor-ticker notification pill keeps a clear
+  // 8. Mobile header: the donor-ticker notification pill keeps a clear
   // gap from the hamburger icon, and the open menu panel spans the
   // full header width so the close ("✕") button sits in its corner
   // instead of floating to the right of a narrower panel.
@@ -291,7 +228,6 @@ async function run(baseUrl) {
     const context = await browser.newContext({ viewport: { width: 320, height: 700 } });
     const page = await freshPage(context, "mobile-header-spacing", errors);
     await page.goto(`${baseUrl}/index.html`);
-    await page.click("#entry-warning-continue");
     await page.waitForTimeout(100);
 
     const tickerBox = await page.locator("#donor-ticker").boundingBox();
@@ -325,14 +261,13 @@ async function run(baseUrl) {
     await context.close();
   }
 
-  // 11. Donor-ticker placement: inline next to the brand name on
+  // 9. Donor-ticker placement: inline next to the brand name on
   // desktop, but relocated between the funds-stats row and the CURE
   // Epilepsy cause line on the collapsed mobile header.
   {
     const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
     const page = await freshPage(context, "donor-ticker-mobile-position", errors);
     await page.goto(`${baseUrl}/index.html`);
-    await page.click("#entry-warning-continue");
     await page.waitForTimeout(150);
     const order = await page.evaluate(() =>
       Array.from(document.querySelector(".nav__left").children).map((c) => c.className)
@@ -348,7 +283,6 @@ async function run(baseUrl) {
     const context = await browser.newContext({ viewport: { width: 1280, height: 800 } });
     const page = await freshPage(context, "donor-ticker-desktop-position", errors);
     await page.goto(`${baseUrl}/index.html`);
-    await page.click("#entry-warning-continue");
     await page.waitForTimeout(150);
     const parentClass = await page.evaluate(
       () => document.getElementById("donor-ticker").parentElement.className
@@ -357,14 +291,13 @@ async function run(baseUrl) {
     await context.close();
   }
 
-  // 12. Donor-ticker on mobile wraps long donor names/dedications
+  // 10. Donor-ticker on mobile wraps long donor names/dedications
   // instead of clipping them mid-word (desktop keeps its single-line
   // ellipsis treatment, since it has less room to work with there).
   {
     const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
     const page = await freshPage(context, "donor-ticker-long-name", errors);
     await page.goto(`${baseUrl}/index.html`);
-    await page.click("#entry-warning-continue");
     await page.waitForTimeout(100);
     await page.evaluate(() => {
       document.getElementById("donor-ticker-name").textContent =

@@ -73,9 +73,9 @@
     })();
 
     // Custom lightning-bolt cursor (desktop/mouse only — touch devices are
-    // left completely alone). Reuses the exact bolt glyph from the storm
-    // toggle icon for visual consistency with the rest of the site's
-    // lightning theme. Positioning is done via a single rAF-batched
+    // left completely alone). Reuses the exact bolt glyph from the
+    // thunder-sound toggle icon for visual consistency with the rest of
+    // the site's lightning theme. Positioning is done via a single rAF-batched
     // transform per frame rather than reacting to every mousemove event
     // directly, so it stays smooth without flooding layout/paint work.
     (function initCustomCursor() {
@@ -107,23 +107,15 @@
       let hasPositioned = false;
 
       // Off by default (the normal pointer is what visitors see unless
-      // they explicitly opt in via the toggle button) — the opposite
-      // default of the storm effects toggle, which starts on. A prior
-      // explicit choice (either way) is remembered the same way.
+      // they explicitly opt in via the toggle button) — same off-by-
+      // default behavior as the thunder-sound toggle. A prior explicit
+      // choice (either way) is remembered the same way.
       let cursorOn = false;
       try {
         cursorOn = window.localStorage.getItem("lightningCursorOn") === "on";
       } catch (e) {
         /* localStorage unavailable (e.g. private mode) — default stays off */
       }
-
-      // Keep the plain, familiar native pointer for the entire time the
-      // entry flash-warning is up (visitors need to be able to see and
-      // click "I understand — continue" right away), and only let the
-      // lightning-bolt cursor take over (if already toggled on from a
-      // prior visit) once that's been dismissed.
-      const entryWarningEl = document.getElementById("entry-warning");
-      let warningActive = !!(entryWarningEl && !entryWarningEl.hidden);
 
       function enableCustomCursor() {
         cursorEl.classList.add("is-active");
@@ -145,22 +137,6 @@
       }
       applyToggleUI();
 
-      if (warningActive) {
-        const continueBtn = document.getElementById("entry-warning-continue");
-        if (continueBtn) {
-          continueBtn.addEventListener(
-            "click",
-            () => {
-              warningActive = false;
-              if (cursorOn && hasPositioned) enableCustomCursor();
-            },
-            { once: true }
-          );
-        } else {
-          warningActive = false;
-        }
-      }
-
       function applyPosition() {
         rafId = null;
         // translate first (so the box's origin lands exactly on the real
@@ -175,7 +151,7 @@
         pendingX = e.clientX;
         pendingY = e.clientY;
         hasPositioned = true;
-        if (cursorOn && !warningActive) enableCustomCursor();
+        if (cursorOn) enableCustomCursor();
         if (rafId === null) rafId = window.requestAnimationFrame(applyPosition);
       }
 

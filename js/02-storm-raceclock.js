@@ -1,44 +1,36 @@
 // 02-storm-raceclock.js
-// Storm/lightning effect toggle + the race-countdown clock bar
+// Thunder-sound toggle + the race-countdown clock bar
 // Part of the app.js split — see index.html for load order. These are
 // classic (non-module) scripts sharing one global scope, same as when
 // this was one file, so load order still matters for anything that
 // isn't scoped inside its own IIFE.
 
-    // Background storm effect: a static, dim purple-tinted lightning photo
-    // sits behind everything at all times (the original site background),
-    // and visitors can opt into "Storm effects" — occasional, hand-drawn
-    // jagged white/blue-white lightning bolts (randomized each strike, not
-    // a canned animation) with a soft screen-flash and a thunder crack.
-    // Because this is an epilepsy awareness site, the animated part is
-    // off by default, strikes are infrequent (one brief flash roughly
-    // every 20-40s, nowhere near the 3-flashes-per-second WCAG threshold),
-    // capped at low opacity rather than a hard white-out, and the whole
-    // effect — plus its toggle — is skipped entirely for visitors who've
-    // asked for reduced motion.
-    (function initStormEffect() {
-      const root = document.getElementById("bg-lightning");
-      const flashEl = document.getElementById("lightning-flash");
-      const mainPath = document.getElementById("lightning-bolt-main");
-      const branchPath = document.getElementById("lightning-bolt-branch");
-      const branchPath2 = document.getElementById("lightning-bolt-branch2");
+    // Optional ambient thunder-sound effect: a rotating thunder-crack
+    // clip plays briefly once every 20s while the visitor has it turned
+    // on. This used to be paired with an animated flashing lightning
+    // bolt + screen-flash, opt-in-gated behind a confirmation dialog —
+    // that visual was removed outright (not just better-warned-about),
+    // since an opt-in confirmation isn't sufficient protection for
+    // photosensitive visitors on an epilepsy awareness site. What's left
+    // here is audio-only: off/muted by default, toggled directly via a
+    // single aria-pressed button with no confirmation step needed, since
+    // there's no flashing-light risk left to warn about. (prefers-
+    // reduced-motion is intentionally NOT checked here: that preference
+    // is about animation/motion, not audio, so it doesn't gate this
+    // toggle — see styles/01-base-nav.css for how it still gates the
+    // separate, genuinely motion-based lightning-cursor toggle.)
+    (function initThunderSound() {
       const thunderAudios = Array.prototype.slice.call(
         document.querySelectorAll(".thunder-audio")
       );
-      const toggle = document.getElementById("storm-toggle");
-      if (!root || !flashEl || !mainPath || !branchPath || !branchPath2) return;
+      const toggle = document.getElementById("thunder-toggle");
+      if (!toggle || !thunderAudios.length) return;
 
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        return;
-      }
-
-      // Storm effects default OFF; a visitor's explicit choice (either
-      // way) is remembered from here on. Turning it on (but not off)
-      // shows a confirmation first — see showStormConfirm() below —
-      // since this is an epilepsy awareness site.
-      let stormOn = false;
+      // Off by default; a visitor's explicit choice (either way) is
+      // remembered from here on.
+      let thunderOn = false;
       try {
-        stormOn = window.localStorage.getItem("stormEffectsOn") === "on";
+        thunderOn = window.localStorage.getItem("thunderSoundOn") === "on";
       } catch (e) {
         /* localStorage unavailable (e.g. private mode) — default stays off */
       }
@@ -46,12 +38,11 @@
       let currentlyPlaying = null;
 
       function applyToggleUI() {
-        if (!toggle) return;
-        toggle.classList.toggle("is-on", stormOn);
-        toggle.setAttribute("aria-pressed", stormOn ? "true" : "false");
+        toggle.classList.toggle("is-on", thunderOn);
+        toggle.setAttribute("aria-pressed", thunderOn ? "true" : "false");
         toggle.setAttribute(
           "aria-label",
-          stormOn ? "Turn off storm effects" : "Turn on storm effects (animated lightning + thunder)"
+          thunderOn ? "Turn off thunder sound effects" : "Turn on thunder sound effects"
         );
       }
       applyToggleUI();
@@ -63,87 +54,31 @@
       // unlocking needed. So there's deliberately no play()-then-pause()
       // "priming" step here: an earlier version tried that and it caused
       // a real bug (two concurrent primes racing on the same elements'
-      // .volume, clipping a strike's thunder mid-playback). The entry
-      // warning's "continue" click (or the toggle click, or honestly any
-      // click/tap/key anywhere on the page) already satisfies the
-      // gesture requirement on its own — nothing extra to do here. A
-      // first-time strike attempted before any gesture has happened just
-      // silently fails to play sound (caught below) until one does; the
-      // visual flash is unaffected either way.
+      // .volume, clipping a strike's thunder mid-playback). The toggle
+      // click itself (or honestly any click/tap/key anywhere on the
+      // page) already satisfies the gesture requirement on its own.
 
-      function setStormOn(on) {
-        stormOn = on;
+      function setThunderOn(on) {
+        thunderOn = on;
         applyToggleUI();
         try {
-          window.localStorage.setItem("stormEffectsOn", stormOn ? "on" : "off");
+          window.localStorage.setItem("thunderSoundOn", thunderOn ? "on" : "off");
         } catch (e) {
           /* ignore */
         }
-        if (stormOn) {
+        if (thunderOn) {
           // Turning it on should feel immediate rather than waiting for
-          // the next 20s cycle boundary. The confirm button click (or
-          // the original toggle click, for turning off) is the user
-          // gesture that lets this strike's thunder actually play.
-          strike();
+          // the next 20s cycle boundary. The toggle click is the user
+          // gesture that lets this burst's thunder actually play.
+          playThunderBurst();
         } else {
           silenceThunder();
         }
       }
 
-      // Turning storm effects ON (but never off) shows a confirmation
-      // first, describing the flashing lights/thunder sound, instead of
-      // enabling it straight from the toggle click — see the "Turn on
-      // storm effects?" prompt in partials/chrome-pre-nav.html. Reuses
-      // the exact same .entry-locked body-visibility trick as the
-      // page-load entry warning.
-      const stormConfirm = document.getElementById("storm-confirm");
-      const stormConfirmYes = document.getElementById("storm-confirm-continue");
-      const stormConfirmNo = document.getElementById("storm-confirm-cancel");
-
-      function hideStormConfirm() {
-        if (!stormConfirm) return;
-        stormConfirm.hidden = true;
-        document.body.classList.remove("entry-locked");
-      }
-
-      function showStormConfirm() {
-        if (!stormConfirm) {
-          // No confirm UI on the page for some reason — fail open rather
-          // than leaving the toggle inert.
-          setStormOn(true);
-          return;
-        }
-        stormConfirm.hidden = false;
-        document.body.classList.add("entry-locked");
-        if (stormConfirmYes) stormConfirmYes.focus();
-      }
-
-      if (toggle) {
-        toggle.addEventListener("click", () => {
-          if (stormOn) {
-            setStormOn(false);
-          } else {
-            showStormConfirm();
-          }
-        });
-      }
-
-      if (stormConfirmYes) {
-        stormConfirmYes.addEventListener("click", () => {
-          hideStormConfirm();
-          setStormOn(true);
-        });
-      }
-
-      if (stormConfirmNo) {
-        stormConfirmNo.addEventListener("click", hideStormConfirm);
-      }
-
-      if (stormConfirm) {
-        document.addEventListener("keydown", (e) => {
-          if (e.key === "Escape" && !stormConfirm.hidden) hideStormConfirm();
-        });
-      }
+      toggle.addEventListener("click", () => {
+        setThunderOn(!thunderOn);
+      });
 
       let fadeTimer = null;
       const FADE_MS = 900; // smooth taper instead of an abrupt cut
@@ -177,64 +112,11 @@
             } catch (e) {
               /* ignore */
             }
-            el.volume = startVolume; // restored so the *next* strike plays at full volume again
+            el.volume = startVolume; // restored so the *next* burst plays at full volume again
           }
         }, 40);
       }
 
-      // Builds a jagged top-to-mid-screen bolt in a 0-100 x 0-100 space
-      // (the SVG viewBox is stretched to fill the viewport via
-      // preserveAspectRatio="none", so this is loose percent-of-screen
-      // coordinates, not real geometry — real lightning isn't geometric
-      // either). Mixes a few bigger "elbow" direction changes with lots of
-      // small high-frequency jitter, which is what makes a jagged line
-      // read as lightning rather than a clean zigzag.
-      function randomBoltPoints() {
-        let x = 15 + Math.random() * 70;
-        let y = 0;
-        const endY = 55 + Math.random() * 35;
-        const steps = 13 + Math.floor(Math.random() * 6);
-        const points = [[x, y]];
-        let drift = (Math.random() - 0.5) * 2.5; // slow overall lean left/right
-        for (let i = 1; i <= steps; i++) {
-          y = (endY / steps) * i;
-          drift += (Math.random() - 0.5) * 1.6;
-          const jitter = (Math.random() - 0.5) * 6.5;
-          x += drift + jitter;
-          points.push([x, y]);
-        }
-        return points;
-      }
-
-      function pointsToPath(points) {
-        return (
-          "M " + points.map((p) => p[0].toFixed(1) + "," + p[1].toFixed(1)).join(" L ")
-        );
-      }
-
-      // A short branch forking off a random point partway down the main
-      // bolt, like real lightning's secondary channels — angled away from
-      // the main channel's own direction so it doesn't just overlap it.
-      function randomBranchPath(mainPoints, minIndex, maxIndexExclusive) {
-        const forkIndex =
-          minIndex + Math.floor(Math.random() * Math.max(1, maxIndexExclusive - minIndex));
-        const fork = mainPoints[forkIndex];
-        const prev = mainPoints[Math.max(0, forkIndex - 1)];
-        const mainDx = fork[0] - prev[0];
-        const sideways = mainDx >= 0 ? -1 : 1; // branch away from the main lean
-        let x = fork[0];
-        let y = fork[1];
-        const steps = 2 + Math.floor(Math.random() * 3);
-        const points = [[x, y]];
-        for (let i = 1; i <= steps; i++) {
-          x += sideways * (4 + Math.random() * 7);
-          y += 4 + Math.random() * 6;
-          points.push([x, y]);
-        }
-        return pointsToPath(points);
-      }
-
-      let hideTimer = null;
       let thunderTimer = null;
       let silenceTimer = null;
       let cycleTimer = null;
@@ -243,99 +125,55 @@
       // distant, mid, cinematic) so the same crack doesn't repeat every
       // cycle.
       function nextThunderAudio() {
-        if (!thunderAudios.length) return null;
         const el = thunderAudios[thunderRotationIndex % thunderAudios.length];
         thunderRotationIndex++;
         return el;
       }
 
-      let strikeHideAt = 0;
-
-      function strike() {
-        const mainPoints = randomBoltPoints();
-        const mid = Math.floor(mainPoints.length / 2);
-        mainPath.setAttribute("d", pointsToPath(mainPoints));
-        branchPath.setAttribute(
-          "d",
-          Math.random() < 0.75 ? randomBranchPath(mainPoints, 2, mid) : ""
-        );
-        branchPath2.setAttribute(
-          "d",
-          Math.random() < 0.5
-            ? randomBranchPath(mainPoints, mid, mainPoints.length - 1)
-            : ""
-        );
-
-        root.classList.add("is-on");
-        const visibleMs = 220 + Math.random() * 160;
-        strikeHideAt = Date.now() + visibleMs;
-        window.clearTimeout(hideTimer);
-        hideTimer = window.setTimeout(() => {
-          root.classList.remove("is-on");
-        }, visibleMs);
-
+      function playThunderBurst() {
         const thunderAudio = nextThunderAudio();
-        if (thunderAudio) {
-          window.clearTimeout(thunderTimer);
-          window.clearInterval(fadeTimer); // cancel any still-tapering previous clip
-          const thunderDelay = 80 + Math.random() * 220; // real thunder lags the flash slightly
-          thunderTimer = window.setTimeout(() => {
-            try {
-              thunderAudio.volume = 1;
-              thunderAudio.currentTime = 0;
-              currentlyPlaying = thunderAudio;
-              thunderAudio.play().catch(() => {});
-            } catch (e) {
-              /* ignore */
-            }
-          }, thunderDelay);
-        }
+        if (!thunderAudio) return;
+        window.clearTimeout(thunderTimer);
+        window.clearInterval(fadeTimer); // cancel any still-tapering previous clip
+        const thunderDelay = 80 + Math.random() * 220;
+        thunderTimer = window.setTimeout(() => {
+          try {
+            thunderAudio.volume = 1;
+            thunderAudio.currentTime = 0;
+            currentlyPlaying = thunderAudio;
+            thunderAudio.play().catch(() => {});
+          } catch (e) {
+            /* ignore */
+          }
+        }, thunderDelay);
       }
 
-      // Belt-and-suspenders: if the tab was backgrounded (or iOS froze
-      // the page) right in the middle of a strike's ~220-380ms "on"
-      // window, the hideTimer that was supposed to remove .is-on can
-      // get suspended along with everything else — leaving the bolt
-      // visibly stuck once the page is active again, over whatever
-      // content the visitor has since scrolled to. On resume, if we're
-      // now past that strike's own hide time, just force it off
-      // immediately instead of waiting on a timer that may never
-      // fire.
-      document.addEventListener("visibilitychange", () => {
-        if (!document.hidden && strikeHideAt && Date.now() >= strikeHideAt) {
-          window.clearTimeout(hideTimer);
-          root.classList.remove("is-on");
-        }
-      });
-
-      // Fixed 10s-on / 10s-off duty cycle: a strike (flash + rotating
-      // thunder clip) happens right at the start of each 10s "on" window;
-      // thunder is explicitly stopped at the 10s mark — regardless of how
-      // long the clip actually is — so the "off" half is reliably silent,
-      // then the next 20s cycle repeats.
+      // Fixed 10s-on / 10s-off duty cycle: a burst happens right at the
+      // start of each 10s "on" window; thunder is explicitly stopped at
+      // the 10s mark — regardless of how long the clip actually is — so
+      // the "off" half is reliably silent, then the next 20s cycle
+      // repeats.
       const ON_MS = 10000;
       const OFF_MS = 10000;
 
       function cycle() {
         window.clearTimeout(silenceTimer);
-        if (stormOn && !document.hidden) {
-          strike();
+        if (thunderOn && !document.hidden) {
+          playThunderBurst();
           silenceTimer = window.setTimeout(silenceThunder, ON_MS);
         }
         cycleTimer = window.setTimeout(cycle, ON_MS + OFF_MS);
       }
 
       cycleTimer = window.setTimeout(cycle, ON_MS + OFF_MS);
-      if (stormOn) {
+      if (thunderOn) {
         // Don't make a first-time visitor wait out a full 20s cycle for
-        // their first strike — go right away instead. (If no user gesture
-        // has happened yet on this page load — e.g. a returning visitor
-        // who skipped this session's entry warning — the thunder audio
-        // will be silently blocked by the browser until their first
-        // click/key, per the fallback listener above, but the visual
-        // flash itself isn't gated by that and still shows immediately.)
+        // their first burst — go right away instead. (If no user gesture
+        // has happened yet on this page load, the thunder audio will be
+        // silently blocked by the browser until their first click/key,
+        // per the catch() above.)
         window.setTimeout(() => {
-          if (stormOn && !document.hidden) {
+          if (thunderOn && !document.hidden) {
             window.clearTimeout(cycleTimer);
             cycle();
           }

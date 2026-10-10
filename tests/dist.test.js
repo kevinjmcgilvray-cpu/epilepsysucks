@@ -32,22 +32,19 @@ async function run(baseUrl) {
     ""
   );
 
-  // Entry warning should still gate the custom cursor the same way it
-  // does against unminified source (see js/01-nav-theme-cursor.js) —
-  // this is the one place in the codebase where cross-script-tag
-  // ordering/scope actually matters, so it's the most likely thing a
-  // bad concatenation would break.
-  const duringWarning = await page.evaluate(() => ({
-    warningVisible: !document.getElementById("entry-warning").hidden,
+  // The custom cursor should stay off right on load, before any user
+  // gesture, the same way it does against unminified source (see
+  // js/01-nav-theme-cursor.js) — this is the one place in the codebase
+  // where cross-script-tag ordering/scope actually matters, so it's
+  // the most likely thing a bad concatenation would break.
+  const onLoad = await page.evaluate(() => ({
     hasClass: document.documentElement.classList.contains("has-custom-cursor")
   }));
-  check(
-    "Native cursor still kept during entry warning after minify",
-    duringWarning.warningVisible === true && duringWarning.hasClass === false,
-    JSON.stringify(duringWarning)
-  );
+  check("Native cursor kept on load after minify", onLoad.hasClass === false, JSON.stringify(onLoad));
 
-  await page.click("#entry-warning-continue");
+  // A plain click stands in for the "first user gesture" that real
+  // visitors make before any mouse-move-driven cursor logic kicks in.
+  await page.mouse.click(200, 200);
   await page.mouse.move(400, 400);
   await page.waitForTimeout(200);
   const beforeToggle = await page.evaluate(() => ({

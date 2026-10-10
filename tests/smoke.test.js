@@ -7,9 +7,9 @@
 //
 // Runs against dist/ (post-build), not the raw source files: the
 // source pages only contain `<!-- INCLUDE:partials/xxx.html -->`
-// markers for their shared chrome (nav/entry-warning/footer/etc.) —
-// resolving those is build.js's job, so a real, navigable page only
-// exists after `npm run build` (which `npm test` already runs first).
+// markers for their shared chrome (nav/footer/etc.) — resolving those
+// is build.js's job, so a real, navigable page only exists after
+// `npm run build` (which `npm test` already runs first).
 const fs = require("fs");
 const path = require("path");
 const { chromium } = require("playwright");
@@ -31,14 +31,6 @@ async function run(baseUrl) {
 
   for (const route of PAGES) {
     await page.goto(`${baseUrl}/${route}`);
-    // The entry-warning ack is stored in localStorage (shared per
-    // origin across all pages), so this only ever actually clicks on
-    // the first page of the loop — later pages see hidden=true already.
-    const warningVisible = await page.evaluate(() => !document.getElementById("entry-warning").hidden);
-    if (warningVisible) {
-      await page.click("#entry-warning-continue");
-      await page.waitForTimeout(200);
-    }
 
     for (let i = 0; i < 15; i++) {
       await page.mouse.wheel(0, 800);
