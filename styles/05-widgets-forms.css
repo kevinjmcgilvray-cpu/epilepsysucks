@@ -666,7 +666,7 @@
       font-size: 0.78rem;
     }
 
-    .seizure-note h4 {
+    .seizure-note h3 {
       margin: 0 0 0.85rem;
       font-family: var(--font-display);
       font-size: clamp(1.1rem, 2.4vw, 1.35rem);
