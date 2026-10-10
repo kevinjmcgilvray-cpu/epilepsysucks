@@ -127,7 +127,16 @@
           return;
         }
         if (node.nodeType !== Node.ELEMENT_NODE) return;
-        if (node.matches("script, style, .hl-epi, .mermaid")) return;
+        // .nav__links (the My Journey/Recovery/Marathon/Community/
+        // Resources dropdown row) is skipped on purpose: its pills are
+        // solid white text on a bold purple gradient, and var(--epi)
+        // (designed for prose on the page's normal background) reads
+        // as a near-invisible, low-contrast fade there — most visibly
+        // on the "Epilepsy Resources" label. The .nav__brand logo text
+        // ("Epilepsy Sucks") lives outside .nav__links and keeps the
+        // highlight, which is the one place it was actually designed
+        // for.
+        if (node.matches("script, style, .hl-epi, .mermaid, .nav__links")) return;
         Array.from(node.childNodes).forEach(walk);
       };
       walk(root);

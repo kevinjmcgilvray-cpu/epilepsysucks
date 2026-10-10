@@ -379,8 +379,9 @@
       });
     })();
 
-    // Nav dropdown categories (My Journey / The Recovery / Marathon /
-    // Community). One shared toggle mechanism drives both desktop
+    // Nav dropdown categories (My Journey / Recovery & Life Today /
+    // LA Marathon 2027 / Community / Epilepsy Resources). One shared
+    // toggle mechanism drives both desktop
     // (where CSS also reveals the panel on hover for fine pointers,
     // on top of this) and the mobile accordion (which has no real
     // hover, so this click/keyboard path is the only way in).
