@@ -123,13 +123,35 @@
     }
 
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
 
+    /* box-sizing on its own line (and explicitly repeated for
+       ::before/::after) because the plain `*` universal selector above
+       does NOT match generated pseudo-elements, and box-sizing isn't an
+       inherited property — without this, any ::before/::after that sets
+       its own width/height alongside padding/border would size itself
+       using the content-box model instead of matching the rest of the
+       page. */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
     html {
       scroll-behavior: smooth;
+      /* Last-resort safety net: nothing on the page is intentionally
+         wider than the viewport (every image/video/iframe/table above
+         already constrains itself — see the img/video rule and
+         .pace-calc__table-wrap/.social-feed below), so a horizontal
+         scrollbar ever appearing would always be an unintended layout
+         bug. Hiding overflow-x here means a future one shows up as a
+         clipped/cut-off element (visibly wrong, easy to spot) instead
+         of a silent sideways-scrolling page (easy to miss, especially
+         on desktop where nothing prompts you to scroll right). */
+      overflow-x: hidden;
     }
 
     /* Visually hidden but still readable by assistive tech — use to
