@@ -71,6 +71,16 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://www.epilepsysucks.org/community/guestbook</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.epilepsysucks.org/community/contact</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://www.epilepsysucks.org/resources</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
