@@ -909,6 +909,7 @@
       text-decoration-color: var(--accent);
     }
 
+    .section h1,
     .section h2 {
       font-family: var(--font-display);
       font-size: clamp(2.5rem, 7vw, 4.5rem);
@@ -966,6 +967,7 @@
       color: var(--accent-text);
     }
 
+    .hub-pillar h2,
     .hub-pillar h3 {
       font-family: var(--font-display);
       font-size: 1.3rem;
