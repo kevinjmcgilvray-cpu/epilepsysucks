@@ -252,6 +252,35 @@
         })
         .catch(() => {});
 
+      fetch("/api/cross-training")
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (!data || !data.ok) return;
+          const stats = data.stats || {};
+          const walkWeeklyEl = document.getElementById("stat-walk-weekly");
+          const walkDetailEl = document.getElementById("stat-walk-detail");
+          const bikeWeeklyEl = document.getElementById("stat-bike-weekly");
+          const bikeDetailEl = document.getElementById("stat-bike-detail");
+
+          function renderBucket(weeklyEl, detailEl, bucket, noun) {
+            if (!bucket || (!bucket.lastActivity && !bucket.totalMiles)) {
+              if (weeklyEl) weeklyEl.textContent = "—";
+              if (detailEl) detailEl.textContent = "No " + noun + " synced yet";
+              return;
+            }
+            if (weeklyEl) weeklyEl.textContent = (Number(bucket.weeklyMiles) || 0).toFixed(1) + " mi";
+            if (detailEl) {
+              detailEl.textContent = bucket.lastActivity
+                ? "Last: " + formatDate(bucket.lastActivity.date) + " · " + bucket.lastActivity.miles + " mi"
+                : "Miles this week";
+            }
+          }
+
+          renderBucket(walkWeeklyEl, walkDetailEl, stats.walk, "walks");
+          renderBucket(bikeWeeklyEl, bikeDetailEl, stats.bike, "rides");
+        })
+        .catch(() => {});
+
       fetch("/api/milestones")
         .then((res) => (res.ok ? res.json() : null))
         .then((data) => {

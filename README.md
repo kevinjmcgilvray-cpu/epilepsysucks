@@ -4,8 +4,9 @@ Kevin's story site for the LA Marathon / CURE Epilepsy — hosted at [epilepsysu
 
 A multi-page static site (23 real pages, listed below) backed by a small set of Vercel
 serverless functions (`api/`) and a Neon Postgres database, powering the live fundraising
-bar, weigh-in chart, training log (manually logged + auto-synced from Strava), milestones,
-comments, and the "Live Track" race-day radar.
+bar, weigh-in chart, training log (manually logged + auto-synced from Strava, with a
+separate off-day walking/biking box also synced from Strava), milestones, comments, and the
+"Live Track" race-day radar.
 
 Every page shares the same nav/footer/race-clock chrome via `<!-- INCLUDE:partials/xxx.html -->`
 markers, resolved by `scripts/build.js` before anything deploys — there's still exactly one
@@ -113,12 +114,16 @@ js/                                        Frontend JS, split into 8 ordered fil
 api/                                       Vercel serverless functions (Neon-backed)
   _db.js                                  Shared helpers: SQL client, CORS, password check,
                                            sanitizing, opt-in Sentry error reporting
-  _strava.js                              Strava OAuth token refresh + activity sync,
-                                           shared by training.js
+  _strava.js                              Strava OAuth token refresh + activity sync (runs
+                                           AND off-day walks/rides in one pass), shared by
+                                           training.js and cross-training.js
   raised.js                               Fundraising totals (scrapes Haku, caches in Neon)
   donors.js                               Recent donor names for the "thank you" ticker
   training.js, weigh-ins.js               Training log (manual + Strava-synced) + weigh-in
                                            log (read + owner-password write)
+  cross-training.js                       Off-day walking/biking box on the training log
+                                           page — read-only, Strava-synced only (see
+                                           sql/cross-training.sql)
   milestones.js                           Timeline milestones (read + owner-password write)
   update.js                               Owner status-update posts
   comments.js, moderate.js                Public comments + owner moderation
@@ -127,7 +132,8 @@ api/                                       Vercel serverless functions (Neon-bac
   maps-config.js                          Bootstraps the map (Google Maps key, or MapLibre
                                            fallback)
 sql/                                       Schema for each table (site, comments, live-track,
-                                           route, Strava auth, login-attempt rate limiting)
+                                           route, Strava auth, Strava off-day cross-training,
+                                           login-attempt rate limiting)
 scripts/                                   build.js (see above), plus one-off Node scripts to
                                            seed/import data into Neon (seed-site.js,
                                            seed-marathon-route.js, import-apple-runs.js)
@@ -171,6 +177,7 @@ Notable client-only features (no backend, data/config lives in `js/*.js`/the HTM
    psql "$DATABASE_URL" -f sql/marathon-route.sql
    psql "$DATABASE_URL" -f sql/auth-attempts.sql             # rate limit for OWNER_UPDATE_PASSWORD (see api/_db.js)
    psql "$DATABASE_URL" -f sql/strava.sql                    # Strava OAuth token storage (optional)
+   psql "$DATABASE_URL" -f sql/cross-training.sql             # Off-day walking/biking box, Strava-synced (optional)
    ```
 3. Copy `.env.local` (see below for the variables it expects) and set the same values in
    **Vercel → Project → Settings → Environment Variables**.
@@ -186,7 +193,7 @@ Notable client-only features (no backend, data/config lives in `js/*.js`/the HTM
 | `OWNER_UPDATE_PASSWORD` | Gate for all owner-only write endpoints |
 | `COMMENTS_GITHUB_TOKEN`, `COMMENTS_ISSUE_NUMBER`, `OWNER_UPDATE_ISSUE_NUMBER` | Optional GitHub-issue mirroring for comments/updates |
 | `GOOGLE_MAPS_API_KEY` | Optional — enables Google Maps for the route map (falls back to MapLibre if unset) |
-| `STRAVA_CLIENT_ID`, `STRAVA_CLIENT_SECRET` | Optional — enables auto-syncing training runs from Strava (see `api/_strava.js`). The refresh token itself lives in the `strava_auth` DB row, not an env var, since Strava rotates it on every refresh. |
+| `STRAVA_CLIENT_ID`, `STRAVA_CLIENT_SECRET` | Optional — enables auto-syncing training runs from Strava (see `api/_strava.js`), plus off-day walks/rides into the separate cross-training box (`api/cross-training.js`, `sql/cross-training.sql`). The refresh token itself lives in the `strava_auth` DB row, not an env var, since Strava rotates it on every refresh. |
 | `SENTRY_DSN` | Optional — enables error tracking for `api/*` serverless functions (see [`api/_db.js`](api/_db.js)'s `reportError`). Unset = no-op, nothing changes. **Currently force-disabled in code regardless of this variable** via the `SENTRY_DISABLED` constant at the top of `api/_db.js` — flip that back to `false` to re-enable even with a DSN already configured. |
 
 ## Deploy (GitHub → Vercel)

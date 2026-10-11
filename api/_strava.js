@@ -20,6 +20,26 @@ const METERS_PER_MILE = 1609.344;
 // checking both covers older activities that only have `type` set.
 const RUN_TYPES = new Set(["Run", "TrailRun", "VirtualRun"]);
 
+// Off-day cross-training (walking at work, bike rides) tracked
+// separately from running — see cross_training_activities in
+// sql/cross-training.sql. Kept as two distinct sets (not folded into
+// one CROSS_TYPES set) so mapActivityToCrossTraining can tag each row
+// with the right `activity_type` without a second lookup.
+const WALK_TYPES = new Set(["Walk", "Hike"]);
+const BIKE_TYPES = new Set([
+  "Ride",
+  "VirtualRide",
+  "EBikeRide",
+  "GravelRide",
+  "MountainBikeRide"
+]);
+
+function crossTrainingKind(activity) {
+  if (WALK_TYPES.has(activity.sport_type) || WALK_TYPES.has(activity.type)) return "walk";
+  if (BIKE_TYPES.has(activity.sport_type) || BIKE_TYPES.has(activity.type)) return "bike";
+  return null;
+}
+
 const SYNC_STALE_MS = 15 * 60 * 1000; // re-check Strava at most every 15 minutes
 
 // Kevin had already been manually logging runs ("Imported from Apple
@@ -108,6 +128,33 @@ async function upsertRun(sql, run) {
   `;
 }
 
+function mapActivityToCrossTraining(activity, kind) {
+  const miles = Number(activity.distance) / METERS_PER_MILE;
+  return {
+    activity_date: String(activity.start_date_local).slice(0, 10),
+    activity_type: kind,
+    miles: Math.round(miles * 100) / 100,
+    duration_seconds: Math.round(Number(activity.moving_time)),
+    notes: activity.name || null,
+    strava_activity_id: activity.id
+  };
+}
+
+async function upsertCrossTraining(sql, activity) {
+  await sql`
+    INSERT INTO cross_training_activities
+      (activity_date, activity_type, miles, duration_seconds, notes, source, strava_activity_id)
+    VALUES
+      (${activity.activity_date}::date, ${activity.activity_type}, ${activity.miles}, ${activity.duration_seconds}, ${activity.notes}, 'strava', ${activity.strava_activity_id})
+    ON CONFLICT (strava_activity_id) DO UPDATE
+      SET activity_date = EXCLUDED.activity_date,
+          activity_type = EXCLUDED.activity_type,
+          miles = EXCLUDED.miles,
+          duration_seconds = EXCLUDED.duration_seconds,
+          notes = EXCLUDED.notes
+  `;
+}
+
 // Fetches recent activities from Strava and upserts any runs into
 // training_runs. Safe to call liberally — every failure path (not
 // configured, token refresh failure, Strava API error) just leaves
@@ -139,6 +186,15 @@ export async function syncStravaIfStale(sql) {
     );
     for (const activity of runs) {
       await upsertRun(sql, mapActivityToRun(activity));
+    }
+
+    // Same activity list, same sync pass — walks and rides just land
+    // in cross_training_activities instead of training_runs, keeping
+    // the running stats/chart on this page unaffected.
+    for (const activity of activities) {
+      const kind = crossTrainingKind(activity);
+      if (!kind) continue;
+      await upsertCrossTraining(sql, mapActivityToCrossTraining(activity, kind));
     }
 
     await sql`UPDATE strava_auth SET last_synced_at = NOW() WHERE id = 1`;
