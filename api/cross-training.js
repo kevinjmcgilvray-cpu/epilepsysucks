@@ -2,11 +2,23 @@
 // see sql/cross-training.sql for why this is a separate table/endpoint
 // from training.js's running log rather than a type column on it.
 //
-// Read-only by design: unlike training.js there's no owner-password
-// POST path here, since every row is expected to come from the
-// Strava sync (syncStravaIfStale, shared with training.js) rather
-// than manual entry.
-import { cors, getSql, pacificDateKey, reportError } from "./_db.js";
+// Strava sync is still the primary, expected source for every row
+// here. The owner-password POST path below exists purely as a safety
+// net for if Strava is ever disconnected/unavailable — same
+// manual-entry fallback training.js has always had for runs, so this
+// table doesn't become permanently stuck on stale data if that
+// happens. Rows written this way get source="manual" (see
+// sql/cross-training.sql), same as how training_runs distinguishes
+// manual entries from synced ones.
+import {
+  authorizeOwner,
+  cors,
+  getSql,
+  pacificDateKey,
+  parseBody,
+  reportError,
+  sanitizePlain
+} from "./_db.js";
 import { syncStravaIfStale } from "./_strava.js";
 
 function mapActivity(row) {
@@ -23,19 +35,67 @@ function mapActivity(row) {
 }
 
 export default async function handler(req, res) {
-  cors(res, "GET, OPTIONS", req);
+  cors(res, "GET, POST, OPTIONS", req);
   if (req.method === "OPTIONS") {
     res.status(204).end();
-    return;
-  }
-  if (req.method !== "GET") {
-    res.status(405).json({ ok: false, error: "Method not allowed" });
     return;
   }
 
   const sql = getSql();
   if (!sql) {
     res.status(500).json({ ok: false, error: "Database not configured" });
+    return;
+  }
+
+  if (req.method === "POST") {
+    try {
+      const payload = parseBody(req);
+      const auth = await authorizeOwner(sql, req, payload);
+      if (!auth.allowed) {
+        res.status(auth.status).json({ ok: false, error: auth.error });
+        return;
+      }
+
+      const date = String(payload.date || "").trim();
+      const type = String(payload.type || "").trim();
+      const miles = Number(payload.miles);
+      const durationMinutes = Number(payload.durationMinutes);
+      const notes = sanitizePlain(payload.notes, 500) || null;
+
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+        res.status(400).json({ ok: false, error: "Date is required (YYYY-MM-DD)" });
+        return;
+      }
+      if (type !== "walk" && type !== "bike") {
+        res.status(400).json({ ok: false, error: "Type must be 'walk' or 'bike'" });
+        return;
+      }
+      if (!Number.isFinite(miles) || miles <= 0) {
+        res.status(400).json({ ok: false, error: "Miles must be greater than 0" });
+        return;
+      }
+      if (!Number.isFinite(durationMinutes) || durationMinutes <= 0) {
+        res.status(400).json({ ok: false, error: "Duration minutes must be greater than 0" });
+        return;
+      }
+
+      const durationSeconds = Math.round(durationMinutes * 60);
+      const rows = await sql`
+        INSERT INTO cross_training_activities (activity_date, activity_type, miles, duration_seconds, notes, source)
+        VALUES (${date}::date, ${type}, ${miles}, ${durationSeconds}, ${notes}, 'manual')
+        RETURNING id, activity_date, activity_type, miles, duration_seconds, notes, source, created_at
+      `;
+      res.status(201).json({ ok: true, activity: mapActivity(rows[0]) });
+      return;
+    } catch (error) {
+      await reportError(error, { endpoint: "cross-training", method: req.method });
+      res.status(500).json({ ok: false, error: "Cross-training request failed" });
+      return;
+    }
+  }
+
+  if (req.method !== "GET") {
+    res.status(405).json({ ok: false, error: "Method not allowed" });
     return;
   }
 
