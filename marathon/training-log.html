@@ -100,7 +100,7 @@
         <h1>Where I am now</h1>
         <p>Every run gets logged — distance, time, pace, and notes. This is the live picture of the road to March 7, 2027.</p>
 
-        <div class="training-status" id="training-status">
+        <div class="training-status" id="training-status" aria-live="polite">
           <div class="training-status__card">
             <div class="training-status__label">Longest run</div>
             <div class="training-status__value" id="stat-longest">—</div>
@@ -138,12 +138,12 @@
             </div>
           </div>
           <p class="training-chart__note" id="training-chart-note">Hover any dot for the exact date.</p>
-          <p class="trend-stat" id="training-trend-stat" hidden></p>
+          <p class="trend-stat" id="training-trend-stat" aria-live="polite" hidden></p>
         </div>
 
         <div class="cross-training reveal">
           <p class="training-log__title">Off days: walking &amp; biking <span class="cross-training__via">via Strava</span></p>
-          <div class="training-status" id="cross-training-status">
+          <div class="training-status" id="cross-training-status" aria-live="polite">
             <div class="training-status__card training-status__card--cross">
               <div class="training-status__label">Walking this week</div>
               <div class="training-status__value" id="stat-walk-weekly">—</div>
