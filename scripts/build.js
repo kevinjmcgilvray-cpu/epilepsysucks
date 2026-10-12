@@ -52,6 +52,13 @@ const CSS_ORDER = [
 // /journey/diagnosis the same way.
 const PAGES = [
   "index.html",
+  // Vercel's static builder auto-serves dist/404.html (with a real
+  // 404 status) for any unmatched path when it exists in the output
+  // directory — no vercel.json routing config needed. Not a real
+  // crawlable route, so it's deliberately absent from sitemap.xml/
+  // sitemap.html, but it still needs the same INCLUDE/bundle-tag
+  // processing as every other page to render with the site's chrome.
+  "404.html",
   "journey.html",
   "journey/diagnosis.html",
   "journey/timeline.html",

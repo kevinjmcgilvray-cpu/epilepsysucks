@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Page not found — Epilepsy Sucks</title>
+  <meta name="description" content="That page doesn't exist. Here's how to get back to the real site." />
+  <meta name="robots" content="noindex" />
+
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem("epilepsy-theme");
+        if (saved === "dark" || saved === "light") {
+          document.documentElement.setAttribute("data-theme", saved);
+        }
+      } catch (e) {}
+    })();
+  </script>
+
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+<!-- INCLUDE:partials/head-assets.html -->
+</head>
+<body>
+<!-- INCLUDE:partials/chrome-pre-nav.html -->
+<!-- INCLUDE:partials/nav.html -->
+
+  <main id="top">
+    <section class="section" id="not-found">
+      <div class="section__inner reveal">
+        <p class="eyebrow">404</p>
+        <h1>That page doesn't exist</h1>
+        <p>The link might be old, mistyped, or just gone — this site's been restructured a few times. Here's where you can actually get to:</p>
+        <ul class="reasons-list">
+          <li><a href="/">Home</a></li>
+          <li><a href="/journey">My Journey</a></li>
+          <li><a href="/marathon">LA Marathon 2027</a></li>
+          <li><a href="/sitemap">Full sitemap</a></li>
+          <li><a href="/community/contact">Report a broken link</a></li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+<!-- INCLUDE:partials/chrome-bottom.html -->
+</body>
+</html>
