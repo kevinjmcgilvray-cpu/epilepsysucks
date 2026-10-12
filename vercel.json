@@ -13,7 +13,11 @@
       "headers": [
         { "key": "X-Content-Type-Options", "value": "nosniff" },
         { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.userway.org https://widgets.sociablekit.com https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com https://*.googleapis.com https://*.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com https://widgets.sociablekit.com https://maxcdn.bootstrapcdn.com https://cdn.userway.org https://*.gstatic.com; font-src 'self' https://fonts.gstatic.com https://maxcdn.bootstrapcdn.com data:; img-src 'self' data: blob: https:; connect-src 'self' https://api.userway.org https://cdn.userway.org https://data.accentapi.com https://*.basemaps.cartocdn.com https://basemaps.cartocdn.com https://*.googleapis.com https://*.gstatic.com; worker-src 'self' blob:; frame-src 'self' https://www.facebook.com https://widgets.sociablekit.com https://cdn.userway.org https://*.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
+        }
       ]
     },
     {
