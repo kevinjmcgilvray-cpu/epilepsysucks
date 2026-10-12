@@ -501,6 +501,124 @@
       }
     }
 
+    /* Featured race-day countdown — a bigger, more prominent sibling of
+       the persistent nav .race-clock (partials/nav.html,
+       02-storm-raceclock.js: 3 units, no seconds). Deliberately reuses
+       that same neon-tube visual language (--neon/--neon-dim, the
+       race-clock-flip keyframe from 02-hero-sections.css) rather than
+       inventing a second countdown aesthetic, and reads from the exact
+       same window.RACE_MS source of truth (set once in
+       01-nav-theme-cursor.js) so the two countdowns can never drift out
+       of sync with each other. Sits right above the donate ask on
+       purpose — urgency and the CTA in the same glance. */
+    .countdown-feature {
+      --neon: #c77dff;
+      --neon-dim: rgba(199, 125, 255, 0.4);
+      --tube: #120e1a;
+      margin-top: 1.75rem;
+      padding: 1.5rem clamp(1rem, 4vw, 2rem);
+      border: 1px solid var(--line);
+      border-radius: 1rem;
+      background: var(--surface-muted);
+      box-shadow: 0 0 50px -24px var(--neon-dim);
+      text-align: center;
+      max-width: 38rem;
+    }
+
+    .countdown-feature__eyebrow {
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent-text);
+      margin: 0 0 1rem;
+    }
+
+    .countdown-feature__units {
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: clamp(0.5rem, 2vw, 1rem);
+    }
+
+    .countdown-feature__unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* Same permanently-dark "tube" background as .race-clock__digits
+       (02-hero-sections.css) — on purpose, not a theme-aware surface.
+       It's an LED/tube display look: the digits are only readably
+       bright against a near-black backing, regardless of whether the
+       site itself is in light or dark theme. An earlier version of
+       this used a theme-aware var(--surface-muted)-tinted background
+       instead, which passed in dark theme but measured ~2.5:1 in light
+       theme (needs 3:1 for this large/bold text) — caught by
+       tests/contrast.test.js's 0-baseline for index.html. */
+    .countdown-feature__digits {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: clamp(3.2rem, 10vw, 4.2rem);
+      padding: 0.5rem 0.6rem 0.4rem;
+      font-family: "Share Tech Mono", "Share Tech Mono Fallback", ui-monospace, monospace;
+      font-size: clamp(1.65rem, 5.5vw, 2.3rem);
+      color: var(--neon);
+      background:
+        linear-gradient(180deg, rgba(199, 125, 255, 0.1), transparent 40%),
+        var(--tube);
+      border: 1px solid color-mix(in srgb, var(--neon) 45%, transparent);
+      border-radius: 0.5rem;
+      box-shadow:
+        0 0 10px var(--neon-dim),
+        inset 0 0 12px rgba(199, 125, 255, 0.14);
+      text-shadow:
+        0 0 6px var(--neon),
+        0 0 14px var(--neon-dim);
+    }
+
+    .countdown-feature__digits.is-flip {
+      /* Shared keyframe already defined in 02-hero-sections.css for
+         .race-clock__digits — concatenated before this file in
+         CSS_ORDER, so it's available here without redefining it. */
+      animation: race-clock-flip 0.45s ease;
+    }
+
+    .countdown-feature__label {
+      font-family: var(--font-body);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--paper-dim);
+    }
+
+    /* --accent-text (not --neon) on purpose: this renders directly on
+       the card's theme-aware var(--surface-muted) background rather
+       than the digits' always-dark tube background above, and
+       --accent-text is this codebase's established "safe for text on
+       either theme" token (see styles/01-base-nav.css) — unlike --neon,
+       which is only guaranteed readable against --tube. */
+    .countdown-feature__expired {
+      margin: 0.65rem 0 0;
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      letter-spacing: 0.04em;
+      color: var(--accent-text);
+    }
+
+    .countdown-feature__cta {
+      margin-top: 1.5rem;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .countdown-feature__digits.is-flip {
+        animation: none;
+      }
+    }
+
     .marathon-meta {
       margin-top: 1.75rem;
       padding-top: 1.5rem;

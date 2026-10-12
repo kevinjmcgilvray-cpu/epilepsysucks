@@ -31,7 +31,8 @@ const JS_ORDER = [
   "04-charts-sims.js",
   "05-pacecalc.js",
   "06-training-comments.js",
-  "07-admin-mermaid.js"
+  "07-admin-mermaid.js",
+  "08-countdown-feature.js"
 ];
 
 const CSS_ORDER = [
@@ -217,9 +218,9 @@ async function build() {
 
     html = replaceOrThrow(
       html,
-      /<script src="\/js\/01-nav-theme-cursor\.js"><\/script>[\s\S]*?<script src="\/js\/07-admin-mermaid\.js"><\/script>/,
+      /<script src="\/js\/01-nav-theme-cursor\.js"><\/script>[\s\S]*?<script src="\/js\/08-countdown-feature\.js"><\/script>/,
       '<script src="/js/app.min.js"></script>',
-      "the 8 ordered js/*.js <script> tags",
+      "the 9 ordered js/*.js <script> tags",
       page
     );
 
