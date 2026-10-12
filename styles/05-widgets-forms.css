@@ -352,6 +352,132 @@
       height: 0.85rem;
     }
 
+    /* Strava training teaser (marathon.html hub) — a summary card, not a
+       log. The real per-run/per-activity detail already lives on
+       marathon/training-log.html (training-status/cross-training
+       sections, 06-training-comments.js); this calls the same two real
+       endpoints (/api/training, /api/cross-training) and only shows
+       totals, so there's deliberately no duplicate list of individual
+       workouts here. */
+    .strava-widget {
+      --strava: #fc4c02;
+      margin-top: 1.75rem;
+      padding: 1.5rem clamp(1rem, 4vw, 2rem);
+      border: 1px solid var(--line);
+      border-radius: 1rem;
+      background: var(--surface-muted);
+      border-top: 3px solid var(--strava);
+      max-width: 42rem;
+    }
+
+    .strava-widget__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .strava-widget__brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--paper);
+    }
+
+    .strava-widget__brand-icon {
+      width: 1rem;
+      height: 1rem;
+      fill: var(--strava);
+      flex-shrink: 0;
+    }
+
+    .strava-widget__status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.78rem;
+      color: var(--paper-dim);
+    }
+
+    .strava-widget__status-dot {
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.55);
+      animation: strava-widget-pulse-dot 2s infinite;
+    }
+
+    .strava-widget[data-status="error"] .strava-widget__status-dot {
+      background: var(--paper-faint);
+      animation: none;
+    }
+
+    @keyframes strava-widget-pulse-dot {
+      0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.55); }
+      70% { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+    }
+
+    .strava-widget__progress {
+      margin-top: 0;
+      margin-bottom: 1.25rem;
+      max-width: none;
+    }
+
+    .strava-widget__grid {
+      margin-top: 0;
+    }
+
+    .strava-widget__actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+    }
+
+    .strava-widget__sync-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .strava-widget__spinner {
+      display: none;
+      width: 0.9rem;
+      height: 0.9rem;
+      border: 2px solid var(--line);
+      border-top-color: var(--paper);
+      border-radius: 50%;
+      animation: strava-widget-spin 0.7s linear infinite;
+    }
+
+    .strava-widget__sync-btn[aria-busy="true"] .strava-widget__spinner {
+      display: inline-block;
+    }
+
+    @keyframes strava-widget-spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .strava-widget__last-synced {
+      margin: 0;
+      font-size: 0.78rem;
+      color: var(--paper-faint);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .strava-widget__status-dot,
+      .strava-widget__spinner {
+        animation: none;
+      }
+    }
+
     .comments-list {
       list-style: none;
       margin: 2rem 0 0;
