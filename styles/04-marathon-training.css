@@ -22,7 +22,8 @@
        one) — give those <a> tags real block-level height so they
        clear the 48px touch-target floor, same as everywhere else on
        the site. */
-    #sitemap .reasons-list a {
+    #sitemap .reasons-list a,
+    #not-found .reasons-list a {
       display: block;
       width: 100%;
       padding: 0.8rem 0;
