@@ -12,6 +12,11 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Preload hint for a small LCP win: the browser can start fetching
+       this stylesheet immediately instead of waiting to discover it
+       further down <head>. Same URL as the real <link rel="stylesheet">
+       right below it. -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Share+Tech+Mono&display=swap" />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
   <!-- Split from one 4,300-line styles.css into ordered partials for
        easier navigation. Load order matters: later files' rules can win
