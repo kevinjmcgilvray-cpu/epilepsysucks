@@ -149,7 +149,7 @@
         </details>
 
         <details class="owner-update-form" id="admin-log-wrap">
-          <summary>Kevin — log training, weigh-in, funds, milestone</summary>
+          <summary>Kevin — log training, cross-training, weigh-in, funds, milestone</summary>
           <form class="comment-form" id="admin-run-form" novalidate>
             <p class="comment-form__note" style="margin:0;">Add a training run</p>
             <label>Password<input id="admin-run-password" name="password" type="password" required autocomplete="current-password" /></label>
@@ -161,6 +161,25 @@
               <button class="btn btn--purple" type="submit">Save run</button>
             </div>
             <p class="comment-form__error" id="admin-run-error" hidden></p>
+          </form>
+
+          <form class="comment-form" id="admin-cross-form" novalidate>
+            <p class="comment-form__note" style="margin:0;">Add a cross-training activity (safety net if Strava is ever disconnected — normally these sync automatically)</p>
+            <label>Password<input id="admin-cross-password" name="password" type="password" required autocomplete="current-password" /></label>
+            <label>Type
+              <select id="admin-cross-type" name="type" required>
+                <option value="walk">Walk</option>
+                <option value="bike">Bike</option>
+              </select>
+            </label>
+            <label>Date<input id="admin-cross-date" name="date" type="date" required /></label>
+            <label>Miles<input id="admin-cross-miles" name="miles" type="number" min="0.1" step="0.1" required /></label>
+            <label>Duration (minutes)<input id="admin-cross-minutes" name="durationMinutes" type="number" min="1" step="0.1" required /></label>
+            <label>Notes<textarea id="admin-cross-notes" name="notes" maxlength="500" placeholder="Optional notes"></textarea></label>
+            <div class="comment-form__actions">
+              <button class="btn btn--purple" type="submit">Save activity</button>
+            </div>
+            <p class="comment-form__error" id="admin-cross-error" hidden></p>
           </form>
 
           <form class="comment-form" id="admin-weigh-form" novalidate>

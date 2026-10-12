@@ -66,6 +66,7 @@
                 btn.disabled = false;
                 const labels = {
                   "admin-run-form": "Save run",
+                  "admin-cross-form": "Save activity",
                   "admin-weigh-form": "Save weigh-in",
                   "admin-funds-form": "Save totals",
                   "admin-milestone-form": "Save milestone"
@@ -77,8 +78,10 @@
       }
 
       const runDate = document.getElementById("admin-run-date");
+      const crossDate = document.getElementById("admin-cross-date");
       const weighDate = document.getElementById("admin-weigh-date");
       if (runDate && !runDate.value) runDate.value = todayIso();
+      if (crossDate && !crossDate.value) crossDate.value = todayIso();
       if (weighDate && !weighDate.value) weighDate.value = todayIso();
 
       wireForm(
@@ -99,6 +102,28 @@
           return { password, date, miles, durationMinutes, notes };
         },
         "/api/training"
+      );
+
+      wireForm(
+        "admin-cross-form",
+        "admin-cross-error",
+        (form) => {
+          const password = (form.password.value || "").trim();
+          const type = form.type.value;
+          const date = (form.date.value || "").trim();
+          const miles = Number(form.miles.value);
+          const durationMinutes = Number(form.durationMinutes.value);
+          const notes = (form.notes.value || "").trim();
+          if (!password) throw new Error("Password is required.");
+          if (type !== "walk" && type !== "bike") throw new Error("Type must be walk or bike.");
+          if (!date) throw new Error("Date is required.");
+          if (!Number.isFinite(miles) || miles <= 0) throw new Error("Miles must be greater than 0.");
+          if (!Number.isFinite(durationMinutes) || durationMinutes <= 0) {
+            throw new Error("Duration minutes must be greater than 0.");
+          }
+          return { password, type, date, miles, durationMinutes, notes };
+        },
+        "/api/cross-training"
       );
 
       wireForm(
