@@ -34,7 +34,12 @@
                   <span class="nav__funds-stat-label">Overachiever</span>
                 </span>
               </span>
-              <span class="funds-bar" aria-hidden="true"><span class="funds-bar__fill" id="funds-bar-fill"></span></span>
+              <!-- Inline width is the hardcoded fallback match for the
+                   $1,851/$3,000 snapshot above -- see index.html's
+                   #marathon-tracker comment for why this needs to stay
+                   in sync (prevents a stale "$X raised, 0% progress"
+                   contradiction if /api/raised is slow/unreachable). -->
+              <span class="funds-bar" aria-hidden="true"><span class="funds-bar__fill" id="funds-bar-fill" style="width: 62%;"></span></span>
             </span>
           </a>
           <button

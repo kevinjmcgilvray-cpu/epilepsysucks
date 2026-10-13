@@ -152,14 +152,37 @@
       const bar = document.getElementById("funds-bar-fill");
       const barMeta = document.getElementById("funds-bar-fill-meta");
       const percentEl = document.getElementById("funds-percent");
-      if (!raisedEl) return;
+      // Guard on either fundraising display existing (nav's #funds-raised
+      // or a page section's #funds-raised-meta) -- a page with only one
+      // of the two shouldn't silently skip syncing the one it does have.
+      if (!raisedEl && !raisedMeta) return;
 
       const formatMoney = (n) => "$" + Number(n).toLocaleString("en-US", { maximumFractionDigits: 0 });
+
+      // On failure, the HTML's own hardcoded fallback numbers (and the
+      // matching 62% bar width — see the comments next to those
+      // elements) stay on screen rather than nothing at all. The one
+      // thing a silent failure couldn't convey on its own is that
+      // those numbers might now be stale, so this surfaces that
+      // explicitly in the same aria-live slot the normal "pace to
+      // goal" message uses — only on pages that have it
+      // (#funds-trend-stat exists on index.html/marathon/fundraising.html,
+      // not on every page's nav-only fundraising display).
+      function showStaleNotice() {
+        const trendStatEl = document.getElementById("funds-trend-stat");
+        if (!trendStatEl) return;
+        trendStatEl.hidden = false;
+        trendStatEl.textContent =
+          "Couldn't refresh the latest fundraising total — the numbers above may be out of date.";
+      }
 
       fetch("/api/raised")
         .then((res) => (res.ok ? res.json() : null))
         .then((data) => {
-          if (!data || !data.ok) return;
+          if (!data || !data.ok) {
+            showStaleNotice();
+            return;
+          }
           if (raisedEl) raisedEl.textContent = data.raisedFormatted;
           if (goalEl) goalEl.textContent = data.goalFormatted;
           if (raisedMeta) raisedMeta.textContent = data.raisedFormatted;
@@ -205,5 +228,7 @@
             }
           }
         })
-        .catch(() => {});
+        .catch(() => {
+          showStaleNotice();
+        });
     })();
