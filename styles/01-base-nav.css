@@ -171,6 +171,14 @@
 
     body {
       position: relative;
+      /* Explicit 16px baseline (matches the unset browser default this
+         already rendered at, so purely declarative/no visual change)
+         -- every component on the site already sizes its own text in
+         rem/clamp() off the root anyway, comfortably at or above this
+         floor, but spelling the baseline out here makes the "16-18px
+         minimum" requirement checkable at a glance instead of resting
+         on an implicit browser default. */
+      font-size: 1rem;
       font-family: var(--font-body);
       color: var(--paper);
       background: var(--ink);
@@ -362,6 +370,7 @@
     }
 
     img,
+    svg,
     video {
       display: block;
       max-width: 100%;

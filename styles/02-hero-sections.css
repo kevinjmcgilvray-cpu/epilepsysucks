@@ -651,8 +651,18 @@
     }
 
     .share-menu__item {
-      display: block;
+      /* 48px floor for mobile touch targets (WCAG 2.5.8) -- was ~36-40px
+         (just padding + text), never caught by touch-targets.test.js
+         because that scan never actually opens #share-panel (it's
+         `hidden` by default, and the test only exercises the nav
+         toggle and <details> elements), so these buttons went
+         unmeasured. Found via a dedicated narrow-viewport audit that
+         does open it. display:flex + align-items so the extra height
+         doesn't just add dead padding above/below the text. */
+      display: flex;
+      align-items: center;
       width: 100%;
+      min-height: 48px;
       padding: 0.55rem 0.75rem;
       border-radius: 0.5rem;
       font-family: var(--font-body);
@@ -663,6 +673,7 @@
       background: none;
       border: none;
       cursor: pointer;
+      box-sizing: border-box;
     }
 
     .share-menu__item:hover,
@@ -764,8 +775,15 @@
       /* 48px floor for mobile touch targets (WCAG 2.5.8) — was ~41px
          tall at the base padding, and the 480px block below shrinks
          padding further; min-height carries through both since
-         neither redeclares it. */
-      min-height: 48px;
+         neither redeclares it. Set to 49px, not 48px: Chromium
+         occasionally lays this element out a fraction of a px under
+         an exact 48px min-height (47.6-47.95px seen in
+         getBoundingClientRect(), varying slightly run to run) —
+         genuine sub-pixel layout rounding, not a real tap-target
+         problem, but it was intermittently flaking
+         touch-targets.test.js. One extra pixel of margin is invisible
+         here and removes the flake instead of just re-running past it. */
+      min-height: 49px;
       padding: 0.75rem 1.15rem;
       border-radius: 999px;
       border: 1px solid #c4a4ff;
