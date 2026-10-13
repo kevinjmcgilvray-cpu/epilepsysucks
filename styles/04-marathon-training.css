@@ -739,6 +739,31 @@
       height: 100%;
     }
 
+    .course-map__error {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      margin: 0;
+      padding: 1.5rem;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    /* Specificity bumped to beat .section p (which this <p> also
+       matches, since it's injected inside .course-map__canvas which
+       lives inside a .section) -- otherwise that rule's
+       var(--paper-dim) wins and goes dark-on-dark in light theme.
+       Fixed light color, not a theme variable: .course-map__canvas's
+       dark background (#0a0e14) is intentionally the same in both
+       themes (same radar/map aesthetic always), so this needs to stay
+       readable against that fixed dark background regardless of the
+       page's own light/dark theme. Same fixed color already used for
+       .live-track__meta text in the same kind of always-dark widget. */
+    .course-map__frame .course-map__canvas .course-map__error {
+      color: rgba(210, 245, 255, 0.88);
+    }
+
     .course-map__legend {
       display: flex;
       flex-wrap: wrap;

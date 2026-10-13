@@ -448,6 +448,20 @@
         window.__liveTrackRefresh = poll;
       }
 
+      // Previously, any failure here (route fetch failing, an empty
+      // route, or the map library itself failing to load/render) just
+      // left #marathon-map an empty dark box with no indication
+      // anything was wrong -- the route is still fully described in the
+      // intro copy right above the map, so this points there instead of
+      // silently showing nothing.
+      function showMapError() {
+        if (!mapEl || mapEl.querySelector(".course-map__error")) return;
+        mapEl.removeAttribute("role");
+        mapEl.removeAttribute("aria-label");
+        mapEl.innerHTML =
+          '<p class="course-map__error">Map couldn\u2019t load. The route is described above: Dodger Stadium to Avenue of the Stars in Century City, 26.2 miles.</p>';
+      }
+
       Promise.all([
         fetch("/api/maps-config").then((r) => (r.ok ? r.json() : null)),
         fetch("/api/marathon-route").then((r) => (r.ok ? r.json() : null))
@@ -455,6 +469,7 @@
         .then(([config, route]) => {
           if (!route || !route.ok || !route.feature) {
             initLiveTrackRadar([]);
+            showMapError();
             return;
           }
           const feature = route.feature;
@@ -462,6 +477,7 @@
           coursePath = path;
           if (!path.length) {
             initLiveTrackRadar([]);
+            showMapError();
             return;
           }
           if (distanceEl && feature.properties.distanceMiles) {
@@ -472,13 +488,16 @@
             config && config.provider === "google" && config.googleMapsApiKey
               ? renderGoogle(path, feature, config.googleMapsApiKey)
               : renderMapLibre(path, feature);
-          return render.then((api) => {
-            mapApi = api;
-            if (window.__liveTrackRefresh) window.__liveTrackRefresh();
-          });
+          return render
+            .then((api) => {
+              mapApi = api;
+              if (window.__liveTrackRefresh) window.__liveTrackRefresh();
+            })
+            .catch(showMapError);
         })
         .catch(() => {
           initLiveTrackRadar([]);
+          showMapError();
         });
     })();
 
@@ -736,13 +755,30 @@
         }
       }
 
+      // On failure, the chart's SVG stays genuinely empty (nothing to
+      // draw without data), but the static note underneath it
+      // previously stayed stuck on "Hover any dot for the exact date
+      // and weight" -- misleading since there'd be no dots there at
+      // all. The narrative numbers above (368/214/154 lb) are this
+      // page's own stable biographical facts, not live data, so they're
+      // intentionally left as-is rather than also flagged as stale.
+      function showWeightChartError() {
+        const note = document.getElementById("weight-chart-note");
+        if (note) note.textContent = "Couldn't load the weigh-in chart right now.";
+      }
+
       fetch("/api/weigh-ins")
         .then((res) => (res.ok ? res.json() : null))
         .then((data) => {
-          if (!data || !data.ok || !data.weighIns || !data.weighIns.length) return;
+          if (!data || !data.ok || !data.weighIns || !data.weighIns.length) {
+            showWeightChartError();
+            return;
+          }
           render(data.weighIns, data.stats);
         })
-        .catch(() => {});
+        .catch(() => {
+          showWeightChartError();
+        });
     })();
 
     // Seizure frequency by year, 2016–2026. Hand-tallied from Kevin's own

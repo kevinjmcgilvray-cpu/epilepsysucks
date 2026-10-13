@@ -449,6 +449,23 @@
       });
     }
 
+    // UserWay graceful-failure fallback -- see the matching comment next
+    // to the widget's <script> tag in partials/head-assets.html. If that
+    // script's own onerror fired, window.__userwayFailed is true and a
+    // click here goes to this site's own /accessibility page instead of
+    // doing nothing. If UserWay loaded fine, it's already wired its own
+    // click handler to this same button to open its panel, and
+    // __userwayFailed stays false, so this listener is a no-op.
+    (function userwayFallback() {
+      const trigger = document.getElementById("userway-trigger");
+      if (!trigger) return;
+      trigger.addEventListener("click", (e) => {
+        if (!window.__userwayFailed) return;
+        e.preventDefault();
+        window.location.href = "/accessibility";
+      });
+    })();
+
     const revealEls = document.querySelectorAll(".reveal");
     if ("IntersectionObserver" in window) {
       const io = new IntersectionObserver((entries) => {
