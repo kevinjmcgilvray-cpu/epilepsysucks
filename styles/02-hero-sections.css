@@ -477,6 +477,16 @@
       }
     }
 
+    /* Unused as of the hero rewrite that made the H1 literally say
+       "Epilepsy Sucks" -- this giant transparent background word (plus
+       its 18s infinite .bg-word span drift animation, a continuously-
+       moving background that doesn't belong on a seizure-safe site
+       regardless of how slow it was) became both redundant and a
+       compliance issue in one move, so its one usage was removed from
+       index.html rather than kept running behind text that already
+       says the same thing. Left here undeleted in case this ever comes
+       back in a non-animated form, same as other now-unreferenced
+       selectors elsewhere in this codebase. */
     .bg-word {
       position: absolute;
       inset: 0;
@@ -506,6 +516,40 @@
       z-index: 2;
       text-align: center;
       max-width: min(36rem, 92vw);
+    }
+
+    /* Real running photo, placed first inside .hero__content so it's
+       the first thing in the hero (above the headline) rather than a
+       purely abstract/illustrative backdrop. Framed the same plain way
+       as .chapter__photo elsewhere on the site (1px line border, no
+       border-radius) rather than inventing a new photo-frame style. */
+    .hero__photo {
+      margin: 0 auto clamp(1.1rem, 3vw, 1.5rem);
+      max-width: min(20rem, 62vw);
+      border: 1px solid var(--line);
+      overflow: hidden;
+      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.35);
+      animation: rise 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .hero__photo img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Specificity bumped (class + class + type) to beat .hero__content >
+       p's (class + type) -- this paragraph is also a direct child of
+       .hero__content, so that rule would otherwise win the font-size/
+       color tie and this would render identically to the plain intro
+       paragraph below it instead of as a distinct subheadline. */
+    .hero__content > p.hero__subhead {
+      margin-top: clamp(0.6rem, 1.6vw, 0.9rem);
+      font-family: var(--font-display);
+      font-size: clamp(1.1rem, 2.6vw, 1.5rem);
+      letter-spacing: 0.02em;
+      color: var(--paper);
+      animation: rise 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
     }
 
     .donor-ticker {
@@ -548,7 +592,13 @@
 
     .hero__content h1 {
       font-family: var(--font-display);
-      font-size: clamp(3.75rem, 15vw, 9.5rem);
+      /* Shrunk from clamp(3.75rem, 15vw, 9.5rem) -- that sizing was
+         tuned for a single ~8-character word ("EPILEPSY"); "EPILEPSY
+         SUCKS" at the same vw-based scale would run far too wide/huge.
+         Left un-nowrap'd on purpose, same as before, so it can still
+         wrap to two stacked lines on narrow viewports rather than
+         shrinking below a readable display size. */
+      font-size: clamp(2.75rem, 11vw, 6.5rem);
       line-height: 0.9;
       letter-spacing: 0.06em;
       text-transform: uppercase;
