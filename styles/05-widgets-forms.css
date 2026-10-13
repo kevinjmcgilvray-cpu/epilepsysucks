@@ -152,6 +152,25 @@
       color: var(--paper);
     }
 
+    /* Sighted-only visual hint that the table below scrolls
+       horizontally -- hiding the actual scrollbar (see the comment on
+       .pace-calc__table-wrap) meant there was previously no indication
+       at all that there was more to see. aria-hidden since a screen
+       reader already reaches every cell linearly regardless of the
+       visual scroll position. */
+    .pace-calc__scroll-hint {
+      display: none;
+      margin: 0 0 0.4rem;
+      font-size: 0.78rem;
+      color: var(--paper-faint);
+    }
+
+    @media (max-width: 540px) {
+      .pace-calc__scroll-hint {
+        display: block;
+      }
+    }
+
     .pace-calc__table-wrap {
       overflow-x: auto;
       border: 1px solid var(--line);
@@ -159,7 +178,9 @@
          see the rest. Touch scrolling doesn't need a visible scrollbar
          to be discoverable, and on some mobile browsers the thin bar
          reads as a stray line crossing the page while swiping. Scroll
-         behavior itself is completely unaffected either way. */
+         behavior itself is completely unaffected either way; the hint
+         above now covers the discoverability gap that not having a
+         visible scrollbar left behind. */
       scrollbar-width: none;
     }
 

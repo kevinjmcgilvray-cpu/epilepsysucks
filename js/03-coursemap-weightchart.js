@@ -714,6 +714,18 @@
           group.addEventListener("pointerleave", hideTip);
           group.addEventListener("focus", () => showTip(point, group));
           group.addEventListener("blur", hideTip);
+          // Tap-to-toggle fallback -- see the matching comment in
+          // 05-pacecalc.js for why this is needed alongside
+          // pointerenter/focus.
+          group.addEventListener("click", () => {
+            if (group.classList.contains("is-active")) hideTip();
+            else showTip(point, group);
+          });
+          group.addEventListener("keydown", (e) => {
+            if (e.key !== "Enter" && e.key !== " ") return;
+            e.preventDefault();
+            group.click();
+          });
         });
 
         if (stats) {
