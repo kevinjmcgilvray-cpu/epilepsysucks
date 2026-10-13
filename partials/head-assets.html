@@ -7,6 +7,15 @@
       s.setAttribute("data-size", "small");
       s.setAttribute("data-color", "#9b6bff");
       s.setAttribute("src", "https://cdn.userway.org/widget.js");
+      // If UserWay's CDN script fails to load (blocked, offline, their
+      // CDN down), the #userway-trigger button in the nav would
+      // otherwise just sit there looking clickable while silently doing
+      // nothing -- flag it so the click handler in 01-nav-theme-cursor.js
+      // can fall back to linking to this site's own /accessibility page
+      // instead of a dead button.
+      s.onerror = function () {
+        window.__userwayFailed = true;
+      };
       (d.body || d.head).appendChild(s);
     })(document);
   </script>

@@ -552,17 +552,44 @@
         });
       }
 
+      // Each "Behind the code" diagram's raw-syntax <pre class="mermaid">
+      // sits next to a <p class="arch-fallback-note"> that normally says
+      // "Diagram renders when you expand this panel." -- true before
+      // mermaid has run, but misleading left as-is if the render (or the
+      // CDN fetch) actually fails: the visitor would be looking at raw
+      // flowchart syntax with a caption promising it'll still render.
+      // Swap that caption to something accurate for any diagram that
+      // still hasn't produced an <svg> by the time this is called.
+      function showMermaidLoadError() {
+        document.querySelectorAll(".arch-diagram").forEach((wrap) => {
+          if (wrap.querySelector("svg")) return;
+          const note = wrap.querySelector(".arch-fallback-note");
+          if (note) {
+            note.textContent =
+              "Couldn't load the diagram renderer — the raw outline above is the same information as plain text.";
+          }
+        });
+      }
+
       function renderPublicDiagrams() {
         const publicDiagrams = Array.from(document.querySelectorAll(".mermaid"));
         if (!publicDiagrams.length) return;
         try {
-          Promise.resolve(window.mermaid.run({ nodes: publicDiagrams })).then(() => {
-            fixTimelineTitleColor();
-            fixEdgeLabelContrast();
-            applyDarkTimelinePalette();
-          });
+          Promise.resolve(window.mermaid.run({ nodes: publicDiagrams }))
+            .then(() => {
+              fixTimelineTitleColor();
+              fixEdgeLabelContrast();
+              applyDarkTimelinePalette();
+              showMermaidLoadError();
+            })
+            .catch(() => {
+              showMermaidLoadError();
+            });
         } catch (err) {
-          /* ignore render errors, diagram just stays as plain text */
+          // Mermaid itself threw synchronously (malformed diagram source,
+          // unexpected version mismatch, etc.) rather than rejecting a
+          // promise -- same user-facing fallback either way.
+          showMermaidLoadError();
         }
       }
 
@@ -575,7 +602,7 @@
             (entries) => {
               if (entries.some((entry) => entry.isIntersecting)) {
                 observer.disconnect();
-                ensureMermaid().then(renderPublicDiagrams).catch(() => {});
+                ensureMermaid().then(renderPublicDiagrams).catch(showMermaidLoadError);
               }
             },
             { rootMargin: "150px 0px" }
@@ -584,7 +611,7 @@
         } else {
           // No IntersectionObserver support — fall back to loading it
           // right away rather than never rendering the diagram at all.
-          ensureMermaid().then(renderPublicDiagrams).catch(() => {});
+          ensureMermaid().then(renderPublicDiagrams).catch(showMermaidLoadError);
         }
       }
 
@@ -604,6 +631,7 @@
             .then(renderPublicDiagrams)
             .catch(() => {
               publicArchRendered = false;
+              showMermaidLoadError();
             });
         });
       }
@@ -616,6 +644,7 @@
             .then(renderPublicDiagrams)
             .catch(() => {
               pageSplitRendered = false;
+              showMermaidLoadError();
             });
         });
       }
@@ -628,6 +657,7 @@
             .then(renderPublicDiagrams)
             .catch(() => {
               projectHistoryRendered = false;
+              showMermaidLoadError();
             });
         });
       }
