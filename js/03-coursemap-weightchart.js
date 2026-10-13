@@ -743,7 +743,7 @@
             title.textContent = "The weigh-ins — " + formatShort(weighIns[0].date) + " to " + formatShort(weighIns[weighIns.length - 1].date);
           }
           if (note && weighIns.length) {
-            note.textContent = "Hover any dot for the exact date and weight — from " + stats.startLb + " lb to " + stats.currentLb + " lb.";
+            note.textContent = "Tap or hover any dot for the exact date and weight — from " + stats.startLb + " lb to " + stats.currentLb + " lb.";
           }
         }
       }
