@@ -149,6 +149,8 @@
       const overachieverEl = document.getElementById("funds-overachiever");
       const raisedMeta = document.getElementById("funds-raised-meta");
       const goalMeta = document.getElementById("funds-goal-meta");
+      const remainingEl = document.getElementById("funds-remaining");
+      const remainingMeta = document.getElementById("funds-remaining-meta");
       const bar = document.getElementById("funds-bar-fill");
       const barMeta = document.getElementById("funds-bar-fill-meta");
       const percentEl = document.getElementById("funds-percent");
@@ -187,6 +189,11 @@
           if (goalEl) goalEl.textContent = data.goalFormatted;
           if (raisedMeta) raisedMeta.textContent = data.raisedFormatted;
           if (goalMeta) goalMeta.textContent = data.goalFormatted;
+          // remainingFormatted comes straight from /api/raised (the one
+          // place this is computed) rather than re-derived here, so
+          // there's exactly one formula for it site-wide.
+          if (remainingEl) remainingEl.textContent = data.remainingFormatted;
+          if (remainingMeta) remainingMeta.textContent = data.remainingFormatted;
           const pct = Math.max(0, Math.min(100, Number(data.percent) || 0));
           if (bar) bar.style.width = pct + "%";
           if (barMeta) barMeta.style.width = pct + "%";
@@ -204,7 +211,7 @@
           // exists (there's no stored day-by-day donation log to trend on).
           const trendStatEl = document.getElementById("funds-trend-stat");
           if (trendStatEl) {
-            const remaining = Number(data.goal) - Number(data.raised);
+            const remaining = Number(data.remaining);
             const daysLeft = Math.max(1, Math.ceil((window.RACE_DAY_UTC_MS - Date.now()) / 86400000));
             if (remaining <= 0) {
               trendStatEl.hidden = false;

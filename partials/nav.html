@@ -30,6 +30,16 @@
                   <span class="nav__funds-stat-label">Personal goal</span>
                 </span>
                 <span class="nav__funds-stat">
+                  <!-- Hardcoded $1,149 fallback matches the $1,851/
+                       $3,000 snapshot above (3000 - 1851 = 1149) --
+                       same "stay in sync" reasoning as the funds-bar
+                       width comment below; /api/raised's remaining
+                       field (goal - raised, floored at 0) overwrites
+                       this on load. -->
+                  <strong id="funds-remaining">$1,149</strong>
+                  <span class="nav__funds-stat-label">Remaining</span>
+                </span>
+                <span class="nav__funds-stat">
                   <strong id="funds-overachiever">$0</strong>
                   <span class="nav__funds-stat-label">Overachiever</span>
                 </span>
