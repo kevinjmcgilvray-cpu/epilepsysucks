@@ -154,67 +154,49 @@ async function run(baseUrl) {
     await context.close();
   }
 
-  // 6. Nav dropdowns: parent link navigates directly, the caret is the
-  // only click target that toggles the submenu, and desktop also
-  // reveals the submenu on hover with zero clicks.
+  // 6. Flat nav (desktop): exactly 6 top-level items (Home / My Story /
+  // Recovery / LA Marathon / Community / Donate), no dropdowns, and
+  // every link navigates directly on a single click with no hover
+  // step required.
   {
     const context = await browser.newContext();
-    const page = await freshPage(context, "nav-dropdown-desktop", errors);
+    const page = await freshPage(context, "nav-flat-desktop", errors);
     await page.goto(`${baseUrl}/index.html`);
     await page.waitForTimeout(100);
 
-    const trigger = page.locator(".nav__dropdown").first();
-    const menu = trigger.locator(".nav__dropdown-menu");
+    const dropdownCount = await page.locator(".nav__dropdown").count();
+    check("No .nav__dropdown elements remain in the nav", dropdownCount === 0, dropdownCount);
 
-    const closedBeforeHover = await menu.evaluate((el) => getComputedStyle(el).visibility);
-    check("Dropdown menu hidden before hover/click", closedBeforeHover === "hidden", closedBeforeHover);
+    // .nav__cta is text-transform: uppercase, so Playwright's rendered
+    // innerText comes back shouting ("MY STORY") even though the
+    // source markup is normal-case -- compare case-insensitively.
+    const linkTexts = await page.locator("#nav-links li a, #nav-links li button").allInnerTexts();
+    const hasAll = ["Home", "My Story", "Recovery", "LA Marathon", "Community"].every((label) =>
+      linkTexts.some((t) => t.trim().toLowerCase() === label.toLowerCase())
+    );
+    check("Nav contains Home/My Story/Recovery/LA Marathon/Community", hasAll, linkTexts.join(" | "));
 
-    await trigger.hover();
-    await page.waitForTimeout(150);
-    const visibleOnHover = await menu.evaluate((el) => getComputedStyle(el).visibility);
-    check("Dropdown menu reveals on hover with no click", visibleOnHover === "visible", visibleOnHover);
-
-    await page.mouse.move(5, 5);
-    await page.waitForTimeout(150);
-
-    const caret = trigger.locator(".nav__dropdown-caret");
-    const expandedBefore = await caret.getAttribute("aria-expanded");
-    check("Caret starts aria-expanded=false", expandedBefore === "false", expandedBefore);
-    await caret.click();
-    await page.waitForTimeout(100);
-    const expandedAfter = await caret.getAttribute("aria-expanded");
-    const urlAfterCaretClick = page.url();
-    check("Caret click toggles aria-expanded without navigating", expandedAfter === "true" && urlAfterCaretClick.endsWith("/index.html"), `${expandedAfter} ${urlAfterCaretClick}`);
-    const isOpen = await trigger.evaluate((el) => el.classList.contains("is-open"));
-    check("Caret click adds is-open class", isOpen === true, isOpen);
-
-    await page.locator(".nav__dropdown-link").first().click();
+    await page.locator("#nav-links a:text-is('My Story')").click();
     await page.waitForLoadState("domcontentloaded");
     const urlAfterLinkClick = page.url();
-    check("Clicking the parent link navigates directly", urlAfterLinkClick.includes("/journey"), urlAfterLinkClick);
+    check("Clicking a flat nav link navigates directly, no click/hover needed first", urlAfterLinkClick.includes("/journey"), urlAfterLinkClick);
     await context.close();
   }
 
-  // 7. Nav dropdowns on mobile: the link still navigates directly, and
-  // the caret still drives the tap-to-expand accordion.
+  // 7. Flat nav (mobile): the hamburger opens the panel, and tapping a
+  // link navigates directly and closes the panel (no accordion step).
   {
     const context = await browser.newContext({ viewport: { width: 480, height: 850 } });
-    const page = await freshPage(context, "nav-dropdown-mobile", errors);
+    const page = await freshPage(context, "nav-flat-mobile", errors);
     await page.goto(`${baseUrl}/index.html`);
     await page.waitForTimeout(100);
     await page.click("#nav-toggle");
     await page.waitForTimeout(100);
 
-    const trigger = page.locator(".nav__dropdown").first();
-    const caret = trigger.locator(".nav__dropdown-caret");
-    await caret.click();
-    await page.waitForTimeout(100);
-    const isOpen = await trigger.evaluate((el) => el.classList.contains("is-open"));
-    check("Mobile: caret tap expands the accordion", isOpen === true, isOpen);
-    const stillOnIndex = page.url().endsWith("/index.html");
-    check("Mobile: caret tap does not navigate", stillOnIndex, page.url());
+    const linksOpen = await page.locator("#nav-links").evaluate((el) => el.classList.contains("is-open"));
+    check("Mobile: hamburger tap opens the nav panel", linksOpen === true, linksOpen);
 
-    await page.locator(".nav__dropdown-link").first().click();
+    await page.locator("#nav-links a:text-is('My Story')").click();
     await page.waitForLoadState("domcontentloaded");
     check("Mobile: link tap navigates directly", page.url().includes("/journey"), page.url());
     await context.close();
