@@ -127,6 +127,18 @@
         rect.addEventListener("pointerleave", hideTip);
         rect.addEventListener("focus", () => showTip(d, rect, cx, barY));
         rect.addEventListener("blur", hideTip);
+        // Tap-to-toggle fallback -- see the matching comment in
+        // 05-pacecalc.js for why this is needed alongside
+        // pointerenter/focus.
+        rect.addEventListener("click", () => {
+          if (rect.classList.contains("is-active")) hideTip();
+          else showTip(d, rect, cx, barY);
+        });
+        rect.addEventListener("keydown", (e) => {
+          if (e.key !== "Enter" && e.key !== " ") return;
+          e.preventDefault();
+          rect.click();
+        });
 
         const text = document.createElementNS(ns, "text");
         text.setAttribute("x", cx);

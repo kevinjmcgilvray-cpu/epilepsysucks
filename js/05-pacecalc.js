@@ -224,6 +224,21 @@
           group.addEventListener("pointerleave", hideTip);
           group.addEventListener("focus", () => showTip(point, group));
           group.addEventListener("blur", hideTip);
+          // Tap-to-toggle fallback: pointerenter/leave don't reliably
+          // behave like a mouse hover on touch devices, and this also
+          // gives the role="button" a real activation path for
+          // keyboard users (Enter/Space below triggers this same
+          // handler via a synthetic click) rather than relying only on
+          // focus to show the tooltip.
+          group.addEventListener("click", () => {
+            if (group.classList.contains("is-active")) hideTip();
+            else showTip(point, group);
+          });
+          group.addEventListener("keydown", (e) => {
+            if (e.key !== "Enter" && e.key !== " ") return;
+            e.preventDefault();
+            group.click();
+          });
         });
       }
 
