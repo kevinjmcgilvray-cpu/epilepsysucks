@@ -275,6 +275,21 @@
       outline-offset: 2px;
     }
 
+    /* Global keyboard-focus fallback. Plenty of individual controls
+       already have their own :focus-visible rule (nav dropdown items,
+       chart points, footer links, etc.), but many others — .btn,
+       .nav__toggle, .sticky-donate, .nav__cta, form inputs without an
+       explicit rule — were relying entirely on the browser's own
+       default outline, which some browsers suppress or style so subtly
+       it's easy to lose against this site's dark theme. This is a
+       low-specificity catch-all (any explicit :focus-visible rule
+       elsewhere in the CSS still wins) rather than a replacement for
+       those more tailored ones. */
+    :focus-visible {
+      outline: 2px solid var(--epi);
+      outline-offset: 2px;
+    }
+
     .bg-lightning {
       position: fixed;
       inset: 0;

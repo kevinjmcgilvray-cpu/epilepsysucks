@@ -49,27 +49,43 @@
     // (collapsed-on-mobile) nav.
     (function stickyDonate() {
       const btn = document.getElementById("sticky-donate");
+      if (!btn) return;
       const hero = document.querySelector(".hero");
-      if (!btn || !hero) return;
-      if ("IntersectionObserver" in window) {
-        // Show the button once the hero has scrolled fully out of view
-        // (not just partially — its own Donate button is still visible
-        // and reachable up until then).
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach((entry) => {
-            btn.classList.toggle("is-visible", !entry.isIntersecting);
+      // Only index.html has a .hero with its own big above-the-fold
+      // Donate button to defer to. Every other page has none, which
+      // used to mean this `return`'d immediately and the button never
+      // became reachable on any non-homepage page at all — fixed below
+      // by falling back to a plain scroll-distance threshold there.
+      if (hero) {
+        if ("IntersectionObserver" in window) {
+          // Show the button once the hero has scrolled fully out of view
+          // (not just partially — its own Donate button is still visible
+          // and reachable up until then).
+          const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+              btn.classList.toggle("is-visible", !entry.isIntersecting);
+            });
           });
-        });
-        observer.observe(hero);
-      } else {
-        window.addEventListener(
-          "scroll",
-          () => {
-            btn.classList.toggle("is-visible", window.scrollY > hero.offsetHeight);
-          },
-          { passive: true }
-        );
+          observer.observe(hero);
+        } else {
+          window.addEventListener(
+            "scroll",
+            () => {
+              btn.classList.toggle("is-visible", window.scrollY > hero.offsetHeight);
+            },
+            { passive: true }
+          );
+        }
+        return;
       }
+      const SHOW_AFTER_PX = 320;
+      window.addEventListener(
+        "scroll",
+        () => {
+          btn.classList.toggle("is-visible", window.scrollY > SHOW_AFTER_PX);
+        },
+        { passive: true }
+      );
     })();
 
     // Custom lightning-bolt cursor (desktop/mouse only — touch devices are
@@ -432,20 +448,43 @@
     })();
 
     if (toggle && links) {
+      function closeMobileMenu() {
+        links.classList.remove("is-open");
+        toggle.setAttribute("aria-expanded", "false");
+        toggle.setAttribute("aria-label", "Open menu");
+        toggle.textContent = "☰";
+        if (links.__closeAllDropdowns) links.__closeAllDropdowns();
+      }
+
       toggle.addEventListener("click", () => {
         const open = links.classList.toggle("is-open");
         toggle.setAttribute("aria-expanded", String(open));
+        // The icon alone (☰/✕) was already a visual-only state change —
+        // this keeps the accessible name in sync with it too, instead
+        // of a screen reader always hearing "Open menu" even once the
+        // menu is open.
+        toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
         toggle.textContent = open ? "✕" : "☰";
         if (!open && links.__closeAllDropdowns) links.__closeAllDropdowns();
       });
 
       links.querySelectorAll("a").forEach((a) => {
-        a.addEventListener("click", () => {
-          links.classList.remove("is-open");
-          toggle.setAttribute("aria-expanded", "false");
-          toggle.textContent = "☰";
-          if (links.__closeAllDropdowns) links.__closeAllDropdowns();
-        });
+        a.addEventListener("click", closeMobileMenu);
+      });
+
+      // Escape and outside-tap only closed per-item dropdowns before
+      // (see navDropdowns() above) — neither closed the mobile menu
+      // itself, so once open it could only be dismissed by tapping the
+      // hamburger again or picking a link.
+      document.addEventListener("keydown", (e) => {
+        if (e.key !== "Escape" || !links.classList.contains("is-open")) return;
+        closeMobileMenu();
+        toggle.focus();
+      });
+      document.addEventListener("click", (e) => {
+        if (!links.classList.contains("is-open")) return;
+        if (e.target.closest("#nav-links") || e.target.closest("#nav-toggle")) return;
+        closeMobileMenu();
       });
     }
 
