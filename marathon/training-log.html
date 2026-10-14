@@ -100,6 +100,28 @@
         <h1>Where I am now</h1>
         <p>Every run, walk, and bike ride below syncs automatically from Strava — no manual logging. This is the live picture of the road to March 7, 2027.</p>
 
+        <div class="mileage-chart reveal">
+          <p class="mileage-chart__title">Weekly long run, Aug 2026 &ndash; Mar 2027</p>
+          <div class="mileage-chart__frame" id="mileage-chart-frame">
+            <svg viewBox="0 0 800 230" role="img" aria-label="Bar chart of weekly long-run mileage from August 2026 through the March 2027 marathon">
+              <title>Weekly long-run mileage, Aug 2026&ndash;Mar 2027</title>
+              <g class="mileage-chart__grid" fill="none" stroke-width="1" id="mileage-chart-grid"></g>
+              <g class="mileage-chart__axis" fill="none" stroke-width="1.25">
+                <line x1="40" y1="16" x2="40" y2="178" />
+                <line x1="40" y1="178" x2="776" y2="178" />
+              </g>
+              <g class="mileage-chart__label" font-family="DM Sans, sans-serif" font-size="11" text-anchor="end" id="mileage-y-labels"></g>
+              <g class="mileage-chart__label" font-family="DM Sans, sans-serif" font-size="10.5" text-anchor="middle" id="mileage-x-labels"></g>
+              <g id="mileage-chart-bars"></g>
+            </svg>
+            <div class="mileage-chart__tooltip" id="mileage-tooltip" hidden>
+              <strong></strong>
+              <span></span>
+            </div>
+          </div>
+          <p class="mileage-chart__note">Saturday/weekly long-run mileage, every week of the training block. Darker bars are cutback weeks, the pale bar is taper week, and the red bars are race day. Hover or tap any bar for the date and note. Full log, newest first, below.</p>
+        </div>
+
         <div class="strava-widget" id="strava-widget">
           <div class="strava-widget__header">
             <span class="strava-widget__brand">
@@ -162,69 +184,46 @@
             <li><span class="key">The golden rule.</span> Never make up missed mileage. Never cram two long runs together. The goal is arriving in Los Angeles healthy enough to finish all 26.2 — not a perfect log.</li>
           </ul>
 
-          <h3>Phase 1 — building to the SLO Half Marathon</h3>
-          <p>The Saturday long run is where the real work happens, following a simple cadence: <span class="key">build, build, cutback</span>, repeated — never two hard weekends in a row without a breather.</p>
+          <p>The Saturday long run is where the real work happens, following a simple cadence: <span class="key">build, build, cutback</span>, repeated — never two hard weekends in a row without a breather. Full log below, newest first.</p>
           <div class="schedule-table-wrap">
             <table class="schedule-table">
               <thead>
-                <tr><th scope="col">Date</th><th scope="col">Saturday long run</th></tr>
+                <tr><th scope="col">Date</th><th scope="col">Workout type</th><th scope="col">Mileage</th><th scope="col">Note</th></tr>
               </thead>
               <tbody>
-                <tr><td>Aug 29</td><td>8 miles</td></tr>
-                <tr><td>Sep 5</td><td>8 miles</td></tr>
-                <tr><td>Sep 12</td><td>9 miles</td></tr>
-                <tr><td>Sep 19</td><td>10 miles</td></tr>
-                <tr class="is-cutback"><td>Sep 26</td><td>8 miles — cutback</td></tr>
-                <tr><td>Oct 3</td><td>11 miles</td></tr>
-                <tr><td>Oct 10</td><td>8 miles — taper</td></tr>
-                <tr class="is-race"><td>Sun, Oct 18</td><td>SLO Half Marathon — 13.1 miles</td></tr>
+                <tr class="is-race"><td>Sun, Mar 7</td><td>Race day</td><td>26.2 mi</td><td>LA Marathon — race day</td></tr>
+                <tr><td>Mar 1&ndash;6</td><td>Long run</td><td>4 mi</td><td>Race week — carb-load &amp; rest</td></tr>
+                <tr><td>Feb 22&ndash;28</td><td>Long run</td><td>8 mi</td><td>Official taper phase begins</td></tr>
+                <tr><td>Feb 15&ndash;21</td><td>Long run</td><td>14 mi</td><td>Final solid long run</td></tr>
+                <tr><td>Feb 8&ndash;14</td><td>Long run</td><td>12 mi</td><td>Early taper transition begins</td></tr>
+                <tr><td>Feb 1&ndash;7</td><td>Long run</td><td>20 mi</td><td>Optional peak 20-miler, condition permitting</td></tr>
+                <tr><td>Jan 25&ndash;31</td><td>Long run</td><td>12 mi</td><td>Mid-block recovery</td></tr>
+                <tr><td>Jan 18&ndash;24</td><td>Long run</td><td>18 mi</td><td>Peak long run #1</td></tr>
+                <tr class="is-cutback"><td>Jan 11&ndash;17</td><td>Cutback</td><td>10 mi</td><td>Cutback week</td></tr>
+                <tr><td>Jan 4&ndash;10</td><td>Long run</td><td>16 mi</td><td>Maintaining peak endurance</td></tr>
+                <tr><td>Dec 28&ndash;Jan 3</td><td>Long run</td><td>16 mi</td><td>Entering peak endurance phase</td></tr>
+                <tr class="is-cutback"><td>Dec 21&ndash;27</td><td>Cutback</td><td>10 mi</td><td>Holiday week / cutback</td></tr>
+                <tr><td>Dec 14&ndash;20</td><td>Long run</td><td>15 mi</td><td>Extending long-run threshold</td></tr>
+                <tr><td>Dec 7&ndash;13</td><td>Long run</td><td>14 mi</td><td>Consolidating base distance</td></tr>
+                <tr class="is-cutback"><td>Nov 30&ndash;Dec 6</td><td>Cutback</td><td>8 mi</td><td>Cutback week</td></tr>
+                <tr><td>Nov 23&ndash;29</td><td>Long run</td><td>14 mi</td><td>Peak volume for November</td></tr>
+                <tr><td>Nov 16&ndash;22</td><td>Long run</td><td>12 mi</td><td>Long-run progression</td></tr>
+                <tr class="is-cutback"><td>Nov 9&ndash;15</td><td>Cutback</td><td>6 mi</td><td>Cutback week</td></tr>
+                <tr><td>Nov 2&ndash;8</td><td>Long run</td><td>10 mi</td><td>Building aerobic base</td></tr>
+                <tr><td>Oct 26&ndash;Nov 1</td><td>Long run</td><td>8 mi</td><td>Resuming base building</td></tr>
+                <tr><td>Oct 19&ndash;25</td><td>Long run</td><td>4 mi</td><td>Post-race recovery</td></tr>
+                <tr class="is-race"><td>Sun, Oct 18</td><td>Race day</td><td>13.1 mi</td><td>SLO Half Marathon</td></tr>
+                <tr class="is-taper"><td>Oct 10</td><td>Taper</td><td>8 mi</td><td>Taper into the SLO Half</td></tr>
+                <tr><td>Oct 3</td><td>Long run</td><td>11 mi</td><td>Build week</td></tr>
+                <tr class="is-cutback"><td>Sep 26</td><td>Cutback</td><td>8 mi</td><td>Cutback week</td></tr>
+                <tr><td>Sep 19</td><td>Long run</td><td>10 mi</td><td>Build week</td></tr>
+                <tr><td>Sep 12</td><td>Long run</td><td>9 mi</td><td>Build week</td></tr>
+                <tr><td>Sep 5</td><td>Long run</td><td>8 mi</td><td>Build week</td></tr>
+                <tr><td>Aug 29</td><td>Long run</td><td>8 mi</td><td>Base week — training block begins</td></tr>
               </tbody>
             </table>
           </div>
-
-          <details class="mechanism-note reveal">
-            <summary class="mechanism-note__summary">
-              <span class="mechanism-note__summary-text">
-                <span class="eyebrow">Oct 2026 &ndash; Mar 2027</span>
-                <span class="mechanism-note__summary-title">Phase 2 — recovery, then the marathon build</span>
-              </span>
-              <span class="mechanism-note__chevron" aria-hidden="true"></span>
-            </summary>
-            <div class="mechanism-note__body">
-            <p>The week right after the half is pure recovery, not a cutback inside the build — a short, capped week before the marathon block even starts. From there the cadence returns to <span class="key">build, build, cutback</span>, repeated through the fall and into January, with the weekly total (not just the long run) climbing alongside it.</p>
-            <div class="schedule-table-wrap">
-              <table class="schedule-table">
-                <thead>
-                  <tr><th scope="col">Week of</th><th scope="col">Long run</th><th scope="col">Weekly total</th><th scope="col">Focus</th></tr>
-                </thead>
-                <tbody>
-                  <tr><td>Oct 19&ndash;25</td><td>4 miles</td><td>12 miles</td><td>Post-race recovery</td></tr>
-                  <tr><td>Oct 26&ndash;Nov 1</td><td>8 miles</td><td>20 miles</td><td>Resuming base building</td></tr>
-                  <tr><td>Nov 2&ndash;8</td><td>10 miles</td><td>22 miles</td><td>Building aerobic base</td></tr>
-                  <tr class="is-cutback"><td>Nov 9&ndash;15</td><td>6 miles</td><td>16 miles</td><td>Cutback week</td></tr>
-                  <tr><td>Nov 16&ndash;22</td><td>12 miles</td><td>26 miles</td><td>Long-run progression</td></tr>
-                  <tr><td>Nov 23&ndash;29</td><td>14 miles</td><td>28 miles</td><td>Peak volume for November</td></tr>
-                  <tr class="is-cutback"><td>Nov 30&ndash;Dec 6</td><td>8 miles</td><td>18 miles</td><td>Cutback week</td></tr>
-                  <tr><td>Dec 7&ndash;13</td><td>14 miles</td><td>28 miles</td><td>Consolidating base distance</td></tr>
-                  <tr><td>Dec 14&ndash;20</td><td>15 miles</td><td>30 miles</td><td>Extending long-run threshold</td></tr>
-                  <tr class="is-cutback"><td>Dec 21&ndash;27</td><td>10 miles</td><td>20 miles</td><td>Holiday week / cutback</td></tr>
-                  <tr><td>Dec 28&ndash;Jan 3</td><td>16 miles</td><td>32 miles</td><td>Entering peak endurance phase</td></tr>
-                  <tr><td>Jan 4&ndash;10</td><td>16 miles</td><td>32 miles</td><td>Maintaining peak endurance</td></tr>
-                  <tr class="is-cutback"><td>Jan 11&ndash;17</td><td>10 miles</td><td>20 miles</td><td>Cutback week</td></tr>
-                  <tr><td>Jan 18&ndash;24</td><td>18 miles</td><td>35 miles</td><td>Peak long run #1</td></tr>
-                  <tr><td>Jan 25&ndash;31</td><td>12 miles</td><td>22 miles</td><td>Mid-block recovery</td></tr>
-                  <tr><td>Feb 1&ndash;7</td><td>20 miles</td><td>38 miles</td><td>Optional peak 20-miler, condition permitting</td></tr>
-                  <tr><td>Feb 8&ndash;14</td><td>12 miles</td><td>24 miles</td><td>Early taper transition begins</td></tr>
-                  <tr><td>Feb 15&ndash;21</td><td>14 miles</td><td>26 miles</td><td>Final solid long run</td></tr>
-                  <tr><td>Feb 22&ndash;28</td><td>8 miles</td><td>18 miles</td><td>Official taper phase begins</td></tr>
-                  <tr><td>Mar 1&ndash;6</td><td>4 miles</td><td>10 miles</td><td>Race week &mdash; carb-load &amp; rest</td></tr>
-                  <tr class="is-race"><td>Sun, Mar 7</td><td>26.2 miles</td><td>&mdash;</td><td>LA Marathon &mdash; race day</td></tr>
-                </tbody>
-              </table>
-            </div>
-            <p><span class="key">The peak-run rule:</span> 18 miles the week of January 18 is mission accomplished. The optional 20-miler in early February only happens if recovery and energy are genuinely good — twenty isn't a test I have to pass before running a marathon.</p>
-            </div>
-          </details>
+          <p><span class="key">The peak-run rule:</span> 18 miles the week of January 18 is mission accomplished. The optional 20-miler in early February only happens if recovery and energy are genuinely good — twenty isn't a test I have to pass before running a marathon.</p>
         </div>
 
         <div class="course-map__block" id="course">

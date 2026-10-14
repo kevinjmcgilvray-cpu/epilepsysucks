@@ -173,6 +173,178 @@
       }
     })();
 
+    // Task 6 (redesign brief): mileage chart on /marathon/training-log,
+    // same bar+tooltip pattern as initSeizureChart above. Every entry is
+    // the Saturday/weekly long-run mileage from the training schedule
+    // table right below this chart in the markup -- the one metric
+    // tracked consistently across the whole Aug 2026-Mar 2027 block, so
+    // the chart and the table never disagree with each other.
+    (function initMileageChart() {
+      const MILEAGE_DATA = [
+        { label: "Aug 29", miles: 8, type: "build", note: "Base week — training block begins" },
+        { label: "Sep 5", miles: 8, type: "build", note: "Build week" },
+        { label: "Sep 12", miles: 9, type: "build", note: "Build week" },
+        { label: "Sep 19", miles: 10, type: "build", note: "Build week" },
+        { label: "Sep 26", miles: 8, type: "cutback", note: "Cutback week" },
+        { label: "Oct 3", miles: 11, type: "build", note: "Build week" },
+        { label: "Oct 10", miles: 8, type: "taper", note: "Taper into the SLO Half" },
+        { label: "Oct 18", miles: 13.1, type: "race", note: "SLO Half Marathon — race day" },
+        { label: "Oct 19\u201325", miles: 4, type: "build", note: "Post-race recovery" },
+        { label: "Oct 26\u2013Nov 1", miles: 8, type: "build", note: "Resuming base building" },
+        { label: "Nov 2\u20138", miles: 10, type: "build", note: "Building aerobic base" },
+        { label: "Nov 9\u201315", miles: 6, type: "cutback", note: "Cutback week" },
+        { label: "Nov 16\u201322", miles: 12, type: "build", note: "Long-run progression" },
+        { label: "Nov 23\u201329", miles: 14, type: "build", note: "Peak volume for November" },
+        { label: "Nov 30\u2013Dec 6", miles: 8, type: "cutback", note: "Cutback week" },
+        { label: "Dec 7\u201313", miles: 14, type: "build", note: "Consolidating base distance" },
+        { label: "Dec 14\u201320", miles: 15, type: "build", note: "Extending long-run threshold" },
+        { label: "Dec 21\u201327", miles: 10, type: "cutback", note: "Holiday week / cutback" },
+        { label: "Dec 28\u2013Jan 3", miles: 16, type: "build", note: "Entering peak endurance phase" },
+        { label: "Jan 4\u201310", miles: 16, type: "build", note: "Maintaining peak endurance" },
+        { label: "Jan 11\u201317", miles: 10, type: "cutback", note: "Cutback week" },
+        { label: "Jan 18\u201324", miles: 18, type: "build", note: "Peak long run #1" },
+        { label: "Jan 25\u201331", miles: 12, type: "build", note: "Mid-block recovery" },
+        { label: "Feb 1\u20137", miles: 20, type: "build", note: "Optional peak 20-miler, condition permitting" },
+        { label: "Feb 8\u201314", miles: 12, type: "build", note: "Early taper transition begins" },
+        { label: "Feb 15\u201321", miles: 14, type: "build", note: "Final solid long run" },
+        { label: "Feb 22\u201328", miles: 8, type: "build", note: "Official taper phase begins" },
+        { label: "Mar 1\u20136", miles: 4, type: "build", note: "Race week — carb-load & rest" },
+        { label: "Mar 7", miles: 26.2, type: "race", note: "LA Marathon — race day" },
+      ];
+
+      const TYPE_LABEL = { build: "Long run", cutback: "Cutback", taper: "Taper", race: "Race day" };
+
+      const frame = document.getElementById("mileage-chart-frame");
+      const barsGroup = document.getElementById("mileage-chart-bars");
+      const tooltip = document.getElementById("mileage-tooltip");
+      const gridEl = document.getElementById("mileage-chart-grid");
+      const yLabels = document.getElementById("mileage-y-labels");
+      const xLabels = document.getElementById("mileage-x-labels");
+      if (!frame || !barsGroup || !tooltip || !gridEl) return;
+
+      const tipStrong = tooltip.querySelector("strong");
+      const tipSpan = tooltip.querySelector("span");
+      const svg = frame.querySelector("svg");
+      const ns = "http://www.w3.org/2000/svg";
+      const X0 = 40, X1 = 776, Y0 = 16, Y1 = 178;
+
+      const maxVal = Math.max.apply(null, MILEAGE_DATA.map((d) => d.miles));
+      const yMax = Math.ceil(maxVal / 5) * 5 + 5;
+      const slot = (X1 - X0) / MILEAGE_DATA.length;
+      const barWidth = Math.max(4, Math.min(16, slot * 0.72));
+
+      function valueToY(v) {
+        return Y1 - (v / yMax) * (Y1 - Y0);
+      }
+
+      gridEl.innerHTML = "";
+      yLabels.innerHTML = "";
+      for (let i = 0; i < 4; i++) {
+        const frac = i / 3;
+        const y = Y0 + frac * (Y1 - Y0);
+        const line = document.createElementNS(ns, "line");
+        line.setAttribute("x1", X0);
+        line.setAttribute("y1", y);
+        line.setAttribute("x2", X1);
+        line.setAttribute("y2", y);
+        gridEl.appendChild(line);
+
+        const val = Math.round(yMax * (1 - frac));
+        const text = document.createElementNS(ns, "text");
+        text.setAttribute("x", "34");
+        text.setAttribute("y", y + 3.5);
+        text.textContent = String(val);
+        yLabels.appendChild(text);
+      }
+
+      xLabels.innerHTML = "";
+      barsGroup.innerHTML = "";
+
+      function placeTooltip(cx, topY) {
+        const ctm = svg.getScreenCTM();
+        if (!ctm) return;
+        const pt = svg.createSVGPoint();
+        pt.x = cx;
+        pt.y = topY;
+        const screen = pt.matrixTransform(ctm);
+        const frameRect = frame.getBoundingClientRect();
+        let left = screen.x - frameRect.left;
+        const top = screen.y - frameRect.top;
+        const tipWidth = tooltip.offsetWidth || 140;
+        left = Math.max(tipWidth / 2 + 4, Math.min(left, frameRect.width - tipWidth / 2 - 4));
+        tooltip.style.left = left + "px";
+        tooltip.style.top = top + "px";
+      }
+
+      function showTip(d, rect, cx, topY) {
+        tipStrong.textContent = d.miles + " mi \u2014 " + TYPE_LABEL[d.type];
+        tipSpan.textContent = d.label + ": " + d.note;
+        tooltip.hidden = false;
+        tooltip.classList.add("is-on");
+        barsGroup.querySelectorAll(".mileage-chart__bar").forEach((el) => {
+          el.classList.toggle("is-active", el === rect);
+        });
+        placeTooltip(cx, topY);
+      }
+
+      function hideTip() {
+        tooltip.classList.remove("is-on");
+        tooltip.hidden = true;
+        barsGroup.querySelectorAll(".mileage-chart__bar").forEach((el) => el.classList.remove("is-active"));
+      }
+
+      MILEAGE_DATA.forEach((d, index) => {
+        const cx = X0 + index * slot + slot / 2;
+        const barX = cx - barWidth / 2;
+        const barY = valueToY(d.miles);
+        const barH = Y1 - barY;
+
+        const rect = document.createElementNS(ns, "rect");
+        rect.classList.add("mileage-chart__bar");
+        if (d.type !== "build") rect.classList.add("mileage-chart__bar--" + d.type);
+        rect.setAttribute("x", barX.toFixed(1));
+        rect.setAttribute("y", barY.toFixed(1));
+        rect.setAttribute("width", barWidth.toFixed(1));
+        rect.setAttribute("height", Math.max(barH, 1).toFixed(1));
+        rect.setAttribute("rx", "2");
+        rect.setAttribute("tabindex", "0");
+        rect.setAttribute("role", "button");
+        rect.setAttribute(
+          "aria-label",
+          d.label + ": " + d.miles + " miles, " + TYPE_LABEL[d.type] + ". " + d.note
+        );
+        barsGroup.appendChild(rect);
+        rect.addEventListener("pointerenter", () => showTip(d, rect, cx, barY));
+        rect.addEventListener("pointerleave", hideTip);
+        rect.addEventListener("focus", () => showTip(d, rect, cx, barY));
+        rect.addEventListener("blur", hideTip);
+        // Tap-to-toggle fallback -- see the matching comment in
+        // 05-pacecalc.js for why this is needed alongside
+        // pointerenter/focus.
+        rect.addEventListener("click", () => {
+          if (rect.classList.contains("is-active")) hideTip();
+          else showTip(d, rect, cx, barY);
+        });
+        rect.addEventListener("keydown", (e) => {
+          if (e.key !== "Enter" && e.key !== " ") return;
+          e.preventDefault();
+          rect.click();
+        });
+
+        // Labeling all 29 bars would overlap at this width -- only label
+        // every 4th week plus both race days, same idea as the seizure
+        // chart's sparser labeling but driven by an explicit interval
+        // instead of one data point per label.
+        if (index % 4 === 0 || d.type === "race") {
+          const text = document.createElementNS(ns, "text");
+          text.setAttribute("x", cx);
+          text.setAttribute("y", "190");
+          text.textContent = d.label;
+          xLabels.appendChild(text);
+        }
+      });
+    })();
+
     // Small interactive demo: a grid of "neurons" where a click starts a
     // discharge that spreads to resting neighbors with a probability driven
     // by two sliders (inhibition, coupling) — a simplified, hands-on

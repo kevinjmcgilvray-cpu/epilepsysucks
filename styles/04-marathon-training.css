@@ -83,6 +83,11 @@
       color: var(--epi);
     }
 
+    .schedule-table tr.is-taper td {
+      color: var(--paper-faint);
+      font-style: italic;
+    }
+
     .mechanism-sim__readout {
       margin: 0.9rem 0 0;
       font-size: 0.85rem;
