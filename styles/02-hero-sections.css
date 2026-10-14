@@ -162,7 +162,10 @@
       align-items: center;
       padding: 0.55rem 1rem;
       border: 1px solid #c4a4ff;
-      background: linear-gradient(135deg, #9b6bff 0%, #7a45e8 55%, #6b35d8 100%) !important;
+      /* Same contrast fix as .btn--purple -- see comment there. This
+         is the always-visible nav "Donate" pill, so of everything
+         sharing this gradient, it had the most real-world exposure. */
+      background: linear-gradient(135deg, #7540d8 0%, #6b35d8 55%, #5a2bc0 100%) !important;
       color: var(--btn-on-color) !important;
       font-size: 0.85rem;
       letter-spacing: 0.08em;
@@ -198,11 +201,13 @@
     }
 
     .nav__cta:hover {
-      background: linear-gradient(135deg, #b48cff 0%, #9b6bff 50%, #8350e6 100%) !important;
+      /* Same contrast fix as .btn--purple:hover -- see comment there
+         (reuse the compliant resting-state stops, drop the brightness
+         filter, let the lift/glow/border carry the hover signal). */
+      background: linear-gradient(135deg, #7540d8 0%, #5a2bc0 100%) !important;
       border-color: #e0d0ff;
       color: var(--btn-on-color) !important;
       transform: translateY(-2px) scale(1.03);
-      filter: brightness(1.08);
       box-shadow:
         0 0 0 1px rgba(196, 164, 255, 0.55),
         0 0 18px var(--cta-glow),
@@ -734,9 +739,18 @@
       background: #a83225;
     }
 
+    /* Contrast fix: the gradient used to start at #9b6bff (the raw
+       --epi brand purple), which only hits ~2.8:1 against the cream
+       button text -- well under the 4.5:1 AA floor for normal text.
+       This slipped past the project's own contrast.test.js because
+       that scanner explicitly skips gradient backgrounds (can't
+       reliably measure them), so it never got caught. Shifted every
+       stop one notch darker (lightest stop now #7540d8, ~4.8:1) so the
+       whole gradient stays >=4.5:1 against --btn-on-color in both
+       themes, not just at its darkest corner. */
     .btn--purple {
       border-color: #c4a4ff;
-      background: linear-gradient(135deg, #9b6bff 0%, #7a45e8 55%, #6b35d8 100%);
+      background: linear-gradient(135deg, #7540d8 0%, #6b35d8 55%, #5a2bc0 100%);
       color: var(--btn-on-color);
       text-shadow: 0 0 10px rgba(255, 255, 255, 0.22);
       box-shadow:
@@ -769,7 +783,8 @@
       padding: 0.75rem 1.15rem;
       border-radius: 999px;
       border: 1px solid #c4a4ff;
-      background: linear-gradient(135deg, #9b6bff 0%, #7a45e8 55%, #6b35d8 100%);
+      /* Same contrast fix as .btn--purple -- see comment there. */
+      background: linear-gradient(135deg, #7540d8 0%, #6b35d8 55%, #5a2bc0 100%);
       color: var(--btn-on-color);
       font-family: var(--font-body);
       font-size: 0.82rem;
@@ -795,7 +810,9 @@
     }
 
     .sticky-donate:hover {
-      filter: brightness(1.08);
+      /* No brightness filter here (same reasoning as .btn--purple:hover
+         above) -- it would erode the contrast fix's margin for no real
+         visual benefit, since the lift already signals "hovered". */
       transform: translateY(-2px) scale(1.03);
     }
 
@@ -817,12 +834,19 @@
       }
     }
 
+    /* Same contrast fix applied to the hover state -- its old gradient
+       was even lighter (#b48cff lightest stop, ~2:1) and additionally
+       got brightened further by filter: brightness(1.08), making it
+       worse, not better. Hover now reuses the same compliant stops as
+       the resting state (still >=4.5:1 throughout) and signals
+       "hovered" via the lift/glow/border below instead of a lighter
+       fill; the brightness filter is dropped since any brightening of
+       these colors erodes the contrast margin that was just fixed. */
     .btn--purple:hover {
-      background: linear-gradient(135deg, #b48cff 0%, #9b6bff 48%, #8350e6 100%);
+      background: linear-gradient(135deg, #7540d8 0%, #5a2bc0 100%);
       border-color: #e0d0ff;
       color: var(--btn-on-color);
       transform: translateY(-3px) scale(1.035);
-      filter: brightness(1.08);
       box-shadow:
         0 0 0 1px rgba(196, 164, 255, 0.6),
         0 0 20px var(--cta-glow),
