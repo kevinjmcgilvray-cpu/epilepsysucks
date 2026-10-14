@@ -456,6 +456,114 @@
       color: var(--paper-faint);
     }
 
+    /* Task 6 (redesign brief): mileage chart at the top of
+       /marathon/training-log, same bar+tooltip+milestone pattern as
+       .seizure-chart above (29 bars instead of 11, so bars/labels run
+       narrower -- see initMileageChart in 04-charts-sims.js). */
+    .mileage-chart {
+      margin-bottom: 2rem;
+    }
+
+    .mileage-chart__title {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--paper-dim);
+      margin-bottom: 1rem;
+    }
+
+    .mileage-chart__frame {
+      position: relative;
+      width: 100%;
+      overflow: visible;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, var(--chart-top), var(--chart-bottom));
+    }
+
+    .mileage-chart__frame svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .mileage-chart__grid {
+      stroke: var(--line);
+    }
+
+    .mileage-chart__axis {
+      stroke: var(--paper-faint);
+    }
+
+    .mileage-chart__label {
+      fill: var(--paper-faint);
+    }
+
+    .mileage-chart__bar {
+      fill: var(--accent);
+      cursor: pointer;
+      transition: fill 0.15s ease, opacity 0.15s ease;
+    }
+
+    .mileage-chart__bar--cutback {
+      fill: color-mix(in srgb, var(--accent) 55%, transparent);
+    }
+
+    .mileage-chart__bar--taper {
+      fill: var(--paper-faint);
+    }
+
+    .mileage-chart__bar--race {
+      fill: var(--epi);
+      stroke: var(--epi);
+    }
+
+    .mileage-chart__bar.is-active,
+    .mileage-chart__bar:hover,
+    .mileage-chart__bar:focus-visible {
+      fill: var(--epi);
+      outline: none;
+    }
+
+    .mileage-chart__tooltip {
+      position: absolute;
+      z-index: 5;
+      min-width: 9rem;
+      padding: 0.55rem 0.75rem;
+      border: 1px solid var(--line);
+      background: var(--ink);
+      color: var(--paper);
+      font-size: 0.85rem;
+      line-height: 1.35;
+      pointer-events: none;
+      opacity: 0;
+      transform: translate(-50%, calc(-100% - 12px));
+      transition: opacity 0.15s ease;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    }
+
+    .mileage-chart__tooltip.is-on {
+      opacity: 1;
+    }
+
+    .mileage-chart__tooltip strong {
+      display: block;
+      color: var(--accent-text);
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .mileage-chart__tooltip span {
+      color: var(--paper-dim);
+      font-size: 0.8rem;
+    }
+
+    .mileage-chart__note {
+      margin-top: 0.85rem;
+      font-size: 0.9rem;
+      color: var(--paper-faint);
+    }
+
     .mechanism-note {
       margin: 0 0 2.75rem;
       max-width: 46rem;
