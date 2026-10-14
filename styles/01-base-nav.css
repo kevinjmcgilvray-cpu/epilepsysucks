@@ -361,6 +361,18 @@
       color: var(--epi-highlight);
     }
 
+    /* Buttons (e.g. the hero's "Donate to CURE Epilepsy") can have
+       "Epilepsy"/"seizure(s)" in their own label text, auto-highlighted
+       by the same .hl-epi walk as everywhere else. Both the purple
+       highlight and the new white dark-theme highlight above are
+       tuned for sitting on the page background, not on a filled
+       button's own background (--epi on --btn-on-color's purple
+       button was nearly unreadable, purple-on-purple) -- inside any
+       .btn, just inherit the button's own text color instead. */
+    .btn .hl-epi {
+      color: inherit;
+    }
+
     .key {
       text-decoration: underline;
       text-decoration-color: var(--epi);
