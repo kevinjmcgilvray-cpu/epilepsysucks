@@ -25,11 +25,17 @@ function mapRow(row) {
   const raised = Number(row.amount_raised);
   const goal = Number(row.goal);
   const pct = goal > 0 ? Math.min(100, Math.round((raised / goal) * 100)) : 0;
+  // Computed once here (the single source of truth every page/widget
+  // reads from) rather than redundantly re-derived in each place that
+  // displays it -- same reasoning as `percent` above.
+  const remaining = Math.max(0, goal - raised);
   return {
     raised,
     goal,
+    remaining,
     raisedFormatted: formatMoney(raised),
     goalFormatted: formatMoney(goal),
+    remainingFormatted: formatMoney(remaining),
     percent: pct,
     source: row.source,
     updatedAt: row.updated_at
