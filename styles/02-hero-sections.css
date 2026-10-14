@@ -660,14 +660,13 @@
       /* 48px floor for mobile touch targets (WCAG 2.5.8) — was ~41px
          tall at the base padding, and the 480px block below shrinks
          padding further; min-height carries through both since
-         neither redeclares it. Set to 49px, not 48px: Chromium
-         occasionally lays this element out a fraction of a px under
-         an exact 48px min-height (47.6-47.95px seen in
-         getBoundingClientRect(), varying slightly run to run) —
-         genuine sub-pixel layout rounding, not a real tap-target
-         problem, but it was intermittently flaking
-         touch-targets.test.js. One extra pixel of margin is invisible
-         here and removes the flake instead of just re-running past it. */
+         neither redeclares it. Set to 49px for a 1px safety margin.
+         (An earlier intermittent CI-only measurement under 48px here
+         turned out to be a test-timing issue, not a layout-rounding
+         one — see the comment in tests/touch-targets.test.js's scroll
+         loop: this element's opacity+transform entrance transition
+         could get measured mid-animation. Fixed there; this min-height
+         bump is just extra margin, not the actual fix.) */
       min-height: 49px;
       padding: 0.75rem 1.15rem;
       border-radius: 999px;

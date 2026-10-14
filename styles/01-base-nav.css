@@ -63,6 +63,12 @@
       --accent-soft: rgba(157, 78, 221, 0.16);
       --accent-text: #c77dff;
       --epi: #9b6bff;
+      /* "Epilepsy"/"seizure(s)" auto-highlight color (.hl-epi, driven
+         by highlightEpiWords() in 01b-donor-fundraising-widgets.js).
+         White reads great against this theme's dark background; the
+         light-background theme below keeps the original purple since
+         plain white would be unreadable there. */
+      --epi-highlight: #ffffff;
       --line: rgba(235, 228, 216, 0.12);
       --nav-top: rgba(20, 17, 15, 0.92);
       --nav-solid: rgba(20, 17, 15, 0.9);
@@ -101,6 +107,7 @@
       --accent-soft: rgba(123, 44, 191, 0.12);
       --accent-text: var(--accent);
       --epi: #6d3fe8;
+      --epi-highlight: var(--epi);
       --line: rgba(28, 25, 21, 0.12);
       --nav-top: rgba(232, 227, 218, 0.94);
       --nav-solid: rgba(232, 227, 218, 0.96);
@@ -351,7 +358,19 @@
     }
 
     .hl-epi {
-      color: var(--epi);
+      color: var(--epi-highlight);
+    }
+
+    /* Buttons (e.g. the hero's "Donate to CURE Epilepsy") can have
+       "Epilepsy"/"seizure(s)" in their own label text, auto-highlighted
+       by the same .hl-epi walk as everywhere else. Both the purple
+       highlight and the new white dark-theme highlight above are
+       tuned for sitting on the page background, not on a filled
+       button's own background (--epi on --btn-on-color's purple
+       button was nearly unreadable, purple-on-purple) -- inside any
+       .btn, just inherit the button's own text color instead. */
+    .btn .hl-epi {
+      color: inherit;
     }
 
     .key {
