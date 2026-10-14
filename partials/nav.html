@@ -100,72 +100,23 @@
         </div>
       </div>
       <button class="nav__toggle" id="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
+      <!-- Flat, 6-item top-level nav (Home / My Story / Recovery / LA
+           Marathon / Community / Donate) -- no dropdowns. The deeper
+           sub-pages that used to hang off each dropdown (diagnosis,
+           timeline, surgeries, mindset, dbs-tuning, weight-loss,
+           mission, training-log, fundraising, guestbook, contact) are
+           still live, real routes; they're just no longer reachable
+           from the nav bar itself, only via links on each hub page
+           (/journey, /recovery, /marathon, /community). Epilepsy
+           Resources (previously its own dropdown) is folded into the
+           Community hub page's own content instead of getting a 7th
+           top-level slot -- see community.html. -->
       <ul class="nav__links" id="nav-links">
-        <li class="nav__dropdown">
-          <span class="nav__cta nav__dropdown-trigger">
-            <a href="/journey" class="nav__dropdown-link">My Journey</a>
-            <button type="button" class="nav__dropdown-caret" aria-expanded="false" aria-haspopup="true" aria-label="Show My Journey submenu">
-              <span class="nav__caret" aria-hidden="true">▾</span>
-            </button>
-          </span>
-          <ul class="nav__dropdown-menu">
-            <li><a href="/journey/diagnosis">Diagnosis &amp; early history</a></li>
-            <li><a href="/journey/timeline">Timeline &amp; milestones</a></li>
-            <li><a href="/journey/surgeries">Surgeries, VNS &amp; DBS</a></li>
-          </ul>
-        </li>
-        <li class="nav__dropdown">
-          <span class="nav__cta nav__dropdown-trigger">
-            <a href="/recovery" class="nav__dropdown-link">Recovery &amp; Life Today</a>
-            <button type="button" class="nav__dropdown-caret" aria-expanded="false" aria-haspopup="true" aria-label="Show Recovery &amp; Life Today submenu">
-              <span class="nav__caret" aria-hidden="true">▾</span>
-            </button>
-          </span>
-          <ul class="nav__dropdown-menu">
-            <li><a href="/recovery/mindset">Mindset &amp; freedom</a></li>
-            <li><a href="/recovery/dbs-tuning">DBS tuning &amp; running</a></li>
-            <li><a href="/recovery/weight-loss">154 lb weight loss</a></li>
-          </ul>
-        </li>
-        <li class="nav__dropdown">
-          <span class="nav__cta nav__dropdown-trigger">
-            <a href="/marathon" class="nav__dropdown-link">LA Marathon 2027</a>
-            <button type="button" class="nav__dropdown-caret" aria-expanded="false" aria-haspopup="true" aria-label="Show LA Marathon 2027 submenu">
-              <span class="nav__caret" aria-hidden="true">▾</span>
-            </button>
-          </span>
-          <ul class="nav__dropdown-menu">
-            <li><a href="/marathon/mission">Why I'm running</a></li>
-            <li><a href="/marathon/training-log">Training log &amp; race course</a></li>
-            <li><a href="/marathon/fundraising">CURE Epilepsy fundraising hub</a></li>
-          </ul>
-        </li>
-        <li class="nav__dropdown">
-          <span class="nav__cta nav__dropdown-trigger">
-            <a href="/community" class="nav__dropdown-link">Community</a>
-            <button type="button" class="nav__dropdown-caret" aria-expanded="false" aria-haspopup="true" aria-label="Show Community submenu">
-              <span class="nav__caret" aria-hidden="true">▾</span>
-            </button>
-          </span>
-          <ul class="nav__dropdown-menu">
-            <li><a href="/community/guestbook">Guestbook &amp; comments</a></li>
-            <li><a href="/community/contact">Contact &amp; media inquiries</a></li>
-            <li><a href="/community#share">Share my story</a></li>
-            <li><a href="/community#social">Follow along</a></li>
-          </ul>
-        </li>
-        <li class="nav__dropdown">
-          <span class="nav__cta nav__dropdown-trigger">
-            <a href="/resources" class="nav__dropdown-link">Epilepsy Resources</a>
-            <button type="button" class="nav__dropdown-caret" aria-expanded="false" aria-haspopup="true" aria-label="Show Epilepsy Resources submenu">
-              <span class="nav__caret" aria-hidden="true">▾</span>
-            </button>
-          </span>
-          <ul class="nav__dropdown-menu">
-            <li><a href="/resources#organizations">Trusted organizations</a></li>
-            <li><a href="/resources#seizure-first-aid">Seizure first aid</a></li>
-          </ul>
-        </li>
+        <li><a class="nav__cta" href="/">Home</a></li>
+        <li><a class="nav__cta" href="/journey">My Story</a></li>
+        <li><a class="nav__cta" href="/recovery">Recovery</a></li>
+        <li><a class="nav__cta" href="/marathon">LA Marathon</a></li>
+        <li><a class="nav__cta" href="/community">Community</a></li>
         <li><button type="button" class="nav__cta theme-toggle-btn" id="theme-toggle" data-label-dark="Dark" data-label-light="Light" aria-label="Switch to dark mode">Dark</button></li>
         <li><a class="nav__cta nav__cta--donate" href="https://haku.ly/9795a39b3b" target="_blank" rel="noopener noreferrer">💜 Donate</a></li>
       </ul>

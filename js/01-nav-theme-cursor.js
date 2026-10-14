@@ -395,65 +395,21 @@
       });
     })();
 
-    // Nav dropdown categories (My Journey / Recovery & Life Today /
-    // LA Marathon 2027 / Community / Epilepsy Resources). One shared
-    // toggle mechanism drives both desktop
-    // (where CSS also reveals the panel on hover for fine pointers,
-    // on top of this) and the mobile accordion (which has no real
-    // hover, so this click/keyboard path is the only way in).
-    (function navDropdowns() {
-      const dropdowns = Array.prototype.slice.call(document.querySelectorAll(".nav__dropdown"));
-      if (!dropdowns.length) return;
-
-      function closeDropdown(dd) {
-        dd.classList.remove("is-open");
-        const caret = dd.querySelector(".nav__dropdown-caret");
-        if (caret) caret.setAttribute("aria-expanded", "false");
-      }
-      function closeAllDropdowns(except) {
-        dropdowns.forEach((dd) => {
-          if (dd !== except) closeDropdown(dd);
-        });
-      }
-
-      // Only the caret button toggles the submenu now — the trigger's
-      // link text (e.g. "My Journey") is a real <a href="/journey">
-      // that navigates directly, same as any other link, with nothing
-      // here intercepting its click. Desktop also gets the submenu via
-      // :hover/:focus-within (see styles/02-hero-sections.css) with no
-      // JS involved; this click toggle is what touch/keyboard users
-      // without a hover state rely on.
-      dropdowns.forEach((dd) => {
-        const caret = dd.querySelector(".nav__dropdown-caret");
-        if (!caret) return;
-        caret.addEventListener("click", (e) => {
-          e.stopPropagation();
-          const willOpen = !dd.classList.contains("is-open");
-          closeAllDropdowns(dd);
-          dd.classList.toggle("is-open", willOpen);
-          caret.setAttribute("aria-expanded", String(willOpen));
-        });
-      });
-
-      document.addEventListener("click", (e) => {
-        if (!e.target.closest(".nav__dropdown")) closeAllDropdowns();
-      });
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") closeAllDropdowns();
-      });
-
-      // Exposed so the hamburger toggle/link-click handlers below can
-      // reset dropdown state whenever the whole mobile menu closes.
-      if (links) links.__closeAllDropdowns = closeAllDropdowns;
-    })();
-
+    // Nav dropdowns (My Journey / Recovery & Life Today / LA Marathon
+    // 2027 / Community / Epilepsy Resources) were removed in the nav
+    // flattening redesign -- the nav is now 6 flat links (Home / My
+    // Story / Recovery / LA Marathon / Community / Donate) with no
+    // submenus, so the dropdown open/close logic that used to live
+    // here (and the matching .nav__dropdown* CSS) was removed outright
+    // rather than left as permanently-dead code, given how much of it
+    // there was. The hamburger toggle below is unaffected -- it never
+    // depended on dropdowns existing, only on using them if present.
     if (toggle && links) {
       function closeMobileMenu() {
         links.classList.remove("is-open");
         toggle.setAttribute("aria-expanded", "false");
         toggle.setAttribute("aria-label", "Open menu");
         toggle.textContent = "☰";
-        if (links.__closeAllDropdowns) links.__closeAllDropdowns();
       }
 
       toggle.addEventListener("click", () => {
@@ -465,17 +421,12 @@
         // menu is open.
         toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
         toggle.textContent = open ? "✕" : "☰";
-        if (!open && links.__closeAllDropdowns) links.__closeAllDropdowns();
       });
 
       links.querySelectorAll("a").forEach((a) => {
         a.addEventListener("click", closeMobileMenu);
       });
 
-      // Escape and outside-tap only closed per-item dropdowns before
-      // (see navDropdowns() above) — neither closed the mobile menu
-      // itself, so once open it could only be dismissed by tapping the
-      // hamburger again or picking a link.
       document.addEventListener("keydown", (e) => {
         if (e.key !== "Escape" || !links.classList.contains("is-open")) return;
         closeMobileMenu();
