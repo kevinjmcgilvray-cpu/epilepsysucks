@@ -1,12 +1,13 @@
 // WCAG 2.5.8 Target Size (Minimum) scanner: every real interactive
 // element on every page must have a 48x48 CSS-pixel (or larger)
 // clickable box at mobile widths. Walks each page at a 390x844
-// viewport across four interaction states (initial load, mobile nav
-// opened, every <details> expanded, and scrolled through the full
-// page — the last one is what actually reveals #sticky-donate, which
-// starts off-screen/non-interactive and animates in past the hero),
-// measuring every element's real getBoundingClientRect() and flagging
-// anything under the 48px floor.
+// viewport across five interaction states (initial load, mobile nav
+// opened, every <details> expanded, community.html's share-menu
+// popover opened, and scrolled through the full page — the last one
+// is what actually reveals #sticky-donate, which starts off-screen/
+// non-interactive and animates in past the hero), measuring every
+// element's real getBoundingClientRect() and flagging anything under
+// the 48px floor.
 //
 // Three categories of legitimate exception, same shape as
 // contrast.test.js's KNOWN_EXCEPTIONS allowlist:
@@ -128,6 +129,21 @@ async function auditPage(browser, baseUrl, route) {
   });
   await page.waitForTimeout(200);
   all = all.concat(await measure(page, "details-open"));
+
+  // community.html's #share-panel is `hidden` until #share-trigger is
+  // clicked -- without this, its buttons/links never get measured at
+  // all (the `hidden` check in measure() above skips them), which is
+  // exactly how the panel's touch targets went unmeasured and under
+  // the 48px floor for an unknown amount of time before a dedicated
+  // narrow-viewport audit (tests/narrow-viewport.test.js) caught it.
+  const shareTrigger = await page.$("#share-trigger");
+  if (shareTrigger) {
+    await shareTrigger.click().catch(() => {});
+    await page.waitForTimeout(200);
+    all = all.concat(await measure(page, "share-menu-open"));
+    await shareTrigger.click().catch(() => {});
+    await page.waitForTimeout(150);
+  }
 
   // Scroll the full page in steps — this is what actually flips
   // #sticky-donate from its off-screen/pointer-events:none placeholder
