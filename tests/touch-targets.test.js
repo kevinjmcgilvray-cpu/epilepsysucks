@@ -148,11 +148,20 @@ async function auditPage(browser, baseUrl, route) {
   // Scroll the full page in steps — this is what actually flips
   // #sticky-donate from its off-screen/pointer-events:none placeholder
   // state into its real, interactive, scaled-to-1 state once the hero
-  // scrolls out of view.
+  // scrolls out of view. #sticky-donate animates in over
+  // `opacity 0.25s ease, transform 0.25s ease` (see .sticky-donate in
+  // 02-hero-sections.css) — a 300ms wait (not 100ms) is required here
+  // so the scroll step that first crosses the reveal threshold doesn't
+  // get measured mid-transition, while its transform is still
+  // interpolating from its hidden-state `scale(0.96)` toward `1`. That
+  // was the real cause of an intermittent CI-only touch-target flake
+  // (getBoundingClientRect() briefly reporting ~47-48px against a 49px
+  // min-height — the min-height itself was never the problem; it was
+  // scaled down along with the rest of the element mid-animation).
   const totalHeight = await page.evaluate(() => document.body.scrollHeight);
   for (let y = 0; y < totalHeight; y += 400) {
     await page.evaluate((yy) => window.scrollTo(0, yy), y);
-    await page.waitForTimeout(100);
+    await page.waitForTimeout(300);
     all = all.concat(await measure(page, `scroll-${y}`));
   }
 
