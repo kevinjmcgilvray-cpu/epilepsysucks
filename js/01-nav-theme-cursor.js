@@ -458,14 +458,30 @@
 
     const revealEls = document.querySelectorAll(".reveal");
     if ("IntersectionObserver" in window) {
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-in");
-            io.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.18 });
+      // threshold is a fraction of the TARGET's own area, not the
+      // viewport's -- a ratio-based threshold like 0.18 can only ever
+      // be satisfied if the element is shorter than ~5.5x the
+      // viewport (844px tall mobile viewport / 0.18). Long sections
+      // (e.g. marathon/training-log's single .section__inner.reveal,
+      // which wraps the mileage chart + Strava widget + the full
+      // training log table and runs 5000px+ tall on mobile) could
+      // never reach 18% visible at any scroll position, so they never
+      // got the .is-in class and stayed stuck at opacity:0 forever --
+      // a real bug, not just a slow fade-in. rootMargin + threshold:0
+      // instead fires as soon as the element's edge crosses a fixed
+      // point near the bottom of the viewport, which works regardless
+      // of the target's own height.
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-in");
+              io.unobserve(entry.target);
+            }
+          });
+        },
+        { rootMargin: "0px 0px -10% 0px", threshold: 0 }
+      );
       revealEls.forEach((el) => io.observe(el));
     } else {
       revealEls.forEach((el) => el.classList.add("is-in"));
