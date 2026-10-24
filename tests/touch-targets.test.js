@@ -108,26 +108,46 @@ async function measure(page, label) {
   );
 }
 
+// Every settle-wait below is >=300ms, not just the scroll loop's.
+// #sticky-donate animates opacity+transform over 250ms (see
+// .sticky-donate in 02-hero-sections.css: scale(0.96) -> scale(1))
+// when its `.is-visible` class toggles, but `pointer-events` -- the
+// property measure() uses to skip it while it's just a placeholder --
+// flips INSTANTLY and synchronously with that class change, since
+// pointer-events isn't itself transitioned/animatable. So the instant
+// anything retriggers the hero's IntersectionObserver (a nav toggle,
+// a <details> expansion, or the share panel opening can all shift
+// layout enough to momentarily change whether the hero intersects the
+// viewport), pointer-events flips to "auto" immediately while the
+// 250ms opacity/transform animation is still catching up -- and a
+// wait shorter than that 250ms (100-200ms, as this file used
+// everywhere except the scroll loop) can catch getBoundingClientRect()
+// mid-transition, still scaled down below the 48px floor (49px
+// min-height * ~0.96 scale = 47.04px). This is the same intermittent
+// CI-only flake fixed once already for the scroll loop specifically;
+// closing it everywhere a measurement follows a DOM-mutating action.
+const SETTLE_MS = 300;
+
 async function auditPage(browser, baseUrl, route) {
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
   await page.goto(`${baseUrl}/${route}`);
-  await page.waitForTimeout(250);
+  await page.waitForTimeout(SETTLE_MS);
 
   let all = await measure(page, "initial");
 
   const navToggle = await page.$("#nav-toggle");
   if (navToggle) {
     await navToggle.click().catch(() => {});
-    await page.waitForTimeout(200);
+    await page.waitForTimeout(SETTLE_MS);
     all = all.concat(await measure(page, "nav-open"));
     await navToggle.click().catch(() => {});
-    await page.waitForTimeout(150);
+    await page.waitForTimeout(SETTLE_MS);
   }
 
   await page.evaluate(() => {
     document.querySelectorAll("details").forEach((d) => (d.open = true));
   });
-  await page.waitForTimeout(200);
+  await page.waitForTimeout(SETTLE_MS);
   all = all.concat(await measure(page, "details-open"));
 
   // community.html's #share-panel is `hidden` until #share-trigger is
@@ -139,29 +159,22 @@ async function auditPage(browser, baseUrl, route) {
   const shareTrigger = await page.$("#share-trigger");
   if (shareTrigger) {
     await shareTrigger.click().catch(() => {});
-    await page.waitForTimeout(200);
+    await page.waitForTimeout(SETTLE_MS);
     all = all.concat(await measure(page, "share-menu-open"));
     await shareTrigger.click().catch(() => {});
-    await page.waitForTimeout(150);
+    await page.waitForTimeout(SETTLE_MS);
   }
 
   // Scroll the full page in steps — this is what actually flips
   // #sticky-donate from its off-screen/pointer-events:none placeholder
   // state into its real, interactive, scaled-to-1 state once the hero
-  // scrolls out of view. #sticky-donate animates in over
-  // `opacity 0.25s ease, transform 0.25s ease` (see .sticky-donate in
-  // 02-hero-sections.css) — a 300ms wait (not 100ms) is required here
-  // so the scroll step that first crosses the reveal threshold doesn't
-  // get measured mid-transition, while its transform is still
-  // interpolating from its hidden-state `scale(0.96)` toward `1`. That
-  // was the real cause of an intermittent CI-only touch-target flake
-  // (getBoundingClientRect() briefly reporting ~47-48px against a 49px
-  // min-height — the min-height itself was never the problem; it was
-  // scaled down along with the rest of the element mid-animation).
+  // scrolls out of view (see SETTLE_MS comment above for why this
+  // step, and every other one in this function, waits 300ms rather
+  // than less).
   const totalHeight = await page.evaluate(() => document.body.scrollHeight);
   for (let y = 0; y < totalHeight; y += 400) {
     await page.evaluate((yy) => window.scrollTo(0, yy), y);
-    await page.waitForTimeout(300);
+    await page.waitForTimeout(SETTLE_MS);
     all = all.concat(await measure(page, `scroll-${y}`));
   }
 
