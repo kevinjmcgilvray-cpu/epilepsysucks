@@ -110,23 +110,27 @@
         </div>
       </div>
       <button class="nav__toggle" id="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
-      <!-- Flat, 6-item top-level nav (Home / My Story / Recovery / LA
-           Marathon / Community / Donate) -- no dropdowns. The deeper
-           sub-pages that used to hang off each dropdown (diagnosis,
-           timeline, surgeries, mindset, dbs-tuning, weight-loss,
-           mission, training-log, fundraising, guestbook, contact) are
-           still live, real routes; they're just no longer reachable
-           from the nav bar itself, only via links on each hub page
-           (/journey, /recovery, /marathon, /community). Epilepsy
-           Resources (previously its own dropdown) is folded into the
-           Community hub page's own content instead of getting a 7th
-           top-level slot -- see community.html. -->
+      <!-- Flat, 6-item top-level nav (Home / My Story / LA Marathon /
+           Resources / Get Involved / Donate) -- no dropdowns. The
+           deeper sub-pages that used to hang off each dropdown
+           (diagnosis, timeline, surgeries, mindset, dbs-tuning,
+           weight-loss, mission, training-log, fundraising, guestbook,
+           contact) are still live, real routes; they're just no
+           longer reachable from the nav bar itself, only via links on
+           each hub page (/journey, /marathon, /community). Recovery
+           (previously its own top-level slot) is folded into the My
+           Story hub page's own content instead -- see journey.html's
+           5th hub-pillar card. "Community" keeps its stable /community
+           URL (no redirect needed) but is labeled "Get Involved" here
+           and in that page's own title/breadcrumb/eyebrows, since
+           that's what the page actually offers (follow, share,
+           participate, support) -- see community.html. -->
       <ul class="nav__links" id="nav-links">
         <li><a class="nav__cta" href="/">Home</a></li>
         <li><a class="nav__cta" href="/journey">My Story</a></li>
-        <li><a class="nav__cta" href="/recovery">Recovery</a></li>
         <li><a class="nav__cta" href="/marathon">LA Marathon</a></li>
-        <li><a class="nav__cta" href="/community">Community</a></li>
+        <li><a class="nav__cta" href="/resources">Resources</a></li>
+        <li><a class="nav__cta" href="/community">Get Involved</a></li>
         <li><button type="button" class="nav__cta theme-toggle-btn" id="theme-toggle" data-label-dark="Dark" data-label-light="Light" aria-label="Switch to dark mode">Dark</button></li>
         <li><a class="nav__cta nav__cta--donate" href="https://haku.ly/9795a39b3b" target="_blank" rel="noopener noreferrer">💜 Donate</a></li>
       </ul>
