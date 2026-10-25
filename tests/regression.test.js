@@ -155,7 +155,7 @@ async function run(baseUrl) {
   }
 
   // 6. Flat nav (desktop): exactly 6 top-level items (Home / My Story /
-  // Recovery / LA Marathon / Community / Donate), no dropdowns, and
+  // LA Marathon / Resources / Get Involved / Donate), no dropdowns, and
   // every link navigates directly on a single click with no hover
   // step required.
   {
@@ -171,10 +171,10 @@ async function run(baseUrl) {
     // innerText comes back shouting ("MY STORY") even though the
     // source markup is normal-case -- compare case-insensitively.
     const linkTexts = await page.locator("#nav-links li a, #nav-links li button").allInnerTexts();
-    const hasAll = ["Home", "My Story", "Recovery", "LA Marathon", "Community"].every((label) =>
+    const hasAll = ["Home", "My Story", "LA Marathon", "Resources", "Get Involved"].every((label) =>
       linkTexts.some((t) => t.trim().toLowerCase() === label.toLowerCase())
     );
-    check("Nav contains Home/My Story/Recovery/LA Marathon/Community", hasAll, linkTexts.join(" | "));
+    check("Nav contains Home/My Story/LA Marathon/Resources/Get Involved", hasAll, linkTexts.join(" | "));
 
     await page.locator("#nav-links a:text-is('My Story')").click();
     await page.waitForLoadState("domcontentloaded");
