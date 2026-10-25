@@ -226,6 +226,39 @@
           <p><span class="key">The peak-run rule:</span> 18 miles the week of January 18 is mission accomplished. The optional 20-miler in early February only happens if recovery and energy are genuinely good — twenty isn't a test I have to pass before running a marathon.</p>
         </div>
 
+        <div class="reveal" id="recent-training-log">
+          <p class="eyebrow">Straight from the database</p>
+          <h2>Recent training log</h2>
+          <p>The table above is the forward-looking plan. Below is the real, logged history — every entry below synced from Strava or entered by hand, newest first.</p>
+          <div class="training-status" aria-label="Training log stats">
+            <div class="training-status__card">
+              <div class="training-status__label">Longest run</div>
+              <div class="training-status__value" id="stat-longest">—</div>
+              <div class="training-status__detail" id="stat-longest-detail">Loading…</div>
+            </div>
+            <div class="training-status__card">
+              <div class="training-status__label">Last 7 days</div>
+              <div class="training-status__value" id="stat-weekly">—</div>
+              <div class="training-status__detail">Rolling weekly mileage</div>
+            </div>
+            <div class="training-status__card">
+              <div class="training-status__label">Runs logged</div>
+              <div class="training-status__value" id="stat-total-runs">—</div>
+              <div class="training-status__detail">All-time, via Strava + manual entries</div>
+            </div>
+          </div>
+          <p class="comments-list__status" id="training-runs-status">Loading training log…</p>
+          <ul class="training-run-list" id="training-runs-list" hidden></ul>
+        </div>
+
+        <div class="reveal" id="milestones">
+          <p class="eyebrow">Milestones &amp; race updates</p>
+          <h2>Every milestone on the way to March 7</h2>
+          <p>Training milestones, race-day results, and notes — pulled from the same log behind the stats above, not re-typed by hand here.</p>
+          <p class="comments-list__status" id="milestones-status">Loading milestones…</p>
+          <ul class="milestone-list" id="milestones-list" hidden></ul>
+        </div>
+
         <div class="race-gallery reveal">
           <p class="eyebrow">Sunday, October 18, 2026</p>
           <h2>City to the Sea — race day recap</h2>

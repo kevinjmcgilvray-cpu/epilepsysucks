@@ -5,304 +5,157 @@
 // this was one file, so load order still matters for anything that
 // isn't scoped inside its own IIFE.
 
-    (function initTraining() {
-      const chartFrame = document.getElementById("training-chart");
+    // Recent training log + milestones (marathon/training-log.html).
+    // Replaces a previous initTraining() IIFE that was entirely dead
+    // code sitewide -- it targeted #training-chart-area/-line IDs that
+    // never existed on any page (an SVG line-chart design that was
+    // built but never wired into any page's markup). This version
+    // targets the real #training-runs-list/#milestones-list IDs added
+    // alongside it, rendering real /api/training + /api/milestones
+    // rows as compact, newest-first card lists -- no invented data,
+    // no SVG chart revival, just the data these endpoints already
+    // return (the API's own ORDER BY already sorts newest first).
+    (function initTrainingLog() {
+      const runsList = document.getElementById("training-runs-list");
+      const runsStatus = document.getElementById("training-runs-status");
+      const milestonesList = document.getElementById("milestones-list");
+      const milestonesStatus = document.getElementById("milestones-status");
       const longestEl = document.getElementById("stat-longest");
       const longestDetail = document.getElementById("stat-longest-detail");
       const weeklyEl = document.getElementById("stat-weekly");
-      const raceDaysEl = document.getElementById("stat-race-days");
-      const milestoneEl = document.getElementById("stat-milestone");
-      const milestoneDetail = document.getElementById("stat-milestone-detail");
-      const areaEl = document.getElementById("training-chart-area");
-      const lineEl = document.getElementById("training-chart-line");
-      const pointsGroup = document.getElementById("training-chart-points");
-      const tooltip = document.getElementById("training-tooltip");
-      const noteEl = document.getElementById("training-chart-note");
-      if (!areaEl || !lineEl) return;
+      const totalRunsEl = document.getElementById("stat-total-runs");
+      if (!runsList && !milestonesList) return;
 
-      const tipStrong = tooltip ? tooltip.querySelector("strong") : null;
-      const tipSpan = tooltip ? tooltip.querySelector("span") : null;
-      const svg = chartFrame ? chartFrame.querySelector("svg") : null;
-      const ns = "http://www.w3.org/2000/svg";
-
-      function dayKey(iso) {
-        return String(iso || "").slice(0, 10);
+      function escapeHtml(value) {
+        return String(value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
       }
 
       function formatDate(iso) {
         try {
-          return new Date(dayKey(iso) + "T12:00:00").toLocaleDateString("en-US", {
+          return new Date(String(iso || "").slice(0, 10) + "T12:00:00").toLocaleDateString("en-US", {
             month: "short",
             day: "numeric",
             year: "numeric"
           });
         } catch (e) {
-          return dayKey(iso) || "";
+          return String(iso || "").slice(0, 10);
         }
-      }
-
-      function daysUntilRace() {
-        const end = window.RACE_DAY_UTC_MS;
-        const parts = new Intl.DateTimeFormat("en-CA", {
-          timeZone: "America/Los_Angeles",
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit"
-        }).format(new Date()).split("-").map(Number);
-        const today = Date.UTC(parts[0], parts[1] - 1, parts[2]);
-        return Math.max(0, Math.round((end - today) / 86400000));
-      }
-
-      if (raceDaysEl) raceDaysEl.textContent = String(daysUntilRace());
-
-      function placeTooltip(point) {
-        if (!tooltip || !svg || !chartFrame) return;
-        const ctm = svg.getScreenCTM();
-        if (!ctm) return;
-        const pt = svg.createSVGPoint();
-        pt.x = point.x;
-        pt.y = point.y;
-        const screen = pt.matrixTransform(ctm);
-        const frameRect = chartFrame.getBoundingClientRect();
-        let left = screen.x - frameRect.left;
-        const top = screen.y - frameRect.top;
-        const tipWidth = tooltip.offsetWidth || 120;
-        left = Math.max(tipWidth / 2 + 4, Math.min(left, frameRect.width - tipWidth / 2 - 4));
-        tooltip.style.left = left + "px";
-        tooltip.style.top = top + "px";
-      }
-
-      function showTip(point, group) {
-        if (!tooltip || !tipStrong || !tipSpan) return;
-        tipStrong.textContent = point.miles + " mi";
-        tipSpan.textContent = point.date + (point.source === "strava" ? " · via Strava" : "");
-        tooltip.hidden = false;
-        tooltip.classList.add("is-on");
-        if (pointsGroup) {
-          pointsGroup.querySelectorAll(".training-chart__point").forEach((el) => {
-            el.classList.toggle("is-active", el === group);
-            const dot = el.querySelector(".training-chart__dot");
-            if (dot) dot.setAttribute("r", el === group ? "5.5" : "3");
-          });
-        }
-        placeTooltip(point);
-      }
-
-      function hideTip() {
-        if (!tooltip) return;
-        tooltip.classList.remove("is-on");
-        tooltip.hidden = true;
-        if (pointsGroup) {
-          pointsGroup.querySelectorAll(".training-chart__point").forEach((el) => {
-            el.classList.remove("is-active");
-            const dot = el.querySelector(".training-chart__dot");
-            if (dot) dot.setAttribute("r", "3");
-          });
-        }
-      }
-
-      function renderChart(runs) {
-        const trendEl = document.getElementById("training-chart-trend");
-        const trendStatEl = document.getElementById("training-trend-stat");
-        if (!runs.length) {
-          areaEl.setAttribute("d", "");
-          lineEl.setAttribute("points", "");
-          if (trendEl) trendEl.setAttribute("points", "");
-          if (trendStatEl) trendStatEl.hidden = true;
-          if (pointsGroup) pointsGroup.innerHTML = "";
-          return;
-        }
-        const chronological = runs.slice().reverse();
-        const X0 = 40, X1 = 760, Y0 = 20, Y1 = 180, BASE = 200;
-        const DAY_MS = 86400000;
-
-        // 7-day trailing mileage total as of each run's date — a real
-        // rolling volume trend, not just the raw per-run distances.
-        const dates = chronological.map((r) => new Date(dayKey(r.date) + "T12:00:00").getTime());
-        const miles = chronological.map((r) => r.miles);
-        const trailingSums = chronological.map((r, i) => {
-          const t = dates[i];
-          let sum = 0;
-          for (let j = 0; j <= i; j++) {
-            if (t - dates[j] <= 6 * DAY_MS) sum += miles[j];
-          }
-          return sum;
-        });
-
-        const maxM = Math.max(Math.max.apply(null, miles), Math.max.apply(null, trailingSums)) || 1;
-        const points = chronological.map((r, i) => {
-          const x = X0 + (i / Math.max(1, chronological.length - 1)) * (X1 - X0);
-          const y = Y0 + (1 - r.miles / maxM) * (Y1 - Y0);
-          return {
-            x: x,
-            y: y,
-            miles: r.miles,
-            date: formatDate(r.date),
-            pace: r.pace || "",
-            source: r.source || "manual"
-          };
-        });
-        const pts = points.map((p) => p.x.toFixed(1) + "," + p.y.toFixed(1)).join(" ");
-        lineEl.setAttribute("points", pts);
-        areaEl.setAttribute("d", "M" + pts + " L" + X1 + "," + BASE + " L" + X0 + "," + BASE + " Z");
-
-        if (trendEl) {
-          if (chronological.length >= 2) {
-            const trendPts = chronological
-              .map((r, i) => {
-                const x = X0 + (i / Math.max(1, chronological.length - 1)) * (X1 - X0);
-                const y = Y0 + (1 - trailingSums[i] / maxM) * (Y1 - Y0);
-                return x.toFixed(1) + "," + y.toFixed(1);
-              })
-              .join(" ");
-            trendEl.setAttribute("points", trendPts);
-          } else {
-            trendEl.setAttribute("points", "");
-          }
-        }
-
-        if (trendStatEl) {
-          if (chronological.length >= 3) {
-            const xs = dates.map((t) => (t - dates[0]) / DAY_MS);
-            const n = xs.length;
-            const xMean = xs.reduce((a, b) => a + b, 0) / n;
-            const yMean = trailingSums.reduce((a, b) => a + b, 0) / n;
-            let num = 0, den = 0;
-            for (let i = 0; i < n; i++) {
-              num += (xs[i] - xMean) * (trailingSums[i] - yMean);
-              den += (xs[i] - xMean) * (xs[i] - xMean);
-            }
-            const slope = den === 0 ? 0 : num / den; // trailing-sum miles per day
-            const perWeek = slope * 7;
-            const direction =
-              perWeek > 0.3 ? "ramping up" : perWeek < -0.3 ? "tapering down" : "holding steady";
-
-            const weeksRemaining = Math.max(0, (window.RACE_DAY_UTC_MS - Date.now()) / (7 * DAY_MS));
-            const currentWeekly = trailingSums[trailingSums.length - 1];
-            const totalLogged = miles.reduce((a, b) => a + b, 0);
-            const projectedTotal = totalLogged + currentWeekly * weeksRemaining;
-
-            trendStatEl.hidden = false;
-            trendStatEl.innerHTML =
-              "<strong>Trend:</strong> weekly volume is " +
-              direction +
-              (Math.abs(perWeek) > 0.3
-                ? " (about " + Math.abs(perWeek).toFixed(1) + " mi/week " + (perWeek > 0 ? "gain" : "drop") + ")"
-                : "") +
-              ". At the current " +
-              currentWeekly.toFixed(1) +
-              " mi/week pace, that's roughly <strong>" +
-              Math.round(projectedTotal) +
-              " total training miles</strong> logged by race day (March 7, 2027).";
-          } else {
-            trendStatEl.hidden = true;
-          }
-        }
-
-        if (!pointsGroup) return;
-        pointsGroup.innerHTML = "";
-        points.forEach((point) => {
-          const group = document.createElementNS(ns, "g");
-          group.classList.add("training-chart__point");
-          group.setAttribute("tabindex", "0");
-          group.setAttribute("role", "button");
-          group.setAttribute("aria-label", point.miles + " miles on " + point.date);
-          const hit = document.createElementNS(ns, "circle");
-          hit.classList.add("training-chart__hit");
-          hit.setAttribute("cx", point.x);
-          hit.setAttribute("cy", point.y);
-          hit.setAttribute("r", "12");
-          const dot = document.createElementNS(ns, "circle");
-          dot.classList.add("training-chart__dot");
-          dot.setAttribute("cx", point.x);
-          dot.setAttribute("cy", point.y);
-          dot.setAttribute("r", "3");
-          group.appendChild(hit);
-          group.appendChild(dot);
-          pointsGroup.appendChild(group);
-          group.addEventListener("pointerenter", () => showTip(point, group));
-          group.addEventListener("pointerleave", hideTip);
-          group.addEventListener("focus", () => showTip(point, group));
-          group.addEventListener("blur", hideTip);
-        });
-
-        if (noteEl) noteEl.textContent = "Hover any dot for the exact date.";
       }
 
       function renderRuns(data) {
         const runs = data.runs || [];
         const stats = data.stats || {};
-        if (longestEl) {
-          longestEl.textContent = stats.longestRun ? stats.longestRun.miles + " mi" : "—";
-        }
+        if (longestEl) longestEl.textContent = stats.longestRun ? stats.longestRun.miles + " mi" : "—";
         if (longestDetail) {
           longestDetail.textContent = stats.longestRun
             ? formatDate(stats.longestRun.date) + (stats.longestRun.pace ? " · " + stats.longestRun.pace : "")
             : "No runs logged yet";
         }
         if (weeklyEl) weeklyEl.textContent = (Number(stats.weeklyMiles) || 0).toFixed(1) + " mi";
-        renderChart(runs);
+        if (totalRunsEl) totalRunsEl.textContent = String(stats.totalRuns || runs.length || 0);
+
+        if (!runsList) return;
+        if (!runs.length) {
+          runsList.hidden = true;
+          runsList.innerHTML = "";
+          if (runsStatus) {
+            runsStatus.hidden = false;
+            runsStatus.textContent = "No runs logged yet.";
+          }
+          return;
+        }
+        if (runsStatus) runsStatus.hidden = true;
+        runsList.hidden = false;
+        runsList.innerHTML = runs
+          .map(
+            (r) =>
+              `<li class="training-run-card">` +
+              `<div class="training-run-card__meta">` +
+              `<time datetime="${escapeHtml(r.date || "")}">${escapeHtml(formatDate(r.date))}</time>` +
+              `<span class="training-run-card__miles">${escapeHtml(r.miles)} mi</span>` +
+              (r.pace ? `<span class="training-run-card__pace">${escapeHtml(r.pace)}</span>` : "") +
+              (r.source === "strava" ? `<span class="training-run-card__source">via Strava</span>` : "") +
+              `</div>` +
+              (r.notes ? `<p class="training-run-card__notes">${escapeHtml(r.notes)}</p>` : "") +
+              `</li>`
+          )
+          .join("");
       }
 
-      fetch("/api/training")
-        .then((res) => (res.ok ? res.json() : null))
-        .then((data) => {
-          if (!data || !data.ok) return;
-          renderRuns(data);
-        })
-        .catch(() => {});
+      function renderMilestones(milestones) {
+        if (!milestonesList) return;
+        if (!milestones.length) {
+          milestonesList.hidden = true;
+          milestonesList.innerHTML = "";
+          if (milestonesStatus) {
+            milestonesStatus.hidden = false;
+            milestonesStatus.textContent = "No milestones yet.";
+          }
+          return;
+        }
+        if (milestonesStatus) milestonesStatus.hidden = true;
+        milestonesList.hidden = false;
+        milestonesList.innerHTML = milestones
+          .map(
+            (m) =>
+              `<li class="milestone-card">` +
+              `<div class="milestone-card__meta">` +
+              `<span class="milestone-card__kind">${escapeHtml(m.kind)}</span>` +
+              (m.occurredOn ? `<time datetime="${escapeHtml(m.occurredOn)}">${escapeHtml(formatDate(m.occurredOn))}</time>` : "") +
+              `</div>` +
+              `<h3 class="milestone-card__title">${escapeHtml(m.title)}</h3>` +
+              (m.detail ? `<p class="milestone-card__detail">${escapeHtml(m.detail)}</p>` : "") +
+              `</li>`
+          )
+          .join("");
+      }
 
-      fetch("/api/cross-training")
-        .then((res) => (res.ok ? res.json() : null))
-        .then((data) => {
-          if (!data || !data.ok) return;
-          const stats = data.stats || {};
-          const walkWeeklyEl = document.getElementById("stat-walk-weekly");
-          const walkDetailEl = document.getElementById("stat-walk-detail");
-          const bikeWeeklyEl = document.getElementById("stat-bike-weekly");
-          const bikeDetailEl = document.getElementById("stat-bike-detail");
-
-          function renderBucket(weeklyEl, detailEl, bucket, noun) {
-            if (!bucket || (!bucket.lastActivity && !bucket.totalMiles)) {
-              if (weeklyEl) weeklyEl.textContent = "—";
-              if (detailEl) detailEl.textContent = "No " + noun + " synced yet";
+      if (runsList) {
+        fetch("/api/training")
+          .then((res) => (res.ok ? res.json() : null))
+          .then((data) => {
+            if (!data || !data.ok) {
+              if (runsStatus) {
+                runsStatus.hidden = false;
+                runsStatus.textContent = "Training log is temporarily unavailable.";
+              }
               return;
             }
-            if (weeklyEl) weeklyEl.textContent = (Number(bucket.weeklyMiles) || 0).toFixed(1) + " mi";
-            if (detailEl) {
-              detailEl.textContent = bucket.lastActivity
-                ? "Last: " + formatDate(bucket.lastActivity.date) + " · " + bucket.lastActivity.miles + " mi"
-                : "Miles this week";
+            renderRuns(data);
+          })
+          .catch(() => {
+            if (runsStatus) {
+              runsStatus.hidden = false;
+              runsStatus.textContent = "Training log is temporarily unavailable.";
             }
-          }
+          });
+      }
 
-          renderBucket(walkWeeklyEl, walkDetailEl, stats.walk, "walks");
-          renderBucket(bikeWeeklyEl, bikeDetailEl, stats.bike, "rides");
-        })
-        .catch(() => {});
-
-      fetch("/api/milestones")
-        .then((res) => (res.ok ? res.json() : null))
-        .then((data) => {
-          if (!data || !data.ok || !data.milestones || !data.milestones.length) {
-            if (milestoneEl) milestoneEl.textContent = "—";
-            if (milestoneDetail) milestoneDetail.textContent = "No milestones yet";
-            return;
-          }
-          const today = new Date();
-          today.setHours(0, 0, 0, 0);
-          const upcoming = data.milestones.find((m) => {
-            if (!m.occurredOn) return true;
-            return new Date(dayKey(m.occurredOn) + "T12:00:00") >= today;
-          }) || data.milestones[data.milestones.length - 1];
-          if (milestoneEl) milestoneEl.textContent = upcoming.title;
-          if (milestoneDetail) {
-            milestoneDetail.textContent = upcoming.occurredOn
-              ? formatDate(upcoming.occurredOn) + (upcoming.detail ? " — " + upcoming.detail : "")
-              : (upcoming.detail || upcoming.kind);
-          }
-        })
-        .catch(() => {});
+      if (milestonesList) {
+        fetch("/api/milestones")
+          .then((res) => (res.ok ? res.json() : null))
+          .then((data) => {
+            if (!data || !data.ok) {
+              if (milestonesStatus) {
+                milestonesStatus.hidden = false;
+                milestonesStatus.textContent = "Milestones are temporarily unavailable.";
+              }
+              return;
+            }
+            renderMilestones(data.milestones || []);
+          })
+          .catch(() => {
+            if (milestonesStatus) {
+              milestonesStatus.hidden = false;
+              milestonesStatus.textContent = "Milestones are temporarily unavailable.";
+            }
+          });
+      }
     })();
 
     (function initComments() {

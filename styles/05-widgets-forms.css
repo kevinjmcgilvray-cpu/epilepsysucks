@@ -545,6 +545,94 @@
       line-height: 1.55;
     }
 
+    /* Recent training log + milestones (marathon/training-log.html) --
+       real DB-backed lists, same compact "border-top divider row"
+       shape as .comments-list/.comment-item above, reused rather than
+       inventing a third visual pattern on the same page. */
+    .training-run-list,
+    .milestone-list {
+      list-style: none;
+      margin: 1.5rem 0 0;
+    }
+
+    .training-run-card,
+    .milestone-card {
+      padding: 1rem 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .training-run-card:first-child,
+    .milestone-card:first-child {
+      border-top: none;
+      padding-top: 0;
+    }
+
+    .training-run-card__meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem 0.85rem;
+      align-items: baseline;
+      margin-bottom: 0.35rem;
+      font-size: 0.85rem;
+    }
+
+    .training-run-card__meta time {
+      color: var(--paper);
+      font-weight: 600;
+    }
+
+    .training-run-card__miles {
+      color: var(--epi);
+      font-weight: 600;
+    }
+
+    .training-run-card__pace,
+    .training-run-card__source {
+      color: var(--paper-faint);
+    }
+
+    .training-run-card__notes {
+      margin: 0;
+      color: var(--paper-dim);
+      line-height: 1.55;
+    }
+
+    .milestone-card__meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem 0.85rem;
+      align-items: baseline;
+      margin-bottom: 0.4rem;
+    }
+
+    .milestone-card__kind {
+      display: inline-block;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--epi);
+      font-size: 0.72rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .milestone-card__meta time {
+      font-size: 0.85rem;
+      color: var(--paper-faint);
+    }
+
+    .milestone-card__title {
+      margin: 0 0 0.25rem;
+      font-size: 1.05rem;
+    }
+
+    .milestone-card__detail {
+      margin: 0;
+      color: var(--paper-dim);
+      line-height: 1.55;
+    }
+
     .owner-update {
       margin: 1.75rem 0 0;
       padding: 1.25rem 0 1.5rem;

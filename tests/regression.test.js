@@ -298,6 +298,54 @@ async function run(baseUrl) {
     await context.close();
   }
 
+  // 8. Training log page: the real-data sections (Recent training log
+  // / Milestones & race updates) exist with the right structure and
+  // degrade gracefully when their APIs are unreachable -- this test
+  // server has no /api/* routes (see tests/_server.js), so every
+  // fetch() 404s here, which is exactly what exercises the "temporarily
+  // unavailable" fallback path for free, deterministically, on every
+  // run (same reasoning as this file's own 404-filtered error check
+  // above -- a failed fetch here is the expected case, not a bug).
+  {
+    const context = await browser.newContext();
+    const page = await freshPage(context, "training-log-sections", errors);
+    await page.goto(`${baseUrl}/marathon/training-log.html`);
+    await page.waitForTimeout(300);
+
+    // h2 is text-transform: uppercase in CSS, so compare case-insensitively
+    // (same gotcha as the .nav__cta labels above).
+    const hasRecentSection = (await page.locator("#recent-training-log h2").innerText()).trim();
+    check(
+      "Recent training log section has a heading",
+      hasRecentSection.toLowerCase() === "recent training log",
+      hasRecentSection
+    );
+
+    const hasMilestonesSection = (await page.locator("#milestones h2").innerText()).trim();
+    check("Milestones & race updates section exists at #milestones", hasMilestonesSection.length > 0, hasMilestonesSection);
+
+    const runsStatusText = await page.locator("#training-runs-status").innerText();
+    check(
+      "Training runs list shows a fallback message when its API is unreachable",
+      /unavailable|no runs/i.test(runsStatusText),
+      runsStatusText
+    );
+    const runsListHidden = await page.locator("#training-runs-list").evaluate((el) => el.hidden);
+    check("Training runs list stays hidden (not an empty flash) when its API is unreachable", runsListHidden === true, runsListHidden);
+
+    const milestonesStatusText = await page.locator("#milestones-status").innerText();
+    check(
+      "Milestones list shows a fallback message when its API is unreachable",
+      /unavailable|no milestones/i.test(milestonesStatusText),
+      milestonesStatusText
+    );
+
+    const statCards = await page.locator("#recent-training-log .training-status__card").count();
+    check("Recent training log has 3 stat cards (longest / weekly / total runs)", statCards === 3, statCards);
+
+    await context.close();
+  }
+
   const relevantErrors = errors.filter((e) => !e.includes("404"));
   check("No unexpected console/page errors", relevantErrors.length === 0, relevantErrors.join(" | "));
 
