@@ -7,11 +7,15 @@
 // narrower 360px pass (common small-Android width) focused on the
 // specific interactive overlay widgets most likely to misbehave at
 // the smallest end of real-world phone widths: the nav hamburger menu
-// (every page) and the share-menu popover (community.html) -- the nav
-// dropdowns this line item originally had in mind were removed
-// outright in the nav-flattening redesign, so there's nothing left of
-// that specific kind to audit, but the two remaining tap-to-open
-// overlays get the same scrutiny.
+// (every page) and the share-menu popover (community.html). The nav
+// dropdown this line item originally had in mind was removed in the
+// nav-flattening redesign and later reintroduced as the single
+// Marathon dropdown -- its mobile accordion trigger/caret are covered
+// below via the generic "every #nav-links li a/button" sweep (closed
+// submenu links return a null boundingBox on this viewport and are
+// skipped, same as any other hidden element); regression.test.js
+// separately drives the accordion open/closed and checks its own
+// 48px floor explicitly.
 const fs = require("fs");
 const path = require("path");
 const { chromium } = require("playwright");

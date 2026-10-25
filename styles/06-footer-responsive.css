@@ -489,6 +489,75 @@
       .nav__cta {
         justify-content: center;
       }
+
+      /* The split trigger (.nav__dropdown-trigger) is a <span>, so it
+         doesn't match the a.nav__cta/button.nav__cta rule above --
+         restyle it the same way, then split its own padding across
+         the link (most of the width, flexes to fill) and the caret
+         (fixed-width tap target on the right) inside it. */
+      .nav__links .nav__dropdown-trigger {
+        display: inline-flex;
+        justify-content: center;
+        width: 100%;
+        padding: 0;
+        margin: 0.35rem 0;
+        font-size: 0.85rem;
+        box-sizing: border-box;
+      }
+
+      .nav__links .nav__dropdown-link {
+        flex: 1 1 auto;
+        justify-content: center;
+        padding: 0.75rem 0.5rem 0.75rem 1rem;
+        /* 48px floor for mobile touch targets (WCAG 2.5.8). */
+        min-height: 48px;
+      }
+
+      .nav__links .nav__dropdown-caret {
+        flex: 0 0 auto;
+        justify-content: center;
+        padding: 0.75rem 1rem 0.75rem 0.5rem;
+        /* 48px floor for mobile touch targets (WCAG 2.5.8). */
+        min-width: 48px;
+        min-height: 48px;
+      }
+
+      /* Dropdown nav categories become inline accordions in the
+         collapsed mobile menu instead of floating panels -- tapping a
+         trigger expands its sub-list in place (toggled via JS adding
+         .is-open to the parent .nav__dropdown), rather than relying on
+         :hover (which touch devices don't really have). */
+      .nav__dropdown-menu {
+        position: static;
+        display: none;
+        transform: none;
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        min-width: 0;
+        margin: 0.35rem 0 0.5rem;
+        padding: 0;
+        background: none;
+        border: none;
+        box-shadow: none;
+      }
+
+      .nav__dropdown.is-open .nav__dropdown-menu {
+        display: block;
+        transform: none;
+      }
+
+      .nav__dropdown-menu a {
+        padding: 0.75rem 1rem 0.75rem 1.75rem;
+        white-space: normal;
+        /* 48px floor for mobile touch targets (WCAG 2.5.8) -- the
+           padding alone (24px) plus one line of 0.85rem text doesn't
+           reliably clear 48px on its own. */
+        min-height: 48px;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+      }
     }
 
     @media (max-width: 800px) {
@@ -634,6 +703,63 @@
         min-height: 48px;
       }
 
+      .nav__links .nav__dropdown-trigger {
+        display: inline-flex;
+        justify-content: center;
+        width: 100%;
+        padding: 0;
+        margin: 0.3rem 0;
+        font-size: 0.85rem;
+        box-sizing: border-box;
+      }
+
+      .nav__links .nav__dropdown-link {
+        flex: 1 1 auto;
+        justify-content: center;
+        padding: 0.65rem 0.5rem 0.65rem 1rem;
+        /* 48px floor for mobile touch targets (WCAG 2.5.8). */
+        min-height: 48px;
+      }
+
+      .nav__links .nav__dropdown-caret {
+        flex: 0 0 auto;
+        justify-content: center;
+        padding: 0.65rem 1rem 0.65rem 0.5rem;
+        /* 48px floor for mobile touch targets (WCAG 2.5.8). */
+        min-width: 48px;
+        min-height: 48px;
+      }
+
+      .nav__dropdown-menu {
+        position: static;
+        display: none;
+        transform: none;
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        min-width: 0;
+        margin: 0.35rem 0 0.5rem;
+        padding: 0;
+        background: none;
+        border: none;
+        box-shadow: none;
+      }
+
+      .nav__dropdown.is-open .nav__dropdown-menu {
+        display: block;
+        transform: none;
+      }
+
+      .nav__dropdown-menu a {
+        padding: 0.75rem 1rem 0.75rem 1.75rem;
+        white-space: normal;
+        /* 48px floor for mobile touch targets (WCAG 2.5.8). */
+        min-height: 48px;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+      }
+
       .nav__brand {
         font-size: 0.95rem;
       }
@@ -777,6 +903,64 @@
       box-sizing: border-box;
       /* 48px floor for mobile touch targets (WCAG 2.5.8). */
       min-height: 48px;
+    }
+
+    html.is-landscape-compact .nav__links .nav__dropdown-trigger {
+      display: inline-flex;
+      justify-content: center;
+      width: 100%;
+      padding: 0;
+      margin: 0.3rem 0;
+      font-size: 0.85rem;
+      box-sizing: border-box;
+    }
+
+    html.is-landscape-compact .nav__links .nav__dropdown-link {
+      flex: 1 1 auto;
+      justify-content: center;
+      padding: 0.65rem 0.5rem 0.65rem 1rem;
+      /* 48px floor for mobile touch targets (WCAG 2.5.8). */
+      min-height: 48px;
+    }
+
+    html.is-landscape-compact .nav__links .nav__dropdown-caret {
+      flex: 0 0 auto;
+      justify-content: center;
+      padding: 0.65rem 1rem 0.65rem 0.5rem;
+      /* 48px floor for mobile touch targets (WCAG 2.5.8). */
+      min-width: 48px;
+      min-height: 48px;
+    }
+
+    html.is-landscape-compact .nav__dropdown-menu {
+      position: static;
+      display: none;
+      transform: none;
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      min-width: 0;
+      margin: 0.35rem 0 0.5rem;
+      padding: 0;
+      background: none;
+      border: none;
+      box-shadow: none;
+    }
+
+    html.is-landscape-compact .nav__dropdown.is-open .nav__dropdown-menu {
+      display: block;
+      transform: none;
+    }
+
+    html.is-landscape-compact .nav__dropdown-menu a {
+      padding: 0.75rem 1rem 0.75rem 1.75rem;
+      white-space: normal;
+      /* 48px floor for mobile touch targets (WCAG 2.5.8) -- same fix
+         as the max-width:800px block above. */
+      min-height: 48px;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
     }
 
     html.is-landscape-compact .nav__brand {

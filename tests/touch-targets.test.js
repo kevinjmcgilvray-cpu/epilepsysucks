@@ -140,6 +140,21 @@ async function auditPage(browser, baseUrl, route) {
     await navToggle.click().catch(() => {});
     await page.waitForTimeout(SETTLE_MS);
     all = all.concat(await measure(page, "nav-open"));
+
+    // The Marathon dropdown's submenu is `display: none` until its
+    // caret is tapped (see styles/06-footer-responsive.css), so
+    // without this its 3 submenu links would never get measured at
+    // all -- the same unmeasured-while-hidden gap the share-menu
+    // comment below already documents for community.html.
+    const dropdownCaret = await page.$("#nav-links .nav__dropdown-caret");
+    if (dropdownCaret) {
+      await dropdownCaret.click().catch(() => {});
+      await page.waitForTimeout(SETTLE_MS);
+      all = all.concat(await measure(page, "nav-open-dropdown-expanded"));
+      await dropdownCaret.click().catch(() => {});
+      await page.waitForTimeout(SETTLE_MS);
+    }
+
     await navToggle.click().catch(() => {});
     await page.waitForTimeout(SETTLE_MS);
   }

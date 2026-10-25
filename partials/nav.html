@@ -110,26 +110,62 @@
         </div>
       </div>
       <button class="nav__toggle" id="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
-      <!-- Flat, 6-item top-level nav (Home / My Story / LA Marathon /
-           Resources / Get Involved / Donate) -- no dropdowns. The
-           deeper sub-pages that used to hang off each dropdown
-           (diagnosis, timeline, surgeries, mindset, dbs-tuning,
-           weight-loss, mission, training-log, fundraising, guestbook,
-           contact) are still live, real routes; they're just no
-           longer reachable from the nav bar itself, only via links on
-           each hub page (/journey, /marathon, /community). Recovery
+      <!-- 5-item top-level nav (Home / My Story / Epilepsy Advocacy /
+           Marathon ▾ / Get Involved / Donate). Every item is a flat
+           direct link except Marathon, which is a reintroduced
+           dropdown -- the nav was flattened to zero dropdowns in an
+           earlier IA pass, then this one category was deliberately
+           brought back later because the marathon content (overview,
+           training log, milestones) outgrew a single link. See
+           styles/02-hero-sections.css + styles/06-footer-responsive.css
+           (.nav__dropdown*) and js/01-nav-theme-cursor.js
+           (navDropdowns()) for the resurrected split-trigger
+           hover/tap-to-expand behavior -- adapted from the pre-
+           flattening implementation rather than invented fresh.
+
+           "Resources" keeps its stable /resources URL (no redirect
+           needed) but is labeled "Epilepsy Advocacy" here and in that
+           page's own title/breadcrumb/eyebrows, matching the same
+           label-vs-URL pattern already used for Get Involved (see
+           community.html) -- the page's content is itself advocacy-
+           oriented (organizations, seizure first aid), the old label
+           just undersold it.
+
+           The Marathon trigger link and its first submenu item both
+           point to /marathon on purpose (overview is the hub page
+           itself); "Milestones & Race Updates" is a new section on
+           the existing /marathon/training-log page (#milestones), not
+           a standalone route, per the real DB-backed milestones data
+           living there. "Why I'm Running" (/marathon/mission) and the
+           fundraising hub stay live, real routes -- they're reachable
+           from the /marathon hub's own pillar cards, just not
+           duplicated into this already-3-item submenu.
+
+           The deeper sub-pages that used to hang off the other removed
+           dropdowns (diagnosis, timeline, surgeries, mindset,
+           dbs-tuning, weight-loss, guestbook, contact) are still live,
+           real routes too; they're reachable via links on each hub
+           page (/journey, /community), not the nav bar. Recovery
            (previously its own top-level slot) is folded into the My
-           Story hub page's own content instead -- see journey.html's
-           5th hub-pillar card. "Community" keeps its stable /community
-           URL (no redirect needed) but is labeled "Get Involved" here
-           and in that page's own title/breadcrumb/eyebrows, since
-           that's what the page actually offers (follow, share,
-           participate, support) -- see community.html. -->
+           Story hub page's own content -- see journey.html's 5th
+           hub-pillar card. -->
       <ul class="nav__links" id="nav-links">
         <li><a class="nav__cta" href="/">Home</a></li>
         <li><a class="nav__cta" href="/journey">My Story</a></li>
-        <li><a class="nav__cta" href="/marathon">LA Marathon</a></li>
-        <li><a class="nav__cta" href="/resources">Resources</a></li>
+        <li><a class="nav__cta" href="/resources">Epilepsy Advocacy</a></li>
+        <li class="nav__dropdown">
+          <span class="nav__cta nav__dropdown-trigger">
+            <a href="/marathon" class="nav__dropdown-link">Marathon</a>
+            <button type="button" class="nav__dropdown-caret" aria-expanded="false" aria-haspopup="true" aria-label="Show Marathon submenu">
+              <span class="nav__caret" aria-hidden="true">▾</span>
+            </button>
+          </span>
+          <ul class="nav__dropdown-menu">
+            <li><a href="/marathon">Marathon overview</a></li>
+            <li><a href="/marathon/training-log">Training log</a></li>
+            <li><a href="/marathon/training-log#milestones">Milestones &amp; race updates</a></li>
+          </ul>
+        </li>
         <li><a class="nav__cta" href="/community">Get Involved</a></li>
         <li><button type="button" class="nav__cta theme-toggle-btn" id="theme-toggle" data-label-dark="Dark" data-label-light="Light" aria-label="Switch to dark mode">Dark</button></li>
         <li><a class="nav__cta nav__cta--donate" href="https://haku.ly/9795a39b3b" target="_blank" rel="noopener noreferrer">💜 Donate</a></li>

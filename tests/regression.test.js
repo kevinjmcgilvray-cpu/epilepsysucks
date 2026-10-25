@@ -154,27 +154,27 @@ async function run(baseUrl) {
     await context.close();
   }
 
-  // 6. Flat nav (desktop): exactly 6 top-level items (Home / My Story /
-  // LA Marathon / Resources / Get Involved / Donate), no dropdowns, and
-  // every link navigates directly on a single click with no hover
-  // step required.
+  // 6. Nav (desktop): 5 top-level items (Home / My Story / Epilepsy
+  // Advocacy / Marathon / Get Involved / Donate), exactly one dropdown
+  // (Marathon), and every plain link navigates directly on a single
+  // click with no hover step required.
   {
     const context = await browser.newContext();
-    const page = await freshPage(context, "nav-flat-desktop", errors);
+    const page = await freshPage(context, "nav-desktop", errors);
     await page.goto(`${baseUrl}/index.html`);
     await page.waitForTimeout(100);
 
     const dropdownCount = await page.locator(".nav__dropdown").count();
-    check("No .nav__dropdown elements remain in the nav", dropdownCount === 0, dropdownCount);
+    check("Exactly one .nav__dropdown element in the nav (Marathon)", dropdownCount === 1, dropdownCount);
 
     // .nav__cta is text-transform: uppercase, so Playwright's rendered
     // innerText comes back shouting ("MY STORY") even though the
     // source markup is normal-case -- compare case-insensitively.
     const linkTexts = await page.locator("#nav-links li a, #nav-links li button").allInnerTexts();
-    const hasAll = ["Home", "My Story", "LA Marathon", "Resources", "Get Involved"].every((label) =>
+    const hasAll = ["Home", "My Story", "Epilepsy Advocacy", "Marathon", "Get Involved"].every((label) =>
       linkTexts.some((t) => t.trim().toLowerCase() === label.toLowerCase())
     );
-    check("Nav contains Home/My Story/LA Marathon/Resources/Get Involved", hasAll, linkTexts.join(" | "));
+    check("Nav contains Home/My Story/Epilepsy Advocacy/Marathon/Get Involved", hasAll, linkTexts.join(" | "));
 
     await page.locator("#nav-links a:text-is('My Story')").click();
     await page.waitForLoadState("domcontentloaded");
@@ -183,11 +183,57 @@ async function run(baseUrl) {
     await context.close();
   }
 
-  // 7. Flat nav (mobile): the hamburger opens the panel, and tapping a
-  // link navigates directly and closes the panel (no accordion step).
+  // 6b. Marathon dropdown (desktop): the trigger label itself is a real
+  // link (navigates with no JS), the separate caret button toggles the
+  // submenu without navigating, Escape and outside-click close it, and
+  // the submenu holds the 3 approved destinations.
+  {
+    const context = await browser.newContext();
+    const page = await freshPage(context, "nav-dropdown-desktop", errors);
+    await page.goto(`${baseUrl}/index.html`);
+    await page.waitForTimeout(100);
+
+    const caret = page.locator("#nav-links .nav__dropdown-caret");
+    await caret.click();
+    // The submenu's hidden->visible flip is instant per spec once the
+    // class lands, but Chrome only reflects it in computed style /
+    // innerText after the next style flush -- a short settle avoids a
+    // false-empty read, same pattern as the SETTLE_MS waits elsewhere
+    // in this suite (e.g. touch-targets.test.js).
+    await page.waitForTimeout(100);
+    const openAfterClick = await page.locator("#nav-links .nav__dropdown").evaluate((el) => el.classList.contains("is-open"));
+    check("Dropdown caret click opens the submenu", openAfterClick === true, openAfterClick);
+    const caretExpanded = await caret.getAttribute("aria-expanded");
+    check("Dropdown caret aria-expanded flips to true when open", caretExpanded === "true", caretExpanded);
+
+    const submenuLinks = await page.locator("#nav-links .nav__dropdown-menu a").allInnerTexts();
+    const hasSubmenu = ["Marathon overview", "Training log", "Milestones & race updates"].every((label) =>
+      submenuLinks.some((t) => t.trim().toLowerCase() === label.toLowerCase())
+    );
+    check("Marathon submenu has overview/training-log/milestones", hasSubmenu, submenuLinks.join(" | "));
+
+    await page.keyboard.press("Escape");
+    const openAfterEscape = await page.locator("#nav-links .nav__dropdown").evaluate((el) => el.classList.contains("is-open"));
+    check("Escape closes the open dropdown", openAfterEscape === false, openAfterEscape);
+
+    await caret.click();
+    await page.locator("#nav-links a:text-is('Marathon')").click();
+    await page.waitForLoadState("domcontentloaded");
+    check(
+      "Clicking the dropdown trigger's own link navigates directly, independent of the caret",
+      page.url().endsWith("/marathon") || page.url().includes("/marathon.html") || page.url().includes("/marathon/index.html"),
+      page.url()
+    );
+    await context.close();
+  }
+
+  // 7. Nav (mobile): the hamburger opens the panel, a plain link tap
+  // navigates directly and closes the panel, and the Marathon dropdown
+  // becomes an inline accordion (tap caret to expand in place, no
+  // floating panel, 48px touch targets).
   {
     const context = await browser.newContext({ viewport: { width: 480, height: 850 } });
-    const page = await freshPage(context, "nav-flat-mobile", errors);
+    const page = await freshPage(context, "nav-mobile", errors);
     await page.goto(`${baseUrl}/index.html`);
     await page.waitForTimeout(100);
     await page.click("#nav-toggle");
@@ -195,6 +241,17 @@ async function run(baseUrl) {
 
     const linksOpen = await page.locator("#nav-links").evaluate((el) => el.classList.contains("is-open"));
     check("Mobile: hamburger tap opens the nav panel", linksOpen === true, linksOpen);
+
+    const caretBox = await page.locator("#nav-links .nav__dropdown-caret").boundingBox();
+    check(
+      "Mobile: dropdown caret meets the 48px touch-target floor",
+      !!caretBox && caretBox.width >= 48 && caretBox.height >= 48,
+      caretBox
+    );
+
+    await page.locator("#nav-links .nav__dropdown-caret").click();
+    const accordionOpen = await page.locator("#nav-links .nav__dropdown").evaluate((el) => el.classList.contains("is-open"));
+    check("Mobile: tapping the caret expands the Marathon accordion in place", accordionOpen === true, accordionOpen);
 
     await page.locator("#nav-links a:text-is('My Story')").click();
     await page.waitForLoadState("domcontentloaded");

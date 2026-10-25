@@ -228,6 +228,132 @@
       color: var(--btn-on-color) !important;
     }
 
+    /* Marathon dropdown. The nav was flattened to zero dropdowns
+       earlier (see git history on partials/nav.html), then this one
+       category was deliberately reintroduced as part of a later IA
+       pass -- every other top-level item stays a plain direct link.
+       Resurrected verbatim from that pre-flattening implementation
+       (same split-trigger pattern, same hover/tap-to-expand behavior)
+       rather than inventing a new dropdown interaction from scratch.
+       Desktop: a floating panel anchored under the trigger pill,
+       shown on hover (fine pointers only -- see the pointer:fine
+       media query below) or via the same click/keyboard toggle that
+       drives the mobile accordion, so every input method works. */
+    .nav__dropdown {
+      position: relative;
+    }
+
+    /* Split trigger: .nav__dropdown-trigger is a <span> that still
+       carries .nav__cta, so it keeps the shared pill chrome
+       (gradient/border/shadow/shimmer) as a non-interactive wrapper.
+       Inside it, .nav__dropdown-link is a real <a href="/..."> that
+       navigates straight to the category's page with no JS attached,
+       and .nav__dropdown-caret is the only click target that toggles
+       the submenu -- kept small and separate so the two actions never
+       fight over the same tap target. */
+    .nav__cta.nav__dropdown-trigger {
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .nav__dropdown-link,
+    .nav__dropdown-caret {
+      position: relative;
+      z-index: 1;
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      color: inherit;
+      font: inherit;
+      letter-spacing: inherit;
+      text-transform: inherit;
+      text-decoration: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .nav__links .nav__dropdown-link {
+      padding: 0.45rem 0.25rem 0.45rem 0.75rem;
+    }
+
+    .nav__links .nav__dropdown-caret {
+      padding: 0.45rem 0.75rem 0.45rem 0.25rem;
+    }
+
+    .nav__dropdown-caret:hover,
+    .nav__dropdown-caret:focus-visible {
+      background: rgba(255, 255, 255, 0.14);
+      outline: none;
+    }
+
+    .nav__caret {
+      display: inline-block;
+      margin-left: 0;
+      font-size: 0.7em;
+      transition: transform 0.2s ease;
+    }
+
+    .nav__dropdown.is-open .nav__caret {
+      transform: rotate(180deg);
+    }
+
+    .nav__dropdown-menu {
+      position: absolute;
+      top: calc(100% + 0.5rem);
+      left: 50%;
+      transform: translate(-50%, -0.4rem);
+      z-index: 25;
+      min-width: 15rem;
+      margin: 0;
+      padding: 0.4rem;
+      list-style: none;
+      background: var(--nav-menu);
+      border: 1px solid var(--line);
+      border-radius: 0.65rem;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+    }
+
+    .nav__dropdown-menu a {
+      display: block;
+      padding: 0.6rem 0.75rem;
+      border-radius: 0.4rem;
+      color: var(--paper-dim);
+      font-size: 0.85rem;
+      letter-spacing: 0.01em;
+      text-transform: none;
+      white-space: nowrap;
+      text-decoration: none;
+    }
+
+    .nav__dropdown-menu a:hover,
+    .nav__dropdown-menu a:focus-visible {
+      background: var(--accent-soft);
+      color: var(--paper);
+      outline: none;
+    }
+
+    .nav__dropdown.is-open .nav__dropdown-menu {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translate(-50%, 0);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .nav__dropdown:hover .nav__dropdown-menu,
+      .nav__dropdown:focus-within .nav__dropdown-menu {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translate(-50%, 0);
+      }
+    }
+
     .nav__toggle {
       grid-column: 2;
       grid-row: 1;
