@@ -112,6 +112,27 @@ function getClientIp(req) {
   return (req && req.socket && req.socket.remoteAddress) || "unknown";
 }
 
+// Fallback, in-memory-only per-IP limiter used strictly as a backstop
+// when the DB-backed checks below throw (auth_attempts table missing
+// or unreachable). It resets on every cold start and isn't shared
+// across concurrent instances, so it's intentionally weaker than the
+// real DB-backed limiter -- but it's still real throttling, instead
+// of the previous behavior of falling through to zero rate limiting
+// on the single shared OWNER_UPDATE_PASSWORD during a DB outage.
+const fallbackAttempts = new Map(); // ip -> { count, windowStart }
+const FALLBACK_WINDOW_MS = RATE_LIMIT_WINDOW_MINUTES * 60 * 1000;
+
+function checkFallbackLimit(ip) {
+  const now = Date.now();
+  const entry = fallbackAttempts.get(ip);
+  if (!entry || now - entry.windowStart > FALLBACK_WINDOW_MS) {
+    fallbackAttempts.set(ip, { count: 1, windowStart: now });
+    return true;
+  }
+  entry.count += 1;
+  return entry.count <= RATE_LIMIT_MAX_ATTEMPTS;
+}
+
 // Wraps checkOwnerPassword with a per-IP rate limit AND a global
 // cross-IP exponential backoff, both backed by the auth_attempts table
 // (sql/auth-attempts.sql) — every owner-password write endpoint shares
@@ -182,8 +203,17 @@ export async function authorizeOwner(sql, req, payload) {
     // blocked doesn't itself extend the streak or the per-IP count.
     await sql`INSERT INTO auth_attempts (ip, success) VALUES (${ip}, ${passwordOk})`;
   } catch {
-    // auth_attempts table missing/unreachable — degrade to no rate
-    // limiting rather than block legitimate owner requests.
+    // auth_attempts table missing/unreachable — degrade to the
+    // weaker in-memory fallback limiter above rather than either
+    // blocking legitimate owner requests outright or (the previous
+    // behavior) applying zero throttling at all during the outage.
+    if (!checkFallbackLimit(ip)) {
+      return {
+        allowed: false,
+        status: 429,
+        error: "Too many attempts from your network. Please try again in a few minutes."
+      };
+    }
   }
 
   if (!passwordOk) {

@@ -1,3 +1,5 @@
+import { reportError } from "./_db.js";
+
 // Strava integration helpers, shared by training.js.
 //
 // Pattern mirrors raised.js's Haku scrape exactly: a lazy, on-demand
@@ -198,7 +200,13 @@ export async function syncStravaIfStale(sql) {
     }
 
     await sql`UPDATE strava_auth SET last_synced_at = NOW() WHERE id = 1`;
-  } catch {
-    // Never let a Strava hiccup break the training log endpoint.
+  } catch (error) {
+    // Never let a Strava hiccup break the training log endpoint --
+    // but unlike before, don't let it fail completely silently either.
+    // A broken refresh token or Strava outage used to just stop
+    // syncing forever with zero visibility; this at least surfaces it
+    // in Sentry (if configured) without changing the fail-soft
+    // behavior for the end user.
+    await reportError(error, { endpoint: "strava-sync" });
   }
 }
