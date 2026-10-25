@@ -14,25 +14,6 @@ function isRaceDay() {
   return pacificDateKey() === RACE_DAY;
 }
 
-async function ensureTable(sql) {
-  await sql`
-    CREATE TABLE IF NOT EXISTS live_track (
-      id INTEGER PRIMARY KEY CHECK (id = 1),
-      is_live BOOLEAN NOT NULL DEFAULT FALSE,
-      lat DOUBLE PRECISION,
-      lng DOUBLE PRECISION,
-      mile NUMERIC(5,2),
-      label TEXT,
-      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-    )
-  `;
-  await sql`
-    INSERT INTO live_track (id, is_live)
-    VALUES (1, FALSE)
-    ON CONFLICT (id) DO NOTHING
-  `;
-}
-
 function rowPayload(row) {
   const live = Boolean(row && row.is_live && row.lat != null && row.lng != null);
   const raceDay = isRaceDay();
@@ -68,8 +49,11 @@ export default async function handler(req, res) {
   }
 
   try {
-    await ensureTable(sql);
-
+    // No per-request CREATE TABLE/upsert here -- live_track is
+    // provisioned once via sql/live-track.sql (see README's Backend
+    // setup steps), which creates the same schema and seeds the same
+    // singleton row this used to do on every single GET/POST,
+    // including the 8-second radar poll (js/03-coursemap-weightchart.js).
     if (req.method === "GET") {
       res.setHeader("Cache-Control", "s-maxage=5, stale-while-revalidate=10");
       const rows = await sql`

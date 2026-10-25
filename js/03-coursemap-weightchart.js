@@ -402,6 +402,21 @@
           requestAnimationFrame(draw);
         }
 
+        // data.label is owner-set free text (see api/live-track.js),
+        // sanitized server-side via sanitizePlain() -- control chars
+        // stripped and length-capped, but NOT HTML-encoded. It gets
+        // concatenated into metaEl.innerHTML below, so it must be
+        // escaped here too (same escaping js/06-training-comments.js
+        // already uses for comment bodies) before that happens.
+        function escapeHtml(value) {
+          return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;");
+        }
+
         function applyTrack(data) {
           if (!data || !data.ok) return;
           track = data;
@@ -421,7 +436,7 @@
                 "Neon beacon <strong>LIVE</strong> · " +
                 mile +
                 " · " +
-                (data.label || "Kevin");
+                escapeHtml(data.label || "Kevin");
             } else if (data.status === "scanning") {
               metaEl.innerHTML =
                 "Race morning · waiting for GPS lock on <strong>26.2</strong>";
