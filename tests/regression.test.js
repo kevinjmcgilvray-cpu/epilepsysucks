@@ -197,10 +197,14 @@ async function run(baseUrl) {
     await caret.click();
     // The submenu's hidden->visible flip is instant per spec once the
     // class lands, but Chrome only reflects it in computed style /
-    // innerText after the next style flush -- a short settle avoids a
-    // false-empty read, same pattern as the SETTLE_MS waits elsewhere
-    // in this suite (e.g. touch-targets.test.js).
-    await page.waitForTimeout(100);
+    // innerText after the next style flush. A fixed waitForTimeout
+    // here was flaky under CI's slower/busier runner (passed 3x
+    // locally, failed on GitHub Actions) -- poll for the actual
+    // rendered text instead of guessing a delay long enough.
+    await page.waitForFunction(() => {
+      const a = document.querySelector("#nav-links .nav__dropdown-menu a");
+      return !!a && a.innerText.trim().length > 0;
+    });
     const openAfterClick = await page.locator("#nav-links .nav__dropdown").evaluate((el) => el.classList.contains("is-open"));
     check("Dropdown caret click opens the submenu", openAfterClick === true, openAfterClick);
     const caretExpanded = await caret.getAttribute("aria-expanded");
