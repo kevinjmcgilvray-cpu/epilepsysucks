@@ -74,21 +74,31 @@ export default async function handler(req, res) {
       // only override the number temporarily (until it goes stale, same as
       // any other value), not disable auto-sync forever.
       if (stale) {
+        // Captured before the (unbounded, third-party) scrape starts,
+        // so a concurrent owner POST that commits a manual override
+        // *during* the scrape is never clobbered by it below -- the
+        // WHERE clause skips the update entirely if a manual row
+        // newer than this timestamp shows up in the meantime.
+        const fetchStartedAt = new Date();
         try {
           const scraped = await scrapeHaku();
           if (scraped) {
-            row = (
-              await sql`
-                INSERT INTO fundraising (id, amount_raised, goal, source, updated_at)
-                VALUES (1, ${scraped.raised}, ${scraped.goal}, 'haku', NOW())
-                ON CONFLICT (id) DO UPDATE
-                  SET amount_raised = EXCLUDED.amount_raised,
-                      goal = EXCLUDED.goal,
-                      source = 'haku',
-                      updated_at = NOW()
-                RETURNING amount_raised, goal, updated_at, source
-              `
-            )[0];
+            const updated = await sql`
+              INSERT INTO fundraising (id, amount_raised, goal, source, updated_at)
+              VALUES (1, ${scraped.raised}, ${scraped.goal}, 'haku', NOW())
+              ON CONFLICT (id) DO UPDATE
+                SET amount_raised = EXCLUDED.amount_raised,
+                    goal = EXCLUDED.goal,
+                    source = 'haku',
+                    updated_at = NOW()
+                WHERE fundraising.source IS DISTINCT FROM 'manual'
+                   OR fundraising.updated_at < ${fetchStartedAt}
+              RETURNING amount_raised, goal, updated_at, source
+            `;
+            // If the WHERE clause skipped the update (a newer manual
+            // override won the race), updated[] comes back empty --
+            // keep the `row` we already read above instead of losing it.
+            if (updated[0]) row = updated[0];
           }
         } catch {
           // Keep DB values if Haku is unreachable
