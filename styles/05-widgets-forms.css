@@ -915,3 +915,189 @@
       color: var(--paper-dim);
     }
 
+    /* Epilepsy Fact of the Day (November's National Epilepsy Awareness
+       Month campaign + evergreen rotation the rest of the year — see
+       js/09-fact-of-the-day.js). Identical markup/ids are duplicated on
+       index.html and resources.html (each page gets its own instance,
+       same pattern as .marathon-progress/.funds-bar already being
+       duplicated across index.html/marathon/fundraising.html), driven
+       by the same data/facts.json. Reuses existing tokens rather than
+       inventing new ones, same reasoning as .hub-pillar's header
+       comment in 02-hero-sections.css. */
+    .fact-card {
+      margin-top: 1.75rem;
+      border: 1px solid var(--line);
+      border-radius: 1rem;
+      background: var(--surface-muted);
+      overflow: hidden;
+    }
+
+    .fact-card__header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1.25rem clamp(1.1rem, 4vw, 1.75rem) 1rem;
+      background: linear-gradient(135deg, #3a1f78 0%, #2c1759 100%);
+    }
+
+    .fact-card__category {
+      display: inline-block;
+      margin-bottom: 0.5rem;
+      padding: 0.2rem 0.65rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.16);
+      color: #e6d9ff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      /* Reserves space before JS populates it, so the header doesn't
+         visibly jump once fetch('/data/facts.json') resolves. */
+      min-height: 1.3em;
+    }
+
+    .fact-card__title {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: clamp(1.15rem, 2.6vw, 1.5rem);
+      line-height: 1.15;
+      letter-spacing: 0.01em;
+      text-transform: none;
+      color: #fff;
+    }
+
+    .fact-card__header-meta {
+      flex-shrink: 0;
+      text-align: right;
+      font-size: 0.85rem;
+      color: #c9b6f5;
+    }
+
+    .fact-card__date {
+      display: block;
+    }
+
+    .fact-card__counter {
+      display: block;
+      font-size: 0.78rem;
+      color: #a893d9;
+    }
+
+    .fact-card__progress {
+      height: 0.4rem;
+      margin: 0 clamp(1.1rem, 4vw, 1.75rem) 1.25rem;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.25);
+      overflow: hidden;
+    }
+
+    /* Same Electric Purple gradient as .funds-bar__fill, so this reads
+       as part of the same "progress toward something" visual language
+       as the fundraising bar, not a one-off. */
+    .fact-card__progress-fill {
+      display: block;
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #9b6bff 0%, #7a45e8 55%, #6b35d8 100%);
+      transition: width 0.6s ease;
+    }
+
+    .fact-card__statement {
+      margin: 0 clamp(1.1rem, 4vw, 1.75rem) 1.25rem;
+      padding: 0.1rem 0 0.1rem 1rem;
+      border-left: 3px solid var(--epi);
+      font-size: clamp(1rem, 2vw, 1.15rem);
+      font-weight: 600;
+      color: var(--paper);
+      /* Reserves two lines' worth of height before JS populates it. */
+      min-height: 2.6em;
+    }
+
+    .fact-card__columns {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+      margin: 0 clamp(1.1rem, 4vw, 1.75rem) 1.25rem;
+    }
+
+    .fact-card__box {
+      padding: 0.9rem 1.1rem;
+      border-radius: 0.65rem;
+      background: rgba(0, 0, 0, 0.18);
+    }
+
+    .fact-card__box--why {
+      background: var(--accent-soft);
+      border: 1px solid rgba(157, 78, 221, 0.3);
+    }
+
+    .fact-card__box-label {
+      margin: 0 0 0.3rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent-text);
+    }
+
+    .fact-card__box p {
+      margin: 0;
+      font-size: 0.9rem;
+      max-width: none;
+      color: var(--paper-dim);
+    }
+
+    .fact-card__footer {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem clamp(1.1rem, 4vw, 1.75rem) 1.25rem;
+      border-top: 1px solid var(--line);
+    }
+
+    .fact-card__source {
+      margin: 0;
+      font-size: 0.82rem;
+      color: var(--paper-faint);
+    }
+
+    .fact-card__source a {
+      color: var(--epi);
+      font-weight: 600;
+    }
+
+    .fact-card__share {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    /* Reuses .btn/.btn--purple as-is for the base look + the 48px
+       touch-target floor it already provides (see .btn's own padding
+       in 02-hero-sections.css) — no size override needed here. */
+    .fact-card__feedback {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--accent-text);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .fact-card__feedback.is-visible {
+      opacity: 1;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fact-card__progress-fill {
+        transition: none;
+      }
+
+      .fact-card__feedback {
+        transition: none;
+      }
+    }
+

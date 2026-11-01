@@ -32,7 +32,8 @@ const JS_ORDER = [
   "05-pacecalc.js",
   "06-training-comments.js",
   "07-admin-mermaid.js",
-  "08-strava-teaser.js"
+  "08-strava-teaser.js",
+  "09-fact-of-the-day.js"
 ];
 
 const CSS_ORDER = [
@@ -218,9 +219,9 @@ async function build() {
 
     html = replaceOrThrow(
       html,
-      /<script src="\/js\/01-nav-theme-cursor\.js"><\/script>[\s\S]*?<script src="\/js\/08-strava-teaser\.js"><\/script>/,
+      /<script src="\/js\/01-nav-theme-cursor\.js"><\/script>[\s\S]*?<script src="\/js\/09-fact-of-the-day\.js"><\/script>/,
       '<script src="/js/app.min.js"></script>',
-      "the 9 ordered js/*.js <script> tags",
+      "the 10 ordered js/*.js <script> tags",
       page
     );
 
