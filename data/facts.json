@@ -1,0 +1,302 @@
+[
+  {
+    "day": 1,
+    "category": "By the Numbers",
+    "title": "Global & U.S. Prevalence",
+    "fact": "Around 50 million people worldwide live with epilepsy, including roughly 3 million adults and children in the U.S.",
+    "explanation": "Epilepsy is one of the most common serious neurological conditions on Earth \u2014 nearly 80% of those affected live in low- and middle-income countries.",
+    "whyItMatters": "It's easy to think of epilepsy as rare. It isn't \u2014 you almost certainly already know someone living with it.",
+    "sourceOrg": "World Health Organization",
+    "sourceUrl": "https://www.who.int/news-room/fact-sheets/detail/epilepsy"
+  },
+  {
+    "day": 2,
+    "category": "By the Numbers",
+    "title": "Lifetime Risk",
+    "fact": "About 1 in 10 people will have at least one seizure in their lifetime, and 1 in 26 will be diagnosed with epilepsy.",
+    "explanation": "A single seizure doesn't mean epilepsy \u2014 epilepsy is defined as two or more unprovoked seizures.",
+    "whyItMatters": "These odds mean seizures aren't a distant, abstract risk. They're a routine part of human health that most people will brush up against.",
+    "sourceOrg": "Epilepsy Foundation",
+    "sourceUrl": "https://www.epilepsy.com/what-is-epilepsy/understanding-seizures/who-gets-epilepsy"
+  },
+  {
+    "day": 3,
+    "category": "Seizure First Aid",
+    "title": "Stay. Safe. Side.",
+    "fact": "The Epilepsy Foundation's core first-aid guidance fits in three words: Stay with the person and time it, keep the area Safe, and turn them onto their Side.",
+    "explanation": "Most seizures last only a minute or two and stop on their own \u2014 first aid is about preventing injury, not stopping the seizure itself.",
+    "whyItMatters": "You don't need medical training to help. Just these three steps make a real difference for someone having a seizure near you.",
+    "sourceOrg": "Epilepsy Foundation",
+    "sourceUrl": "https://www.epilepsy.com/recognition/seizure-first-aid"
+  },
+  {
+    "day": 4,
+    "category": "Seizure First Aid",
+    "title": "When to Call 911",
+    "fact": "Call 911 if a seizure lasts 5 minutes or longer, a second one starts before the person recovers, breathing becomes difficult, it happens in water, or it's a first-time seizure.",
+    "explanation": "Most seizures end on their own within 1\u20133 minutes and don't need emergency care \u2014 these specific red flags are what actually warrant a call.",
+    "whyItMatters": "Knowing these exact triggers in advance means you won't hesitate \u2014 or panic unnecessarily \u2014 in the moment.",
+    "sourceOrg": "Epilepsy Foundation",
+    "sourceUrl": "https://www.epilepsy.com/recognition/emergency-help"
+  },
+  {
+    "day": 5,
+    "category": "Understanding Epilepsy",
+    "title": "Not All Seizures Look the Same",
+    "fact": "The International League Against Epilepsy classifies seizures into four main types \u2014 focal, generalized, unknown, and unclassified \u2014 spanning 21 distinct seizure types.",
+    "explanation": "Focal seizures start in networks limited to one hemisphere of the brain; generalized seizures rapidly involve both sides.",
+    "whyItMatters": "\"A seizure\" isn't one single thing. The type someone has shapes their treatment, their risk, and their day-to-day life very differently.",
+    "sourceOrg": "International League Against Epilepsy (ILAE)",
+    "sourceUrl": "https://www.ilae.org/updated-classification-epileptic-seizures-2025"
+  },
+  {
+    "day": 6,
+    "category": "Risks & Safety",
+    "title": "SUDEP",
+    "fact": "Each year, more than 1 in 1,000 people with epilepsy die from Sudden Unexpected Death in Epilepsy (SUDEP) \u2014 the leading cause of death in people with uncontrolled seizures.",
+    "explanation": "SUDEP is the sudden, unexpected death of an otherwise healthy person with epilepsy, with no other cause found on autopsy; risk rises sharply with uncontrolled tonic-clonic seizures.",
+    "whyItMatters": "Seizure control isn't just about quality of life \u2014 for many people, it's a matter of real, measurable survival odds.",
+    "sourceOrg": "Epilepsy Foundation",
+    "sourceUrl": "https://www.epilepsy.com/complications-risks/early-death-sudep"
+  },
+  {
+    "day": 7,
+    "category": "Risks & Safety",
+    "title": "Status Epilepticus",
+    "fact": "A seizure lasting 5 minutes or longer \u2014 or repeated seizures without full recovery in between \u2014 is a medical emergency called status epilepticus.",
+    "explanation": "The threshold for calling this an emergency has gotten shorter over the decades as research showed how quickly a prolonged seizure can become dangerous.",
+    "whyItMatters": "This is exactly why \"5 minutes\" is the line seizure first-aid guidance draws for calling 911 \u2014 it's not an arbitrary number.",
+    "sourceOrg": "Epilepsy Foundation",
+    "sourceUrl": "https://www.epilepsy.com/complications-risks/emergencies/status-epilepticus"
+  },
+  {
+    "day": 8,
+    "category": "Understanding Epilepsy",
+    "title": "The Diagnosis Gap",
+    "fact": "U.S. data show a median of about 19 months between a first seizure and a formal epilepsy diagnosis.",
+    "explanation": "Delays happen at every step \u2014 deciding to seek care, getting referred to a specialist, and actually being seen \u2014 and a single normal EEG can't rule epilepsy out.",
+    "whyItMatters": "Faster diagnosis means faster access to treatment that actually works. This delay is a real, fixable gap in how care is delivered.",
+    "sourceOrg": "PMC / peer-reviewed Medicaid claims study",
+    "sourceUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7998893/"
+  },
+  {
+    "day": 9,
+    "category": "Treatment",
+    "title": "The Treatment Gap",
+    "fact": "Up to 70% of people with epilepsy could become seizure-free with proper diagnosis and treatment \u2014 yet three-quarters of people in low-income countries don't get the treatment they need.",
+    "explanation": "The biggest barrier to seizure freedom for most people worldwide isn't medical complexity \u2014 it's access to diagnosis, medication, and trained clinicians.",
+    "whyItMatters": "A huge amount of unnecessary suffering from epilepsy is preventable with resources that already exist \u2014 they just aren't reaching everyone yet.",
+    "sourceOrg": "World Health Organization",
+    "sourceUrl": "https://www.who.int/news-room/fact-sheets/detail/epilepsy"
+  },
+  {
+    "day": 10,
+    "category": "Treatment",
+    "title": "Drug-Resistant Epilepsy & Surgery",
+    "fact": "About 30\u201340% of people with epilepsy have drug-resistant epilepsy \u2014 but for carefully selected candidates, surgery can lead to seizure freedom in up to 80% of cases.",
+    "explanation": "Surgery becomes an option when seizures start in one identifiable, safely treatable area of the brain, after medications alone haven't worked.",
+    "whyItMatters": "\"Drug-resistant\" doesn't mean \"no options left\" \u2014 it means it's time to talk to a specialist about what else is possible.",
+    "sourceOrg": "Epilepsy Foundation",
+    "sourceUrl": "https://www.epilepsy.com/treatment/surgery"
+  },
+  {
+    "day": 11,
+    "category": "Treatment",
+    "title": "Neurostimulation Devices",
+    "fact": "For people who can't have surgery, devices like responsive neurostimulation (RNS) have shown real results \u2014 about 3 in 4 RNS patients see seizures drop by half or more.",
+    "explanation": "RNS continuously monitors brain activity and delivers a brief pulse of stimulation the instant it detects a seizure starting \u2014 often before the person even notices.",
+    "whyItMatters": "This is the same category of device-based therapy that's part of my own treatment story \u2014 proof that \"no more options\" is rarely actually true.",
+    "sourceOrg": "Epilepsy Foundation",
+    "sourceUrl": "https://www.epilepsy.com/treatment/devices/responsive-neurostimulation"
+  },
+  {
+    "day": 12,
+    "category": "Treatment",
+    "title": "DBS for Epilepsy",
+    "fact": "The FDA approved deep brain stimulation (DBS) for drug-resistant epilepsy in 2018, based on 7-year trial data showing a median 75% reduction in seizure frequency.",
+    "explanation": "DBS delivers steady electrical pulses to the anterior nucleus of the thalamus, a brain region involved in how seizures spread.",
+    "whyItMatters": "This device is part of my own treatment history \u2014 and a direct result of decades of exactly the kind of research funding this campaign supports.",
+    "sourceOrg": "Medtronic / FDA (SANTE trial)",
+    "sourceUrl": "https://news.medtronic.com/2018-05-01-Medtronic-Receives-FDA-Approval-for-Deep-Brain-Stimulation-Therapy-for-Medically-Refractory-Epilepsy"
+  },
+  {
+    "day": 13,
+    "category": "Treatment",
+    "title": "The Ketogenic Diet",
+    "fact": "Over half of children on the ketogenic diet for drug-resistant epilepsy see their seizures drop by 50% or more, and 10\u201315% become seizure-free.",
+    "explanation": "The diet is high-fat and very low-carbohydrate, prescribed and closely monitored by a physician and dietitian \u2014 not something to try without a medical team.",
+    "whyItMatters": "It's a reminder that effective epilepsy treatment doesn't always mean a new drug or a new device.",
+    "sourceOrg": "Epilepsy Foundation",
+    "sourceUrl": "https://www.epilepsy.com/treatment/dietary-therapies/ketogenic-diet"
+  },
+  {
+    "day": 14,
+    "category": "Treatment",
+    "title": "Rescue Medication",
+    "fact": "FDA-approved rescue medications like nasal diazepam let caregivers stop a seizure cluster at home \u2014 in one long-term study, a single dose resolved 87% of treated episodes.",
+    "explanation": "These are used as needed for a cluster of seizures outside someone's normal pattern, not as a replacement for daily seizure medication.",
+    "whyItMatters": "A tool that works outside a hospital can mean the difference between a manageable bad day and an unnecessary ER trip.",
+    "sourceOrg": "Neurelis (Valtoco) / FDA",
+    "sourceUrl": "https://valtoco.com/"
+  },
+  {
+    "day": 15,
+    "category": "Living With Epilepsy",
+    "title": "Common Seizure Triggers",
+    "fact": "Across patient surveys, the most consistently reported seizure triggers are sleep deprivation, emotional stress, and missed medication doses.",
+    "explanation": "In one survey of 546 people with epilepsy, 52% named sleep deprivation specifically as a trigger for their seizures.",
+    "whyItMatters": "These triggers are largely modifiable \u2014 sleep hygiene and medication adherence are genuinely protective, not just good advice in general.",
+    "sourceOrg": "Saudi Medical Journal (peer-reviewed survey)",
+    "sourceUrl": "https://smj.org.sa/content/41/8/828"
+  },
+  {
+    "day": 16,
+    "category": "Understanding Epilepsy",
+    "title": "Photosensitive Epilepsy",
+    "fact": "Only about 3% of people with epilepsy have seizures triggered by flashing lights or certain visual patterns.",
+    "explanation": "Photosensitive epilepsy is more common in children, adolescents, and certain syndromes like juvenile myoclonic epilepsy, and becomes less common with age.",
+    "whyItMatters": "It's a common myth that flashing lights are a universal epilepsy trigger \u2014 correcting that matters for how media and venues think about accessibility.",
+    "sourceOrg": "Epilepsy Foundation",
+    "sourceUrl": "https://www.epilepsy.com/what-is-epilepsy/seizure-triggers/photosensitivity"
+  },
+  {
+    "day": 17,
+    "category": "Understanding Epilepsy",
+    "title": "Genetics Aren't Always Inheritance",
+    "fact": "Epilepsy can have a genetic cause without being inherited \u2014 many genetic epilepsies come from a brand-new DNA change, not one passed down from a parent.",
+    "explanation": "Researchers have identified close to 1,000 genes linked to epilepsy; a DNA variant can arise spontaneously with no family history at all.",
+    "whyItMatters": "This reframes a lot of unfair self-blame and stigma \u2014 epilepsy isn't something someone's family necessarily \"did\" or \"passed on.\"",
+    "sourceOrg": "Epilepsy Foundation",
+    "sourceUrl": "https://www.epilepsy.com/causes/genetic"
+  },
+  {
+    "day": 18,
+    "category": "Living With Epilepsy",
+    "title": "Do Kids Outgrow It?",
+    "fact": "Nearly two-thirds of children with newly diagnosed epilepsy eventually reach long-term remission \u2014 though outcomes vary hugely by the specific syndrome.",
+    "explanation": "Some self-limited childhood syndromes resolve in the vast majority of cases, while others carry a much lower chance of remission.",
+    "whyItMatters": "\"Will my child outgrow this?\" has a real, evidence-based, often hopeful answer \u2014 it just depends on which epilepsy they have.",
+    "sourceOrg": "SAGE Journals (Epilepsy Therapies Symposium)",
+    "sourceUrl": "https://journals.sagepub.com/doi/10.1177/15357597241304501"
+  },
+  {
+    "day": 19,
+    "category": "By the Numbers",
+    "title": "Epilepsy in Older Adults",
+    "fact": "New epilepsy diagnoses rise sharply after age 55\u201360, with one large U.S. study finding the highest rate of new cases among people in their late 80s.",
+    "explanation": "Strokes, brain tumors, and Alzheimer's disease all become more common with age \u2014 and all three can cause epilepsy.",
+    "whyItMatters": "Epilepsy is too often thought of as a young person's condition. It has a second, less-discussed peak much later in life.",
+    "sourceOrg": "Neurology (American Academy of Neurology)",
+    "sourceUrl": "https://www.neurology.org/doi/10.1212/WNL.0000000000209804"
+  },
+  {
+    "day": 20,
+    "category": "Living With Epilepsy",
+    "title": "Pregnancy & Epilepsy",
+    "fact": "Women with epilepsy can have healthy pregnancies \u2014 medication choice matters, with newer options like lamotrigine and levetiracetam carrying substantially lower risk than older drugs like valproate.",
+    "explanation": "Clinical guidelines now recommend avoiding valproic acid during pregnancy when clinically feasible, specifically to reduce the risk of major malformations.",
+    "whyItMatters": "With the right medical guidance, epilepsy and a healthy pregnancy aren't in conflict.",
+    "sourceOrg": "American Academy of Neurology / AES / SMFM",
+    "sourceUrl": "https://www.neurology.org/doi/10.1212/WNL.0000000000209279"
+  },
+  {
+    "day": 21,
+    "category": "Living With Epilepsy",
+    "title": "Mental Health & Epilepsy",
+    "fact": "Depression and anxiety disorders are more than twice as common in people with epilepsy as in the general population.",
+    "explanation": "A large meta-analysis found significantly higher odds of depression, anxiety, and several other psychiatric conditions in people with epilepsy.",
+    "whyItMatters": "Mental health screening should be a routine, expected part of epilepsy care \u2014 not an afterthought to seizure control alone.",
+    "sourceOrg": "JAMA Neurology",
+    "sourceUrl": "https://jamanetwork.com/journals/jamaneurology/fullarticle/2827126"
+  },
+  {
+    "day": 22,
+    "category": "Advocacy",
+    "title": "Employment & the ADA",
+    "fact": "People with epilepsy are successfully employed as police officers, firefighters, welders, and construction workers \u2014 the ADA requires an individualized assessment, not a blanket assumption.",
+    "explanation": "Under the ADA, an employer can only exclude someone for safety reasons with specific medical documentation of a real, current risk \u2014 not a general assumption about epilepsy.",
+    "whyItMatters": "The barrier people with epilepsy face at work is too often stigma and assumption, not actual capability.",
+    "sourceOrg": "Epilepsy Foundation",
+    "sourceUrl": "https://www.epilepsy.com/lifestyle/employment"
+  },
+  {
+    "day": 23,
+    "category": "Living With Epilepsy",
+    "title": "Driving Laws Vary by State",
+    "fact": "Required seizure-free periods for driving vary widely by U.S. state \u2014 from as short as 3\u20136 months to a full year, and some states leave the decision to a physician's judgment instead of a fixed rule.",
+    "explanation": "Most states require a doctor's statement about the date of the last seizure; some weigh the doctor's recommendation heavily, while others leave the final call to the DMV.",
+    "whyItMatters": "These rules directly affect independence and daily life \u2014 and they're not uniform, so it genuinely pays to know your own state's law.",
+    "sourceOrg": "Epilepsy Foundation",
+    "sourceUrl": "https://www.epilepsy.com/lifestyle/driving-and-transportation/laws"
+  },
+  {
+    "day": 24,
+    "category": "By the Numbers",
+    "title": "The Economic Cost",
+    "fact": "Epilepsy and seizure-related health care cost the U.S. about $24.5 billion in a single year (2019).",
+    "explanation": "That figure covers direct health care spending alone \u2014 it doesn't include lost wages, productivity, or caregiving costs.",
+    "whyItMatters": "This is also a case for research funding: better treatment reduces this burden, not just the underlying suffering.",
+    "sourceOrg": "CDC",
+    "sourceUrl": "https://www.cdc.gov/epilepsy/data-research/facts-stats/"
+  },
+  {
+    "day": 25,
+    "category": "Advocacy",
+    "title": "Caregivers Carry a Lot",
+    "fact": "In a national survey, over half of epilepsy caregivers reported anxiety and 41% reported depression since becoming a caregiver.",
+    "explanation": "The same study estimated the total U.S. economic burden of epilepsy caregiving at nearly $48 billion a year in direct and indirect costs.",
+    "whyItMatters": "Epilepsy doesn't just affect the person diagnosed \u2014 it reshapes the lives of everyone caring for them, too.",
+    "sourceOrg": "Peer-reviewed caregiver burden survey",
+    "sourceUrl": "https://pubmed.ncbi.nlm.nih.gov/31953846/"
+  },
+  {
+    "day": 26,
+    "category": "Living With Epilepsy",
+    "title": "Seizure Dogs",
+    "fact": "Some dogs can alert to a seizure minutes before it happens, and trained seizure-response dogs have been shown in small studies to reduce seizure frequency and improve quality of life.",
+    "explanation": "Seizure-response dogs can be trained to bark for help, break a fall, or stay close during and after a seizure \u2014 but they're a support tool, not a substitute for medical monitoring.",
+    "whyItMatters": "It's a vivid reminder that support for a chronic condition can come in forms you wouldn't expect.",
+    "sourceOrg": "Epilepsy Foundation",
+    "sourceUrl": "https://www.epilepsy.com/recognition/seizure-dogs"
+  },
+  {
+    "day": 27,
+    "category": "Living With Epilepsy",
+    "title": "Exercise Is (Usually) Encouraged",
+    "fact": "The International League Against Epilepsy's own Sports Task Force concludes that physical exercise may favorably affect seizure control, on top of its broader health benefits.",
+    "explanation": "Risk varies by sport and by how well-controlled someone's seizures are \u2014 the Task Force sorts activities into risk tiers rather than issuing a blanket restriction.",
+    "whyItMatters": "With reasonable precautions, staying active \u2014 even training for something like a marathon \u2014 is encouraged, not forbidden.",
+    "sourceOrg": "ILAE Task Force on Sports and Epilepsy",
+    "sourceUrl": "https://onlinelibrary.wiley.com/doi/10.1111/epi.13261"
+  },
+  {
+    "day": 28,
+    "category": "History",
+    "title": "\"The Sacred Disease\"",
+    "fact": "Ancient Greeks called epilepsy \"the sacred disease,\" blaming the gods \u2014 until Hippocrates argued, around the 4th century BC, that it was a natural, brain-based condition, not a curse.",
+    "explanation": "Hippocrates wrote that people claiming epilepsy was divine punishment were using that belief as cover for their own inability to actually treat it.",
+    "whyItMatters": "Epilepsy stigma is nearly 2,500 years old \u2014 and dismantling it has been a project just as long in the making.",
+    "sourceOrg": "Hippocrates, \u201cOn the Sacred Disease\u201d",
+    "sourceUrl": "https://classics.mit.edu/Hippocrates/sacred.html"
+  },
+  {
+    "day": 29,
+    "category": "History",
+    "title": "Why November?",
+    "fact": "The Epilepsy Foundation has marked November as National Epilepsy Awareness Month since 1969 \u2014 Congress formally recognized it in 2003.",
+    "explanation": "What started as one organization's annual campaign grew, over decades, into a nationally recognized month with its own congressional resolution.",
+    "whyItMatters": "This campaign you're reading right now has more than 50 years of history behind it.",
+    "sourceOrg": "Epilepsy Foundation",
+    "sourceUrl": "https://www.epilepsy.com/stories/importance-national-epilepsy-awareness-month"
+  },
+  {
+    "day": 30,
+    "category": "Hope & Research",
+    "title": "Why CURE Epilepsy",
+    "fact": "Since 1998, CURE Epilepsy has raised more than $100 million and funded over 300 research grants across nearly 20 countries, aimed squarely at a cure, not just symptom management.",
+    "explanation": "CURE Epilepsy was founded by Susan Axelrod and a small group of parents of children with epilepsy who refused to accept the treatment options available at the time.",
+    "whyItMatters": "Every fact this month connects back to real, fundable research \u2014 and that research is fueled by people who choose to support it.",
+    "sourceOrg": "CURE Epilepsy",
+    "sourceUrl": "https://www.cureepilepsy.org/about-cure-epilepsy/our-story/"
+  }
+]
