@@ -174,14 +174,31 @@ export async function syncStravaIfStale(sql) {
     const accessToken = await getFreshAccessToken(sql);
     if (!accessToken) return;
 
+    // Deliberately NOT passing `after` here. Strava's activities
+    // endpoint returns results newest-first by default, but flips to
+    // oldest-first (ascending) as soon as an `after` filter is present
+    // -- so `after=<fixed launch epoch>&per_page=30` doesn't page
+    // forward over time, it permanently returns the same oldest 30
+    // activities since launch. Once more than 30 activities existed
+    // after the launch date, every sync kept re-fetching that same
+    // stuck window and nothing newer ever synced again (confirmed:
+    // training/cross-training both stopped advancing past the ~30th
+    // activity after SYNC_LAUNCH_EPOCH). Fetching the 30 most recent
+    // activities (no date filter) and filtering by SYNC_LAUNCH_EPOCH
+    // in code gets the same "nothing before launch" guarantee while
+    // actually keeping up with new activities.
     const response = await fetch(
-      `${ACTIVITIES_URL}?per_page=30&after=${SYNC_LAUNCH_EPOCH}`,
+      `${ACTIVITIES_URL}?per_page=30`,
       { headers: { Authorization: `Bearer ${accessToken}` } }
     );
     if (!response.ok) return;
 
-    const activities = await response.json();
-    if (!Array.isArray(activities)) return;
+    const recentActivities = await response.json();
+    if (!Array.isArray(recentActivities)) return;
+
+    const activities = recentActivities.filter(
+      (a) => Math.floor(new Date(a.start_date).getTime() / 1000) >= SYNC_LAUNCH_EPOCH
+    );
 
     const runs = activities.filter(
       (a) => RUN_TYPES.has(a.sport_type) || RUN_TYPES.has(a.type)
